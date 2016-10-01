@@ -1,0 +1,14 @@
+{
+  "name": "javab-azmayesh",
+  "description": "سامانۀ دریافت جواب آزمایش عمومی آزمایشگاه ها به صورت آنلاین",
+  "main": "./server.js",
+  "authors": [
+    "Hessam A Shokravi <ahs502@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "javabazmayesh.ir",
+  "private": true,
+  "dependencies": {
+    "semantic": "semantic-ui#^2.2.4"
+  }
+}

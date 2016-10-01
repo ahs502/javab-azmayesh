@@ -1,0 +1,18 @@
+/* AHS502 : Application stylesheet file : */
+
+/*
+	AHS502 : Start of 'style.less'
+*/
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+body button {
+  color: #0000FF;
+}
+
+
+/*
+	AHS502 : End of 'style.less'
+*/
