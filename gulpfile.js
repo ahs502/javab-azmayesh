@@ -40,11 +40,14 @@ var stylesheets_app = [
 
 var javascripts_lib = [
     './app/lib/jquery/dist/jquery.min.js',
-    './app/lib/semantic/dist/semantic.min.js',
+    //'./app/lib/semantic/dist/semantic.min.js',
+    './app/lib/semantic/dist/components/site.min.js',
 ];
 
 var stylesheets_lib = [
-    './app/lib/semantic/dist/semantic.rtl.min.css',
+    //'./app/lib/semantic/dist/semantic.rtl.min.css',
+    './app/lib/semantic/dist/components/site.rtl.min.css',
+    './app/lib/semantic/dist/components/grid.rtl.min.css',
 ];
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
