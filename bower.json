@@ -9,6 +9,8 @@
   "homepage": "javabazmayesh.ir",
   "private": true,
   "dependencies": {
-    "semantic": "semantic-ui#^2.2.4"
+    "semantic": "semantic-ui#^2.2.4",
+    "angular": "^1.5.8",
+    "angular-ui-router": "^0.3.1"
   }
 }

@@ -40,6 +40,8 @@ var stylesheets_app = [
 
 var javascripts_lib = [
     './app/lib/jquery/dist/jquery.min.js',
+    './app/lib/angular/angular.min.js',
+    './app/lib/angular-ui-router/release/angular-ui-router.min.js',
     //'./app/lib/semantic/dist/semantic.min.js',
     './app/lib/semantic/dist/components/site.min.js',
 ];

@@ -4,12 +4,14 @@
 	AHS502 : Start of 'main.js'
 */
 
-var zxc = 123;
-console.log(zxc);
+/*global angular*/
 
-function func(asd, fgh) {
-    console.dir(asd, fgh);
-}
+var app = angular.module('test', ['ui.router']);
+
+app.controller('ctrl', ['$scope', function($scope) {
+    $scope.data = 'Data !';
+}]);
+
 
 /*
 	AHS502 : End of 'main.js'
