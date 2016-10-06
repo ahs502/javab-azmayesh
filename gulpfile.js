@@ -23,6 +23,8 @@ var bs, bsRaw, browserSync = require("browser-sync");
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
+var port = 50302;
+
 var javascripts_app = [
     './app/src/libraries/*.js',
     './app/src/modules/*.js',
@@ -51,6 +53,34 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/site.rtl.min.css',
     './app/lib/semantic/dist/components/grid.rtl.min.css',
 ];
+
+var browserSyncOptions = {
+
+    // See: https://www.browsersync.io/docs/options/
+
+    proxy: {
+        target: "localhost:" + port,
+        ws: true
+    },
+    port: port + 2,
+    ui: {
+        port: port + 3,
+        weinre: {
+            port: port + 4
+        }
+    },
+    online: true,
+    reloadDebounce: 3000,
+    reloadDelay: 0,
+    minify: false,
+    ghostMode: {
+        clicks: true,
+        scroll: true,
+        forms: true
+    },
+    notify: true,
+    injectChanges: true, // For CSSes
+};
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
@@ -212,7 +242,7 @@ gulp.task('start-node', callback => {
 
     var child = childProcess.spawn('/usr/bin/node', ['./bin/start'], {
         env: {
-            PORT: 50302
+            PORT: port
         }
     });
 
@@ -264,34 +294,8 @@ gulp.task('watch', callback => {
 
 gulp.task('browser-sync', callback => {
 
-    // All browser-sync options, see: https://www.browsersync.io/docs/options/
-    var options = {
-        proxy: {
-            target: "localhost:" + 50302,
-            ws: true
-        },
-        port: 50304,
-        ui: {
-            port: 50305,
-            weinre: {
-                port: 50306
-            }
-        },
-        online: true,
-        reloadDebounce: 3000,
-        reloadDelay: 0,
-        minify: false,
-        ghostMode: {
-            clicks: true,
-            scroll: true,
-            forms: true
-        },
-        notify: true,
-        injectChanges: true, // For CSSes
-    }
-
     bsRaw = browserSync.create("javab-azmayesh");
-    bsRaw.init(options, () => {
+    bsRaw.init(browserSyncOptions, () => {
         bs = bsRaw;
 
         gulp.watch('./app/view/**/*.*').on("change", bs.reload);
@@ -300,7 +304,7 @@ gulp.task('browser-sync', callback => {
                 './app/public/img/**/*.*',
             ])
             .on("change", bs.reload);
-            
+
         gulp.watch('./routes/**/*.*').on("change", bs.reload);
         gulp.watch('./*.*').on("change", bs.reload);
 

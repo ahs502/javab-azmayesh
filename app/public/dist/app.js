@@ -6,13 +6,31 @@
 
 /*global angular*/
 
-var app = angular.module('test', ['ui.router']);
+var app = angular.module('JavabAzmayesh', ['ui.router']);
 
-app.controller('ctrl', ['$scope', function($scope) {
-    $scope.data = 'Data !';
-}]);
+
 
 
 /*
 	AHS502 : End of 'main.js'
+*/
+
+
+/*
+	AHS502 : Start of 'master-controller.js'
+*/
+
+/*global app*/
+
+app.controller('MasterController', ['$scope',
+    function($scope) {
+
+        // ...
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'master-controller.js'
 */

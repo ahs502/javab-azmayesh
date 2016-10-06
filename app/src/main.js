@@ -1,7 +1,5 @@
 /*global angular*/
 
-var app = angular.module('test', ['ui.router']);
+var app = angular.module('JavabAzmayesh', ['ui.router']);
 
-app.controller('ctrl', ['$scope', function($scope) {
-    $scope.data = 'Data !';
-}]);
+

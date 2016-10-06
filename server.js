@@ -15,8 +15,7 @@ var app = express();
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-// uncomment after placing your favicon in /app/public/img
-//app.use(favicon(path.join(__dirname, 'app/public/img', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'app/public/img', 'javab-azmayesh-64x64.png')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
