@@ -25,7 +25,6 @@ app.use(cookieParser());
 
 // static folders
 app.use(express.static(path.join(__dirname, 'app/public')));
-app.use(express.static(path.join(__dirname, 'app/view')));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 

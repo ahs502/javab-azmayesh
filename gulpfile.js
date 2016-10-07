@@ -15,6 +15,8 @@ var path = require('path');
 var del = require('del');
 var syncExec = require('sync-exec');
 var childProcess = require('child_process');
+var fs = require("fs");
+
 
 /*var colors =*/
 require('colors');
@@ -29,7 +31,9 @@ var javascripts_app = [
     './app/src/libraries/*.js',
     './app/src/modules/*.js',
     './app/src/utilities.js',
-    './app/src/main.js',
+    './app/src/app.js',
+    './app/src/app-config.js',
+    './app/src/app-run.js',
     './app/src/services/*.js',
     './app/src/controllers/*.js',
     './app/src/directives/*.js',
@@ -42,7 +46,7 @@ var stylesheets_app = [
 
 var javascripts_lib = [
     './app/lib/jquery/dist/jquery.min.js',
-    './app/lib/angular/angular.min.js',
+    './app/lib/angular/angular.js',
     './app/lib/angular-ui-router/release/angular-ui-router.min.js',
     //'./app/lib/semantic/dist/semantic.min.js',
     './app/lib/semantic/dist/components/site.min.js',
@@ -52,6 +56,12 @@ var stylesheets_lib = [
     //'./app/lib/semantic/dist/semantic.rtl.min.css',
     './app/lib/semantic/dist/components/site.rtl.min.css',
     './app/lib/semantic/dist/components/grid.rtl.min.css',
+];
+
+var views_templates = [
+    // Each Item, Just One File :
+    './app/view/index.html',
+    './app/view/lab.html',
 ];
 
 var browserSyncOptions = {
@@ -85,7 +95,10 @@ var browserSyncOptions = {
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
 gulp.task('clean', callback => {
-    del(['./app/public/dist/**/*'])
+    del([
+            './app/public/dist/**/*',
+            './app/public/*.html',
+        ])
         .then(items => {
             if (items && items.length && items.length > 0) {
                 util.log(' -> ' + 'Deleted files and folders :'.green);
@@ -225,8 +238,33 @@ gulp.task('build-lib', ['build-lib-js', 'build-lib-css']);
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
+gulp.task('build-view', callback => {
+    views_templates.forEach(tempelateFile => {
+        util.log(' -> [' + 'view'.cyan + '] HTML template file:' + tempelateFile.magenta);
+        var template = fs.readFileSync(tempelateFile),
+            indexStart, indexEnd, partialFile, partial;
+        while ((indexStart = template.indexOf('<!-- import:')) >= 0) {
+            indexEnd = template.slice(indexStart).indexOf(' -->') + indexStart + 4;
+            partialFile = template.slice(indexStart + 12, indexEnd - 4);
+            partial = fs.readFileSync('./app/view/partials/' + partialFile);
+            template = template.slice(0, indexStart) + partial + template.slice(indexEnd);
+        }
+        var outputFile = path.join('./app/public', path.basename(tempelateFile));
+        fs.writeFileSync(outputFile, template, {
+            encoding: 'utf8'
+        });
+    });
+
+    util.log(' => [' + 'view'.bold.cyan + '] ' + 'All HTML views have been created.'.green);
+    bs && bs.reload();
+
+    callback();
+});
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+
 gulp.task('build', ['clean'], () =>
-    runSequence('build-lib', 'build-app'));
+    runSequence('build-lib', 'build-app', 'build-view'));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
@@ -283,6 +321,7 @@ gulp.task('watch', callback => {
     gulp.watch('./app/src/**/*.js', ['build-app-js']);
     gulp.watch('./app/style/**/*.css', ['build-app-css']);
     gulp.watch('./app/style/**/*.less', ['build-app-css']);
+    gulp.watch('./app/view/**/*.html', ['build-view']);
 
     gulp.watch('./routes/**/*.*', ['restart-node']);
     gulp.watch('./*.*', ['restart-node']);
