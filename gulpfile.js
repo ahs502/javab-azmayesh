@@ -56,6 +56,9 @@ var stylesheets_lib = [
     //'./app/lib/semantic/dist/semantic.rtl.min.css',
     './app/lib/semantic/dist/components/site.rtl.min.css',
     './app/lib/semantic/dist/components/grid.rtl.min.css',
+    './app/lib/semantic/dist/components/image.min.css',
+    './app/lib/semantic/dist/components/menu.min.css',
+    './app/lib/semantic/dist/components/button.min.css',
 ];
 
 var views_templates = [

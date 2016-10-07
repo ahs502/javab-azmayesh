@@ -64,6 +64,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 url: '/answer',
                 templateUrl: 'answer.html',
                 controller: 'AnswerController'
+            })
+            .state('about', {
+                url: '/about',
+                templateUrl: 'about.html',
+                // controller: 'AboutController'
             });
 
         $urlRouterProvider.otherwise('/home/forget');

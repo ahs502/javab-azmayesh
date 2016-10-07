@@ -1,8 +1,49 @@
+@font-face {
+	font-family: BNazanin;
+	src: url('/font/B-Nazanin.ttf');
+}
+
+.b-nazanin {
+	font-family: BNazanin;
+}
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  //background-color:red;
-  button {
-    color: #0000FF;
-  }
+	padding: 0;
+	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.ja-rtl {
+	directiorn: rtl;
+}
+
+.ja-ltr {
+	directiorn: ltr;
+}
+
+.ja-align-right {
+	text-align: -webkit-right;
+	text-align: right;
+}
+
+.ja-align-left {
+	text-align: -webkit-left;
+	text-align: left;
+}
+
+.ja-align-center {
+	text-align: -webkit-center;
+	text-align: center;
+}
+
+.ja-home-logo {
+	margin-top: 70px;
+	margin-bottom: 30px;
+}
+
+.ja-home-footer {
+	&.ui.menu {
+		.item:before {
+			width: 0;
+		}
+	}
 }

@@ -15,7 +15,7 @@ var app = express();
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-app.use(favicon(path.join(__dirname, 'app/public/img', 'javab-azmayesh-64x64.png')));
+app.use(favicon(path.join(__dirname, 'app/public/img', 'icon-64x64.png')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

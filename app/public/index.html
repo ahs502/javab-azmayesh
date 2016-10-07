@@ -12,7 +12,7 @@
     <title>سامانه الکترونیکی دریافت جواب آزمایش</title>
 
     <!--<base href="/">-->
-    <link rel="shortcut icon" type="image/png" href="/img/javab-azmayesh-64x64.png" />
+    <link rel="shortcut icon" type="image/png" href="/img/icon-64x64.png" />
 
     <link rel="stylesheet" type="text/css" href="/dist/lib.min.css">
     <link rel="stylesheet" type="text/css" href="/dist/app.min.css">
@@ -29,8 +29,34 @@
 
     <script type="text/ng-template" id="home.html">
         <div>
-    Home:
-    <div ui-view></div>
+
+    <!-- Main Container -->
+    <div class="ui centered grid">
+        <div class="six wide tablet eight wide computer column">
+            <div class="center aligned row ltr">
+                
+                <!-- Home Logo -->
+                <img class="ui centered medium image ja-home-logo" src="/img/logo-full.png" />
+
+                <div ui-view></div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="ui bottom fixed huge menu ja-home-footer">
+    <!--<div class="item">-->
+    <!--    <button class="ui basic green button"><span class="b-nazanin">آزمایشگاه ها</span></button>-->
+    <!--</div>-->
+    <a class="item b-nazanin">آزمایشگاه ها</a>
+        <div class="right menu">
+            <a class="item b-nazanin">همه سوابق من</a>
+            <a class="item b-nazanin">تماس با ما</a>
+            <a class="item b-nazanin">درباره ما</a>
+        </div>
+    </div>
+
 </div>
     </script>
 
@@ -56,6 +82,10 @@
 
     <script type="text/ng-template" id="answer.html">
         <div>Answer</div>
+    </script>
+
+    <script type="text/ng-template" id="about.html">
+        We are us !
     </script>
 
     <!-- / Angular templates -->
