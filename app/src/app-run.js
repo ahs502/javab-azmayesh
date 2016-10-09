@@ -3,7 +3,7 @@
 app.run(['$rootScope', '$state', '$stateParams',
     function($rootScope, $state, $stateParams) {
 
-        $state.go('home.find');
+        $state.go('home.history');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;

@@ -10,30 +10,20 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 controller: 'HomeController',
                 abstract: true
             })
-            .state('home.history', {
-                url: '/history',
-                template: '<div ui-view></div>',
-                abstract: true
-            })
             .state('home.find', {
                 url: '/find',
                 templateUrl: 'home.find.html',
                 controller: 'HomeFindController'
             })
-            .state('home.forget', {
-                url: '/forget',
-                templateUrl: 'home.forget.html',
-                controller: 'HomeForgetController'
-            })
-            .state('home.history.otp', {
+            .state('home.otp', {
                 url: '/otp',
-                templateUrl: 'home.history.otp.html',
-                controller: 'HomeHistoryOtpController'
+                templateUrl: 'home.otp.html',
+                controller: 'HomeOtpController'
             })
-            .state('home.history.find', {
-                url: '/find',
-                templateUrl: 'home.history.find.html',
-                controller: 'HomeHistoryFindController'
+            .state('home.history', {
+                url: '/history',
+                templateUrl: 'home.history.html',
+                controller: 'HomeHistoryController'
             })
             .state('history', {
                 url: '/history',
@@ -45,13 +35,18 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 templateUrl: 'answer.html',
                 controller: 'AnswerController'
             })
-            .state('about', {
+            .state('home.contact', {
+                url: '/contact',
+                templateUrl: 'home.contact.html',
+                //controller: 'HomeContactController'
+            })
+            .state('home.about', {
                 url: '/about',
-                templateUrl: 'about.html',
-                // controller: 'AboutController'
+                templateUrl: 'home.about.html',
+                //controller: 'HomeAboutController'
             });
 
-        $urlRouterProvider.otherwise('/home/forget');
+        $urlRouterProvider.otherwise('/home/find');
 
         // $locationProvider.html5Mode(true);
 

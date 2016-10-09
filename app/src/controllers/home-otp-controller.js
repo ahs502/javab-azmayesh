@@ -1,6 +1,6 @@
 /*global app*/
 
-app.controller('HomeForgetController', ['$scope',
+app.controller('HomeOtpController', ['$scope',
     function($scope) {
 
         //...

@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="description" content="سامانه الکترونیکی دریافت جواب آزمایش">
+    <meta name="description" content="سامانه اینترنتی دریافت نتایج آزمایشگاهی">
     <meta name="keywords" content="آزمایش,نتیجه,جواب,آنلاین,اینترنتی,پزشکی,طبی">
     <meta name="author" content="Hessam A Shokravi">
     <meta name="robots" content="index, noarchive">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 
-    <title>سامانه الکترونیکی دریافت جواب آزمایش</title>
+    <title>جواب آزمایش - سامانه اینترنتی دریافت نتایج آزمایشگاهی</title>
 
     <!--<base href="/">-->
     <link rel="shortcut icon" type="image/png" href="/img/icon-64x64.png" />
@@ -32,28 +32,40 @@
 
     <!-- Main Container -->
     <div class="ui centered grid">
-        <div class="six wide tablet eight wide computer column">
+        <div class="twelve wide small eight wide tablet six wide computer column">
             <div class="center aligned row ltr">
-                
+
                 <!-- Home Logo -->
                 <img class="ui centered medium image ja-home-logo" src="/img/logo-full.png" />
-
-                <div ui-view></div>
 
             </div>
         </div>
     </div>
 
+    <div ui-view></div>
+
     <!-- Footer -->
     <div class="ui bottom fixed huge menu ja-home-footer">
-    <!--<div class="item">-->
-    <!--    <button class="ui basic green button"><span class="b-nazanin">آزمایشگاه ها</span></button>-->
-    <!--</div>-->
-    <a class="item b-nazanin">آزمایشگاه ها</a>
+
+        <a class="item nazanin">آزمایشگاه ها</a>
+
         <div class="right menu">
-            <a class="item b-nazanin">همه سوابق من</a>
-            <a class="item b-nazanin">تماس با ما</a>
-            <a class="item b-nazanin">درباره ما</a>
+
+            <a class="item nazanin" id="home-contactUs" data-position="top right">تماس با ما</a>
+            <div class="ui popup ja-align-right">
+                <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
+                <div class="nazanin">
+                    <bdi>021-66910430</bdi>
+                    <bdi>تلفن:</bdi>
+                </div>
+            </div>
+
+            <a class="item nazanin" ui-sref="home.about">درباره ما</a>
+
+            <a class="item nazanin">سوابق من</a>
+
+            <a class="item nazanin" ui-sref="home.find">جواب آزمایش</a>
+
         </div>
     </div>
 
@@ -61,19 +73,134 @@
     </script>
 
     <script type="text/ng-template" id="home.find.html">
-        <div>Find</div>
+        <div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui form">
+                    <div class="field">
+                        <!--<label class="nazanin">کد ملی</label>-->
+                        <div class="ui input">
+                            <input type="text" name="first-name" placeholder="کد ملی">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <!--<label class="nazanin">شماره رسید آزمایش</label>-->
+                        <div class="ui input">
+                            <input type="text" name="last-name" placeholder="شماره رسید آزمایش">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui primary button" type="submit">
+                            <span class="nazanin">مشاهده نتیجه آزمایش</span>
+                        </button>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui basic button" type="submit">
+                            <span class="nazanin">شماره رسید خود را فراموش کرده ام</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
     </script>
 
-    <script type="text/ng-template" id="home.forget.html">
-        <div>Forget</div>
+    <script type="text/ng-template" id="home.otp.html">
+        <div>
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    برای مشاهده سوابق آزمایشگاهی خود نیاز به دریافت رمز یک بار مصرف دارید
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui form">
+                    <div class="field">
+                        <!--<label class="nazanin">کد ملی</label>-->
+                        <div class="ui input">
+                            <input type="text" name="first-name" placeholder="کد ملی">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <!--<label class="nazanin">شماره تلفن همراه</label>-->
+                        <div class="ui input">
+                            <input type="text" name="last-name" placeholder="شماره تلفن همراه">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui primary button" type="submit">
+                            <span class="nazanin">دریافت رمز یک بار مصرف</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Back arrow -->
+    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow"></img>
+
+</div>
     </script>
 
-    <script type="text/ng-template" id="home.history.otp.html">
-        <div>Home.History.OTP</div>
-    </script>
+    <script type="text/ng-template" id="home.history.html">
+        <div>
 
-    <script type="text/ng-template" id="home.history.find.html">
-        <div>Home.History.Find</div>
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    لطفاً رمز یک بار مصرف دریافت شده را وارد کنید
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui form">
+                    <div class="field">
+                        <!--<label class="nazanin">رمز یک بار مصرف</label>-->
+                        <div class="ui input">
+                            <input type="text" name="first-name" placeholder="رمز یک بار مصرف">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui primary button" type="submit">
+                            <span class="nazanin">مشاهده سوابق آزمایشگاهی</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Back arrow -->
+    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow"></img>
+
+</div>
     </script>
 
     <script type="text/ng-template" id="history.html">
@@ -84,8 +211,16 @@
         <div>Answer</div>
     </script>
 
-    <script type="text/ng-template" id="about.html">
-        We are us !
+    <script type="text/ng-template" id="home.contact.html">
+        <div>
+    Contact us
+</div>
+    </script>
+
+    <script type="text/ng-template" id="home.about.html">
+        <div>
+    About us
+</div>
     </script>
 
     <!-- / Angular templates -->

@@ -50,15 +50,23 @@ var javascripts_lib = [
     './app/lib/angular-ui-router/release/angular-ui-router.min.js',
     //'./app/lib/semantic/dist/semantic.min.js',
     './app/lib/semantic/dist/components/site.min.js',
+    './app/lib/semantic/dist/components/form.min.js',
+    './app/lib/semantic/dist/components/transition.min.js',
+    './app/lib/semantic/dist/components/popup.min.js',
 ];
 
 var stylesheets_lib = [
     //'./app/lib/semantic/dist/semantic.rtl.min.css',
     './app/lib/semantic/dist/components/site.rtl.min.css',
     './app/lib/semantic/dist/components/grid.rtl.min.css',
+    './app/lib/semantic/dist/components/form.rtl.min.css',
+    './app/lib/semantic/dist/components/input.rtl.min.css',
     './app/lib/semantic/dist/components/image.min.css',
     './app/lib/semantic/dist/components/menu.min.css',
     './app/lib/semantic/dist/components/button.min.css',
+    './app/lib/semantic/dist/components/transition.min.css',
+    './app/lib/semantic/dist/components/popup.min.css',
+    //'./app/lib/semantic/dist/components/icon.min.css',
 ];
 
 var views_templates = [
@@ -249,7 +257,12 @@ gulp.task('build-view', callback => {
         while ((indexStart = template.indexOf('<!-- import:')) >= 0) {
             indexEnd = template.slice(indexStart).indexOf(' -->') + indexStart + 4;
             partialFile = template.slice(indexStart + 12, indexEnd - 4);
-            partial = fs.readFileSync('./app/view/partials/' + partialFile);
+            try {
+                partial = fs.readFileSync('./app/view/partials/' + partialFile);
+            }
+            catch (err) {
+                partial = '';
+            }
             template = template.slice(0, indexStart) + partial + template.slice(indexEnd);
         }
         var outputFile = path.join('./app/public', path.basename(tempelateFile));

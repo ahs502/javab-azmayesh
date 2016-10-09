@@ -2,28 +2,40 @@
 
     <!-- Main Container -->
     <div class="ui centered grid">
-        <div class="six wide tablet eight wide computer column">
+        <div class="twelve wide small eight wide tablet six wide computer column">
             <div class="center aligned row ltr">
-                
+
                 <!-- Home Logo -->
                 <img class="ui centered medium image ja-home-logo" src="/img/logo-full.png" />
-
-                <div ui-view></div>
 
             </div>
         </div>
     </div>
 
+    <div ui-view></div>
+
     <!-- Footer -->
     <div class="ui bottom fixed huge menu ja-home-footer">
-    <!--<div class="item">-->
-    <!--    <button class="ui basic green button"><span class="b-nazanin">آزمایشگاه ها</span></button>-->
-    <!--</div>-->
-    <a class="item b-nazanin">آزمایشگاه ها</a>
+
+        <a class="item nazanin">آزمایشگاه ها</a>
+
         <div class="right menu">
-            <a class="item b-nazanin">همه سوابق من</a>
-            <a class="item b-nazanin">تماس با ما</a>
-            <a class="item b-nazanin">درباره ما</a>
+
+            <a class="item nazanin" id="home-contactUs" data-position="top right">تماس با ما</a>
+            <div class="ui popup ja-align-right">
+                <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
+                <div class="nazanin">
+                    <bdi>021-66910430</bdi>
+                    <bdi>تلفن:</bdi>
+                </div>
+            </div>
+
+            <a class="item nazanin" ui-sref="home.about">درباره ما</a>
+
+            <a class="item nazanin">سوابق من</a>
+
+            <a class="item nazanin" ui-sref="home.find">جواب آزمایش</a>
+
         </div>
     </div>
 

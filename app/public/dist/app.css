@@ -8,9 +8,6 @@
   font-family: BNazanin;
   src: url('/font/B-Nazanin.ttf');
 }
-.b-nazanin {
-  font-family: BNazanin;
-}
 body {
   padding: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -34,11 +31,34 @@ body {
   text-align: center;
 }
 .ja-home-logo {
-  margin-top: 70px;
+  margin-top: 60px;
   margin-bottom: 30px;
 }
 .ja-home-footer.ui.menu .item:before {
   width: 0;
+}
+.ja-back-arrow {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  cursor: pointer;
+}
+.nazanin {
+  font-family: BNazanin;
+  font-size: 110%;
+}
+.ui.form input[type=text] {
+  width: 90%;
+  font-family: BNazanin;
+  font-size: 110%;
+}
+.ui.button span.nazanin {
+  font-size: 110%;
+  font-weight: normal;
+  line-height: 1.4;
 }
 
 

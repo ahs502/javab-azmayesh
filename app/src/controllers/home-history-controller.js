@@ -1,6 +1,6 @@
 /*global app*/
 
-app.controller('HomeHistoryFindController', ['$scope',
+app.controller('HomeHistoryController', ['$scope',
     function($scope) {
 
         //...

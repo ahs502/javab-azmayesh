@@ -30,30 +30,20 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 controller: 'HomeController',
                 abstract: true
             })
-            .state('home.history', {
-                url: '/history',
-                template: '<div ui-view></div>',
-                abstract: true
-            })
             .state('home.find', {
                 url: '/find',
                 templateUrl: 'home.find.html',
                 controller: 'HomeFindController'
             })
-            .state('home.forget', {
-                url: '/forget',
-                templateUrl: 'home.forget.html',
-                controller: 'HomeForgetController'
-            })
-            .state('home.history.otp', {
+            .state('home.otp', {
                 url: '/otp',
-                templateUrl: 'home.history.otp.html',
-                controller: 'HomeHistoryOtpController'
+                templateUrl: 'home.otp.html',
+                controller: 'HomeOtpController'
             })
-            .state('home.history.find', {
-                url: '/find',
-                templateUrl: 'home.history.find.html',
-                controller: 'HomeHistoryFindController'
+            .state('home.history', {
+                url: '/history',
+                templateUrl: 'home.history.html',
+                controller: 'HomeHistoryController'
             })
             .state('history', {
                 url: '/history',
@@ -65,13 +55,18 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 templateUrl: 'answer.html',
                 controller: 'AnswerController'
             })
-            .state('about', {
+            .state('home.contact', {
+                url: '/contact',
+                templateUrl: 'home.contact.html',
+                //controller: 'HomeContactController'
+            })
+            .state('home.about', {
                 url: '/about',
-                templateUrl: 'about.html',
-                // controller: 'AboutController'
+                templateUrl: 'home.about.html',
+                //controller: 'HomeAboutController'
             });
 
-        $urlRouterProvider.otherwise('/home/forget');
+        $urlRouterProvider.otherwise('/home/find');
 
         // $locationProvider.html5Mode(true);
 
@@ -93,7 +88,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
 app.run(['$rootScope', '$state', '$stateParams',
     function($rootScope, $state, $stateParams) {
 
-        $state.go('home.find');
+        $state.go('home.history');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -168,11 +163,17 @@ app.controller('HistoryController', ['$scope',
 */
 
 /*global app*/
+/*global $*/
 
 app.controller('HomeController', ['$scope',
     function($scope) {
 
-        //...
+        var popupContactUs = $('#home-contactUs');
+
+        popupContactUs.popup({
+            inline: true,
+            transition: 'scale'
+        });
 
     }
 ]);
@@ -204,12 +205,12 @@ app.controller('HomeFindController', ['$scope',
 
 
 /*
-	AHS502 : Start of 'home-forget-controller.js'
+	AHS502 : Start of 'home-history-controller.js'
 */
 
 /*global app*/
 
-app.controller('HomeForgetController', ['$scope',
+app.controller('HomeHistoryController', ['$scope',
     function($scope) {
 
         //...
@@ -219,17 +220,17 @@ app.controller('HomeForgetController', ['$scope',
 
 
 /*
-	AHS502 : End of 'home-forget-controller.js'
+	AHS502 : End of 'home-history-controller.js'
 */
 
 
 /*
-	AHS502 : Start of 'home-history-find-controller.js'
+	AHS502 : Start of 'home-otp-controller.js'
 */
 
 /*global app*/
 
-app.controller('HomeHistoryFindController', ['$scope',
+app.controller('HomeOtpController', ['$scope',
     function($scope) {
 
         //...
@@ -239,27 +240,7 @@ app.controller('HomeHistoryFindController', ['$scope',
 
 
 /*
-	AHS502 : End of 'home-history-find-controller.js'
-*/
-
-
-/*
-	AHS502 : Start of 'home-history-otp-controller.js'
-*/
-
-/*global app*/
-
-app.controller('HomeHistoryOtpController', ['$scope',
-    function($scope) {
-
-        //...
-
-    }
-]);
-
-
-/*
-	AHS502 : End of 'home-history-otp-controller.js'
+	AHS502 : End of 'home-otp-controller.js'
 */
 
 
