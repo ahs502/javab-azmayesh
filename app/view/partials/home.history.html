@@ -16,7 +16,7 @@
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
 
-                <form class="ui form">
+                <form class="ui {{ findingHistory ? 'loading' : '' }} form">
                     <div class="field">
                         <!--<label class="nazanin">رمز یک بار مصرف</label>-->
                         <div class="ui input">
@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <button class="fluid ui primary button" type="submit">
+                        <button class="fluid ui primary button" type="submit" ng-click="findHistory()">
                             <span class="nazanin">مشاهده سوابق آزمایشگاهی</span>
                         </button>
                     </div>
@@ -33,8 +33,5 @@
             </div>
         </div>
     </div>
-
-    <!-- Back arrow -->
-    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow"></img>
 
 </div>

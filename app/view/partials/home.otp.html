@@ -16,7 +16,7 @@
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
 
-                <form class="ui form">
+                <form class="ui {{ sendingOtp ? 'loading' : '' }} form">
                     <div class="field">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <button class="fluid ui primary button" type="submit">
+                        <button class="fluid ui primary button" type="submit" ng-click="sendOtp()">
                             <span class="nazanin">دریافت رمز یک بار مصرف</span>
                         </button>
                     </div>
@@ -39,8 +39,5 @@
             </div>
         </div>
     </div>
-
-    <!-- Back arrow -->
-    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow"></img>
 
 </div>

@@ -1,10 +1,10 @@
 /*global app*/
 
-app.controller('HistoryController', ['$scope', '$state',
+app.controller('HomeAboutController', ['$scope', '$state',
     function($scope, $state) {
 
         $scope.onBackClicked(function() {
-            $state.go('home.otp');
+            $state.go('home.find');
         });
 
     }

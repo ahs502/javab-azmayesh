@@ -30,13 +30,16 @@
     <script type="text/ng-template" id="home.html">
         <div>
 
+    <!-- Back arrow -->
+    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+
     <!-- Main Container -->
     <div class="ui centered grid">
         <div class="twelve wide small eight wide tablet six wide computer column">
             <div class="center aligned row ltr">
 
                 <!-- Home Logo -->
-                <img class="ui centered medium image ja-home-logo" src="/img/logo-full.png" />
+                <img class="ui centered medium image ja-home-logo" src="x/img/logo-full.png" alt="جواب آزمایش" />
 
             </div>
         </div>
@@ -51,7 +54,7 @@
 
         <div class="right menu">
 
-            <a class="item nazanin" id="home-contactUs" data-position="top right">تماس با ما</a>
+            <a class="item nazanin" id="home-contactUs" data-position="top right" ui-sref="home.contact">تماس با ما</a>
             <div class="ui popup ja-align-right">
                 <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
                 <div class="nazanin">
@@ -62,7 +65,7 @@
 
             <a class="item nazanin" ui-sref="home.about">درباره ما</a>
 
-            <a class="item nazanin">سوابق من</a>
+            <a class="item nazanin" ui-sref="home.otp">سوابق من</a>
 
             <a class="item nazanin" ui-sref="home.find">جواب آزمایش</a>
 
@@ -79,7 +82,7 @@
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
 
-                <form class="ui form">
+                <form class="ui {{ findingAnswer ? 'loading' : '' }} form">
                     <div class="field">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
@@ -93,12 +96,12 @@
                         </div>
                     </div>
                     <div class="field">
-                        <button class="fluid ui primary button" type="submit">
+                        <button class="fluid ui primary button" type="submit" ng-click="seeAnswer()">
                             <span class="nazanin">مشاهده نتیجه آزمایش</span>
                         </button>
                     </div>
                     <div class="field">
-                        <button class="fluid ui basic button" type="submit">
+                        <button class="fluid ui basic button" type="submit" ng-click="$state.go('home.otp')">
                             <span class="nazanin">شماره رسید خود را فراموش کرده ام</span>
                         </button>
                     </div>
@@ -130,7 +133,7 @@
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
 
-                <form class="ui form">
+                <form class="ui {{ sendingOtp ? 'loading' : '' }} form">
                     <div class="field">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
@@ -144,7 +147,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <button class="fluid ui primary button" type="submit">
+                        <button class="fluid ui primary button" type="submit" ng-click="sendOtp()">
                             <span class="nazanin">دریافت رمز یک بار مصرف</span>
                         </button>
                     </div>
@@ -153,9 +156,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Back arrow -->
-    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow"></img>
 
 </div>
     </script>
@@ -179,7 +179,7 @@
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
 
-                <form class="ui form">
+                <form class="ui {{ findingHistory ? 'loading' : '' }} form">
                     <div class="field">
                         <!--<label class="nazanin">رمز یک بار مصرف</label>-->
                         <div class="ui input">
@@ -187,7 +187,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <button class="fluid ui primary button" type="submit">
+                        <button class="fluid ui primary button" type="submit" ng-click="findHistory()">
                             <span class="nazanin">مشاهده سوابق آزمایشگاهی</span>
                         </button>
                     </div>
@@ -197,30 +197,55 @@
         </div>
     </div>
 
+</div>
+
+    </script>
+
+    <script type="text/ng-template" id="history.html">
+        <div>
+
     <!-- Back arrow -->
-    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow"></img>
+    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+
+history
 
 </div>
     </script>
 
-    <script type="text/ng-template" id="history.html">
-        <div>History</div>
-    </script>
-
     <script type="text/ng-template" id="answer.html">
-        <div>Answer</div>
+        <div>
+
+    <!-- Back arrow -->
+    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+
+answer
+
+</div>
+
     </script>
 
     <script type="text/ng-template" id="home.contact.html">
         <div>
-    Contact us
+
+    <!-- Back arrow -->
+    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+
+contact us
+
 </div>
+
     </script>
 
     <script type="text/ng-template" id="home.about.html">
         <div>
-    About us
+
+    <!-- Back arrow -->
+    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+
+about us
+
 </div>
+
     </script>
 
     <!-- / Angular templates -->

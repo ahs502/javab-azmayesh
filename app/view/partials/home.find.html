@@ -4,7 +4,7 @@
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
 
-                <form class="ui form">
+                <form class="ui {{ findingAnswer ? 'loading' : '' }} form">
                     <div class="field">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
@@ -18,12 +18,12 @@
                         </div>
                     </div>
                     <div class="field">
-                        <button class="fluid ui primary button" type="submit">
+                        <button class="fluid ui primary button" type="submit" ng-click="seeAnswer()">
                             <span class="nazanin">مشاهده نتیجه آزمایش</span>
                         </button>
                     </div>
                     <div class="field">
-                        <button class="fluid ui basic button" type="submit">
+                        <button class="fluid ui basic button" type="submit" ng-click="$state.go('home.otp')">
                             <span class="nazanin">شماره رسید خود را فراموش کرده ام</span>
                         </button>
                     </div>

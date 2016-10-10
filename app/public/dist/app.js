@@ -58,12 +58,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
             .state('home.contact', {
                 url: '/contact',
                 templateUrl: 'home.contact.html',
-                //controller: 'HomeContactController'
+                controller: 'HomeContactController'
             })
             .state('home.about', {
                 url: '/about',
                 templateUrl: 'home.about.html',
-                //controller: 'HomeAboutController'
+                controller: 'HomeAboutController'
             });
 
         $urlRouterProvider.otherwise('/home/find');
@@ -88,7 +88,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
 app.run(['$rootScope', '$state', '$stateParams',
     function($rootScope, $state, $stateParams) {
 
-        $state.go('home.history');
+        $state.go('home.find');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -124,10 +124,12 @@ app.run(['$rootScope', '$state', '$stateParams',
 
 /*global app*/
 
-app.controller('AnswerController', ['$scope',
-    function($scope) {
+app.controller('AnswerController', ['$scope', '$state',
+    function($scope, $state) {
 
-        //...
+        $scope.onBackClicked(function() {
+            $state.go('home.find');
+        });
 
     }
 ]);
@@ -144,10 +146,12 @@ app.controller('AnswerController', ['$scope',
 
 /*global app*/
 
-app.controller('HistoryController', ['$scope',
-    function($scope) {
+app.controller('HistoryController', ['$scope', '$state',
+    function($scope, $state) {
 
-        //...
+        $scope.onBackClicked(function() {
+            $state.go('home.otp');
+        });
 
     }
 ]);
@@ -155,6 +159,50 @@ app.controller('HistoryController', ['$scope',
 
 /*
 	AHS502 : End of 'history-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'home-about-controller.js'
+*/
+
+/*global app*/
+
+app.controller('HomeAboutController', ['$scope', '$state',
+    function($scope, $state) {
+
+        $scope.onBackClicked(function() {
+            $state.go('home.find');
+        });
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'home-about-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'home-contact-controller.js'
+*/
+
+/*global app*/
+
+app.controller('HomeContactController', ['$scope', '$state',
+    function($scope, $state) {
+
+        $scope.onBackClicked(function() {
+            $state.go('home.find');
+        });
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'home-contact-controller.js'
 */
 
 
@@ -190,10 +238,22 @@ app.controller('HomeController', ['$scope',
 
 /*global app*/
 
-app.controller('HomeFindController', ['$scope',
-    function($scope) {
+app.controller('HomeFindController', ['$scope', '$state', '$timeout',
+    function($scope, $state, $timeout) {
 
-        //...
+        $scope.seeAnswer = seeAnswer;
+
+        $scope.findingAnswer = false;
+        
+        $scope.onBackClicked(undefined);
+
+        function seeAnswer() {
+            $scope.findingAnswer = true;
+            $timeout(function() {
+                $state.go('answer');
+                $scope.findingAnswer = true;
+            }, 500);
+        }
 
     }
 ]);
@@ -210,10 +270,24 @@ app.controller('HomeFindController', ['$scope',
 
 /*global app*/
 
-app.controller('HomeHistoryController', ['$scope',
-    function($scope) {
+app.controller('HomeHistoryController', ['$scope', '$state', '$timeout',
+    function($scope, $state, $timeout) {
 
-        //...
+        $scope.findHistory = findHistory;
+
+        $scope.findingHistory = false;
+
+        $scope.onBackClicked(function() {
+            $state.go('home.otp');
+        });
+
+        function findHistory() {
+            $scope.findingHistory = true;
+            $timeout(function() {
+                $state.go('history');
+                $scope.findingHistory = true;
+            }, 500);
+        }
 
     }
 ]);
@@ -230,10 +304,24 @@ app.controller('HomeHistoryController', ['$scope',
 
 /*global app*/
 
-app.controller('HomeOtpController', ['$scope',
-    function($scope) {
+app.controller('HomeOtpController', ['$scope', '$state', '$timeout',
+    function($scope, $state, $timeout) {
 
-        //...
+        $scope.sendOtp = sendOtp;
+
+        $scope.sendingOtp = false;
+
+        $scope.onBackClicked(function() {
+            $state.go('home.find');
+        });
+
+        function sendOtp() {
+            $scope.sendingOtp = true;
+            $timeout(function() {
+                $state.go('home.history');
+                $scope.sendingOtp = true;
+            }, 500);
+        }
 
     }
 ]);
@@ -250,10 +338,16 @@ app.controller('HomeOtpController', ['$scope',
 
 /*global app*/
 
-app.controller('MasterController', ['$scope',
-    function($scope) {
+app.controller('MasterController', ['$scope', '$rootScope',
+    function($scope, $rootScope) {
 
-        // ...
+        $scope.back = undefined;
+        $scope.onBackClicked = onBackClicked;
+
+        function onBackClicked(handler) {
+            $scope.back = handler;
+            //$rootScope.$apply();
+        }
 
     }
 ]);

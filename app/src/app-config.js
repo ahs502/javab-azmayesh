@@ -38,12 +38,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
             .state('home.contact', {
                 url: '/contact',
                 templateUrl: 'home.contact.html',
-                //controller: 'HomeContactController'
+                controller: 'HomeContactController'
             })
             .state('home.about', {
                 url: '/about',
                 templateUrl: 'home.about.html',
-                //controller: 'HomeAboutController'
+                controller: 'HomeAboutController'
             });
 
         $urlRouterProvider.otherwise('/home/find');
