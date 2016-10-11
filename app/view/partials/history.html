@@ -1,8 +1,41 @@
 <div>
 
-    <!-- Back arrow -->
-    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+    <!-- Header -->
+    <div class="ui top fixed menu ja-home-footer">
 
-history
+        <!-- Back arrow -->
+        <img src="/img/icons/left-arrow.svg" alt="<- Back" class="item ja-back-arrow" ng-if="back" ng-click="back()"></img>
+
+        <a class="item nazanin" ng-bind="paitentName"></a>
+
+        <div class="right menu">
+            <!-- ... -->
+        </div>
+    </div>
+
+    <div class="ui basic segment" id="history-testList">
+
+        <div class="ui three stackable doubling cards">
+
+            <div class="ui link fluid raised blue card" ng-repeat="x in [1,2,3,4,5,6,7,8,9,0]" ng-click="testClicked()">
+                <div class="content">
+                    <div class="header">header</div>
+                    <div class="meta">
+                        <span class="category">meta data</span>
+                    </div>
+                    <div class="description">
+                        <p>sjkd fsdjgh djha shdg ajshd gajd </p>
+                    </div>
+                </div>
+                <!--<div class="extra content">-->
+                <!--    <div class="right floated author">-->
+                <!--        <img class="ui avatar image" src="/images/avatar/small/matt.jpg"> Matt-->
+                <!--    </div>-->
+                <!--</div>-->
+            </div>
+
+        </div>
+
+    </div>
 
 </div>

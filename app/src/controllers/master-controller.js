@@ -3,12 +3,18 @@
 app.controller('MasterController', ['$scope', '$rootScope',
     function($scope, $rootScope) {
 
-        $scope.back = undefined;
         $scope.onBackClicked = onBackClicked;
+        $scope.onMenuClicked = onMenuClicked;
+
+        $scope.back = undefined;
+        $scope.menu = undefined;
 
         function onBackClicked(handler) {
             $scope.back = handler;
-            //$rootScope.$apply();
+        }
+
+        function onMenuClicked(handler) {
+            $scope.menu = handler;
         }
 
     }

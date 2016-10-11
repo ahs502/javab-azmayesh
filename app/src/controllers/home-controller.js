@@ -4,9 +4,7 @@
 app.controller('HomeController', ['$scope',
     function($scope) {
 
-        var popupContactUs = $('#home-contactUs');
-
-        popupContactUs.popup({
+        $('#home-contactUs').popup({
             inline: true,
             transition: 'scale'
         });

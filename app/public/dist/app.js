@@ -89,6 +89,7 @@ app.run(['$rootScope', '$state', '$stateParams',
     function($rootScope, $state, $stateParams) {
 
         $state.go('home.find');
+        // $state.go('history');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -123,12 +124,30 @@ app.run(['$rootScope', '$state', '$stateParams',
 */
 
 /*global app*/
+/*global $*/
+/*global persianDate*/
+/*global toPersianNumber*/
 
 app.controller('AnswerController', ['$scope', '$state',
     function($scope, $state) {
 
+        $scope.paitentName = "مینا قاسمی راد";
+        $scope.testDate = persianDate().format('L'); //TODO: ???
+        $scope.receiptNumber = toPersianNumber(2771); //TODO: ???
+        $scope.laboratoryName = "آزمایشگاه دکتر ساوجی";
+
         $scope.onBackClicked(function() {
             $state.go('home.find');
+        });
+
+        $('#answer-receiptNumber').popup({
+            inline: true,
+            transition: 'scale'
+        });
+
+        $('#answer-laboratoryName').popup({
+            inline: true,
+            transition: 'scale'
         });
 
     }
@@ -145,13 +164,22 @@ app.controller('AnswerController', ['$scope', '$state',
 */
 
 /*global app*/
+/*global $*/
 
 app.controller('HistoryController', ['$scope', '$state',
     function($scope, $state) {
 
+        $scope.testClicked = testClicked;
+
+        $scope.paitentName = "مینا قاسمی راد";
+
         $scope.onBackClicked(function() {
             $state.go('home.otp');
         });
+
+        function testClicked(test) {
+            $state.go('answer');
+        }
 
     }
 ]);
@@ -216,9 +244,7 @@ app.controller('HomeContactController', ['$scope', '$state',
 app.controller('HomeController', ['$scope',
     function($scope) {
 
-        var popupContactUs = $('#home-contactUs');
-
-        popupContactUs.popup({
+        $('#home-contactUs').popup({
             inline: true,
             transition: 'scale'
         });
@@ -246,6 +272,9 @@ app.controller('HomeFindController', ['$scope', '$state', '$timeout',
         $scope.findingAnswer = false;
         
         $scope.onBackClicked(undefined);
+        
+        //$scope.nationalCode
+        //$scope.receiptNumber
 
         function seeAnswer() {
             $scope.findingAnswer = true;
@@ -280,6 +309,8 @@ app.controller('HomeHistoryController', ['$scope', '$state', '$timeout',
         $scope.onBackClicked(function() {
             $state.go('home.otp');
         });
+        
+        //$scope.otp
 
         function findHistory() {
             $scope.findingHistory = true;
@@ -315,6 +346,9 @@ app.controller('HomeOtpController', ['$scope', '$state', '$timeout',
             $state.go('home.find');
         });
 
+        //$scope.nationalCode
+        //$scope.mobilePhoneNumber
+
         function sendOtp() {
             $scope.sendingOtp = true;
             $timeout(function() {
@@ -341,12 +375,18 @@ app.controller('HomeOtpController', ['$scope', '$state', '$timeout',
 app.controller('MasterController', ['$scope', '$rootScope',
     function($scope, $rootScope) {
 
-        $scope.back = undefined;
         $scope.onBackClicked = onBackClicked;
+        $scope.onMenuClicked = onMenuClicked;
+
+        $scope.back = undefined;
+        $scope.menu = undefined;
 
         function onBackClicked(handler) {
             $scope.back = handler;
-            //$rootScope.$apply();
+        }
+
+        function onMenuClicked(handler) {
+            $scope.menu = handler;
         }
 
     }
@@ -355,4 +395,43 @@ app.controller('MasterController', ['$scope', '$rootScope',
 
 /*
 	AHS502 : End of 'master-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'utilities/persian-number.js'
+*/
+
+(function(global) {
+
+    var persianDigitConvertions = {
+        0: '۰',
+        1: '۱',
+        2: '۲',
+        3: '۳',
+        4: '۴',
+        5: '۵',
+        6: '۶',
+        7: '۷',
+        8: '۸',
+        9: '۹'
+    };
+
+    function toPersianNumber(text) {
+        text = String(text || '');
+        var chars = text.split('');
+        return chars.map(function(char) {
+            if (persianDigitConvertions[char] != undefined)
+                return persianDigitConvertions[char];
+            else
+                return char;
+        }).join('');
+    }
+
+    global.toPersianNumber = toPersianNumber;
+
+})(window);
+
+/*
+	AHS502 : End of 'utilities/persian-number.js'
 */

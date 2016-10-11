@@ -10,6 +10,8 @@ app.controller('HomeHistoryController', ['$scope', '$state', '$timeout',
         $scope.onBackClicked(function() {
             $state.go('home.otp');
         });
+        
+        //$scope.otp
 
         function findHistory() {
             $scope.findingHistory = true;

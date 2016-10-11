@@ -44,14 +44,24 @@ body {
 	}
 }
 
-.ja-back-arrow {
+.ja-back-arrow,
+.ja-menu-bars {
 	position: fixed;
 	width: 30px;
 	height: 30px;
-	top: 0;
-	left: 0;
 	padding: 10px;
 	cursor: pointer;
+	z-index: 2147483647;
+}
+
+.ja-back-arrow {
+	top: 0;
+	left: 0;
+}
+
+.ja-menu-bars {
+	top: 0;
+	right: 0;
 }
 
 .nazanin {
@@ -72,6 +82,21 @@ body {
 			font-size: 110%;
 			font-weight: normal;
 			line-height: 1.4;
+		}
+	}
+	&.menu {
+		.item {
+			&.ja-back-arrow {
+				padding: 10px;
+			}
+		}
+	}
+	&.segment {
+		&#history-testList {
+			margin-top: 60px;
+		}
+		&#answer-content {
+			margin-top: 60px;
 		}
 	}
 }

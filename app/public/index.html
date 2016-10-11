@@ -31,7 +31,10 @@
         <div>
 
     <!-- Back arrow -->
-    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+    <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+
+    <!-- Menu bars -->
+    <img src="/img/icons/menu-bars.svg" alt="Menu" class="ja-menu-bars" ng-if="menu" ng-click="menu()"></img>
 
     <!-- Main Container -->
     <div class="ui centered grid">
@@ -39,7 +42,7 @@
             <div class="center aligned row ltr">
 
                 <!-- Home Logo -->
-                <img class="ui centered medium image ja-home-logo" src="x/img/logo-full.png" alt="جواب آزمایش" />
+                <img class="ui centered medium image ja-home-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
 
             </div>
         </div>
@@ -86,13 +89,13 @@
                     <div class="field">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
-                            <input type="text" name="first-name" placeholder="کد ملی">
+                            <input type="text" name="national-code" ng-model="nationalCode" placeholder="کد ملی">
                         </div>
                     </div>
                     <div class="field">
                         <!--<label class="nazanin">شماره رسید آزمایش</label>-->
                         <div class="ui input">
-                            <input type="text" name="last-name" placeholder="شماره رسید آزمایش">
+                            <input type="text" name="receipt-number" ng-model="receiptNumber" placeholder="شماره رسید آزمایش">
                         </div>
                     </div>
                     <div class="field">
@@ -137,13 +140,13 @@
                     <div class="field">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
-                            <input type="text" name="first-name" placeholder="کد ملی">
+                            <input type="text" name="national-code" ng-model="nationalCode" placeholder="کد ملی">
                         </div>
                     </div>
                     <div class="field">
                         <!--<label class="nazanin">شماره تلفن همراه</label>-->
                         <div class="ui input">
-                            <input type="text" name="last-name" placeholder="شماره تلفن همراه">
+                            <input type="text" name="mobile-phone-number" ng-model="mobilePhoneNumber" placeholder="شماره تلفن همراه">
                         </div>
                     </div>
                     <div class="field">
@@ -183,7 +186,7 @@
                     <div class="field">
                         <!--<label class="nazanin">رمز یک بار مصرف</label>-->
                         <div class="ui input">
-                            <input type="text" name="first-name" placeholder="رمز یک بار مصرف">
+                            <input type="text" name="otp" ng-model="otp" placeholder="رمز یک بار مصرف">
                         </div>
                     </div>
                     <div class="field">
@@ -204,21 +207,129 @@
     <script type="text/ng-template" id="history.html">
         <div>
 
-    <!-- Back arrow -->
-    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+    <!-- Header -->
+    <div class="ui top fixed menu ja-home-footer">
 
-history
+        <!-- Back arrow -->
+        <img src="/img/icons/left-arrow.svg" alt="<- Back" class="item ja-back-arrow" ng-if="back" ng-click="back()"></img>
+
+        <a class="item nazanin" ng-bind="paitentName"></a>
+
+        <div class="right menu">
+            <!-- ... -->
+        </div>
+    </div>
+
+    <div class="ui basic segment" id="history-testList">
+
+        <div class="ui three stackable doubling cards">
+
+            <div class="ui link fluid raised blue card" ng-repeat="x in [1,2,3,4,5,6,7,8,9,0]" ng-click="testClicked()">
+                <div class="content">
+                    <div class="header">header</div>
+                    <div class="meta">
+                        <span class="category">meta data</span>
+                    </div>
+                    <div class="description">
+                        <p>sjkd fsdjgh djha shdg ajshd gajd </p>
+                    </div>
+                </div>
+                <!--<div class="extra content">-->
+                <!--    <div class="right floated author">-->
+                <!--        <img class="ui avatar image" src="/images/avatar/small/matt.jpg"> Matt-->
+                <!--    </div>-->
+                <!--</div>-->
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
+
     </script>
 
     <script type="text/ng-template" id="answer.html">
         <div>
 
-    <!-- Back arrow -->
-    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+    <!-- Header -->
+    <div class="ui top fixed menu ja-home-footer">
 
-answer
+        <!-- Back arrow -->
+        <img src="/img/icons/left-arrow.svg" alt="<- Back" class="item ja-back-arrow" ng-if="back" ng-click="back()"></img>
+
+        <a class="item nazanin" ng-bind="paitentName"></a>
+
+        <div class="right menu">
+
+            <a class="item nazanin">چاپ</a>
+            <a class="item nazanin">به اشتراک گذاری</a>
+
+            <div class="item">
+                <button class="ui basic blue button"><span class="nazanin">ذخیره فایل</span></button>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="ui basic segment" id="answer-content">
+
+        <p>1contents....</p>
+        <p>2contents....</p>
+        <p>3contents....</p>
+        <p>4contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="ui bottom fixed huge menu ja-home-footer">
+
+        <a class="item nazanin" ng-bind="testDate"></a>
+
+        <a class="item nazanin" ng-bind="receiptNumber" id="answer-receiptNumber"></a>
+        <div class="ui popup ja-align-right">
+            <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>
+            <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>
+        </div>
+
+        <div class="right menu">
+
+            <a class="item nazanin" id="answer-laboratoryName" data-position="top right" ng-bind="laboratoryName"></a>
+            <div class="ui popup ja-align-right">
+                <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>
+                <div class="nazanin">
+                    <bdi>021-22915247</bdi>
+                    <bdi>تلفن:</bdi>
+                </div>
+                <div class="nazanin">
+                    <bdi>آدرس: تهران، خ آزادی، نبش بهبودی، پلاک 182، واحد 4</bdi>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 </div>
 
@@ -226,9 +337,6 @@ answer
 
     <script type="text/ng-template" id="home.contact.html">
         <div>
-
-    <!-- Back arrow -->
-    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
 
 contact us
 
@@ -238,9 +346,6 @@ contact us
 
     <script type="text/ng-template" id="home.about.html">
         <div>
-
-    <!-- Back arrow -->
-    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
 
 about us
 

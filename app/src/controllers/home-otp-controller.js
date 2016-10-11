@@ -11,6 +11,9 @@ app.controller('HomeOtpController', ['$scope', '$state', '$timeout',
             $state.go('home.find');
         });
 
+        //$scope.nationalCode
+        //$scope.mobilePhoneNumber
+
         function sendOtp() {
             $scope.sendingOtp = true;
             $timeout(function() {

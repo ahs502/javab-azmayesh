@@ -1,8 +1,82 @@
 <div>
 
-    <!-- Back arrow -->
-    <img src="/img/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+    <!-- Header -->
+    <div class="ui top fixed menu ja-home-footer">
 
-answer
+        <!-- Back arrow -->
+        <img src="/img/icons/left-arrow.svg" alt="<- Back" class="item ja-back-arrow" ng-if="back" ng-click="back()"></img>
+
+        <a class="item nazanin" ng-bind="paitentName"></a>
+
+        <div class="right menu">
+
+            <a class="item nazanin">چاپ</a>
+            <a class="item nazanin">به اشتراک گذاری</a>
+
+            <div class="item">
+                <button class="ui basic blue button"><span class="nazanin">ذخیره فایل</span></button>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="ui basic segment" id="answer-content">
+
+        <p>1contents....</p>
+        <p>2contents....</p>
+        <p>3contents....</p>
+        <p>4contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="ui bottom fixed huge menu ja-home-footer">
+
+        <a class="item nazanin" ng-bind="testDate"></a>
+
+        <a class="item nazanin" ng-bind="receiptNumber" id="answer-receiptNumber"></a>
+        <div class="ui popup ja-align-right">
+            <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>
+            <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>
+        </div>
+
+        <div class="right menu">
+
+            <a class="item nazanin" id="answer-laboratoryName" data-position="top right" ng-bind="laboratoryName"></a>
+            <div class="ui popup ja-align-right">
+                <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>
+                <div class="nazanin">
+                    <bdi>021-22915247</bdi>
+                    <bdi>تلفن:</bdi>
+                </div>
+                <div class="nazanin">
+                    <bdi>آدرس: تهران، خ آزادی، نبش بهبودی، پلاک 182، واحد 4</bdi>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 </div>

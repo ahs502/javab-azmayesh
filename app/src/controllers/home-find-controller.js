@@ -8,6 +8,9 @@ app.controller('HomeFindController', ['$scope', '$state', '$timeout',
         $scope.findingAnswer = false;
         
         $scope.onBackClicked(undefined);
+        
+        //$scope.nationalCode
+        //$scope.receiptNumber
 
         function seeAnswer() {
             $scope.findingAnswer = true;
