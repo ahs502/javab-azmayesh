@@ -54,6 +54,7 @@ var javascripts_lib = [
     './app/lib/semantic/dist/components/form.min.js',
     './app/lib/semantic/dist/components/transition.min.js',
     './app/lib/semantic/dist/components/popup.min.js',
+    './app/lib/semantic/dist/components/sidebar.min.js',
 ];
 
 var stylesheets_lib = [
@@ -64,16 +65,18 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/input.rtl.min.css',
     './app/lib/semantic/dist/components/card.rtl.min.css',
     './app/lib/semantic/dist/components/segment.rtl.min.css',
+    './app/lib/semantic/dist/components/container.rtl.min.css',
     './app/lib/semantic/dist/components/image.min.css',
     './app/lib/semantic/dist/components/menu.min.css',
     './app/lib/semantic/dist/components/button.min.css',
     './app/lib/semantic/dist/components/transition.min.css',
     './app/lib/semantic/dist/components/popup.min.css',
+    './app/lib/semantic/dist/components/sidebar.min.css',
     //'./app/lib/semantic/dist/components/icon.min.css',
 ];
 
 var views_templates = [
-    // Each Item, Just One File :
+    // Each Item, Just One File (Do not use * widechar or else) :
     './app/view/index.html',
     './app/view/lab.html',
 ];

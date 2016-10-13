@@ -40,9 +40,9 @@ body {
 .ja-back-arrow,
 .ja-menu-bars {
   position: fixed;
-  width: 30px;
-  height: 30px;
-  padding: 10px;
+  width: 26px;
+  height: 26px;
+  padding: 12px;
   cursor: pointer;
   z-index: 2147483647;
 }
@@ -76,6 +76,19 @@ body {
 }
 .ui.segment#answer-content {
   margin-top: 60px;
+}
+.ui.pushable .pusher {
+  min-height: 100vh;
+}
+@media screen and (min-width: 520px) {
+  .ja-menu-bars {
+    display: none;
+  }
+}
+@media screen and (max-width: 520px) {
+  .ja-menu-footer {
+    display: none !important;
+  }
 }
 
 

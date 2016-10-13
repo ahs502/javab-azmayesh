@@ -28,54 +28,65 @@
     <!-- Angular templates -->
 
     <script type="text/ng-template" id="home.html">
-        <div>
+        <div class="ui pushable" id="home-sidebarContainer">
 
-    <!-- Back arrow -->
-    <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
-
-    <!-- Menu bars -->
-    <img src="/img/icons/menu-bars.svg" alt="Menu" class="ja-menu-bars" ng-if="menu" ng-click="menu()"></img>
-
-    <!-- Main Container -->
-    <div class="ui centered grid">
-        <div class="twelve wide small eight wide tablet six wide computer column">
-            <div class="center aligned row ltr">
-
-                <!-- Home Logo -->
-                <img class="ui centered medium image ja-home-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
-
-            </div>
-        </div>
+    <!-- Sidebar menu -->
+    <div class="ui thin right sidebar inverted vertical menu" id="home-sidebarMenu">
+        <a class="item nazanin ja-align-right" ui-sref="home.find" ng-click="menu()">جواب آزمایش</a>
+        <a class="item nazanin ja-align-right" ui-sref="home.otp" ng-click="menu()">سوابق من</a>
+        <a class="item nazanin ja-align-right" ng-click="menu()">آزمایشگاه ها</a>
+        <a class="item nazanin ja-align-right" ui-sref="home.about" ng-click="menu()">درباره ما</a>
+        <a class="item nazanin ja-align-right" ui-sref="home.contact" ng-click="menu()">تماس با ما</a>
     </div>
+    <div class="dimed pusher">
 
-    <div ui-view></div>
+        <!-- Back arrow -->
+        <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
 
-    <!-- Footer -->
-    <div class="ui bottom fixed huge menu ja-home-footer">
+        <!-- Menu bars -->
+        <img src="/img/icons/menu-bars.svg" alt="Menu" class="ja-menu-bars" ng-if="menu" ng-click="menu()"></img>
 
-        <a class="item nazanin">آزمایشگاه ها</a>
-
-        <div class="right menu">
-
-            <a class="item nazanin" id="home-contactUs" data-position="top right" ui-sref="home.contact">تماس با ما</a>
-            <div class="ui popup ja-align-right">
-                <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
-                <div class="nazanin">
-                    <bdi>021-66910430</bdi>
-                    <bdi>تلفن:</bdi>
+        <!-- Home logo -->
+        <div class="ui centered grid">
+            <div class="twelve wide small eight wide tablet six wide computer column">
+                <div class="center aligned row ltr">
+                    <img class="ui centered medium image ja-home-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
                 </div>
             </div>
-
-            <a class="item nazanin" ui-sref="home.about">درباره ما</a>
-
-            <a class="item nazanin" ui-sref="home.otp">سوابق من</a>
-
-            <a class="item nazanin" ui-sref="home.find">جواب آزمایش</a>
-
         </div>
+
+        <!-- Main container -->
+        <div ui-view></div>
+
     </div>
 
 </div>
+
+<!-- Footer -->
+<div class="ui bottom fixed huge menu ja-home-footer">
+
+    <a class="item nazanin">آزمایشگاه ها</a>
+
+    <div class="right menu">
+
+        <a class="item nazanin ja-menu-footer" id="home-contactUs" data-position="top right" ui-sref="home.contact">تماس با ما</a>
+        <div class="ui popup ja-align-right ja-menu-footer">
+            <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
+            <div class="nazanin">
+                <bdi>021-66910430</bdi>
+                <bdi>تلفن:</bdi>
+            </div>
+        </div>
+
+        <a class="item nazanin ja-menu-footer" ui-sref="home.about">درباره ما</a>
+
+        <a class="item nazanin ja-menu-footer" ui-sref="home.otp">سوابق من</a>
+
+        <a class="item nazanin" ui-sref="home.find">جواب آزمایش</a>
+
+    </div>
+</div>
+
     </script>
 
     <script type="text/ng-template" id="home.find.html">
@@ -338,7 +349,9 @@
     <script type="text/ng-template" id="home.contact.html">
         <div>
 
-contact us
+    <div class="ui justified text container">
+        contact us
+    </div>
 
 </div>
 
@@ -347,7 +360,9 @@ contact us
     <script type="text/ng-template" id="home.about.html">
         <div>
 
-about us
+    <div class="ui justified text container">
+        about us
+    </div>
 
 </div>
 
