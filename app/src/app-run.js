@@ -3,8 +3,8 @@
 app.run(['$rootScope', '$state', '$stateParams',
     function($rootScope, $state, $stateParams) {
 
-        $state.go('home.find');
-        // $state.go('history');
+        // $state.go('home.find');
+        $state.go('answer');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;

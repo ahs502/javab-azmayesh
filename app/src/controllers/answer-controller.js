@@ -25,5 +25,17 @@ app.controller('AnswerController', ['$scope', '$state',
             transition: 'scale'
         });
 
+        $scope.onMenuClicked(function() {
+            $('#answer-sidebarMenu')
+                .sidebar({
+                    context: $('#answer-sidebarContainer')
+                });
+
+            $('#answer-sidebarMenu')
+                .sidebar('setting', 'transition', 'overlay')
+                .sidebar('setting', 'mobileTransition', 'overlay')
+                .sidebar('toggle');
+        });
+
     }
 ]);

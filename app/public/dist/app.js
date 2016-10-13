@@ -88,8 +88,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
 app.run(['$rootScope', '$state', '$stateParams',
     function($rootScope, $state, $stateParams) {
 
-        $state.go('home.find');
-        // $state.go('history');
+        // $state.go('home.find');
+        $state.go('answer');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -148,6 +148,18 @@ app.controller('AnswerController', ['$scope', '$state',
         $('#answer-laboratoryName').popup({
             inline: true,
             transition: 'scale'
+        });
+
+        $scope.onMenuClicked(function() {
+            $('#answer-sidebarMenu')
+                .sidebar({
+                    context: $('#answer-sidebarContainer')
+                });
+
+            $('#answer-sidebarMenu')
+                .sidebar('setting', 'transition', 'overlay')
+                .sidebar('setting', 'mobileTransition', 'overlay')
+                .sidebar('toggle');
         });
 
     }

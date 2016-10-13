@@ -1,58 +1,62 @@
-<div class="ui pushable" id="home-sidebarContainer">
+<div class="ja-home">
 
-    <!-- Sidebar menu -->
-    <div class="ui thin right sidebar inverted vertical menu" id="home-sidebarMenu">
-        <a class="item nazanin ja-align-right" ui-sref="home.find" ng-click="menu()">جواب آزمایش</a>
-        <a class="item nazanin ja-align-right" ui-sref="home.otp" ng-click="menu()">سوابق من</a>
-        <a class="item nazanin ja-align-right" ng-click="menu()">آزمایشگاه ها</a>
-        <a class="item nazanin ja-align-right" ui-sref="home.about" ng-click="menu()">درباره ما</a>
-        <a class="item nazanin ja-align-right" ui-sref="home.contact" ng-click="menu()">تماس با ما</a>
-    </div>
-    <div class="dimed pusher">
+    <div class="ui pushable" id="home-sidebarContainer">
 
-        <!-- Back arrow -->
-        <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+        <!-- Sidebar menu -->
+        <div class="ui thin right sidebar ---inverted vertical menu" id="home-sidebarMenu">
+            <a class="item nazanin ja-align-right" ui-sref="home.find" ng-click="menu()">جواب آزمایش</a>
+            <a class="item nazanin ja-align-right" ui-sref="home.otp" ng-click="menu()">سوابق من</a>
+            <a class="item nazanin ja-align-right" ng-click="menu()">آزمایشگاه ها</a>
+            <a class="item nazanin ja-align-right" ui-sref="home.about" ng-click="menu()">درباره ما</a>
+            <a class="item nazanin ja-align-right" ui-sref="home.contact" ng-click="menu()">تماس با ما</a>
+        </div>
+        <div class="dimed pusher">
 
-        <!-- Menu bars -->
-        <img src="/img/icons/menu-bars.svg" alt="Menu" class="ja-menu-bars" ng-if="menu" ng-click="menu()"></img>
+            <!-- Back arrow -->
+            <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
 
-        <!-- Home logo -->
-        <div class="ui centered grid">
-            <div class="twelve wide small eight wide tablet six wide computer column">
-                <div class="center aligned row ltr">
-                    <img class="ui centered medium image ja-home-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
+            <!-- Menu bars -->
+            <img src="/img/icons/menu-bars.svg" alt="Menu" class="ja-menu-bars" ng-if="menu" ng-click="menu()"></img>
+
+            <!-- Home logo -->
+            <div class="ui centered grid">
+                <div class="twelve wide small eight wide tablet six wide computer column">
+                    <div class="center aligned row ltr">
+                        <img class="ui centered medium image ja-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Main container -->
-        <div ui-view></div>
+            <!-- Main container -->
+            <div ui-view></div>
+
+        </div>
 
     </div>
 
-</div>
+    <!-- Footer -->
+    <div class="ui bottom fixed huge menu ja-footer">
 
-<!-- Footer -->
-<div class="ui bottom fixed huge menu ja-home-footer">
+        <a class="item nazanin">آزمایشگاه ها</a>
 
-    <a class="item nazanin">آزمایشگاه ها</a>
+        <div class="right menu">
 
-    <div class="right menu">
-
-        <a class="item nazanin ja-menu-footer" id="home-contactUs" data-position="top right" ui-sref="home.contact">تماس با ما</a>
-        <div class="ui popup ja-align-right ja-menu-footer">
-            <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
-            <div class="nazanin">
-                <bdi>021-66910430</bdi>
-                <bdi>تلفن:</bdi>
+            <a class="item nazanin ja-hidable-menu-item" id="home-contactUs" data-position="top right" ui-sref="home.contact">تماس با ما</a>
+            <div class="ui popup ja-align-right ja-hidable-menu-item">
+                <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
+                <div class="nazanin">
+                    <bdi>021-66910430</bdi>
+                    <bdi>تلفن:</bdi>
+                </div>
             </div>
+
+            <a class="item nazanin ja-hidable-menu-item" ui-sref="home.about">درباره ما</a>
+
+            <a class="item nazanin ja-hidable-menu-item" ui-sref="home.otp">سوابق من</a>
+
+            <a class="item nazanin" ui-sref="home.find">جواب آزمایش</a>
+
         </div>
-
-        <a class="item nazanin ja-menu-footer" ui-sref="home.about">درباره ما</a>
-
-        <a class="item nazanin ja-menu-footer" ui-sref="home.otp">سوابق من</a>
-
-        <a class="item nazanin" ui-sref="home.find">جواب آزمایش</a>
-
     </div>
+
 </div>

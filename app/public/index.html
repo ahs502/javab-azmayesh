@@ -28,69 +28,72 @@
     <!-- Angular templates -->
 
     <script type="text/ng-template" id="home.html">
-        <div class="ui pushable" id="home-sidebarContainer">
+        <div class="ja-home">
 
-    <!-- Sidebar menu -->
-    <div class="ui thin right sidebar inverted vertical menu" id="home-sidebarMenu">
-        <a class="item nazanin ja-align-right" ui-sref="home.find" ng-click="menu()">جواب آزمایش</a>
-        <a class="item nazanin ja-align-right" ui-sref="home.otp" ng-click="menu()">سوابق من</a>
-        <a class="item nazanin ja-align-right" ng-click="menu()">آزمایشگاه ها</a>
-        <a class="item nazanin ja-align-right" ui-sref="home.about" ng-click="menu()">درباره ما</a>
-        <a class="item nazanin ja-align-right" ui-sref="home.contact" ng-click="menu()">تماس با ما</a>
-    </div>
-    <div class="dimed pusher">
+    <div class="ui pushable" id="home-sidebarContainer">
 
-        <!-- Back arrow -->
-        <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
+        <!-- Sidebar menu -->
+        <div class="ui thin right sidebar ---inverted vertical menu" id="home-sidebarMenu">
+            <a class="item nazanin ja-align-right" ui-sref="home.find" ng-click="menu()">جواب آزمایش</a>
+            <a class="item nazanin ja-align-right" ui-sref="home.otp" ng-click="menu()">سوابق من</a>
+            <a class="item nazanin ja-align-right" ng-click="menu()">آزمایشگاه ها</a>
+            <a class="item nazanin ja-align-right" ui-sref="home.about" ng-click="menu()">درباره ما</a>
+            <a class="item nazanin ja-align-right" ui-sref="home.contact" ng-click="menu()">تماس با ما</a>
+        </div>
+        <div class="dimed pusher">
 
-        <!-- Menu bars -->
-        <img src="/img/icons/menu-bars.svg" alt="Menu" class="ja-menu-bars" ng-if="menu" ng-click="menu()"></img>
+            <!-- Back arrow -->
+            <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
 
-        <!-- Home logo -->
-        <div class="ui centered grid">
-            <div class="twelve wide small eight wide tablet six wide computer column">
-                <div class="center aligned row ltr">
-                    <img class="ui centered medium image ja-home-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
+            <!-- Menu bars -->
+            <img src="/img/icons/menu-bars.svg" alt="Menu" class="ja-menu-bars" ng-if="menu" ng-click="menu()"></img>
+
+            <!-- Home logo -->
+            <div class="ui centered grid">
+                <div class="twelve wide small eight wide tablet six wide computer column">
+                    <div class="center aligned row ltr">
+                        <img class="ui centered medium image ja-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Main container -->
-        <div ui-view></div>
+            <!-- Main container -->
+            <div ui-view></div>
+
+        </div>
 
     </div>
 
-</div>
+    <!-- Footer -->
+    <div class="ui bottom fixed huge menu ja-footer">
 
-<!-- Footer -->
-<div class="ui bottom fixed huge menu ja-home-footer">
+        <a class="item nazanin">آزمایشگاه ها</a>
 
-    <a class="item nazanin">آزمایشگاه ها</a>
+        <div class="right menu">
 
-    <div class="right menu">
-
-        <a class="item nazanin ja-menu-footer" id="home-contactUs" data-position="top right" ui-sref="home.contact">تماس با ما</a>
-        <div class="ui popup ja-align-right ja-menu-footer">
-            <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
-            <div class="nazanin">
-                <bdi>021-66910430</bdi>
-                <bdi>تلفن:</bdi>
+            <a class="item nazanin ja-hidable-menu-item" id="home-contactUs" data-position="top right" ui-sref="home.contact">تماس با ما</a>
+            <div class="ui popup ja-align-right ja-hidable-menu-item">
+                <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
+                <div class="nazanin">
+                    <bdi>021-66910430</bdi>
+                    <bdi>تلفن:</bdi>
+                </div>
             </div>
+
+            <a class="item nazanin ja-hidable-menu-item" ui-sref="home.about">درباره ما</a>
+
+            <a class="item nazanin ja-hidable-menu-item" ui-sref="home.otp">سوابق من</a>
+
+            <a class="item nazanin" ui-sref="home.find">جواب آزمایش</a>
+
         </div>
-
-        <a class="item nazanin ja-menu-footer" ui-sref="home.about">درباره ما</a>
-
-        <a class="item nazanin ja-menu-footer" ui-sref="home.otp">سوابق من</a>
-
-        <a class="item nazanin" ui-sref="home.find">جواب آزمایش</a>
-
     </div>
-</div>
 
+</div>
     </script>
 
     <script type="text/ng-template" id="home.find.html">
-        <div>
+        <div class="ja-home-find">
 
     <div class="ui centered grid">
         <div class="fourteen wide small eight wide tablet six wide computer column">
@@ -129,7 +132,7 @@
     </script>
 
     <script type="text/ng-template" id="home.otp.html">
-        <div>
+        <div class="ja-home-otp">
 
     <div class="ui grid">
         <div class="center aligned row">
@@ -175,7 +178,7 @@
     </script>
 
     <script type="text/ng-template" id="home.history.html">
-        <div>
+        <div class="ja-home-history">
 
     <div class="ui grid">
         <div class="center aligned row">
@@ -216,10 +219,10 @@
     </script>
 
     <script type="text/ng-template" id="history.html">
-        <div>
+        <div class="ja-history">
 
     <!-- Header -->
-    <div class="ui top fixed menu ja-home-footer">
+    <div class="ui top fixed menu ja-header">
 
         <!-- Back arrow -->
         <img src="/img/icons/left-arrow.svg" alt="<- Back" class="item ja-back-arrow" ng-if="back" ng-click="back()"></img>
@@ -261,10 +264,10 @@
     </script>
 
     <script type="text/ng-template" id="answer.html">
-        <div>
+        <div class="ja-answer">
 
     <!-- Header -->
-    <div class="ui top fixed menu ja-home-footer">
+    <div class="ui top fixed menu ja-header">
 
         <!-- Back arrow -->
         <img src="/img/icons/left-arrow.svg" alt="<- Back" class="item ja-back-arrow" ng-if="back" ng-click="back()"></img>
@@ -273,49 +276,67 @@
 
         <div class="right menu">
 
-            <a class="item nazanin">چاپ</a>
-            <a class="item nazanin">به اشتراک گذاری</a>
+            <a class="item nazanin ja-hidable-menu-item">چاپ نتایج</a>
+            <a class="item nazanin ja-hidable-menu-item">به اشتراک گذاری</a>
 
-            <div class="item">
+            <div class="item ja-hidable-menu-item">
                 <button class="ui basic blue button"><span class="nazanin">ذخیره فایل</span></button>
             </div>
 
+            <!-- Menu bars -->
+            <img src="/img/icons/menu-bars.svg" alt="Menu" class="item ja-menu-bars" ng-if="menu" ng-click="menu()"></img>
+
         </div>
     </div>
-    
-    <div class="ui basic segment" id="answer-content">
 
-        <p>1contents....</p>
-        <p>2contents....</p>
-        <p>3contents....</p>
-        <p>4contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
+    <div class="ui pushable" id="answer-sidebarContainer">
+
+        <!-- Sidebar menu -->
+        <div class="ui thin right sidebar ---inverted vertical menu" id="answer-sidebarMenu">
+            <a class="item nazanin ja-align-right" ng-click="menu()">ذخیره فایل</a>
+            <a class="item nazanin ja-align-right" ng-click="menu()">به اشتراک گذاری</a>
+            <a class="item nazanin ja-align-right" ng-click="menu()">چاپ نتایج</a>
+            <a class="item nazanin ja-align-right" ng-click="menu()">آزمایشگاه دکتر ساوجی</a>
+        </div>
+        <div class="dimed pusher">
+
+            <div class="ui basic segment" id="answer-content">
+
+                <p>1contents....</p>
+                <p>2contents....</p>
+                <p>3contents....</p>
+                <p>4contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+                <p>contents....</p>
+
+            </div>
+
+        </div>
 
     </div>
 
     <!-- Footer -->
-    <div class="ui bottom fixed huge menu ja-home-footer">
+    <div class="ui bottom fixed huge menu ja-footer">
 
         <a class="item nazanin" ng-bind="testDate"></a>
 
@@ -327,8 +348,8 @@
 
         <div class="right menu">
 
-            <a class="item nazanin" id="answer-laboratoryName" data-position="top right" ng-bind="laboratoryName"></a>
-            <div class="ui popup ja-align-right">
+            <a class="item nazanin ja-hidable-menu-item" id="answer-laboratoryName" data-position="top right" ng-bind="laboratoryName"></a>
+            <div class="ui popup ja-align-right ja-hidable-menu-item">
                 <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>
                 <div class="nazanin">
                     <bdi>021-22915247</bdi>
@@ -347,7 +368,7 @@
     </script>
 
     <script type="text/ng-template" id="home.contact.html">
-        <div>
+        <div class="ja-home-contact">
 
     <div class="ui justified text container">
         contact us
@@ -358,7 +379,7 @@
     </script>
 
     <script type="text/ng-template" id="home.about.html">
-        <div>
+        <div class="ja-home-about">
 
     <div class="ui justified text container">
         about us
