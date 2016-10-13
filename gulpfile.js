@@ -256,22 +256,28 @@ gulp.task('build-lib', ['build-lib-js', 'build-lib-css']);
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
 gulp.task('build-view', callback => {
-    views_templates.forEach(tempelateFile => {
-        util.log(' -> [' + 'view'.cyan + '] HTML template file:' + tempelateFile.magenta);
-        var template = fs.readFileSync(tempelateFile),
-            indexStart, indexEnd, partialFile, partial;
-        while ((indexStart = template.indexOf('<!-- import:')) >= 0) {
-            indexEnd = template.slice(indexStart).indexOf(' -->') + indexStart + 4;
-            partialFile = template.slice(indexStart + 12, indexEnd - 4);
-            try {
-                partial = fs.readFileSync('./app/view/partials/' + partialFile);
+
+    function renderHtmlTemplate(htmlTemplateFile) {
+        try {
+            var template = fs.readFileSync(htmlTemplateFile),
+                indexStart, indexEnd, partialFile, partial;
+            while ((indexStart = template.indexOf('<!-- import:')) >= 0) {
+                indexEnd = template.slice(indexStart).indexOf(' -->') + indexStart + 4;
+                partialFile = template.slice(indexStart + 12, indexEnd - 4);
+                partial = renderHtmlTemplate(partialFile);
+                template = template.slice(0, indexStart) + partial + template.slice(indexEnd);
             }
-            catch (err) {
-                partial = '';
-            }
-            template = template.slice(0, indexStart) + partial + template.slice(indexEnd);
+            return template;
         }
-        var outputFile = path.join('./app/public', path.basename(tempelateFile));
+        catch (err) {
+            return '';
+        }
+    }
+
+    views_templates.forEach(templateFile => {
+        util.log(' -> [' + 'view'.cyan + '] HTML template file:' + templateFile.magenta);
+        var template = renderHtmlTemplate(templateFile);
+        var outputFile = path.join('./app/public', path.basename(templateFile));
         fs.writeFileSync(outputFile, template, {
             encoding: 'utf8'
         });
