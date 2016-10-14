@@ -1,20 +1,29 @@
 /*global app*/
+/*global $*/
 
 app.controller('MasterController', ['$scope', '$rootScope',
     function($scope, $rootScope) {
 
         $scope.onBackClicked = onBackClicked;
-        $scope.onMenuClicked = onMenuClicked;
+        $scope.setMenuEvents = setMenuEvents;
+        $scope.toggleMenu = toggleMenu;
 
-        $scope.back = undefined;
-        $scope.menu = undefined;
+        $scope.backHandler = undefined;
+        $scope.menuEvents = undefined;
 
         function onBackClicked(handler) {
-            $scope.back = handler;
+            $scope.backHandler = handler;
         }
 
-        function onMenuClicked(handler) {
-            $scope.menu = handler;
+        function setMenuEvents(events) {
+            $scope.menuEvents = events;
+        }
+
+        function toggleMenu() {
+            $('#sidebarMenu')
+                .sidebar('setting', 'transition', 'overlay')
+                .sidebar('setting', 'mobileTransition', 'overlay')
+                .sidebar('toggle');
         }
 
     }

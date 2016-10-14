@@ -15,6 +15,22 @@ app.controller('AnswerController', ['$scope', '$state',
             $state.go('home.find');
         });
 
+        $scope.setMenuEvents({
+            saveFile: function() {
+                // save file ...
+            },
+            shareFile: function() {
+                // share file ...
+            },
+            printFile: function() {
+                // print file ...
+            },
+            goToLaboratory: function() {
+                //$state.go('...');
+            },
+            laboratoryName: $scope.laboratoryName,
+        });
+
         $('#answer-receiptNumber').popup({
             inline: true,
             transition: 'scale'
@@ -23,18 +39,6 @@ app.controller('AnswerController', ['$scope', '$state',
         $('#answer-laboratoryName').popup({
             inline: true,
             transition: 'scale'
-        });
-
-        $scope.onMenuClicked(function() {
-            $('#answer-sidebarMenu')
-                .sidebar({
-                    context: $('#answer-sidebarContainer')
-                });
-
-            $('#answer-sidebarMenu')
-                .sidebar('setting', 'transition', 'overlay')
-                .sidebar('setting', 'mobileTransition', 'overlay')
-                .sidebar('toggle');
         });
 
     }

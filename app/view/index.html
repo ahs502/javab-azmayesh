@@ -20,7 +20,12 @@
 
 <body>
 
-    <div ui-view></div>
+    <div class="ui thin right sidebar --inverted vertical menu" id="sidebarMenu">
+        <div ui-view="menu"></div>
+    </div>
+    <div class="dimed pusher">
+        <div ui-view="content"></div>
+    </div>
 
     <script type="text/javascript" src="/dist/lib.min.js"></script>
     <script type="text/javascript" src="/dist/app.min.js"></script>
@@ -31,16 +36,28 @@
         <!-- import:./app/view/partials/home.html -->
     </script>
 
-    <script type="text/ng-template" id="home.find.html">
-        <!-- import:./app/view/partials/home.find.html -->
+    <script type="text/ng-template" id="home/menu.html">
+        <!-- import:./app/view/partials/home/menu.html -->
     </script>
 
-    <script type="text/ng-template" id="home.otp.html">
-        <!-- import:./app/view/partials/home.otp.html -->
+    <script type="text/ng-template" id="home/find.html">
+        <!-- import:./app/view/partials/home/find.html -->
     </script>
 
-    <script type="text/ng-template" id="home.history.html">
-        <!-- import:./app/view/partials/home.history.html -->
+    <script type="text/ng-template" id="home/otp.html">
+        <!-- import:./app/view/partials/home/otp.html -->
+    </script>
+
+    <script type="text/ng-template" id="home/history.html">
+        <!-- import:./app/view/partials/home/history.html -->
+    </script>
+
+    <script type="text/ng-template" id="home/contact.html">
+        <!-- import:./app/view/partials/home/contact.html -->
+    </script>
+
+    <script type="text/ng-template" id="home/about.html">
+        <!-- import:./app/view/partials/home/about.html -->
     </script>
 
     <script type="text/ng-template" id="history.html">
@@ -51,12 +68,8 @@
         <!-- import:./app/view/partials/answer.html -->
     </script>
 
-    <script type="text/ng-template" id="home.contact.html">
-        <!-- import:./app/view/partials/home.contact.html -->
-    </script>
-
-    <script type="text/ng-template" id="home.about.html">
-        <!-- import:./app/view/partials/home.about.html -->
+    <script type="text/ng-template" id="answer/menu.html">
+        <!-- import:./app/view/partials/answer/menu.html -->
     </script>
 
     <!-- / Angular templates -->

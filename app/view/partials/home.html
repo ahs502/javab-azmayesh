@@ -1,47 +1,31 @@
 <div class="ja-home">
 
-    <div class="ui pushable" id="home-sidebarContainer">
+    <!-- Back arrow -->
+    <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="backHandler" ng-click="backHandler()"></img>
 
-        <!-- Sidebar menu -->
-        <div class="ui thin right sidebar ---inverted vertical menu" id="home-sidebarMenu">
-            <a class="item nazanin ja-align-right" ui-sref="home.find" ng-click="menu()">جواب آزمایش</a>
-            <a class="item nazanin ja-align-right" ui-sref="home.otp" ng-click="menu()">سوابق من</a>
-            <a class="item nazanin ja-align-right" ng-click="menu()">آزمایشگاه ها</a>
-            <a class="item nazanin ja-align-right" ui-sref="home.about" ng-click="menu()">درباره ما</a>
-            <a class="item nazanin ja-align-right" ui-sref="home.contact" ng-click="menu()">تماس با ما</a>
-        </div>
-        <div class="dimed pusher">
+    <!-- Menu bars -->
+    <img src="/img/icons/menu-bars.svg" alt="Menu" class="ja-menu-bars" ng-if="menuEvents" ng-click="toggleMenu()"></img>
 
-            <!-- Back arrow -->
-            <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="back" ng-click="back()"></img>
-
-            <!-- Menu bars -->
-            <img src="/img/icons/menu-bars.svg" alt="Menu" class="ja-menu-bars" ng-if="menu" ng-click="menu()"></img>
-
-            <!-- Home logo -->
-            <div class="ui centered grid">
-                <div class="twelve wide small eight wide tablet six wide computer column">
-                    <div class="center aligned row ltr">
-                        <img class="ui centered medium image ja-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
-                    </div>
-                </div>
+    <!-- Home logo -->
+    <div class="ui centered grid">
+        <div class="twelve wide small eight wide tablet six wide computer column">
+            <div class="center aligned row ltr">
+                <img class="ui centered medium image ja-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
             </div>
-
-            <!-- Main container -->
-            <div ui-view></div>
-
         </div>
-
     </div>
+
+    <!-- Main container -->
+    <div ui-view></div>
 
     <!-- Footer -->
     <div class="ui bottom fixed huge menu ja-footer">
 
-        <a class="item nazanin">آزمایشگاه ها</a>
+        <a class="item nazanin" ng-click="menuEvents.goToLabs()">آزمایشگاه ها</a>
 
         <div class="right menu">
 
-            <a class="item nazanin ja-hidable-menu-item" id="home-contactUs" data-position="top right" ui-sref="home.contact">تماس با ما</a>
+            <a class="item nazanin ja-hidable-menu-item" id="home-contactUs" data-position="top right" ng-click="menuEvents.goToHomeContact()">تماس با ما</a>
             <div class="ui popup ja-align-right ja-hidable-menu-item">
                 <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
                 <div class="nazanin">
@@ -50,11 +34,11 @@
                 </div>
             </div>
 
-            <a class="item nazanin ja-hidable-menu-item" ui-sref="home.about">درباره ما</a>
+            <a class="item nazanin ja-hidable-menu-item" ng-click="menuEvents.goToHomeAbout()">درباره ما</a>
 
-            <a class="item nazanin ja-hidable-menu-item" ui-sref="home.otp">سوابق من</a>
+            <a class="item nazanin ja-hidable-menu-item" ng-click="menuEvents.goToHomeOtp()">سوابق من</a>
 
-            <a class="item nazanin" ui-sref="home.find">جواب آزمایش</a>
+            <a class="item nazanin" ng-click="menuEvents.goToHomeFind()">جواب آزمایش</a>
 
         </div>
     </div>

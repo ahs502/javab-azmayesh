@@ -55,8 +55,11 @@ body {
   margin-top: 60px;
   margin-bottom: 30px;
 }
-.ja-answer #answer-sidebarMenu {
-  padding-top: 53px;
+.ja-answer #answer-paitentName {
+  padding-left: 60px;
+}
+.ja-history #answer-paitentName {
+  padding-left: 60px;
 }
 .ui.form input[type=text] {
   width: 90%;
@@ -76,12 +79,6 @@ body {
 }
 .ui.segment#answer-content {
   margin-top: 60px;
-}
-.ui.pushable {
-  max-height: 100vh;
-}
-.ui.pushable .pusher {
-  min-height: 100vh;
 }
 .nazanin {
   font-family: BNazanin;
