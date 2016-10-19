@@ -4,7 +4,7 @@ var soap = require("soap");
 
 var nikSmsUrl = "http://niksms.com:1370/NiksmsWebservice.svc?wsdl";
 
-module.export = function nikSms(username, password) {
+module.exports = function nikSms(username, password) {
 
     if (typeof username !== 'string' || typeof password !== 'string' || username.length <= 0 || password.length <= 0) {
         throw new Error('Empty username or password.');
@@ -17,6 +17,11 @@ module.export = function nikSms(username, password) {
         smsStatus: smsStatus,
         // smsInfo: smsInfo, //TODO: Not working yet.
         receiveSms: receiveSms,
+        credit: credit,
+        discount: discount,
+        panelExpireDate: panelExpireDate,
+        receiveSmsAgain: receiveSmsAgain,
+        senderNumbers: senderNumbers,
     };
 
     //////////////////////////////////////////////////////////////////////////////
@@ -59,27 +64,23 @@ module.export = function nikSms(username, password) {
     ***/
     function sendSms(from, to, message, id, at, type) {
 
-        var singlePtpSmsMode = !Array.isArray(message) && !Array.isArray(to) && !Array.isArray(id);
-        var multiplePtpSmsMode = Array.isArray(message) && Array.isArray(to) && Array.isArray(id);
-        var groupSmsMode = !Array.isArray(message) && Array.isArray(to) && Array.isArray(id);
-
-        // console.log(singlePtpSmsMode, multiplePtpSmsMode, groupSmsMode);
+        var singlePtpSmsMode = !Array.isArray(message) && !Array.isArray(to) && (!id || !Array.isArray(id));
+        var multiplePtpSmsMode = Array.isArray(message) && Array.isArray(to) && (!id || Array.isArray(id));
+        var groupSmsMode = !Array.isArray(message) && Array.isArray(to) && (!id || Array.isArray(id));
 
         if (!singlePtpSmsMode && !multiplePtpSmsMode && !groupSmsMode) {
             return Promise.reject('Invalid input arguments.');
         }
 
         if (Array.isArray(id)) {
-            id = id.map(function(i) {
-                return String(i);
-            });
+            id = id.map(i => String(i));
         }
         else if (id) {
             id = String(id);
         }
 
-        if (at && typeof at !== 'string') {
-            at = at.toISOString();
+        if (at && Object.prototype.toString.call(at) === "[object Date]") {
+            at = toISOFormatedLocaleString(at);
         }
 
         var data = {
@@ -91,7 +92,7 @@ module.export = function nikSms(username, password) {
             }
         };
         data["model"]["SendType"] = type || 'Normal';
-        at && (data["model"]["SendOn"] = at);
+        (typeof at !== 'string') && (data["model"]["SendOn"] = at);
         id && (data["model"]["YourMessageId"] = [{
             "long": id
         }]);
@@ -121,9 +122,9 @@ module.export = function nikSms(username, password) {
     /*** Get SMS Status by NikId :
 
      >> Input
-          * id              :   Received nik id for the sms (string/long, provided in sendSms method's output)
+          * id              :   Received nik id for the sms (string/long or array of strings/longs, provided in sendSms method's output)
 
-     >> Output              :   Sms status (string, described below)
+     >> Output              :   Sms status (string or array of string, described below)
 
      -> Sms status
             0	NotFound	هنگامی که کاربر درخواست مشاهده نتیجه پیامی را دارد که قبلا برای ما ارسال نکرده و در دیتابیس وجود ندارد.
@@ -151,7 +152,19 @@ module.export = function nikSms(username, password) {
     ***/
     function smsStatus(id) {
 
-        id = String(id);
+        var singleSmsMode = id && (typeof id === 'string' || typeof id === 'number');
+        var multipleSmsMode = id && Array.isArray(id);
+
+        if (!singleSmsMode && !multipleSmsMode) {
+            return Promise.reject('Invalid input arguments.');
+        }
+
+        if (Array.isArray(id)) {
+            id = id.map(i => String(i));
+        }
+        else if (id) {
+            id = String(id);
+        }
 
         var data = {
             "nikIds": [{
@@ -160,7 +173,7 @@ module.export = function nikSms(username, password) {
         };
 
         return nikSmsWebServiceApiPromise('GetSmsDelivery', data,
-            result => result["SmsStatus"][0]);
+            result => singleSmsMode ? result["SmsStatus"][0] : result["SmsStatus"]);
     }
 
     //////////////////////////////////////////////////////////////////////////////
@@ -196,7 +209,7 @@ module.export = function nikSms(username, password) {
             24	NotDeliveredNotAnswered	تحویل نشده - عدم پاسخ
             25	NotDeliveredLineIsBusy	تحویل نشده - مشغولی
     ***/
-    function smsInfo(id) {
+    /*function smsInfo(id) {
 
         id = String(id);
 
@@ -207,7 +220,7 @@ module.export = function nikSms(username, password) {
         };
 
         return nikSmsWebServiceApiPromise('GetSmsDeliveryWithClientId', data);
-    }
+    }*/
 
     //////////////////////////////////////////////////////////////////////////////
 
@@ -227,12 +240,6 @@ module.export = function nikSms(username, password) {
                 IsRelayed       :   Is this message sent automaticaly? (boolean)
     ***/
     function receiveSms(start, end) {
-
-        function toISOFormatedLocaleString(d) {
-            d = new Date(d);
-            d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-            return d.toISOString();
-        }
 
         if (start && Object.prototype.toString.call(start) === "[object Date]") {
             start = toISOFormatedLocaleString(start);
@@ -257,6 +264,130 @@ module.export = function nikSms(username, password) {
             });
             return result;
         });
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    /*** Get Remaining Credit :
+
+     >> Input
+            - No inputs -
+
+     >> Output              :   Remaining credit (long, in Rials)
+     
+    ***/
+    function credit() {
+
+        var data = {};
+
+        return nikSmsWebServiceApiPromise('GetCredit', data);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    /*** Get Remaining Discount Credit :
+
+     >> Input
+            - No inputs -
+
+     >> Output              :   Remaining discount credit (long, in Rials)
+     
+    ***/
+    function discount() {
+
+        var data = {};
+
+        return nikSmsWebServiceApiPromise('GetDiscountCredit', data);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    /*** Get Panel Expiration Date :
+
+     >> Input
+            - No inputs -
+
+     >> Output              :   Exact expiration date of the panel (Date)
+     
+    ***/
+    function panelExpireDate() {
+
+        var data = {};
+
+        return nikSmsWebServiceApiPromise('GetPanelExpireDate', data);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    /*** Retrieved Received SMS(es) (Even if you have did this before and want to do it again) :
+
+     >> Input
+            start           :   Start date of search for received smses (Date or ISO formated locale time string)
+            end             :   End date of search for received smses (Date or ISO formated locale time string)
+            notNow          :   Retrieve messages right now or later using receiveSms for example? (boolean, false by default which means right now)
+
+     >> Output
+     
+            In the case of notNow == false :
+                An array of (may be an empty array)
+                    Message         :   Sms text (string)
+                    SenderNumber    :   Sender number (string, e.g. : "09337770720")
+                    ReceiveNumber   :   Receiver number (string, e.g. : "50004545454545")
+                    Id              :   Sms id (long)
+                    ReceiveDate     :   Receive date and time (Date)
+                    IsRelayed       :   Is this message sent automaticaly? (boolean)
+                    
+            In the case of notNow == false :
+                A boolean indicating success or failure of the operation of setting the messages status to unread.
+
+    ***/
+    function receiveSmsAgain(start, end, notNow) {
+
+        if (start && Object.prototype.toString.call(start) === "[object Date]") {
+            start = toISOFormatedLocaleString(start);
+        }
+
+        if (end && Object.prototype.toString.call(end) === "[object Date]") {
+            end = toISOFormatedLocaleString(end);
+        }
+
+        var data = {};
+
+        (typeof start === 'string') && (data["startDate"] = start);
+        (typeof end === 'string') && (data["endDate"] = end);
+
+        return nikSmsWebServiceApiPromise('ResetReceiveSmsVisitedStatus', data)
+            .then(function(status /* : boolean */ ) {
+                if (notNow) {
+                    return !!status;
+                }
+                if (!status) {
+                    return Promise.reject('Unable to set the status of those messages to unread.');
+                }
+                return receiveSms(start, end);
+            });
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    /*** Get Active Sender Numbers :
+
+     >> Input
+            - No inputs -
+
+     >> Output              :   List of user's active sender numbers (array of string, e.g. : ['50004545454545', '30001234567'])
+     
+    ***/
+    function senderNumbers() {
+
+        var data = {};
+
+        return nikSmsWebServiceApiPromise('GetSenderNumbers', data,
+            result => result["string"].map(function(r) {
+                if (r.slice(0, 2) === '98')
+                    r = r.slice(2);
+                return r;
+            }));
     }
 
     //////////////////////////////////////////////////////////////////////////////
@@ -288,6 +419,12 @@ module.export = function nikSms(username, password) {
         });
     }
 
+    function toISOFormatedLocaleString(d) {
+        d = new Date(d);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        return d.toISOString();
+    }
+
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -300,13 +437,21 @@ module.export = function nikSms(username, password) {
 
 
 
-// var nikSms = module.export('09337770720', 'nspassword');
-
-// nikSms.receiveSms()
-//     .then(logJSONTerminate, logJSONTerminate);
+// var nikSms = module.exports('09337770720', 'nspassword');
 
 
+// // nikSms.sendSms('50004545454545', ['09337770720', '09126550720'],
+// //         "س")
+// //     .then(logJSONTerminate, logJSONTerminate);
 
+// // nikSms.smsStatus(['173667892','173667893']).then(logJSONTerminate, logJSONTerminate);
+
+// // nikSms.receiveSms()
+// //     .then(logJSONTerminate, logJSONTerminate);
+
+// // nikSms.receiveSmsAgain("2016-10-19T09:11:12.000Z", "2016-10-19T09:36:18.843Z", true).then(logJSONTerminate, logJSONTerminate);
+
+// nikSms.senderNumbers().then(logJSONTerminate, logJSONTerminate);
 
 
 
