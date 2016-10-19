@@ -14,19 +14,20 @@ module.export = function nikSms(username, password) {
 
     return {
         sendSms: sendSms,
-        getSmsStatus: getSmsStatus,
-        // getSmsInfo: getSmsInfo, //TODO: Not working yet.
+        smsStatus: smsStatus,
+        // smsInfo: smsInfo, //TODO: Not working yet.
+        receiveSms: receiveSms,
     };
 
     //////////////////////////////////////////////////////////////////////////////
 
-    /*** Send PTP SMS :
+    /*** Send Single and Multiple PTP and also Group SMS :
 
      >> Inputs
           * from            :   Sender number (string)
           * to              :   Receiver's number (string or array of strings)
-          * message         :   Message body (string or array of strings, single message for one reciever or group sms)
-            id              :   Given id to each sms (string/long or array of strings/longs, will map to recievers' numbers)
+          * message         :   Message body (string or array of strings, single message for one receiver or group sms)
+            id              :   Given id to each sms (string/long or array of strings/longs, will map to receivers' numbers)
             at              :   Sending date-time (Date or ISO formated stringOfDate, right now by default)
             type            :   Type of sms sending (string, 'Normal' by default)
         
@@ -120,7 +121,7 @@ module.export = function nikSms(username, password) {
     /*** Get SMS Status by NikId :
 
      >> Input
-          * id              :   Recieved nik id for the sms (string/long, provided in sendSms method's output)
+          * id              :   Received nik id for the sms (string/long, provided in sendSms method's output)
 
      >> Output              :   Sms status (string, described below)
 
@@ -148,7 +149,7 @@ module.export = function nikSms(username, password) {
             24	NotDeliveredNotAnswered	تحویل نشده - عدم پاسخ
             25	NotDeliveredLineIsBusy	تحویل نشده - مشغولی
     ***/
-    function getSmsStatus(id) {
+    function smsStatus(id) {
 
         id = String(id);
 
@@ -158,7 +159,8 @@ module.export = function nikSms(username, password) {
             }]
         };
 
-        return nikSmsWebServiceApiPromise('GetSmsDelivery', data, result => result["SmsStatus"][0]);
+        return nikSmsWebServiceApiPromise('GetSmsDelivery', data,
+            result => result["SmsStatus"][0]);
     }
 
     //////////////////////////////////////////////////////////////////////////////
@@ -194,7 +196,7 @@ module.export = function nikSms(username, password) {
             24	NotDeliveredNotAnswered	تحویل نشده - عدم پاسخ
             25	NotDeliveredLineIsBusy	تحویل نشده - مشغولی
     ***/
-    function getSmsInfo(id) {
+    function smsInfo(id) {
 
         id = String(id);
 
@@ -205,6 +207,56 @@ module.export = function nikSms(username, password) {
         };
 
         return nikSmsWebServiceApiPromise('GetSmsDeliveryWithClientId', data);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    /*** Retrieved Received SMS(es) :
+
+     >> Input
+            start           :   Start date of search for received smses (Date or ISO formated locale time string)
+            end             :   End date of search for received smses (Date or ISO formated locale time string)
+
+     >> Output
+          * An array of (may be an empty array)
+                Message         :   Sms text (string)
+                SenderNumber    :   Sender number (string, e.g. : "09337770720")
+                ReceiveNumber   :   Receiver number (string, e.g. : "50004545454545")
+                Id              :   Sms id (long)
+                ReceiveDate     :   Receive date and time (Date)
+                IsRelayed       :   Is this message sent automaticaly? (boolean)
+    ***/
+    function receiveSms(start, end) {
+
+        function toISOFormatedLocaleString(d) {
+            d = new Date(d);
+            d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+            return d.toISOString();
+        }
+
+        if (start && Object.prototype.toString.call(start) === "[object Date]") {
+            start = toISOFormatedLocaleString(start);
+        }
+
+        if (end && Object.prototype.toString.call(end) === "[object Date]") {
+            end = toISOFormatedLocaleString(end);
+        }
+
+        var data = {};
+
+        (typeof start === 'string') && (data["startDate"] = start);
+        (typeof end === 'string') && (data["endDate"] = end);
+
+        return nikSmsWebServiceApiPromise('GetReceiveSms', data, function(result) {
+            result = result ? (result["GetReceiveSmsModel"] || []) : [];
+            result.forEach(function(r) {
+                if (r["SenderNumber"].slice(0, 3) === '989')
+                    r["SenderNumber"] = '0' + r["SenderNumber"].slice(2);
+                if (r["ReceiveNumber"].slice(0, 2) === '98')
+                    r["ReceiveNumber"] = r["ReceiveNumber"].slice(2);
+            });
+            return result;
+        });
     }
 
     //////////////////////////////////////////////////////////////////////////////
@@ -248,29 +300,11 @@ module.export = function nikSms(username, password) {
 
 
 
-// sendSms('50004545454545',
-//         '09101821367',
-//         "سلام !\nحسام ام و اینپیام رو با کامپیوترم بدون گوشی ام می فرستم.",
-//         34567
-//     )
-//     .then(function(result) {
-//         logJSON(result);
-//         getSmsStatusByNikId(result.NikId).then(logJSONTerminate, logJSONTerminate);
-//     }, logJSONTerminate);
+// var nikSms = module.export('09337770720', 'nspassword');
 
-
-// getSmsStatus(173623667).then(logJSONTerminate, logJSONTerminate);
-
-
-// sendSms('50004545454545',
-//         '09337770720',
-//         "سلام !\nحسام ام و اینپیام رو با کامپیوترم بدون گوشی ام می فرستم.",
-//         1
-//     )
+// nikSms.receiveSms()
 //     .then(logJSONTerminate, logJSONTerminate);
 
-
-// getSmsInfo(1).then(logJSONTerminate, logJSONTerminate);
 
 
 
