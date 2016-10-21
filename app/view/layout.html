@@ -7,15 +7,15 @@
     <!-- Main site contents -->
 
     <!-- Back arrow and menu bars icon (when no header, outside of it) -->
-    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-left" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
-    <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-right" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
+    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
+    <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-clickable ja-right" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
 
     <!-- Header -->
     <div ng-if="headerHandlers" id="ja-header" class="ui fixed top sticky segment">
 
         <!-- Back arrow and menu bars icon (when header, inside of it) -->
-        <img ng-if="backHandler" class="ja-item ja-icon ja-left ja-hoverable" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
-        <img ng-if="menuHandlers" class="ja-item ja-icon ja-right ja-hoverable" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
+        <img ng-if="backHandler" class="ja-item ja-icon ja-hoverable ja-clickable ja-left" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
+        <img ng-if="menuHandlers" class="ja-item ja-icon ja-hoverable ja-clickable ja-right" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
 
         <div ui-view="header">
             <!-- Header contents -->

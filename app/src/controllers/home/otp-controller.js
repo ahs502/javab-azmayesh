@@ -1,13 +1,13 @@
 /*global app*/
 
-app.controller('HomeOtpController', ['$scope', '$state', '$timeout',
-    function($scope, $state, $timeout) {
+app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout',
+    function($rootScope, $scope, $state, $timeout) {
 
         $scope.sendOtp = sendOtp;
 
         $scope.sendingOtp = false;
 
-        $scope.onBackClicked(function() {
+        $scope.setBackHandler(function() {
             $state.go('home.find');
         });
 
@@ -15,11 +15,14 @@ app.controller('HomeOtpController', ['$scope', '$state', '$timeout',
         //$scope.mobilePhoneNumber
 
         function sendOtp() {
+            //TODO: check for validity
             $scope.sendingOtp = true;
             $timeout(function() {
-                $state.go('home.history');
-                $scope.sendingOtp = true;
-            }, 500);
+                $state.go('home.history', {
+                    nationalCode: $scope.nationalCode
+                });
+                // $scope.sendingOtp = false;
+            }, 300);
         }
 
     }

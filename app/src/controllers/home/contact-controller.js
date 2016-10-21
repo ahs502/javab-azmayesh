@@ -3,7 +3,7 @@
 app.controller('HomeContactController', ['$scope', '$state',
     function($scope, $state) {
 
-        $scope.onBackClicked(function() {
+        $scope.setBackHandler(function() {
             $state.go('home.find');
         });
 

@@ -9,6 +9,8 @@ app.run(['$rootScope', '$state', '$stateParams',
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
 
+        $rootScope.data = {};
+
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams, options) {
                 //event.preventDefault(); 

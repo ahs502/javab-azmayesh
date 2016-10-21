@@ -30,15 +30,15 @@
     <!-- Main site contents -->
 
     <!-- Back arrow and menu bars icon (when no header, outside of it) -->
-    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-left" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
-    <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-right" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
+    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
+    <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-clickable ja-right" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
 
     <!-- Header -->
     <div ng-if="headerHandlers" id="ja-header" class="ui fixed top sticky segment">
 
         <!-- Back arrow and menu bars icon (when header, inside of it) -->
-        <img ng-if="backHandler" class="ja-item ja-icon ja-left ja-hoverable" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
-        <img ng-if="menuHandlers" class="ja-item ja-icon ja-right ja-hoverable" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
+        <img ng-if="backHandler" class="ja-item ja-icon ja-hoverable ja-clickable ja-left" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
+        <img ng-if="menuHandlers" class="ja-item ja-icon ja-hoverable ja-clickable ja-right" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
 
         <div ui-view="header">
             <!-- Header contents -->
@@ -89,24 +89,24 @@
     </script>
 
     <script type="text/ng-template" id="home/menu.html">
-        <a class="item nazanin ja-align-right" ng-click="menuEvents.goToHomeFind(); toggleMenu()">جواب آزمایش</a>
-<a class="item nazanin ja-align-right" ng-click="menuEvents.goToHomeOtp(); toggleMenu()">سوابق من</a>
-<a class="item nazanin ja-align-right" ng-click="menuEvents.goToLabs(); toggleMenu()">آزمایشگاه ها</a>
-<a class="item nazanin ja-align-right" ng-click="menuEvents.goToHomeAbout(); toggleMenu()">درباره ما</a>
-<a class="item nazanin ja-align-right" ng-click="menuEvents.goToHomeContact(); toggleMenu()">تماس با ما</a>
+        <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeFind(); toggleMenu()">جواب آزمایش</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeOtp(); toggleMenu()">سوابق من</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabs(); toggleMenu()">آزمایشگاه ها</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeAbout(); toggleMenu()">درباره ما</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeContact(); toggleMenu()">تماس با ما</a>
             
     </script>
 
     <script type="text/ng-template" id="home/footer.html">
-        <a class="ja-item ja-text ja-hoverable ja-left nazanin" ng-click="menuHandlers.goToLabs()">آزمایشگاه ها</a>
+        <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToLabs()">آزمایشگاه ها</a>
 
-<a class="ja-item ja-text ja-hoverable ja-right nazanin" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
 
-<a class="ja-item ja-text ja-hoverable ja-right nazanin" ng-click="menuHandlers.goToHomeOtp()">سوابق من</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeOtp()">سوابق من</a>
 
-<a class="ja-item ja-text ja-hoverable ja-right nazanin" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
 
-<a class="ja-item ja-text ja-hoverable ja-right nazanin" id="home-contact-us" data-position="top right" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="home-contact-us" data-position="top right" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
 <div class="ui popup ja-align-right">
     <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
     <div class="nazanin">
@@ -157,14 +157,14 @@
     </script>
 
     <script type="text/ng-template" id="home/otp.html">
-        <div class="ja-home-otp">
+        <div id="ja-home-otp">
 
     <div class="ui grid">
         <div class="center aligned row">
             <div class="sixteen wide column">
 
                 <p class="nazanin">
-                    برای مشاهده سوابق آزمایشگاهی خود نیاز به دریافت رمز یک بار مصرف دارید
+                    برای مشاهده سوابق آزمایشگاهی خود ابتدا باید رمز یک بار مصرف تهیه کنید
                 </p>
 
             </div>
@@ -179,13 +179,13 @@
                     <div class="field">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
-                            <input type="text" name="national-code" ng-model="nationalCode" placeholder="کد ملی">
+                            <input type="text" ng-model="nationalCode" placeholder="کد ملی">
                         </div>
                     </div>
                     <div class="field">
                         <!--<label class="nazanin">شماره تلفن همراه</label>-->
                         <div class="ui input">
-                            <input type="text" name="mobile-phone-number" ng-model="mobilePhoneNumber" placeholder="شماره تلفن همراه">
+                            <input type="text" ng-model="mobilePhoneNumber" placeholder="شماره تلفن همراه">
                         </div>
                     </div>
                     <div class="field">
@@ -203,14 +203,14 @@
     </script>
 
     <script type="text/ng-template" id="home/history.html">
-        <div class="ja-home-history">
+        <div id="ja-home-history">
 
     <div class="ui grid">
         <div class="center aligned row">
             <div class="sixteen wide column">
 
                 <p class="nazanin">
-                    لطفاً رمز یک بار مصرف دریافت شده را وارد کنید
+                    رمزیک بار مصرف شما از طریق پیامک ارسال شد. لطفاً آن را در کادر زیر وارد کنید
                 </p>
 
             </div>
@@ -225,7 +225,7 @@
                     <div class="field">
                         <!--<label class="nazanin">رمز یک بار مصرف</label>-->
                         <div class="ui input">
-                            <input type="text" name="otp" ng-model="otp" placeholder="رمز یک بار مصرف">
+                            <input type="text" ng-model="otp" placeholder="رمز یک بار مصرف">
                         </div>
                     </div>
                     <div class="field">
@@ -243,19 +243,8 @@
 
     </script>
 
-    <script type="text/ng-template" id="home/contact.html">
-        <div class="ja-home-contact">
-
-    <div class="ui justified text container">
-        contact us
-    </div>
-
-</div>
-
-    </script>
-
     <script type="text/ng-template" id="home/about.html">
-        <div class="ja-home-about">
+        <div id="ja-home-about">
 
     <div class="ui justified text container">
         about us
@@ -265,34 +254,32 @@
 
     </script>
 
-    <script type="text/ng-template" id="history.html">
-        <div class="ja-history">
+    <script type="text/ng-template" id="home/contact.html">
+        <div id="ja-home-contact">
 
-    <!-- Header -->
-    <div class="ui top fixed menu ja-header">
-
-        <!-- Back arrow -->
-        <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="backHandler" ng-click="backHandler()"></img>
-
-        <a class="item nazanin" id="answer-paitentName" ng-bind="paitentName"></a>
-
-        <div class="right menu">
-            <!-- ... -->
-        </div>
+    <div class="ui justified text container">
+        contact us
     </div>
 
-    <div class="ui basic segment" id="history-testList">
+</div>
+
+    </script>
+
+    <script type="text/ng-template" id="history.html">
+        <div id="ja-history">
+
+    <div class="ui basic segment">
 
         <div class="ui three stackable doubling cards">
 
-            <div class="ui link fluid raised blue card" ng-repeat="x in [1,2,3,4,5,6,7,8,9,0]" ng-click="testClicked()">
+            <div class="ui link fluid raised blue card" ng-repeat="test in paitentTests" ng-click="testClicked(test)">
                 <div class="content">
-                    <div class="header">header</div>
+                    <div class="header">header {{test.id}}</div>
                     <div class="meta">
                         <span class="category">meta data</span>
                     </div>
                     <div class="description">
-                        <p>sjkd fsdjgh djha shdg ajshd gajd </p>
+                        <p>some description about the test</p>
                     </div>
                 </div>
                 <!--<div class="extra content">-->
@@ -310,35 +297,15 @@
 
     </script>
 
+    <script type="text/ng-template" id="history/header.html">
+        <a class="ja-item ja-text ja-left nazanin" ng-bind="headerHandlers.paitentName"></a>
+        
+    </script>
+
     <script type="text/ng-template" id="answer.html">
-        <div class="ja-answer">
+        <div id="ja-answer">
 
-    <!-- Header -->
-    <div class="ui top fixed menu ja-header">
-
-        <!-- Back arrow -->
-        <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="backHandler" ng-click="backHandler()"></img>
-
-        <a class="item nazanin" id="answer-paitentName" ng-bind="paitentName"></a>
-
-        <div class="right menu">
-
-            <a class="item nazanin ja-hidable-menu-item" ng-click="menuEvents.printFile()">چاپ نتایج</a>
-            <a class="item nazanin ja-hidable-menu-item" ng-click="menuEvents.shareFile()">به اشتراک گذاری</a>
-
-            <div class="item ja-hidable-menu-item">
-                <button class="ui basic blue button" ng-click="menuEvents.saveFile()">
-                    <span class="nazanin">ذخیره فایل</span>
-                </button>
-            </div>
-
-            <!-- Menu bars -->
-            <img src="/img/icons/menu-bars.svg" alt="Menu" class="item ja-menu-bars" ng-if="menuEvents" ng-click="toggleMenu()"></img>
-
-        </div>
-    </div>
-
-    <div class="ui basic segment" id="answer-content">
+    <div class="ui basic segment">
 
         <p>1contents....</p>
         <p>2contents....</p>
@@ -346,6 +313,7 @@
         <p>4contents....</p>
         <p>contents....</p>
         <p>contents....</p>
+        <p>---</p>
         <p>contents....</p>
         <p>contents....</p>
         <p>contents....</p>
@@ -355,6 +323,23 @@
         <p>contents....</p>
         <p>contents....</p>
         <p>contents....</p>
+        <p>---</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>---</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>---</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>---</p>
         <p>contents....</p>
         <p>contents....</p>
         <p>contents....</p>
@@ -364,8 +349,21 @@
         <p>contents....</p>
         <p>contents....</p>
         <p>contents....</p>
+        <p>---</p>
         <p>contents....</p>
         <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>---</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>contents....</p>
+        <p>---</p>
+        <p>END!</p>
 
     </div>
 
@@ -404,13 +402,47 @@
     </script>
 
     <script type="text/ng-template" id="answer/menu.html">
-        <a class="item nazanin ja-align-right" ng-click="menuEvents.saveFile(); toggleMenu()">ذخیره فایل</a>
-<a class="item nazanin ja-align-right" ng-click="menuEvents.shareFile(); toggleMenu()">به اشتراک گذاری</a>
-<a class="item nazanin ja-align-right" ng-click="menuEvents.printFile(); toggleMenu()">چاپ نتایج</a>
-<a class="item nazanin ja-align-right" ng-click="menuEvents.goToLaboratory(); toggleMenu()">
-    <span ng-bind="menuEvents.laboratoryName"></span>
+        <a class="item nazanin ja-align-right" ng-click="menuHandlers.saveFile(); toggleMenu()">ذخیره فایل</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.shareFile(); toggleMenu()">به اشتراک گذاری</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.printFile(); toggleMenu()">چاپ نتایج</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLaboratory(); toggleMenu()">
+    <span ng-bind="menuHandlers.laboratoryName"></span>
 </a>
-            
+
+    </script>
+
+    <script type="text/ng-template" id="answer/header.html">
+        <a class="ja-item ja-text ja-left nazanin" ng-bind="headerHandlers.paitentName"></a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-bind="menuHandlers.saveFile()">ذخیره فایل</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-bind="menuHandlers.shareFile()">به اشتراک گذاری</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-bind="menuHandlers.printFile()">چاپ نتایج</a>
+
+    </script>
+
+    <script type="text/ng-template" id="answer/footer.html">
+        <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.testDate"></a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.testNumber" id="answer-test-number"></a>
+<div class="ui popup ja-align-right">
+    <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>
+    <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>
+</div>
+
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="answer-laboratory-name" data-position="top right" ng-click="menuHandlers.goToLaboratory()">
+    <span ng-bind="menuHandlers.laboratoryName"></span>
+</a>
+<div class="ui popup ja-align-right">
+    <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>
+    <div class="nazanin">
+        <bdi>021-22915247</bdi>
+        <bdi>تلفن:</bdi>
+    </div>
+    <div class="nazanin">
+        <bdi>آدرس: تهران، خ آزادی، نبش بهبودی، پلاک 182، واحد 4</bdi>
+    </div>
+</div>
     </script>
 
     <!-- / Angular templates -->

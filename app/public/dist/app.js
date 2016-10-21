@@ -26,16 +26,16 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
         $stateProvider
             .state('home', {
                 url: '/home',
-                views:{
-                    '':{
-                     templateUrl: 'home.html',
-                    controller: 'HomeController',
+                views: {
+                    '': {
+                        templateUrl: 'home.html',
+                        controller: 'HomeController',
                     },
-                    menu:{
-                        templateUrl:'home/menu.html'
+                    menu: {
+                        templateUrl: 'home/menu.html'
                     },
-                    footer:{
-                        templateUrl:'home/footer.html'
+                    footer: {
+                        templateUrl: 'home/footer.html'
                     },
                 },
                 abstract: true
@@ -45,47 +45,64 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 templateUrl: 'home/find.html',
                 controller: 'HomeFindController'
             })
-            // .state('home.otp', {
-            //     url: '/otp',
-            //     templateUrl: 'home/otp.html',
-            //     controller: 'HomeOtpController'
-            // })
-            // .state('home.history', {
-            //     url: '/history',
-            //     templateUrl: 'home/history.html',
-            //     controller: 'HomeHistoryController'
-            // })
-            // .state('home.contact', {
-            //     url: '/contact',
-            //     templateUrl: 'home/contact.html',
-            //     controller: 'HomeContactController'
-            // })
-            // .state('home.about', {
-            //     url: '/about',
-            //     templateUrl: 'home/about.html',
-            //     controller: 'HomeAboutController'
-            // })
-            // .state('history', {
-            //     url: '/history',
-            //     views: {
-            //         content: {
-            //             templateUrl: 'history.html',
-            //             controller: 'HistoryController'
-            //         }
-            //     }
-            // })
-            // .state('answer', {
-            //     url: '/answer',
-            //     views: {
-            //         content: {
-            //             templateUrl: 'answer.html',
-            //             controller: 'AnswerController'
-            //         },
-            //         menu: {
-            //             templateUrl: 'answer/menu.html',
-            //         }
-            //     }
-            // });
+            .state('home.otp', {
+                url: '/otp',
+                templateUrl: 'home/otp.html',
+                controller: 'HomeOtpController'
+            })
+            .state('home.history', {
+                url: '/history',
+                templateUrl: 'home/history.html',
+                controller: 'HomeHistoryController'
+            })
+            .state('home.about', {
+                url: '/about',
+                templateUrl: 'home/about.html',
+                controller: 'HomeAboutController'
+            })
+            .state('home.contact', {
+                url: '/contact',
+                templateUrl: 'home/contact.html',
+                controller: 'HomeContactController'
+            })
+            .state('history', {
+                url: '/history',
+                params: {
+                    nationalCode: null
+                },
+                views: {
+                    '': {
+                        templateUrl: 'history.html',
+                        controller: 'HistoryController'
+                    },
+                    header: {
+                        templateUrl: 'history/header.html'
+                    }
+                }
+            })
+            .state('answer', {
+                url: '/answer',
+                params: {
+                    nationalCode: null,
+                    testNumber: null,
+                    previousState: null
+                },
+                views: {
+                    '': {
+                        templateUrl: 'answer.html',
+                        controller: 'AnswerController'
+                    },
+                    menu: {
+                        templateUrl: 'answer/menu.html',
+                    },
+                    header: {
+                        templateUrl: 'answer/header.html',
+                    },
+                    footer: {
+                        templateUrl: 'answer/footer.html',
+                    },
+                }
+            });
 
         $urlRouterProvider.otherwise('/home/find');
 
@@ -114,6 +131,8 @@ app.run(['$rootScope', '$state', '$stateParams',
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
+
+        $rootScope.data = {};
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams, options) {
@@ -149,19 +168,27 @@ app.run(['$rootScope', '$state', '$stateParams',
 /*global persianDate*/
 /*global toPersianNumber*/
 
-app.controller('AnswerController', ['$scope', '$state',
-    function($scope, $state) {
+app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$stateParams',
+    function($rootScope, $scope, $state, $stateParams) {
 
-        $scope.paitentName = "مینا قاسمی راد";
-        $scope.testDate = persianDate().format('L'); //TODO: ???
-        $scope.receiptNumber = toPersianNumber(2771); //TODO: ???
-        $scope.laboratoryName = "آزمایشگاه دکتر ساوجی";
+        $scope.nationalCode = $stateParams.nationalCode;
+        $scope.testNumber = $stateParams.testNumber;
+        $scope.previousState = $stateParams.previousState;
 
-        $scope.onBackClicked(function() {
-            $state.go('home.find');
+        $scope.answer = $rootScope.data.answer;
+
+        //TODO: remove these lines later
+        // $scope.testDate = persianDate().format('L'); //TODO: ???
+        // $scope.receiptNumber = toPersianNumber(6140); //TODO: ???
+
+        $scope.setBackHandler(function() {
+            var params = $scope.previousState === 'history' ? {
+                nationalCode: $scope.nationalCode
+            } : {};
+            $state.go($scope.previousState, params);
         });
 
-        $scope.setMenuEvents({
+        $scope.setMenuHandlers({
             saveFile: function() {
                 // save file ...
             },
@@ -174,15 +201,24 @@ app.controller('AnswerController', ['$scope', '$state',
             goToLaboratory: function() {
                 //$state.go('...');
             },
-            laboratoryName: $scope.laboratoryName,
+            laboratoryName: $scope.answer.laboratoryName,
         });
 
-        $('#answer-receiptNumber').popup({
+        $scope.setHeaderHandlers({
+            paitentName: $scope.answer.paitentName
+        });
+
+        $scope.setFooterHandlers({
+            testDate: persianDate($scope.answer.testDate).format('L'),
+            testNumber: toPersianNumber($scope.answer.testNumber)
+        });
+
+        $('#answer-test-number').popup({
             inline: true,
             transition: 'scale'
         });
 
-        $('#answer-laboratoryName').popup({
+        $('#answer-laboratory-name').popup({
             inline: true,
             transition: 'scale'
         });
@@ -203,19 +239,48 @@ app.controller('AnswerController', ['$scope', '$state',
 /*global app*/
 /*global $*/
 
-app.controller('HistoryController', ['$scope', '$state',
-    function($scope, $state) {
+app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
+    function($rootScope, $scope, $state, $stateParams, $timeout) {
 
         $scope.testClicked = testClicked;
 
-        $scope.paitentName = "مینا قاسمی راد";
+        $scope.nationalCode = $stateParams.nationalCode;
 
-        $scope.onBackClicked(function() {
+        $scope.paitentName = $rootScope.data.paitentName;
+        $scope.paitentTests = $rootScope.data.paitentTests;
+
+        $scope.setBackHandler(function() {
             $state.go('home.otp');
         });
 
+        $scope.setMenuHandlers(false);
+
+        $scope.setHeaderHandlers({
+            paitentName: $scope.paitentName
+        });
+
+        $scope.setFooterHandlers(false);
+
         function testClicked(test) {
-            $state.go('answer');
+            $scope.findingAnswer = true;
+            $timeout(function() { //TODO: resolve answer
+                return {
+                    testNumber: 1234,
+                    nationalCode: '1234567890',
+                    paitentName: 'حسام شکروی',
+                    testDate: new Date(),
+                    answerDate: new Date(),
+                    laboratoryName: "آزمایشگاه دکتر شاهپوری"
+                };
+            }, 400).then(function(answer) {
+                //TODO: validate result
+                $rootScope.data.answer = answer;
+                $state.go('answer', {
+                    nationalCode: $scope.nationalCode,
+                    testNumber: test.testNumber,
+                    previousState: 'history'
+                });
+            });
         }
 
     }
@@ -245,7 +310,7 @@ app.controller('HomeController', ['$scope', '$state',
                 $state.go('home.otp');
             },
             goToLabs: function() {
-                //$state.go('labs');
+                // $state.go('labs');
             },
             goToHomeAbout: function() {
                 $state.go('home.about');
@@ -375,7 +440,7 @@ app.controller('MasterController', ['$scope', '$rootScope',
 app.controller('HomeAboutController', ['$scope', '$state',
     function($scope, $state) {
 
-        $scope.onBackClicked(function() {
+        $scope.setBackHandler(function() {
             $state.go('home.find');
         });
 
@@ -397,7 +462,7 @@ app.controller('HomeAboutController', ['$scope', '$state',
 app.controller('HomeContactController', ['$scope', '$state',
     function($scope, $state) {
 
-        $scope.onBackClicked(function() {
+        $scope.setBackHandler(function() {
             $state.go('home.find');
         });
 
@@ -416,24 +481,39 @@ app.controller('HomeContactController', ['$scope', '$state',
 
 /*global app*/
 
-app.controller('HomeFindController', ['$scope', '$state', '$timeout',
-    function($scope, $state, $timeout) {
+app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeout',
+    function($rootScope, $scope, $state, $timeout) {
 
         $scope.seeAnswer = seeAnswer;
 
         $scope.findingAnswer = false;
-        
+
         $scope.setBackHandler(false);
-        
+
         //$scope.nationalCode
-        //$scope.receiptNumber
+        //$scope.testNumber
 
         function seeAnswer() {
+            //TODO: check for validity
             $scope.findingAnswer = true;
-            $timeout(function() {
-                $state.go('answer');
-                $scope.findingAnswer = false;
-            }, 500);
+            $timeout(function() { //TODO: resolve answer
+                return {
+                    testNumber: 1234,
+                    nationalCode: '1234567890',
+                    paitentName: 'حسام شکروی',
+                    testDate: new Date(),
+                    answerDate: new Date(),
+                    laboratoryName: "آزمایشگاه دکتر شاهپوری"
+                };
+            }, 400).then(function(answer) {
+                //TODO: validate result
+                $rootScope.data.answer = answer;
+                $state.go('answer', {
+                    nationalCode: $scope.nationalCode,
+                    testNumber: $scope.testNumber,
+                    previousState: 'home.find'
+                });
+            });
         }
 
     }
@@ -451,25 +531,45 @@ app.controller('HomeFindController', ['$scope', '$state', '$timeout',
 
 /*global app*/
 
-app.controller('HomeHistoryController', ['$scope', '$state', '$timeout',
-    function($scope, $state, $timeout) {
+app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
+    function($rootScope, $scope, $state, $stateParams, $timeout) {
 
         $scope.findHistory = findHistory;
 
+        $scope.nationalCode = $stateParams.nationalCode;
+
         $scope.findingHistory = false;
 
-        $scope.onBackClicked(function() {
+        $scope.setBackHandler(function() {
             $state.go('home.otp');
         });
-        
+
         //$scope.otp
 
         function findHistory() {
-            $scope.findingHistory = true;
+            //TODO: check for validity
+            $scope.sendingOtp = true;
             $timeout(function() {
-                $state.go('history');
-                $scope.findingHistory = true;
-            }, 500);
+                return {
+                    paitentName: "علی رضا محمودی",
+                    paitentTests: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(function(t) {
+                        return {
+                            laboratoryName: "آمایشگاه رازی مرکزی",
+                            testNumber: 6822,
+                            testDate: new Date(),
+                            answerDate: new Date(),
+                            id: t
+                        };
+                    })
+                };
+            }, 400).then(function(res) {
+                //TODO: validate result
+                $rootScope.data.paitentName = res.paitentName;
+                $rootScope.data.paitentTests = res.paitentTests;
+                $state.go('history', {
+                    nationalCode: $scope.nationalCode
+                });
+            });
         }
 
     }
@@ -487,14 +587,14 @@ app.controller('HomeHistoryController', ['$scope', '$state', '$timeout',
 
 /*global app*/
 
-app.controller('HomeOtpController', ['$scope', '$state', '$timeout',
-    function($scope, $state, $timeout) {
+app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout',
+    function($rootScope, $scope, $state, $timeout) {
 
         $scope.sendOtp = sendOtp;
 
         $scope.sendingOtp = false;
 
-        $scope.onBackClicked(function() {
+        $scope.setBackHandler(function() {
             $state.go('home.find');
         });
 
@@ -502,11 +602,14 @@ app.controller('HomeOtpController', ['$scope', '$state', '$timeout',
         //$scope.mobilePhoneNumber
 
         function sendOtp() {
+            //TODO: check for validity
             $scope.sendingOtp = true;
             $timeout(function() {
-                $state.go('home.history');
-                $scope.sendingOtp = true;
-            }, 500);
+                $state.go('home.history', {
+                    nationalCode: $scope.nationalCode
+                });
+                // $scope.sendingOtp = false;
+            }, 300);
         }
 
     }

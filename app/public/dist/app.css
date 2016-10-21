@@ -41,7 +41,6 @@ body {
 }
 .ja-item {
   margin: 0;
-  cursor: pointer;
   height: 26px;
 }
 .ja-item.ja-text {
@@ -59,6 +58,12 @@ body {
 }
 .ja-item.ja-hoverable:hover {
   background-color: #eee;
+}
+.ja-item.ja-clickable {
+  cursor: pointer;
+}
+.ja-item.ja-clickable:active {
+  background-color: #ddd;
 }
 #ja-free-back-arrow,
 #ja-free-menu-bars {

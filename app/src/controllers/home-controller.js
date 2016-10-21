@@ -12,7 +12,7 @@ app.controller('HomeController', ['$scope', '$state',
                 $state.go('home.otp');
             },
             goToLabs: function() {
-                //$state.go('labs');
+                // $state.go('labs');
             },
             goToHomeAbout: function() {
                 $state.go('home.about');

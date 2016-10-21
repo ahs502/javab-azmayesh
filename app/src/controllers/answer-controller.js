@@ -3,19 +3,27 @@
 /*global persianDate*/
 /*global toPersianNumber*/
 
-app.controller('AnswerController', ['$scope', '$state',
-    function($scope, $state) {
+app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$stateParams',
+    function($rootScope, $scope, $state, $stateParams) {
 
-        $scope.paitentName = "مینا قاسمی راد";
-        $scope.testDate = persianDate().format('L'); //TODO: ???
-        $scope.receiptNumber = toPersianNumber(2771); //TODO: ???
-        $scope.laboratoryName = "آزمایشگاه دکتر ساوجی";
+        $scope.nationalCode = $stateParams.nationalCode;
+        $scope.testNumber = $stateParams.testNumber;
+        $scope.previousState = $stateParams.previousState;
 
-        $scope.onBackClicked(function() {
-            $state.go('home.find');
+        $scope.answer = $rootScope.data.answer;
+
+        //TODO: remove these lines later
+        // $scope.testDate = persianDate().format('L'); //TODO: ???
+        // $scope.receiptNumber = toPersianNumber(6140); //TODO: ???
+
+        $scope.setBackHandler(function() {
+            var params = $scope.previousState === 'history' ? {
+                nationalCode: $scope.nationalCode
+            } : {};
+            $state.go($scope.previousState, params);
         });
 
-        $scope.setMenuEvents({
+        $scope.setMenuHandlers({
             saveFile: function() {
                 // save file ...
             },
@@ -28,15 +36,24 @@ app.controller('AnswerController', ['$scope', '$state',
             goToLaboratory: function() {
                 //$state.go('...');
             },
-            laboratoryName: $scope.laboratoryName,
+            laboratoryName: $scope.answer.laboratoryName,
         });
 
-        $('#answer-receiptNumber').popup({
+        $scope.setHeaderHandlers({
+            paitentName: $scope.answer.paitentName
+        });
+
+        $scope.setFooterHandlers({
+            testDate: persianDate($scope.answer.testDate).format('L'),
+            testNumber: toPersianNumber($scope.answer.testNumber)
+        });
+
+        $('#answer-test-number').popup({
             inline: true,
             transition: 'scale'
         });
 
-        $('#answer-laboratoryName').popup({
+        $('#answer-laboratory-name').popup({
             inline: true,
             transition: 'scale'
         });
