@@ -1,0 +1,39 @@
+<div id="ja-sidebar-menu" class="ui thin right sidebar --inverted vertical menu">
+    <div ui-view="menu">
+        <!-- Main sidebar menu items -->
+    </div>
+</div>
+<div class="dimed pusher">
+    <!-- Main site contents -->
+
+    <!-- Back arrow and menu bars icon (when no header, outside of it) -->
+    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-left" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
+    <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-right" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
+
+    <!-- Header -->
+    <div ng-if="headerHandlers" id="ja-header" class="ui fixed top sticky segment">
+
+        <!-- Back arrow and menu bars icon (when header, inside of it) -->
+        <img ng-if="backHandler" class="ja-item ja-icon ja-left ja-hoverable" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
+        <img ng-if="menuHandlers" class="ja-item ja-icon ja-right ja-hoverable" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
+
+        <div ui-view="header">
+            <!-- Header contents -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div ng-if="footerHandlers" id="ja-footer" class="ui fixed bottom sticky segment">
+        <div ui-view="footer">
+            <!-- Footer contents -->
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div id="ja-main-content" ng-class="{ 'ja-has-header': headerHandlers, 'ja-has-footer': footerHandlers }">
+        <div ui-view>
+            <!-- Main view contents -->
+        </div>
+    </div>
+
+</div>

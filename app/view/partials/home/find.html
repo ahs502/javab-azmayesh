@@ -1,4 +1,4 @@
-<div class="ja-home-find">
+<div id="ja-home-find">
 
     <div class="ui centered grid">
         <div class="fourteen wide small eight wide tablet six wide computer column">
@@ -8,13 +8,13 @@
                     <div class="field">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
-                            <input type="text" name="national-code" ng-model="nationalCode" placeholder="کد ملی">
+                            <input type="text" ng-model="nationalCode" placeholder="کد ملی">
                         </div>
                     </div>
                     <div class="field">
                         <!--<label class="nazanin">شماره رسید آزمایش</label>-->
                         <div class="ui input">
-                            <input type="text" name="receipt-number" ng-model="receiptNumber" placeholder="شماره رسید آزمایش">
+                            <input type="text" ng-model="testNumber" placeholder="شماره آزمایش">
                         </div>
                     </div>
                     <div class="field">
@@ -23,8 +23,8 @@
                         </button>
                     </div>
                     <div class="field">
-                        <button class="fluid ui basic button" type="submit" ng-click="$state.go('home.otp')">
-                            <span class="nazanin">شماره رسید خود را فراموش کرده ام</span>
+                        <button class="fluid ui basic blue button" ng-click="$state.go('home.otp')">
+                            <span class="nazanin">شماره آزمایش خود را فراموش کرده ام</span>
                         </button>
                     </div>
                 </form>

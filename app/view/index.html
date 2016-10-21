@@ -20,15 +20,13 @@
 
 <body>
 
-    <div class="ui thin right sidebar --inverted vertical menu" id="sidebarMenu">
-        <div ui-view="menu"></div>
-    </div>
-    <div class="dimed pusher">
-        <div ui-view="content"></div>
-    </div>
+
+    <!-- import:./app/view/layout.html -->
+
 
     <script type="text/javascript" src="/dist/lib.min.js"></script>
     <script type="text/javascript" src="/dist/app.min.js"></script>
+
 
     <!-- Angular templates -->
 
@@ -38,6 +36,10 @@
 
     <script type="text/ng-template" id="home/menu.html">
         <!-- import:./app/view/partials/home/menu.html -->
+    </script>
+
+    <script type="text/ng-template" id="home/footer.html">
+        <!-- import:./app/view/partials/home/footer.html -->
     </script>
 
     <script type="text/ng-template" id="home/find.html">
@@ -73,6 +75,7 @@
     </script>
 
     <!-- / Angular templates -->
+
 
 </body>
 

@@ -26,14 +26,17 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
         $stateProvider
             .state('home', {
                 url: '/home',
-                views: {
-                    content: {
-                        templateUrl: 'home.html',
-                        controller: 'HomeController',
+                views:{
+                    '':{
+                     templateUrl: 'home.html',
+                    controller: 'HomeController',
                     },
-                    menu: {
-                        templateUrl: 'home/menu.html',
-                    }
+                    menu:{
+                        templateUrl:'home/menu.html'
+                    },
+                    footer:{
+                        templateUrl:'home/footer.html'
+                    },
                 },
                 abstract: true
             })
@@ -42,47 +45,47 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 templateUrl: 'home/find.html',
                 controller: 'HomeFindController'
             })
-            .state('home.otp', {
-                url: '/otp',
-                templateUrl: 'home/otp.html',
-                controller: 'HomeOtpController'
-            })
-            .state('home.history', {
-                url: '/history',
-                templateUrl: 'home/history.html',
-                controller: 'HomeHistoryController'
-            })
-            .state('home.contact', {
-                url: '/contact',
-                templateUrl: 'home/contact.html',
-                controller: 'HomeContactController'
-            })
-            .state('home.about', {
-                url: '/about',
-                templateUrl: 'home/about.html',
-                controller: 'HomeAboutController'
-            })
-            .state('history', {
-                url: '/history',
-                views: {
-                    content: {
-                        templateUrl: 'history.html',
-                        controller: 'HistoryController'
-                    }
-                }
-            })
-            .state('answer', {
-                url: '/answer',
-                views: {
-                    content: {
-                        templateUrl: 'answer.html',
-                        controller: 'AnswerController'
-                    },
-                    menu: {
-                        templateUrl: 'answer/menu.html',
-                    }
-                }
-            });
+            // .state('home.otp', {
+            //     url: '/otp',
+            //     templateUrl: 'home/otp.html',
+            //     controller: 'HomeOtpController'
+            // })
+            // .state('home.history', {
+            //     url: '/history',
+            //     templateUrl: 'home/history.html',
+            //     controller: 'HomeHistoryController'
+            // })
+            // .state('home.contact', {
+            //     url: '/contact',
+            //     templateUrl: 'home/contact.html',
+            //     controller: 'HomeContactController'
+            // })
+            // .state('home.about', {
+            //     url: '/about',
+            //     templateUrl: 'home/about.html',
+            //     controller: 'HomeAboutController'
+            // })
+            // .state('history', {
+            //     url: '/history',
+            //     views: {
+            //         content: {
+            //             templateUrl: 'history.html',
+            //             controller: 'HistoryController'
+            //         }
+            //     }
+            // })
+            // .state('answer', {
+            //     url: '/answer',
+            //     views: {
+            //         content: {
+            //             templateUrl: 'answer.html',
+            //             controller: 'AnswerController'
+            //         },
+            //         menu: {
+            //             templateUrl: 'answer/menu.html',
+            //         }
+            //     }
+            // });
 
         $urlRouterProvider.otherwise('/home/find');
 
@@ -234,7 +237,7 @@ app.controller('HistoryController', ['$scope', '$state',
 app.controller('HomeController', ['$scope', '$state',
     function($scope, $state) {
 
-        $scope.setMenuEvents({
+        $scope.setMenuHandlers({
             goToHomeFind: function() {
                 $state.go('home.find');
             },
@@ -251,8 +254,12 @@ app.controller('HomeController', ['$scope', '$state',
                 $state.go('home.contact');
             },
         });
+        
+        $scope.setHeaderHandlers(false);
+        
+        $scope.setFooterHandlers(true);
 
-        $('#home-contactUs').popup({
+        $('#home-contact-us').popup({
             inline: true,
             transition: 'scale'
         });
@@ -276,23 +283,36 @@ app.controller('HomeController', ['$scope', '$state',
 app.controller('MasterController', ['$scope', '$rootScope',
     function($scope, $rootScope) {
 
-        $scope.onBackClicked = onBackClicked;
-        $scope.setMenuEvents = setMenuEvents;
+        $scope.setBackHandler = setBackHandler;
+        $scope.setMenuHandlers = setMenuHandlers;
+        $scope.setHeaderHandlers = setHeaderHandlers;
+        $scope.setFooterHandlers = setFooterHandlers;
+        
         $scope.toggleMenu = toggleMenu;
 
         $scope.backHandler = undefined;
-        $scope.menuEvents = undefined;
+        $scope.menuHandlers = undefined;
+        $scope.headerHandlers = undefined;
+        $scope.footerHandlers = undefined;
 
-        function onBackClicked(handler) {
+        function setBackHandler(handler) {
             $scope.backHandler = handler;
         }
 
-        function setMenuEvents(events) {
-            $scope.menuEvents = events;
+        function setMenuHandlers(handlerObject) {
+            $scope.menuHandlers = handlerObject;
+        }
+
+        function setHeaderHandlers(handlerObject) {
+            $scope.headerHandlers = handlerObject;
+        }
+
+        function setFooterHandlers(handlerObject) {
+            $scope.footerHandlers = handlerObject;
         }
 
         function toggleMenu() {
-            $('#sidebarMenu')
+            $('#ja-sidebar-menu')
                 .sidebar('setting', 'transition', 'overlay')
                 .sidebar('setting', 'mobileTransition', 'overlay')
                 .sidebar('toggle');
@@ -403,7 +423,7 @@ app.controller('HomeFindController', ['$scope', '$state', '$timeout',
 
         $scope.findingAnswer = false;
         
-        $scope.onBackClicked(undefined);
+        $scope.setBackHandler(false);
         
         //$scope.nationalCode
         //$scope.receiptNumber
@@ -412,7 +432,7 @@ app.controller('HomeFindController', ['$scope', '$state', '$timeout',
             $scope.findingAnswer = true;
             $timeout(function() {
                 $state.go('answer');
-                $scope.findingAnswer = true;
+                $scope.findingAnswer = false;
             }, 500);
         }
 

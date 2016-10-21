@@ -7,7 +7,7 @@ app.controller('HomeFindController', ['$scope', '$state', '$timeout',
 
         $scope.findingAnswer = false;
         
-        $scope.onBackClicked(undefined);
+        $scope.setBackHandler(false);
         
         //$scope.nationalCode
         //$scope.receiptNumber
@@ -16,7 +16,7 @@ app.controller('HomeFindController', ['$scope', '$state', '$timeout',
             $scope.findingAnswer = true;
             $timeout(function() {
                 $state.go('answer');
-                $scope.findingAnswer = true;
+                $scope.findingAnswer = false;
             }, 500);
         }
 

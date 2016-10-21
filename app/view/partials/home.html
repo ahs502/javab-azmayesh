@@ -1,46 +1,9 @@
-<div class="ja-home">
-
-    <!-- Back arrow -->
-    <img src="/img/icons/left-arrow.svg" alt="<- Back" class="ja-back-arrow" ng-if="backHandler" ng-click="backHandler()"></img>
-
-    <!-- Menu bars -->
-    <img src="/img/icons/menu-bars.svg" alt="Menu" class="ja-menu-bars" ng-if="menuEvents" ng-click="toggleMenu()"></img>
+<div id="ja-home">
 
     <!-- Home logo -->
-    <div class="ui centered grid">
-        <div class="twelve wide small eight wide tablet six wide computer column">
-            <div class="center aligned row ltr">
-                <img class="ui centered medium image ja-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
-            </div>
-        </div>
-    </div>
+    <!-- import:./app/view/partials/logo.html -->
 
     <!-- Main container -->
     <div ui-view></div>
-
-    <!-- Footer -->
-    <div class="ui bottom fixed huge menu ja-footer">
-
-        <a class="item nazanin" ng-click="menuEvents.goToLabs()">آزمایشگاه ها</a>
-
-        <div class="right menu">
-
-            <a class="item nazanin ja-hidable-menu-item" id="home-contactUs" data-position="top right" ng-click="menuEvents.goToHomeContact()">تماس با ما</a>
-            <div class="ui popup ja-align-right ja-hidable-menu-item">
-                <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
-                <div class="nazanin">
-                    <bdi>021-66910430</bdi>
-                    <bdi>تلفن:</bdi>
-                </div>
-            </div>
-
-            <a class="item nazanin ja-hidable-menu-item" ng-click="menuEvents.goToHomeAbout()">درباره ما</a>
-
-            <a class="item nazanin ja-hidable-menu-item" ng-click="menuEvents.goToHomeOtp()">سوابق من</a>
-
-            <a class="item nazanin" ng-click="menuEvents.goToHomeFind()">جواب آزمایش</a>
-
-        </div>
-    </div>
 
 </div>

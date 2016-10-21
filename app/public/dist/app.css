@@ -10,7 +10,10 @@
 }
 body {
   padding: 0;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+.nazanin {
+  font-family: BNazanin;
+  font-size: 110%;
 }
 .ja-rtl {
   directiorn: rtl;
@@ -30,81 +33,59 @@ body {
   text-align: -webkit-center;
   text-align: center;
 }
-.ja-header.ui.menu .item:before,
-.ja-footer.ui.menu .item:before {
-  width: 0;
+#ja-header,
+#ja-footer {
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
-.ja-back-arrow,
-.ja-menu-bars {
-  position: fixed;
-  width: 26px;
-  height: 26px;
-  padding: 12px;
+.ja-item {
+  margin: 0;
   cursor: pointer;
+  height: 26px;
+}
+.ja-item.ja-text {
+  padding: 7px 10px;
+}
+.ja-item.ja-icon {
+  width: 26px;
+  padding: 12px;
+}
+.ja-item.ja-right {
+  float: right;
+}
+.ja-item.ja-left {
+  float: left;
+}
+.ja-item.ja-hoverable:hover {
+  background-color: #eee;
+}
+#ja-free-back-arrow,
+#ja-free-menu-bars {
+  position: fixed;
   z-index: 2147483647;
 }
-.ja-back-arrow {
+#ja-free-back-arrow {
   top: 0;
   left: 0;
 }
-.ja-menu-bars {
+#ja-free-menu-bars {
   top: 0;
   right: 0;
 }
-.ja-home .ja-logo {
-  margin-top: 60px;
+#ja-main-content {
+  margin: 0;
+  padding: 0;
+}
+#ja-main-content.ja-has-header {
+  margin-top: 30px;
+}
+#ja-main-content.ja-has-footer {
   margin-bottom: 30px;
 }
-.ja-answer #answer-paitentName {
-  padding-left: 60px;
-}
-.ja-history #answer-paitentName {
-  padding-left: 60px;
-}
-.ui.form input[type=text] {
-  width: 90%;
-  font-family: BNazanin;
-  font-size: 110%;
-}
-.ui.button span.nazanin {
-  font-size: 110%;
-  font-weight: normal;
-  line-height: 1.4;
-}
-.ui.menu .item.ja-back-arrow {
-  padding: 10px;
-}
-.ui.segment#history-testList {
+.ja-logo {
   margin-top: 60px;
-}
-.ui.segment#answer-content {
-  margin-top: 60px;
-}
-.nazanin {
-  font-family: BNazanin;
-  font-size: 110%;
-}
-@media screen and (min-width: 520px) {
-  .ja-home .ja-menu-bars {
-    display: none !important;
-  }
-}
-@media screen and (max-width: 520px) {
-  .ja-home .ja-header .ja-hidable-menu-item,
-  .ja-home .ja-footer .ja-hidable-menu-item {
-    display: none !important;
-  }
-}
-@media screen and (min-width: 540px) {
-  .ja-answer .ja-menu-bars {
-    display: none !important;
-  }
-}
-@media screen and (max-width: 540px) {
-  .ja-answer .ja-header .ja-hidable-menu-item,
-  .ja-answer .ja-footer .ja-hidable-menu-item {
-    display: none !important;
-  }
+  margin-bottom: 30px;
 }
 
 

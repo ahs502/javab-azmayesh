@@ -55,6 +55,7 @@ var javascripts_lib = [
     './app/lib/semantic/dist/components/transition.min.js',
     './app/lib/semantic/dist/components/popup.min.js',
     './app/lib/semantic/dist/components/sidebar.min.js',
+    './app/lib/semantic/dist/components/sticky.min.js',
 ];
 
 var stylesheets_lib = [
@@ -72,17 +73,16 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/transition.min.css',
     './app/lib/semantic/dist/components/popup.min.css',
     './app/lib/semantic/dist/components/sidebar.min.css',
+    './app/lib/semantic/dist/components/sticky.min.css',
     //'./app/lib/semantic/dist/components/icon.min.css',
 ];
 
 var views_templates = [
     // Each Item, Just One File (Do not use * widechar or else) :
     './app/view/index.html',
-    './app/view/lab.html',
 ];
 
 var browserSyncOptions = {
-
     // See: https://www.browsersync.io/docs/options/
 
     proxy: {

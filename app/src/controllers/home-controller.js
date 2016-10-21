@@ -4,7 +4,7 @@
 app.controller('HomeController', ['$scope', '$state',
     function($scope, $state) {
 
-        $scope.setMenuEvents({
+        $scope.setMenuHandlers({
             goToHomeFind: function() {
                 $state.go('home.find');
             },
@@ -21,8 +21,12 @@ app.controller('HomeController', ['$scope', '$state',
                 $state.go('home.contact');
             },
         });
+        
+        $scope.setHeaderHandlers(false);
+        
+        $scope.setFooterHandlers(true);
 
-        $('#home-contactUs').popup({
+        $('#home-contact-us').popup({
             inline: true,
             transition: 'scale'
         });

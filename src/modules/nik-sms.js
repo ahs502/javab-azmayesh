@@ -440,9 +440,9 @@ module.exports = function nikSms(username, password) {
 // var nikSms = module.exports('09337770720', 'nspassword');
 
 
-// // nikSms.sendSms('50004545454545', ['09337770720', '09126550720'],
-// //         "س")
-// //     .then(logJSONTerminate, logJSONTerminate);
+// nikSms.sendSms('50004545454545', '09196182902',
+//         "من حسام ام و این شماره اختصاصی منه و این پیغام را از سرورم دریافت می کنی!")
+//     .then(logJSONTerminate, logJSONTerminate);
 
 // // nikSms.smsStatus(['173667892','173667893']).then(logJSONTerminate, logJSONTerminate);
 
@@ -451,7 +451,7 @@ module.exports = function nikSms(username, password) {
 
 // // nikSms.receiveSmsAgain("2016-10-19T09:11:12.000Z", "2016-10-19T09:36:18.843Z", true).then(logJSONTerminate, logJSONTerminate);
 
-// nikSms.senderNumbers().then(logJSONTerminate, logJSONTerminate);
+// // nikSms.senderNumbers().then(logJSONTerminate, logJSONTerminate);
 
 
 
