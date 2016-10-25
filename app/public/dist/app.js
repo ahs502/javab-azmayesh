@@ -57,11 +57,17 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
             })
             .state('home.about', {
                 url: '/about',
+                params: {
+                    previousState: null
+                },
                 templateUrl: 'home/about.html',
                 controller: 'HomeAboutController'
             })
             .state('home.contact', {
                 url: '/contact',
+                params: {
+                    previousState: null
+                },
                 templateUrl: 'home/contact.html',
                 controller: 'HomeContactController'
             })
@@ -102,6 +108,27 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                         templateUrl: 'answer/footer.html',
                     },
                 }
+            })
+            .state('lab', {
+                url: '/lab',
+                views: {
+                    '': {
+                        templateUrl: 'lab.html',
+                        controller: 'LabController',
+                    },
+                    menu: {
+                        templateUrl: 'lab/menu.html'
+                    },
+                    footer: {
+                        templateUrl: 'lab/footer.html'
+                    },
+                },
+                abstract: true
+            })
+            .state('lab.login', {
+                url: '/login',
+                templateUrl: 'lab/login.html',
+                controller: 'LabLoginController'
             });
 
         $urlRouterProvider.otherwise('/home/find');
@@ -309,19 +336,23 @@ app.controller('HomeController', ['$scope', '$state',
             goToHomeOtp: function() {
                 $state.go('home.otp');
             },
-            goToLabs: function() {
-                // $state.go('labs');
+            goToLabLogin: function() {
+                $state.go('lab.login');
             },
             goToHomeAbout: function() {
-                $state.go('home.about');
+                $state.go('home.about', {
+                    previousState: $state.current
+                });
             },
             goToHomeContact: function() {
-                $state.go('home.contact');
+                $state.go('home.contact', {
+                    previousState: $state.current
+                });
             },
         });
-        
+
         $scope.setHeaderHandlers(false);
-        
+
         $scope.setFooterHandlers(true);
 
         $('#home-contact-us').popup({
@@ -335,6 +366,51 @@ app.controller('HomeController', ['$scope', '$state',
 
 /*
 	AHS502 : End of 'home-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'lab-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('LabController', ['$scope', '$state',
+    function($scope, $state) {
+
+        $scope.setMenuHandlers({
+            goToLabLogin: function() {
+                $state.go('lab.login');
+            },
+            goToLabRegister: function() {
+                $state.go('lab.register');
+            },
+            goToHomeFind: function() {
+                $state.go('home.find');
+            },
+            goToHomeAbout: function() {
+                $state.go('home.about', {
+                    previousState: $state.current
+                });
+            },
+            goToHomeContact: function() {
+                $state.go('home.contact', {
+                    previousState: $state.current
+                });
+            },
+        });
+
+        $scope.setHeaderHandlers(false);
+
+        $scope.setFooterHandlers(true);
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'lab-controller.js'
 */
 
 
@@ -437,11 +513,13 @@ app.controller('MasterController', ['$scope', '$rootScope',
 
 /*global app*/
 
-app.controller('HomeAboutController', ['$scope', '$state',
-    function($scope, $state) {
+app.controller('HomeAboutController', ['$scope', '$state', '$stateParams',
+    function($scope, $state, $stateParams) {
+
+        $scope.previousState = $stateParams.previousState;
 
         $scope.setBackHandler(function() {
-            $state.go('home.find');
+            $state.go($scope.previousState);
         });
 
     }
@@ -459,11 +537,13 @@ app.controller('HomeAboutController', ['$scope', '$state',
 
 /*global app*/
 
-app.controller('HomeContactController', ['$scope', '$state',
-    function($scope, $state) {
+app.controller('HomeContactController', ['$scope', '$state', '$stateParams',
+    function($scope, $state, $stateParams) {
+
+        $scope.previousState = $stateParams.previousState;
 
         $scope.setBackHandler(function() {
-            $state.go('home.find');
+            $state.go($scope.previousState);
         });
 
     }
@@ -618,4 +698,54 @@ app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout
 
 /*
 	AHS502 : End of 'controllers/home/otp-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'controllers/lab/login-controller.js'
+*/
+
+/*global app*/
+
+app.controller('LabLoginController', ['$rootScope', '$scope', '$state', '$timeout',
+    function($rootScope, $scope, $state, $timeout) {
+
+        $scope.login = login;
+
+        $scope.loggingIn = false;
+
+        $scope.setBackHandler(false);
+
+        //$scope.username
+        //$scope.password
+
+        function login() {
+            // //TODO: check for validity
+            // $scope.findingAnswer = true;
+            // $timeout(function() { //TODO: resolve answer
+            //     return {
+            //         testNumber: 1234,
+            //         nationalCode: '1234567890',
+            //         paitentName: 'حسام شکروی',
+            //         testDate: new Date(),
+            //         answerDate: new Date(),
+            //         laboratoryName: "آزمایشگاه دکتر شاهپوری"
+            //     };
+            // }, 400).then(function(answer) {
+            //     //TODO: validate result
+            //     $rootScope.data.answer = answer;
+            //     $state.go('answer', {
+            //         nationalCode: $scope.nationalCode,
+            //         testNumber: $scope.testNumber,
+            //         previousState: 'home.find'
+            //     });
+            // });
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/lab/login-controller.js'
 */

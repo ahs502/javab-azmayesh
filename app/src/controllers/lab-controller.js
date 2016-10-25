@@ -1,18 +1,18 @@
 /*global app*/
 /*global $*/
 
-app.controller('HomeController', ['$scope', '$state',
+app.controller('LabController', ['$scope', '$state',
     function($scope, $state) {
 
         $scope.setMenuHandlers({
-            goToHomeFind: function() {
-                $state.go('home.find');
-            },
-            goToHomeOtp: function() {
-                $state.go('home.otp');
-            },
             goToLabLogin: function() {
                 $state.go('lab.login');
+            },
+            goToLabRegister: function() {
+                $state.go('lab.register');
+            },
+            goToHomeFind: function() {
+                $state.go('home.find');
             },
             goToHomeAbout: function() {
                 $state.go('home.about', {
@@ -29,11 +29,6 @@ app.controller('HomeController', ['$scope', '$state',
         $scope.setHeaderHandlers(false);
 
         $scope.setFooterHandlers(true);
-
-        $('#home-contact-us').popup({
-            inline: true,
-            transition: 'scale'
-        });
 
     }
 ]);

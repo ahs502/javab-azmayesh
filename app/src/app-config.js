@@ -37,11 +37,17 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
             })
             .state('home.about', {
                 url: '/about',
+                params: {
+                    previousState: null
+                },
                 templateUrl: 'home/about.html',
                 controller: 'HomeAboutController'
             })
             .state('home.contact', {
                 url: '/contact',
+                params: {
+                    previousState: null
+                },
                 templateUrl: 'home/contact.html',
                 controller: 'HomeContactController'
             })
@@ -82,6 +88,27 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                         templateUrl: 'answer/footer.html',
                     },
                 }
+            })
+            .state('lab', {
+                url: '/lab',
+                views: {
+                    '': {
+                        templateUrl: 'lab.html',
+                        controller: 'LabController',
+                    },
+                    menu: {
+                        templateUrl: 'lab/menu.html'
+                    },
+                    footer: {
+                        templateUrl: 'lab/footer.html'
+                    },
+                },
+                abstract: true
+            })
+            .state('lab.login', {
+                url: '/login',
+                templateUrl: 'lab/login.html',
+                controller: 'LabLoginController'
             });
 
         $urlRouterProvider.otherwise('/home/find');

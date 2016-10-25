@@ -258,6 +258,7 @@ gulp.task('build-lib', ['build-lib-js', 'build-lib-css']);
 gulp.task('build-view', callback => {
 
     function renderHtmlTemplate(htmlTemplateFile) {
+        util.log(' -> [' + 'view'.cyan + '] HTML template partial file:' + htmlTemplateFile.magenta);
         try {
             var template = fs.readFileSync(htmlTemplateFile),
                 indexStart, indexEnd, partialFile, partial;
@@ -275,7 +276,7 @@ gulp.task('build-view', callback => {
     }
 
     views_templates.forEach(templateFile => {
-        util.log(' -> [' + 'view'.cyan + '] HTML template file:' + templateFile.magenta);
+        util.log(' => [' + 'view'.cyan + '] HTML template file:' + templateFile.magenta);
         var template = renderHtmlTemplate(templateFile);
         var outputFile = path.join('./app/public', path.basename(templateFile));
         fs.writeFileSync(outputFile, template, {

@@ -1,10 +1,12 @@
 /*global app*/
 
-app.controller('HomeAboutController', ['$scope', '$state',
-    function($scope, $state) {
+app.controller('HomeAboutController', ['$scope', '$state', '$stateParams',
+    function($scope, $state, $stateParams) {
+
+        $scope.previousState = $stateParams.previousState;
 
         $scope.setBackHandler(function() {
-            $state.go('home.find');
+            $state.go($scope.previousState);
         });
 
     }

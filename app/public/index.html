@@ -20,8 +20,10 @@
 
 <body>
 
-
-    <div id="ja-sidebar-menu" class="ui thin right sidebar --inverted vertical menu">
+    <div id="ja-sidebar-menu" class="ui --thin right sidebar --inverted vertical menu">
+    <div class="item">
+        <img class="ui centered small image ja-menu-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
+    </div>
     <div ui-view="menu">
         <!-- Main sidebar menu items -->
     </div>
@@ -62,17 +64,13 @@
 </div>
 
 
-
     <script type="text/javascript" src="/dist/lib.min.js"></script>
     <script type="text/javascript" src="/dist/app.min.js"></script>
 
-
-    <!-- Angular templates -->
-
     <script type="text/ng-template" id="home.html">
-        <div id="ja-home">
+    <div id="ja-home">
 
-    <!-- Home logo -->
+    <!-- Logo -->
     <div class="ui centered grid">
     <div class="twelve wide small eight wide tablet six wide computer column">
         <div class="center aligned row ltr">
@@ -86,19 +84,20 @@
     <div ui-view></div>
 
 </div>
-    </script>
 
-    <script type="text/ng-template" id="home/menu.html">
-        <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeFind(); toggleMenu()">جواب آزمایش</a>
+</script>
+
+<script type="text/ng-template" id="home/menu.html">
+    <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeFind(); toggleMenu()">جواب آزمایش</a>
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeOtp(); toggleMenu()">سوابق من</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabs(); toggleMenu()">آزمایشگاه ها</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabLogin(); toggleMenu()">آزمایشگاه ها</a>
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeAbout(); toggleMenu()">درباره ما</a>
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeContact(); toggleMenu()">تماس با ما</a>
             
-    </script>
+</script>
 
-    <script type="text/ng-template" id="home/footer.html">
-        <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToLabs()">آزمایشگاه ها</a>
+<script type="text/ng-template" id="home/footer.html">
+    <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToLabLogin()">آزمایشگاه ها</a>
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
 
@@ -115,10 +114,10 @@
     </div>
 </div>
 
-    </script>
+</script>
 
-    <script type="text/ng-template" id="home/find.html">
-        <div id="ja-home-find">
+<script type="text/ng-template" id="home/find.html">
+    <div id="ja-home-find">
 
     <div class="ui centered grid">
         <div class="fourteen wide small eight wide tablet six wide computer column">
@@ -154,10 +153,10 @@
     </div>
 
 </div>
-    </script>
+</script>
 
-    <script type="text/ng-template" id="home/otp.html">
-        <div id="ja-home-otp">
+<script type="text/ng-template" id="home/otp.html">
+    <div id="ja-home-otp">
 
     <div class="ui grid">
         <div class="center aligned row">
@@ -200,10 +199,10 @@
     </div>
 
 </div>
-    </script>
+</script>
 
-    <script type="text/ng-template" id="home/history.html">
-        <div id="ja-home-history">
+<script type="text/ng-template" id="home/history.html">
+    <div id="ja-home-history">
 
     <div class="ui grid">
         <div class="center aligned row">
@@ -241,10 +240,10 @@
 
 </div>
 
-    </script>
+</script>
 
-    <script type="text/ng-template" id="home/about.html">
-        <div id="ja-home-about">
+<script type="text/ng-template" id="home/about.html">
+    <div id="ja-home-about">
 
     <div class="ui justified text container">
         about us
@@ -252,10 +251,10 @@
 
 </div>
 
-    </script>
+</script>
 
-    <script type="text/ng-template" id="home/contact.html">
-        <div id="ja-home-contact">
+<script type="text/ng-template" id="home/contact.html">
+    <div id="ja-home-contact">
 
     <div class="ui justified text container">
         contact us
@@ -263,10 +262,10 @@
 
 </div>
 
-    </script>
+</script>
 
-    <script type="text/ng-template" id="history.html">
-        <div id="ja-history">
+<script type="text/ng-template" id="history.html">
+    <div id="ja-history">
 
     <div class="ui basic segment">
 
@@ -295,15 +294,15 @@
 
 </div>
 
-    </script>
+</script>
 
-    <script type="text/ng-template" id="history/header.html">
-        <a class="ja-item ja-text ja-left nazanin" ng-bind="headerHandlers.paitentName"></a>
+<script type="text/ng-template" id="history/header.html">
+    <a class="ja-item ja-text ja-left nazanin" ng-bind="headerHandlers.paitentName"></a>
         
-    </script>
+</script>
 
-    <script type="text/ng-template" id="answer.html">
-        <div id="ja-answer">
+<script type="text/ng-template" id="answer.html">
+    <div id="ja-answer">
 
     <div class="ui basic segment">
 
@@ -399,29 +398,29 @@
 
 </div>
 
-    </script>
+</script>
 
-    <script type="text/ng-template" id="answer/menu.html">
-        <a class="item nazanin ja-align-right" ng-click="menuHandlers.saveFile(); toggleMenu()">ذخیره فایل</a>
+<script type="text/ng-template" id="answer/menu.html">
+    <a class="item nazanin ja-align-right" ng-click="menuHandlers.saveFile(); toggleMenu()">ذخیره فایل</a>
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.shareFile(); toggleMenu()">به اشتراک گذاری</a>
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.printFile(); toggleMenu()">چاپ نتایج</a>
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLaboratory(); toggleMenu()">
     <span ng-bind="menuHandlers.laboratoryName"></span>
 </a>
 
-    </script>
+</script>
 
-    <script type="text/ng-template" id="answer/header.html">
-        <a class="ja-item ja-text ja-left nazanin" ng-bind="headerHandlers.paitentName"></a>
+<script type="text/ng-template" id="answer/header.html">
+    <a class="ja-item ja-text ja-left nazanin" ng-bind="headerHandlers.paitentName"></a>
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-bind="menuHandlers.saveFile()">ذخیره فایل</a>
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-bind="menuHandlers.shareFile()">به اشتراک گذاری</a>
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-bind="menuHandlers.printFile()">چاپ نتایج</a>
 
-    </script>
+</script>
 
-    <script type="text/ng-template" id="answer/footer.html">
-        <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.testDate"></a>
+<script type="text/ng-template" id="answer/footer.html">
+    <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.testDate"></a>
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.testNumber" id="answer-test-number"></a>
 <div class="ui popup ja-align-right">
@@ -443,9 +442,106 @@
         <bdi>آدرس: تهران، خ آزادی، نبش بهبودی، پلاک 182، واحد 4</bdi>
     </div>
 </div>
-    </script>
+</script>
 
-    <!-- / Angular templates -->
+<script type="text/ng-template" id="lab.html">
+    <div id="ja-lab">
+
+    <!-- Logo -->
+    <div class="ui centered grid">
+    <div class="twelve wide small eight wide tablet six wide computer column">
+        <div class="center aligned row ltr">
+            <img class="ui centered medium image ja-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
+        </div>
+    </div>
+</div>
+
+
+    <!-- Main container -->
+    <div ui-view></div>
+
+</div>
+
+</script>
+
+<script type="text/ng-template" id="lab/menu.html">
+    <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabLogin(); toggleMenu()">ورود مشترکین</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabRegister(); toggleMenu()">ثبت نام</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeFind(); toggleMenu()">جواب آزمایش</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeAbout(); toggleMenu()">درباره ما</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeContact(); toggleMenu()">تماس با ما</a>
+            
+</script>
+
+<script type="text/ng-template" id="lab/footer.html">
+    <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabLogin()">ورود مشترکین</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabRegister()">ثبت نام</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="home-contact-us" data-position="top right" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
+<div class="ui popup ja-align-right">
+    <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
+    <div class="nazanin">
+        <bdi>021-66910430</bdi>
+        <bdi>تلفن:</bdi>
+    </div>
+</div>
+
+</script>
+
+<script type="text/ng-template" id="lab/login.html">
+    <div id="ja-home-find">
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ loggingIn ? 'loading' : '' }} form">
+                    <div class="field">
+                        <!--<label class="nazanin">نام کاربری</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="username" placeholder="نام کاربری">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <!--<label class="nazanin">کلمه عبور</label>-->
+                        <div class="ui input">
+                            <input type="password" ng-model="password" placeholder="کلمه عبور">
+                        </div>
+                    </div>
+                    <div class="ui two column grid">
+                        <div class="column">
+                            <div class="field">
+                                <button class="fluid ui blue button" type="submit" ng-click="login()">
+                                    <span class="nazanin">ورود</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="field">
+                                <button class="fluid ui green button" ng-click="$state.go('lab.register')">
+                                    <span class="nazanin">ثبت نام</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui basic blue button" ng-click="$state.go('lab.forget')">
+                            <span class="nazanin">کلمه عبور خود را فراموش کرده ام</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</script>
 
 
 </body>
