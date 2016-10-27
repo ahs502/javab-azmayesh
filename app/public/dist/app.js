@@ -60,17 +60,19 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 params: {
                     previousState: null
                 },
-                templateUrl: 'home/about.html',
-                controller: 'HomeAboutController'
+                templateUrl: 'common/about.html',
+                controller: 'CommonAboutController'
             })
             .state('home.contact', {
                 url: '/contact',
                 params: {
                     previousState: null
                 },
-                templateUrl: 'home/contact.html',
-                controller: 'HomeContactController'
-            })
+                templateUrl: 'common/contact.html',
+                controller: 'CommonContactController'
+            });
+
+        $stateProvider
             .state('history', {
                 url: '/history',
                 params: {
@@ -85,7 +87,9 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                         templateUrl: 'history/header.html'
                     }
                 }
-            })
+            });
+
+        $stateProvider
             .state('answer', {
                 url: '/answer',
                 params: {
@@ -108,7 +112,9 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                         templateUrl: 'answer/footer.html',
                     },
                 }
-            })
+            });
+
+        $stateProvider
             .state('lab', {
                 url: '/lab',
                 views: {
@@ -129,6 +135,51 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 url: '/login',
                 templateUrl: 'lab/login.html',
                 controller: 'LabLoginController'
+            })
+            .state('lab.register', {
+                url: '/register',
+                params: {
+                    username: null
+                },
+                templateUrl: 'lab/register.html',
+                controller: 'LabRegisterController'
+            })
+            .state('lab.validate', {
+                url: '/validate',
+                params: {
+                    username: null
+                },
+                templateUrl: 'lab/validate.html',
+                controller: 'LabValidateController'
+            })
+            .state('lab.signedup', {
+                url: '/signedup',
+                templateUrl: 'lab/signedup.html'
+            })
+            .state('lab.forget', {
+                url: '/forget',
+                templateUrl: 'lab/forget.html',
+                controller: 'LabForgetController'
+            })
+            .state('lab.password', {
+                url: '/password',
+                templateUrl: 'lab/password.html'
+            })
+            .state('lab.about', {
+                url: '/about',
+                params: {
+                    previousState: null
+                },
+                templateUrl: 'common/about.html',
+                controller: 'CommonAboutController'
+            })
+            .state('lab.contact', {
+                url: '/contact',
+                params: {
+                    previousState: null
+                },
+                templateUrl: 'common/contact.html',
+                controller: 'CommonContactController'
             });
 
         $urlRouterProvider.otherwise('/home/find');
@@ -154,7 +205,7 @@ app.run(['$rootScope', '$state', '$stateParams',
     function($rootScope, $state, $stateParams) {
 
         $state.go('home.find');
-        // $state.go('answer');
+        // $state.go('lab.register');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -389,13 +440,13 @@ app.controller('LabController', ['$scope', '$state',
             goToHomeFind: function() {
                 $state.go('home.find');
             },
-            goToHomeAbout: function() {
-                $state.go('home.about', {
+            goToLabAbout: function() {
+                $state.go('lab.about', {
                     previousState: $state.current
                 });
             },
-            goToHomeContact: function() {
-                $state.go('home.contact', {
+            goToLabContact: function() {
+                $state.go('lab.contact', {
                     previousState: $state.current
                 });
             },
@@ -508,12 +559,12 @@ app.controller('MasterController', ['$scope', '$rootScope',
 
 
 /*
-	AHS502 : Start of 'controllers/home/about-controller.js'
+	AHS502 : Start of 'controllers/common/about-controller.js'
 */
 
 /*global app*/
 
-app.controller('HomeAboutController', ['$scope', '$state', '$stateParams',
+app.controller('CommonAboutController', ['$scope', '$state', '$stateParams',
     function($scope, $state, $stateParams) {
 
         $scope.previousState = $stateParams.previousState;
@@ -527,17 +578,17 @@ app.controller('HomeAboutController', ['$scope', '$state', '$stateParams',
 
 
 /*
-	AHS502 : End of 'controllers/home/about-controller.js'
+	AHS502 : End of 'controllers/common/about-controller.js'
 */
 
 
 /*
-	AHS502 : Start of 'controllers/home/contact-controller.js'
+	AHS502 : Start of 'controllers/common/contact-controller.js'
 */
 
 /*global app*/
 
-app.controller('HomeContactController', ['$scope', '$state', '$stateParams',
+app.controller('CommonContactController', ['$scope', '$state', '$stateParams',
     function($scope, $state, $stateParams) {
 
         $scope.previousState = $stateParams.previousState;
@@ -551,7 +602,7 @@ app.controller('HomeContactController', ['$scope', '$state', '$stateParams',
 
 
 /*
-	AHS502 : End of 'controllers/home/contact-controller.js'
+	AHS502 : End of 'controllers/common/contact-controller.js'
 */
 
 
@@ -702,6 +753,44 @@ app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout
 
 
 /*
+	AHS502 : Start of 'controllers/lab/forget-controller.js'
+*/
+
+/*global app*/
+
+app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeout',
+    function($rootScope, $scope, $state, $timeout) {
+
+        $scope.sendPassword = sendPassword;
+
+        $scope.sendingPassword = false;
+
+        $scope.setBackHandler(function() {
+            $state.go('lab.login');
+        });
+
+        //$scope.username
+        //$scope.mobilePhoneNumber
+
+        function sendPassword() {
+            //TODO: check for validity
+            $scope.sendingPassword = true;
+            $timeout(function() {
+                $state.go('lab.password');
+                // $scope.sendingPassword = false;
+            }, 300);
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/lab/forget-controller.js'
+*/
+
+
+/*
 	AHS502 : Start of 'controllers/lab/login-controller.js'
 */
 
@@ -748,4 +837,95 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', '$timeou
 
 /*
 	AHS502 : End of 'controllers/lab/login-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'controllers/lab/register-controller.js'
+*/
+
+/*global app*/
+
+app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
+    function($rootScope, $scope, $state, $stateParams, $timeout) {
+
+        $scope.sendRegisterationForm = sendRegisterationForm;
+
+        $scope.username = $stateParams.username;
+
+        $scope.sendingRegisterationForm = false;
+
+        $scope.setBackHandler(function() {
+            $state.go('lab.login');
+        });
+
+        //$scope.labName
+        //$scope.mobilePhoneNumber
+        //$scope.phoneNumber
+        //$scope.address
+        //$scope.postalCode
+        //$scope.websiteAddress
+        //$scope.username
+        //$scope.password
+        //$scope.passwordAgain
+        //$scope.acceptRules
+
+        function sendRegisterationForm() {
+            //TODO: check for validity
+            $scope.sendingRegisterationForm = true;
+            $timeout(function() {
+                $state.go('lab.validate', {
+                    username: $scope.username
+                });
+                // $scope.sendingRegisterationForm = false;
+            }, 400);
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/lab/register-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'controllers/lab/validate-controller.js'
+*/
+
+/*global app*/
+
+app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
+    function($rootScope, $scope, $state, $stateParams, $timeout) {
+
+        $scope.finishRegisteration = finishRegisteration;
+
+        $scope.username = $stateParams.username;
+
+        $scope.registering = false;
+
+        $scope.setBackHandler(function() {
+            $state.go('lab.register', {
+                username: $scope.username
+            });
+        });
+
+        //$scope.validationCode
+
+        function finishRegisteration() {
+            //TODO: check for validity
+            $scope.registering = true;
+            $timeout(function() {
+                $state.go('lab.signedup');
+                // $scope.registering = false;
+            }, 400);
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/lab/validate-controller.js'
 */

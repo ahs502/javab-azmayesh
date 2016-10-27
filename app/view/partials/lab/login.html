@@ -1,4 +1,4 @@
-<div id="ja-home-find">
+<div id="ja-lab-login">
 
     <div class="ui centered grid">
         <div class="fourteen wide small eight wide tablet six wide computer column">
@@ -17,20 +17,15 @@
                             <input type="password" ng-model="password" placeholder="کلمه عبور">
                         </div>
                     </div>
-                    <div class="ui two column grid">
-                        <div class="column">
-                            <div class="field">
-                                <button class="fluid ui blue button" type="submit" ng-click="login()">
-                                    <span class="nazanin">ورود</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="field">
-                                <button class="fluid ui green button" ng-click="$state.go('lab.register')">
-                                    <span class="nazanin">ثبت نام</span>
-                                </button>
-                            </div>
+                    <div class="field">
+                        <div class="two ui buttons">
+                            <button class="fluid ui green button" ng-click="$state.go('lab.register')">
+                                <span class="nazanin">ثبت نام</span>
+                            </button>
+                            <div class="or nazanin" data-text="یا"></div>
+                            <button class="fluid ui blue button" type="submit" ng-click="login()">
+                                <span class="nazanin">ورود</span>
+                            </button>
                         </div>
                     </div>
                     <div class="field">

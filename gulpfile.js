@@ -52,6 +52,7 @@ var javascripts_lib = [
     //'./app/lib/semantic/dist/semantic.min.js',
     './app/lib/semantic/dist/components/site.min.js',
     './app/lib/semantic/dist/components/form.min.js',
+    './app/lib/semantic/dist/components/checkbox.min.js',
     './app/lib/semantic/dist/components/transition.min.js',
     './app/lib/semantic/dist/components/popup.min.js',
     './app/lib/semantic/dist/components/sidebar.min.js',
@@ -67,6 +68,7 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/card.rtl.min.css',
     './app/lib/semantic/dist/components/segment.rtl.min.css',
     './app/lib/semantic/dist/components/container.rtl.min.css',
+    './app/lib/semantic/dist/components/checkbox.rtl.min.css',
     './app/lib/semantic/dist/components/image.min.css',
     './app/lib/semantic/dist/components/menu.min.css',
     './app/lib/semantic/dist/components/button.min.css',
@@ -74,6 +76,7 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/popup.min.css',
     './app/lib/semantic/dist/components/sidebar.min.css',
     './app/lib/semantic/dist/components/sticky.min.css',
+    // './app/lib/semantic/dist/components/divider.min.css',
     //'./app/lib/semantic/dist/components/icon.min.css',
 ];
 
@@ -258,7 +261,7 @@ gulp.task('build-lib', ['build-lib-js', 'build-lib-css']);
 gulp.task('build-view', callback => {
 
     function renderHtmlTemplate(htmlTemplateFile) {
-        util.log(' -> [' + 'view'.cyan + '] HTML template partial file:' + htmlTemplateFile.magenta);
+        util.log(' -> [' + 'view'.cyan + '] HTML template partial file:' + String(htmlTemplateFile).magenta);
         try {
             var template = fs.readFileSync(htmlTemplateFile),
                 indexStart, indexEnd, partialFile, partial;

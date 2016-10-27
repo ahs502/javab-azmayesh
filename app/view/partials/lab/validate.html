@@ -1,0 +1,37 @@
+<div id="ja-lab-validate">
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    <bdi>کد اعتبار سنجی به شماره تلفن همراه ارتباطی آزمایشگاه ارسال شد. لطفاً کد دریافتی را در کادر زیر وارد کنید</bdi>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ registering ? 'loading' : '' }} form">
+                    <div class="field">
+                        <!--<label class="nazanin">کد اعتبار سنجی</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="validationCode" placeholder="کد اعتبار سنجی">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="finishRegisteration()">
+                            <span class="nazanin">ثبت نام</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>

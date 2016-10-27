@@ -40,17 +40,19 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 params: {
                     previousState: null
                 },
-                templateUrl: 'home/about.html',
-                controller: 'HomeAboutController'
+                templateUrl: 'common/about.html',
+                controller: 'CommonAboutController'
             })
             .state('home.contact', {
                 url: '/contact',
                 params: {
                     previousState: null
                 },
-                templateUrl: 'home/contact.html',
-                controller: 'HomeContactController'
-            })
+                templateUrl: 'common/contact.html',
+                controller: 'CommonContactController'
+            });
+
+        $stateProvider
             .state('history', {
                 url: '/history',
                 params: {
@@ -65,7 +67,9 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                         templateUrl: 'history/header.html'
                     }
                 }
-            })
+            });
+
+        $stateProvider
             .state('answer', {
                 url: '/answer',
                 params: {
@@ -88,7 +92,9 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                         templateUrl: 'answer/footer.html',
                     },
                 }
-            })
+            });
+
+        $stateProvider
             .state('lab', {
                 url: '/lab',
                 views: {
@@ -109,6 +115,51 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 url: '/login',
                 templateUrl: 'lab/login.html',
                 controller: 'LabLoginController'
+            })
+            .state('lab.register', {
+                url: '/register',
+                params: {
+                    username: null
+                },
+                templateUrl: 'lab/register.html',
+                controller: 'LabRegisterController'
+            })
+            .state('lab.validate', {
+                url: '/validate',
+                params: {
+                    username: null
+                },
+                templateUrl: 'lab/validate.html',
+                controller: 'LabValidateController'
+            })
+            .state('lab.signedup', {
+                url: '/signedup',
+                templateUrl: 'lab/signedup.html'
+            })
+            .state('lab.forget', {
+                url: '/forget',
+                templateUrl: 'lab/forget.html',
+                controller: 'LabForgetController'
+            })
+            .state('lab.password', {
+                url: '/password',
+                templateUrl: 'lab/password.html'
+            })
+            .state('lab.about', {
+                url: '/about',
+                params: {
+                    previousState: null
+                },
+                templateUrl: 'common/about.html',
+                controller: 'CommonAboutController'
+            })
+            .state('lab.contact', {
+                url: '/contact',
+                params: {
+                    previousState: null
+                },
+                templateUrl: 'common/contact.html',
+                controller: 'CommonContactController'
             });
 
         $urlRouterProvider.otherwise('/home/find');

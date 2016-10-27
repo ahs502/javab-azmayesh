@@ -14,13 +14,13 @@ app.controller('LabController', ['$scope', '$state',
             goToHomeFind: function() {
                 $state.go('home.find');
             },
-            goToHomeAbout: function() {
-                $state.go('home.about', {
+            goToLabAbout: function() {
+                $state.go('lab.about', {
                     previousState: $state.current
                 });
             },
-            goToHomeContact: function() {
-                $state.go('home.contact', {
+            goToLabContact: function() {
+                $state.go('lab.contact', {
                     previousState: $state.current
                 });
             },

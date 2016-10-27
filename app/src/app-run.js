@@ -4,7 +4,7 @@ app.run(['$rootScope', '$state', '$stateParams',
     function($rootScope, $state, $stateParams) {
 
         $state.go('home.find');
-        // $state.go('answer');
+        // $state.go('lab.register');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;

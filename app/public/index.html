@@ -22,7 +22,7 @@
 
     <div id="ja-sidebar-menu" class="ui --thin right sidebar --inverted vertical menu">
     <div class="item">
-        <img class="ui centered small image ja-menu-logo" src="/img/logo-full.png" alt="جواب آزمایش" />
+        <img class="ui centered small image ja-menu-logo" src="/img/logo.png" alt="جواب آزمایش" />
     </div>
     <div ui-view="menu">
         <!-- Main sidebar menu items -->
@@ -67,7 +67,29 @@
     <script type="text/javascript" src="/dist/lib.min.js"></script>
     <script type="text/javascript" src="/dist/app.min.js"></script>
 
-    <script type="text/ng-template" id="home.html">
+    <script type="text/ng-template" id="common/about.html">
+    <div id="ja-common-about">
+
+    <div class="ui justified text container">
+        about us
+    </div>
+
+</div>
+
+</script>
+
+<script type="text/ng-template" id="common/contact.html">
+    <div id="ja-common-contact">
+
+    <div class="ui justified text container">
+        contact us
+    </div>
+
+</div>
+
+</script>
+
+<script type="text/ng-template" id="home.html">
     <div id="ja-home">
 
     <!-- Logo -->
@@ -236,28 +258,6 @@
 
             </div>
         </div>
-    </div>
-
-</div>
-
-</script>
-
-<script type="text/ng-template" id="home/about.html">
-    <div id="ja-home-about">
-
-    <div class="ui justified text container">
-        about us
-    </div>
-
-</div>
-
-</script>
-
-<script type="text/ng-template" id="home/contact.html">
-    <div id="ja-home-contact">
-
-    <div class="ui justified text container">
-        contact us
     </div>
 
 </div>
@@ -468,8 +468,8 @@
     <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabLogin(); toggleMenu()">ورود مشترکین</a>
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabRegister(); toggleMenu()">ثبت نام</a>
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeFind(); toggleMenu()">جواب آزمایش</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeAbout(); toggleMenu()">درباره ما</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeContact(); toggleMenu()">تماس با ما</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabAbout(); toggleMenu()">درباره ما</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabContact(); toggleMenu()">تماس با ما</a>
             
 </script>
 
@@ -477,24 +477,14 @@
     <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabLogin()">ورود مشترکین</a>
-
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabRegister()">ثبت نام</a>
-
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
-
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="home-contact-us" data-position="top right" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
-<div class="ui popup ja-align-right">
-    <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
-    <div class="nazanin">
-        <bdi>021-66910430</bdi>
-        <bdi>تلفن:</bdi>
-    </div>
-</div>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabAbout()">درباره ما</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabContact()">تماس با ما</a>
 
 </script>
 
 <script type="text/ng-template" id="lab/login.html">
-    <div id="ja-home-find">
+    <div id="ja-lab-login">
 
     <div class="ui centered grid">
         <div class="fourteen wide small eight wide tablet six wide computer column">
@@ -513,25 +503,285 @@
                             <input type="password" ng-model="password" placeholder="کلمه عبور">
                         </div>
                     </div>
-                    <div class="ui two column grid">
-                        <div class="column">
-                            <div class="field">
-                                <button class="fluid ui blue button" type="submit" ng-click="login()">
-                                    <span class="nazanin">ورود</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="field">
-                                <button class="fluid ui green button" ng-click="$state.go('lab.register')">
-                                    <span class="nazanin">ثبت نام</span>
-                                </button>
-                            </div>
+                    <div class="field">
+                        <div class="two ui buttons">
+                            <button class="fluid ui green button" ng-click="$state.go('lab.register')">
+                                <span class="nazanin">ثبت نام</span>
+                            </button>
+                            <div class="or nazanin" data-text="یا"></div>
+                            <button class="fluid ui blue button" type="submit" ng-click="login()">
+                                <span class="nazanin">ورود</span>
+                            </button>
                         </div>
                     </div>
                     <div class="field">
                         <button class="fluid ui basic blue button" ng-click="$state.go('lab.forget')">
                             <span class="nazanin">کلمه عبور خود را فراموش کرده ام</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</script>
+
+<script type="text/ng-template" id="lab/forget.html">
+    <div id="ja-lab-forget">
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    برای دریافت رمز ورود خود، نام کاربری و شماره تلفن ارتباطی خود را وارد کنید
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ sendingPassword ? 'loading' : '' }} form">
+                    <div class="field">
+                        <!--<label class="nazanin">نام کاربری</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="username" placeholder="نام کاربری">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <!--<label class="nazanin">شماره تلفن همراه</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="mobilePhoneNumber" placeholder="شماره تلفن همراه">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="sendPassword()">
+                            <span class="nazanin">دریافت رمز</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</script>
+
+<script type="text/ng-template" id="lab/password.html">
+    <div id="ja-lab-password">
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    <bdi>رمز عبور شما به شماره تلفن ارتباطی آزمایشگاه ارسال شد.</bdi>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui form">
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="menuHandlers.goToLabLogin()">
+                            <span class="nazanin">بازگشت به صفحه اصلی</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</script>
+
+<script type="text/ng-template" id="lab/register.html">
+    <div id="ja-lab-register">
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    <bdi>لطفاً کادرهای زیر را با دقت پُرکنید</bdi>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ sendingRegisterationForm ? 'loading' : '' }} form">
+
+                    <div class="field">
+                        <label class="nazanin">نام کامل آزمایشگاه</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="labName" placeholder="نام کامل آزمایشگاه">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">تلفن همراه ارتباطی</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="mobilePhoneNumber" placeholder="09123456789">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">تلفن ثابت</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="phoneNumber" placeholder="021-12345678">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">آدرس</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="address" placeholder="نام شهر - خیابان اصلی - خیابان فرعی - پلاک - واحد">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">کد پستی</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="postalCode" placeholder="1234567890">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">آدرس وبسایت</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="websiteAddress" placeholder="example.ir">
+                        </div>
+                    </div>
+
+                    <p class="nazanin">
+                        <bdi>مشخصات شناسه کاربری</bdi>
+                    </p>
+
+                    <div class="field">
+                        <label class="nazanin">نام کاربری</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="username" placeholder="username">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">کلمه عبور</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="password">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">تکرار کلمه عبور</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="passwordAgain">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" ng-model="acceptRules">
+                            <label class="nazanin">قوانین و مقررات را می پذیرم</label>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="sendRegisterationForm()">
+                            <span class="nazanin">مرحله بعدی</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</script>
+
+<script type="text/ng-template" id="lab/validate.html">
+    <div id="ja-lab-validate">
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    <bdi>کد اعتبار سنجی به شماره تلفن همراه ارتباطی آزمایشگاه ارسال شد. لطفاً کد دریافتی را در کادر زیر وارد کنید</bdi>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ registering ? 'loading' : '' }} form">
+                    <div class="field">
+                        <!--<label class="nazanin">کد اعتبار سنجی</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="validationCode" placeholder="کد اعتبار سنجی">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="finishRegisteration()">
+                            <span class="nazanin">ثبت نام</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</script>
+
+<script type="text/ng-template" id="lab/signedup.html">
+    <div id="ja-lab-signedup">
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    <bdi>ثبت نام آزمایشگاه با موفقیت انجام شد!</bdi>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui form">
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="menuHandlers.goToLabLogin()">
+                            <span class="nazanin">بازگشت به صفحه اصلی</span>
                         </button>
                     </div>
                 </form>

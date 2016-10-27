@@ -1,0 +1,43 @@
+<div id="ja-lab-forget">
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    برای دریافت رمز ورود خود، نام کاربری و شماره تلفن ارتباطی خود را وارد کنید
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ sendingPassword ? 'loading' : '' }} form">
+                    <div class="field">
+                        <!--<label class="nazanin">نام کاربری</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="username" placeholder="نام کاربری">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <!--<label class="nazanin">شماره تلفن همراه</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="mobilePhoneNumber" placeholder="شماره تلفن همراه">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="sendPassword()">
+                            <span class="nazanin">دریافت رمز</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>

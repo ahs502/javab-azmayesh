@@ -1,6 +1,6 @@
 /*global app*/
 
-app.controller('HomeAboutController', ['$scope', '$state', '$stateParams',
+app.controller('CommonContactController', ['$scope', '$state', '$stateParams',
     function($scope, $state, $stateParams) {
 
         $scope.previousState = $stateParams.previousState;
