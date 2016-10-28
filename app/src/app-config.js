@@ -183,6 +183,46 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 url: '/home',
                 templateUrl: 'panel/home.html',
                 controller: 'PanelHomeController'
+            })
+            .state('panel.history', {
+                url: '/history',
+                templateUrl: 'panel/history.html',
+                controller: 'PanelHistoryController'
+            })
+            .state('panel.post', {
+                url: '/post',
+                templateUrl: 'panel/post.html',
+                controller: 'PanelPostController'
+            })
+            .state('panel.send', {
+                url: '/send',
+                templateUrl: 'panel/send.html',
+                controller: 'PanelSendController'
+            })
+            .state('panel.balance', {
+                url: '/balance',
+                templateUrl: 'panel/balance.html',
+                controller: 'PanelBalanceController'
+            })
+            .state('panel.account', {
+                url: '/account',
+                templateUrl: 'panel/account.html',
+                controller: 'PanelAccountController'
+            })
+            .state('panel.account.summary', {
+                url: '/summary',
+                templateUrl: 'panel/account/summary.html',
+                controller: 'PanelAccountSummaryController'
+            })
+            .state('panel.account.edit', {
+                url: '/edit',
+                templateUrl: 'panel/account/edit.html',
+                controller: 'PanelAccountEditController'
+            })
+            .state('panel.account.password', {
+                url: '/password',
+                templateUrl: 'panel/account/password.html',
+                controller: 'PanelAccountPasswordController'
             });
 
         $urlRouterProvider.otherwise('/home/find');

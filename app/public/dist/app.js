@@ -203,6 +203,46 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 url: '/home',
                 templateUrl: 'panel/home.html',
                 controller: 'PanelHomeController'
+            })
+            .state('panel.history', {
+                url: '/history',
+                templateUrl: 'panel/history.html',
+                controller: 'PanelHistoryController'
+            })
+            .state('panel.post', {
+                url: '/post',
+                templateUrl: 'panel/post.html',
+                controller: 'PanelPostController'
+            })
+            .state('panel.send', {
+                url: '/send',
+                templateUrl: 'panel/send.html',
+                controller: 'PanelSendController'
+            })
+            .state('panel.balance', {
+                url: '/balance',
+                templateUrl: 'panel/balance.html',
+                controller: 'PanelBalanceController'
+            })
+            .state('panel.account', {
+                url: '/account',
+                templateUrl: 'panel/account.html',
+                controller: 'PanelAccountController'
+            })
+            .state('panel.account.summary', {
+                url: '/summary',
+                templateUrl: 'panel/account/summary.html',
+                controller: 'PanelAccountSummaryController'
+            })
+            .state('panel.account.edit', {
+                url: '/edit',
+                templateUrl: 'panel/account/edit.html',
+                controller: 'PanelAccountEditController'
+            })
+            .state('panel.account.password', {
+                url: '/password',
+                templateUrl: 'panel/account/password.html',
+                controller: 'PanelAccountPasswordController'
             });
 
         $urlRouterProvider.otherwise('/home/find');
@@ -1017,6 +1057,63 @@ app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$sta
 
 
 /*
+	AHS502 : Start of 'controllers/panel/account-controller..js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('PanelAccountController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/panel/account-controller..js'
+*/
+
+
+/*
+	AHS502 : Start of 'controllers/panel/balance-controller..js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/panel/balance-controller..js'
+*/
+
+
+/*
+	AHS502 : Start of 'controllers/panel/history-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/panel/history-controller.js'
+*/
+
+
+/*
 	AHS502 : Start of 'controllers/panel/home-controller.js'
 */
 
@@ -1036,4 +1133,99 @@ app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$state
 
 /*
 	AHS502 : End of 'controllers/panel/home-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'controllers/panel/post-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/panel/post-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'controllers/panel/send-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/panel/send-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'controllers/panel/account/edit-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/panel/account/edit-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'controllers/panel/account/password-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/panel/account/password-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'controllers/panel/account/summary-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/panel/account/summary-controller.js'
 */
