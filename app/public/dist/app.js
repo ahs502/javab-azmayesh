@@ -182,6 +182,29 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 controller: 'CommonContactController'
             });
 
+        $stateProvider
+            .state('panel', {
+                url: '/panel',
+                views: {
+                    '': {
+                        templateUrl: 'panel.html',
+                        controller: 'PanelController',
+                    },
+                    menu: {
+                        templateUrl: 'panel/menu.html'
+                    },
+                    header: {
+                        templateUrl: 'panel/header.html'
+                    },
+                },
+                abstract: true
+            })
+            .state('panel.home', {
+                url: '/home',
+                templateUrl: 'panel/home.html',
+                controller: 'PanelHomeController'
+            });
+
         $urlRouterProvider.otherwise('/home/find');
 
         // $locationProvider.html5Mode(true);
@@ -204,8 +227,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
 app.run(['$rootScope', '$state', '$stateParams',
     function($rootScope, $state, $stateParams) {
 
-        $state.go('home.find');
-        // $state.go('lab.register');
+        // $state.go('home.find');
+        $state.go('panel.home');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -516,6 +539,68 @@ app.controller('MasterController', ['$scope', '$rootScope',
 
 /*
 	AHS502 : End of 'master-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'panel-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
+
+        $scope.setPageTitle = setPageTitle;
+        
+        //TODO: Initialize lab info from logged-in user data...
+
+        $scope.setMenuHandlers({
+            goToMainPage: function() {
+                $state.go('panel.home');
+            },
+            goToSendResults: function() {
+                $state.go('panel.send');
+            },
+            goToResultsHistory: function() {
+                // $state.go('lab.login');
+            },
+            goToChargeAccount: function() {
+                // $state.go('home.about', {
+                //     previousState: $state.current
+                // });
+            },
+            goToUserAccount: function() {
+                // $state.go('home.contact', {
+                //     previousState: $state.current
+                // });
+            },
+            logout:function () {
+                // body...
+            }
+        });
+
+        var headerHandlers = {
+            pageTitle: 'نام کامل آزمایشگاه'
+        };
+
+        $scope.setHeaderHandlers(headerHandlers);
+
+        $scope.setFooterHandlers(false);
+
+        function setPageTitle(title) {
+            // $rootScope.$apply(function() {
+                headerHandlers.pageTitle = title;
+            // });
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'panel-controller.js'
 */
 
 
@@ -928,4 +1013,27 @@ app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$sta
 
 /*
 	AHS502 : End of 'controllers/lab/validate-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'controllers/panel/home-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
+
+        $scope.setPageTitle('نام آزمایشگاه');
+
+        $('#test-modal').modal('show');
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'controllers/panel/home-controller.js'
 */

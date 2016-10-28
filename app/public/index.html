@@ -793,6 +793,88 @@
 </div>
 </script>
 
+<script type="text/ng-template" id="panel.html">
+    <div id="ja-panel">
+
+    <!-- Main container -->
+    <div ui-view></div>
+
+</div>
+
+</script>
+
+<script type="text/ng-template" id="panel/home.html">
+    <div id="ja-panel-home">
+
+    panel home
+
+    <div id="test-modal" class="ui modal">
+        <!--<i class="close icon"></i>-->
+        <div class="header">
+            Modal Title
+        </div>
+        <div class="content">
+            ahdgjahdjahdfjahfjshadf sfjafgafdhgdfg fadg
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">Cancel</div>
+            <div class="ui ok button">OK</div>
+        </div>
+    </div>
+
+    <!--<div class="ui centered grid">-->
+    <!--    <div class="fourteen wide small eight wide tablet six wide computer column">-->
+    <!--        <div class="center aligned row">-->
+
+    <!--            <form class="ui {{ findingAnswer ? 'loading' : '' }} form">-->
+    <!--                <div class="field">-->
+    <!--<label class="nazanin">کد ملی</label>-->
+    <!--                    <div class="ui input">-->
+    <!--                        <input type="text" ng-model="nationalCode" placeholder="کد ملی">-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--                <div class="field">-->
+    <!--<label class="nazanin">شماره رسید آزمایش</label>-->
+    <!--                    <div class="ui input">-->
+    <!--                        <input type="text" ng-model="testNumber" placeholder="شماره آزمایش">-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--                <div class="field">-->
+    <!--                    <button class="fluid ui blue button" type="submit" ng-click="seeAnswer()">-->
+    <!--                        <span class="nazanin">مشاهده نتیجه آزمایش</span>-->
+    <!--                    </button>-->
+    <!--                </div>-->
+    <!--                <div class="field">-->
+    <!--                    <button class="fluid ui basic blue button" ng-click="$state.go('home.otp')">-->
+    <!--                        <span class="nazanin">شماره آزمایش خود را فراموش کرده ام</span>-->
+    <!--                    </button>-->
+    <!--                </div>-->
+    <!--            </form>-->
+
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--</div>-->
+
+</div>
+</script>
+
+<script type="text/ng-template" id="panel/menu.html">
+    <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToMainPage(); toggleMenu()">صفحه اصلی</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToSendResults(); toggleMenu()">ارسال نتایج</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToResultsHistory(); toggleMenu()">سوابق نتایج ثبت شده</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToChargeAccount(); toggleMenu()">تأمین اعتبار</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToUserAccount(); toggleMenu()">مشخصات کاربری آزمایشگاه</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.logout(); toggleMenu()">خروج</a>
+            
+</script>
+
+<script type="text/ng-template" id="panel/header.html">
+    <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.logout()">خروج</a>
+
+<span class="ja-item ja-text ja-right nazanin" ng-bind="headerHandlers.pageTitle"></span>
+
+</script>
+
 
 </body>
 

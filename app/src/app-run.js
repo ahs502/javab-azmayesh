@@ -3,8 +3,8 @@
 app.run(['$rootScope', '$state', '$stateParams',
     function($rootScope, $state, $stateParams) {
 
-        $state.go('home.find');
-        // $state.go('lab.register');
+        // $state.go('home.find');
+        $state.go('panel.home');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;

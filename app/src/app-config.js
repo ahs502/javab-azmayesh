@@ -162,6 +162,29 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 controller: 'CommonContactController'
             });
 
+        $stateProvider
+            .state('panel', {
+                url: '/panel',
+                views: {
+                    '': {
+                        templateUrl: 'panel.html',
+                        controller: 'PanelController',
+                    },
+                    menu: {
+                        templateUrl: 'panel/menu.html'
+                    },
+                    header: {
+                        templateUrl: 'panel/header.html'
+                    },
+                },
+                abstract: true
+            })
+            .state('panel.home', {
+                url: '/home',
+                templateUrl: 'panel/home.html',
+                controller: 'PanelHomeController'
+            });
+
         $urlRouterProvider.otherwise('/home/find');
 
         // $locationProvider.html5Mode(true);
