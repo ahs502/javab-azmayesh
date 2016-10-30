@@ -589,11 +589,14 @@ app.controller('MasterController', ['$scope', '$rootScope',
 /*global app*/
 /*global $*/
 
-app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams',
-    function($scope, $rootScope, $state, $stateParams) {
+app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
+    function($scope, $rootScope, $state, $stateParams, $timeout) {
 
+        $scope.setLoading = setLoading;
         $scope.setPageTitle = setPageTitle;
-        
+
+        $scope.loading = $scope.loadingMessage = false;
+
         //TODO: Initialize lab info from logged-in user data...
 
         $scope.setMenuHandlers({
@@ -604,20 +607,20 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
                 $state.go('panel.send');
             },
             goToResultsHistory: function() {
-                // $state.go('lab.login');
+                $state.go('panel.history');
             },
             goToChargeAccount: function() {
-                // $state.go('home.about', {
-                //     previousState: $state.current
-                // });
+                $state.go('panel.balance');
             },
             goToUserAccount: function() {
-                // $state.go('home.contact', {
-                //     previousState: $state.current
-                // });
+                $state.go('panel.account.summary');
             },
-            logout:function () {
-                // body...
+            logout: function() {
+                //...
+                //TODO: logout
+                //...
+                $state.go('lab.login');
+                console.log('logout');
             }
         });
 
@@ -629,9 +632,17 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 
         $scope.setFooterHandlers(false);
 
+        function setLoading(loading) {
+            $scope.loading = loading;
+            $scope.loadingMessage = false;
+            loading && $timeout(function() {
+                $scope.loadingMessage = true;
+            }, 1500);
+        }
+
         function setPageTitle(title) {
             // $rootScope.$apply(function() {
-                headerHandlers.pageTitle = title;
+            headerHandlers.pageTitle = title;
             // });
         }
 
@@ -1120,12 +1131,22 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
 /*global app*/
 /*global $*/
 
-app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$stateParams',
-    function($scope, $rootScope, $state, $stateParams) {
+app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
+    function($scope, $rootScope, $state, $stateParams, $timeout) {
+
+        // modal sample
+        // $('#test-modal').modal('show');
+
+        $scope.setLoading(true);
 
         $scope.setPageTitle('نام آزمایشگاه');
 
-        $('#test-modal').modal('show');
+        $scope.setBackHandler($scope.menuHandlers.logout);
+
+        //TODO: replace with actual data loading
+        $timeout(function() {
+            $scope.setLoading(false);
+        }, 100);
 
     }
 ]);

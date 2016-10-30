@@ -1,12 +1,22 @@
 /*global app*/
 /*global $*/
 
-app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$stateParams',
-    function($scope, $rootScope, $state, $stateParams) {
+app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
+    function($scope, $rootScope, $state, $stateParams, $timeout) {
+
+        // modal sample
+        // $('#test-modal').modal('show');
+
+        $scope.setLoading(true);
 
         $scope.setPageTitle('نام آزمایشگاه');
 
-        $('#test-modal').modal('show');
+        $scope.setBackHandler($scope.menuHandlers.logout);
+
+        //TODO: replace with actual data loading
+        $timeout(function() {
+            $scope.setLoading(false);
+        }, 100);
 
     }
 ]);

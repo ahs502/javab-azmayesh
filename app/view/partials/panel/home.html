@@ -1,52 +1,101 @@
 <div id="ja-panel-home">
 
-    panel home
 
-    <div id="test-modal" class="ui modal">
-        <!--<i class="close icon"></i>-->
-        <div class="header">
-            Modal Title
-        </div>
-        <div class="content">
-            ahdgjahdjahdfjahfjshadf sfjafgafdhgdfg fadg
-        </div>
-        <div class="actions">
-            <div class="ui cancel button">Cancel</div>
-            <div class="ui ok button">OK</div>
-        </div>
-    </div>
 
-    <!--<div class="ui centered grid">-->
-    <!--    <div class="fourteen wide small eight wide tablet six wide computer column">-->
-    <!--        <div class="center aligned row">-->
+    <!-- modal sample -->
 
-    <!--            <form class="ui {{ findingAnswer ? 'loading' : '' }} form">-->
-    <!--                <div class="field">-->
-    <!--<label class="nazanin">کد ملی</label>-->
-    <!--                    <div class="ui input">-->
-    <!--                        <input type="text" ng-model="nationalCode" placeholder="کد ملی">-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--                <div class="field">-->
-    <!--<label class="nazanin">شماره رسید آزمایش</label>-->
-    <!--                    <div class="ui input">-->
-    <!--                        <input type="text" ng-model="testNumber" placeholder="شماره آزمایش">-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--                <div class="field">-->
-    <!--                    <button class="fluid ui blue button" type="submit" ng-click="seeAnswer()">-->
-    <!--                        <span class="nazanin">مشاهده نتیجه آزمایش</span>-->
-    <!--                    </button>-->
-    <!--                </div>-->
-    <!--                <div class="field">-->
-    <!--                    <button class="fluid ui basic blue button" ng-click="$state.go('home.otp')">-->
-    <!--                        <span class="nazanin">شماره آزمایش خود را فراموش کرده ام</span>-->
-    <!--                    </button>-->
-    <!--                </div>-->
-    <!--            </form>-->
-
-    <!--        </div>-->
+    <!--<div id="test-modal" class="ui modal">-->
+    <!--    <div class="header">-->
+    <!--        Modal Title-->
+    <!--    </div>-->
+    <!--    <div class="content">-->
+    <!--        ahdgjahdjahdfjahfjshadf sfjafgafdhgdfg fadg-->
+    <!--    </div>-->
+    <!--    <div class="actions">-->
+    <!--        <div class="ui cancel button">Cancel</div>-->
+    <!--        <div class="ui ok button">OK</div>-->
     <!--    </div>-->
     <!--</div>-->
+
+
+
+
+    <!--TODO: messages -->
+
+    <div class="ui centered grid">
+        <div class="twelve wide small eight wide tablet six wide computer column">
+            <div class="center aligned row ltr">
+
+                <div class="ui blue raised fluid link card" ng-click="menuHandlers.goToSendResults()">
+                    <div class="content">
+                        <div class="header">
+                            Send
+                        </div>
+                        <div class="meta">
+                            Meta data
+                        </div>
+                        <div class="description">
+                            This is some description about it.
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <span class="right floated">Extra contents</span>
+                    </div>
+                </div>
+
+                <div class="ui green raised fluid link card" ng-click="menuHandlers.goToResultsHistory()">
+                    <div class="content">
+                        <div class="header">
+                            History
+                        </div>
+                        <div class="meta">
+                            Meta data
+                        </div>
+                        <div class="description">
+                            This is some description about it.
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <span class="right floated">Extra contents</span>
+                    </div>
+                </div>
+
+                <div class="ui olive raised fluid link card" ng-click="menuHandlers.goToChargeAccount()">
+                    <div class="content">
+                        <div class="header">
+                            Charge
+                        </div>
+                        <div class="meta">
+                            Meta data
+                        </div>
+                        <div class="description">
+                            This is some description about it.
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <span class="right floated">Extra contents</span>
+                    </div>
+                </div>
+
+                <div class="ui yellow raised fluid link card" ng-click="menuHandlers.goToUserAccount()">
+                    <div class="content">
+                        <div class="header">
+                            User Info
+                        </div>
+                        <div class="meta">
+                            Meta data
+                        </div>
+                        <div class="description">
+                            This is some description about it.
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <span class="right floated">Extra contents</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 </div>
