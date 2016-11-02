@@ -1,1 +1,109 @@
-balance
+<div id="ja-panel-balance">
+
+    <div class="ui centered grid">
+        <div class="twelve wide small eight wide tablet six wide computer column">
+            <div class="center aligned row ltr">
+
+                <div class="ui right floated {{balanceColor}} tiny statistic">
+                    <div class="label">
+                        <span class="nazanin">اعتبار باقیمانده</span>
+                    </div>
+                    <div class="value">
+                        <span class="nazanin" ng-bind="balanceForDisplay"></span>
+                    </div>
+                    <div class="label">
+                        <span class="nazanin">ریال</span>
+                    </div>
+                </div>
+
+                <div class="ui left floated {{balanceColor}} tiny statistic">
+                    <div class="label">
+                        <span class="nazanin">معادل</span>
+                    </div>
+                    <div class="value">
+                        <span class="nazanin" ng-bind="testCountForDisplay"></span>
+                    </div>
+                    <div class="label">
+                        <span class="nazanin">آزمایش</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui horizontal divider">
+        <span class="nazanin">شارژ حساب</span>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="twelve wide small eight wide tablet six wide computer column">
+            <div class="center aligned row ltr">
+
+                <form class="ui {{ preparingPayment ? 'loading' : '' }} form">
+
+                    <p class="nazanin">
+                        <bdi>پرداخت از طریق کارت به کارت:</bdi>
+                    </p>
+                    <p class="nazanin">
+                        <bdi>بانک ملت: <strong><bdi>۶۱۰۴ - ۳۳۷۹ - ۷۳۸۴ - ۹۷۱۲</bdi></strong>
+                        </bdi>
+                    </p>
+                    <p class="nazanin">
+                        <bdi>به نام: <strong>حسام الدین امین شکروی</strong></bdi>
+                    </p>
+
+                    <div class="field">
+                        <label class="nazanin">کد پیگیری پرداخت</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="c2cReceiptCode" placeholder="123456">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui --basic blue button" ng-click="c2cPayment()">
+                            <span class="nazanin">ثبت تراکنش</span>
+                        </button>
+                    </div>
+
+                    <div class="ui horizontal divider">
+                        <span class="nazanin">یا</span>
+                    </div>
+
+                    <p class="nazanin">
+                        <bdi>پرداخت از طریق درگاه پرداخت الکترونیکی <strong>زرین پال</strong>:</bdi>
+                    </p>
+
+                    <div class="field">
+                        <label class="nazanin"><bdi>مبلغ مورد نظر (ریال)</bdi></label>
+                        <div class="ui disabled input">
+                            <input type="text" ng-model="zpChargeAmount" placeholder="مبلغ شارژ به ریال">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="disabled fluid ui --basic blue button" ng-click="zpPayment()">
+                            <span class="nazanin">ورود به درگاه پرداخت</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- c2c request acknowledgement -->
+    <div id="ja-c2c-acknowledgement-modal" class="ui modal">
+        <div class="header">
+            <span class="nazanin">درخواست شما ثبت شد</span>
+        </div>
+        <div class="content">
+            <span class="nazanin"><bdi>درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد.</bdi></span>
+        </div>
+        <div class="actions">
+            <!--<div class="ui cancel button">Cancel</div>-->
+            <button class="ui --basic blue ok button" ng-click="$state.go('panel.home')">
+                <span class="nazanin">تأیید</span>
+            </button>
+        </div>
+    </div>
+
+</div>

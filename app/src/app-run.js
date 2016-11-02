@@ -1,10 +1,10 @@
 /*global app*/
 
-app.run(['$rootScope', '$state', '$stateParams',
-    function($rootScope, $state, $stateParams) {
+app.run(['$rootScope', '$state', '$stateParams', '$window',
+    function($rootScope, $state, $stateParams, $window) {
 
         // $state.go('home.find');
-        $state.go('panel.home');
+        $state.go('panel.balance');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -19,6 +19,9 @@ app.run(['$rootScope', '$state', '$stateParams',
 
         $rootScope.$on('$stateChangeSuccess',
             function(event, toState, toParams, fromState, fromParams) {
+
+                $window.scrollTo(0, 0);
+
                 //...
             });
 

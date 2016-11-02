@@ -1,15 +1,18 @@
 /*global app*/
 /*global $*/
 
-app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$interval',
+    function($scope, $rootScope, $state, $stateParams, $timeout, $interval) {
 
         $scope.setLoading = setLoading;
         $scope.setPageTitle = setPageTitle;
 
         $scope.loading = $scope.loadingMessage = false;
 
-        //TODO: Initialize lab info from logged-in user data...
+        refreshAllUserInfoProvider(false)();
+
+        // Refresh user data every 1 minute
+        $interval(refreshAllUserInfoProvider(true), 60000);
 
         $scope.setMenuHandlers({
             goToMainPage: function() {
@@ -37,7 +40,7 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         });
 
         var headerHandlers = {
-            pageTitle: 'نام کامل آزمایشگاه'
+            pageTitle: ''
         };
 
         $scope.setHeaderHandlers(headerHandlers);
@@ -53,9 +56,16 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         }
 
         function setPageTitle(title) {
-            // $rootScope.$apply(function() {
             headerHandlers.pageTitle = title;
-            // });
+        }
+
+        function refreshAllUserInfoProvider(silent) {
+            return function() {
+                silent || $scope.setLoading(true);
+                $timeout(function() { //TODO: Initialize lab info from logged-in user data...
+                    silent || $scope.setLoading(false);
+                }, 400);
+            };
         }
 
     }

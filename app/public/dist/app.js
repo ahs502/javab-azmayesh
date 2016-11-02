@@ -264,11 +264,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
 
 /*global app*/
 
-app.run(['$rootScope', '$state', '$stateParams',
-    function($rootScope, $state, $stateParams) {
+app.run(['$rootScope', '$state', '$stateParams', '$window',
+    function($rootScope, $state, $stateParams, $window) {
 
         // $state.go('home.find');
-        $state.go('panel.home');
+        $state.go('panel.balance');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -283,6 +283,9 @@ app.run(['$rootScope', '$state', '$stateParams',
 
         $rootScope.$on('$stateChangeSuccess',
             function(event, toState, toParams, fromState, fromParams) {
+
+                $window.scrollTo(0, 0);
+
                 //...
             });
 
@@ -589,15 +592,18 @@ app.controller('MasterController', ['$scope', '$rootScope',
 /*global app*/
 /*global $*/
 
-app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$interval',
+    function($scope, $rootScope, $state, $stateParams, $timeout, $interval) {
 
         $scope.setLoading = setLoading;
         $scope.setPageTitle = setPageTitle;
 
         $scope.loading = $scope.loadingMessage = false;
 
-        //TODO: Initialize lab info from logged-in user data...
+        refreshAllUserInfoProvider(false)();
+
+        // Refresh user data every 1 minute
+        $interval(refreshAllUserInfoProvider(true), 60000);
 
         $scope.setMenuHandlers({
             goToMainPage: function() {
@@ -625,7 +631,7 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         });
 
         var headerHandlers = {
-            pageTitle: 'نام کامل آزمایشگاه'
+            pageTitle: ''
         };
 
         $scope.setHeaderHandlers(headerHandlers);
@@ -641,9 +647,16 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         }
 
         function setPageTitle(title) {
-            // $rootScope.$apply(function() {
             headerHandlers.pageTitle = title;
-            // });
+        }
+
+        function refreshAllUserInfoProvider(silent) {
+            return function() {
+                silent || $scope.setLoading(true);
+                $timeout(function() { //TODO: Initialize lab info from logged-in user data...
+                    silent || $scope.setLoading(false);
+                }, 400);
+            };
         }
 
     }
@@ -945,26 +958,12 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', '$timeou
         //$scope.password
 
         function login() {
-            // //TODO: check for validity
-            // $scope.findingAnswer = true;
-            // $timeout(function() { //TODO: resolve answer
-            //     return {
-            //         testNumber: 1234,
-            //         nationalCode: '1234567890',
-            //         paitentName: 'حسام شکروی',
-            //         testDate: new Date(),
-            //         answerDate: new Date(),
-            //         laboratoryName: "آزمایشگاه دکتر شاهپوری"
-            //     };
-            // }, 400).then(function(answer) {
-            //     //TODO: validate result
-            //     $rootScope.data.answer = answer;
-            //     $state.go('answer', {
-            //         nationalCode: $scope.nationalCode,
-            //         testNumber: $scope.testNumber,
-            //         previousState: 'home.find'
-            //     });
-            // });
+            //TODO: check for validity
+            $scope.loggingIn = true;
+            $timeout(function() { //TODO: try to login
+                $state.go('panel.home');
+                // $scope.loggingIn = false;
+            }, 300);
         }
 
     }
@@ -1092,9 +1091,55 @@ app.controller('PanelAccountController', ['$scope', '$rootScope', '$state', '$st
 
 /*global app*/
 /*global $*/
+/*global toPersianNumber*/
 
-app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams',
-    function($scope, $rootScope, $state, $stateParams) {
+app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
+    function($scope, $rootScope, $state, $stateParams, $timeout) {
+
+        $scope.c2cPayment = c2cPayment;
+        $scope.zpPayment = zpPayment;
+
+        $scope.balance = 1250000;
+        $scope.preparingPayment = false;
+
+        $scope.setBackHandler(function() {
+            $state.go('panel.home');
+        });
+        
+        $scope.setPageTitle('وضعیت حساب و تأمین اعتبار');
+
+        //$scope.c2cReceiptCode
+        //$scope.zpChargeAmount
+
+        $scope.testCount = Math.floor($scope.balance / 10000);
+
+        $scope.balanceForDisplay = toPersianNumber($scope.balance);
+        $scope.testCountForDisplay = $scope.testCount >= 0 ?
+            toPersianNumber($scope.testCount) : '–';
+
+        if ($scope.testCount >= 200)
+            $scope.balanceColor = 'green';
+        else if ($scope.testCount >= 50)
+            $scope.balanceColor = 'olive';
+        else if ($scope.testCount >= 20)
+            $scope.balanceColor = 'yellow';
+        else if ($scope.testCount > 0)
+            $scope.balanceColor = 'orange';
+        else
+            $scope.balanceColor = 'red';
+
+        function c2cPayment() {
+            //TODO: check for validity
+            $scope.preparingPayment = true;
+            $timeout(function() {
+                $scope.preparingPayment = false;
+                $('#ja-c2c-acknowledgement-modal').modal('show');
+            }, 400);
+        }
+
+        function zpPayment() {
+            // body...
+        }
 
     }
 ]);
@@ -1134,19 +1179,9 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
 app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
     function($scope, $rootScope, $state, $stateParams, $timeout) {
 
-        // modal sample
-        // $('#test-modal').modal('show');
-
-        $scope.setLoading(true);
-
-        $scope.setPageTitle('نام آزمایشگاه');
-
         $scope.setBackHandler($scope.menuHandlers.logout);
 
-        //TODO: replace with actual data loading
-        $timeout(function() {
-            $scope.setLoading(false);
-        }, 100);
+        $scope.setPageTitle('نام آزمایشگاه');
 
     }
 ]);

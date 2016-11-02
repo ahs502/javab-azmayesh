@@ -73,7 +73,6 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/checkbox.rtl.min.css',
     './app/lib/semantic/dist/components/dimmer.rtl.min.css',
     './app/lib/semantic/dist/components/modal.rtl.min.css',
-    './app/lib/semantic/dist/components/statistic.rtl.min.css',
     './app/lib/semantic/dist/components/loader.rtl.min.css',
     './app/lib/semantic/dist/components/image.min.css',
     './app/lib/semantic/dist/components/menu.min.css',
@@ -82,7 +81,8 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/popup.min.css',
     './app/lib/semantic/dist/components/sidebar.min.css',
     './app/lib/semantic/dist/components/sticky.min.css',
-    // './app/lib/semantic/dist/components/divider.min.css',
+    './app/lib/semantic/dist/components/statistic.min.css',
+    './app/lib/semantic/dist/components/divider.min.css',
     //'./app/lib/semantic/dist/components/icon.min.css',
 ];
 
