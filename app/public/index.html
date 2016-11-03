@@ -14,8 +14,9 @@
     <!--<base href="/">-->
     <link rel="shortcut icon" type="image/png" href="/img/icon-64x64.png" />
 
-    <link rel="stylesheet" type="text/css" href="/dist/lib.min.css">
-    <link rel="stylesheet" type="text/css" href="/dist/app.min.css">
+    <!-- CSS files will be loaded dynamically -->
+    <!--<link rel="stylesheet" type="text/css" href="/dist/lib.min.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="/dist/app.min.css">-->
 </head>
 
 <body>
@@ -117,15 +118,15 @@
     <!-- Main site contents -->
 
     <!-- Back arrow and menu bars icon (when no header, outside of it) -->
-    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left" icon-js="left arrow" alt="<- Back" ng-click="backHandler()"></img>
-    <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-clickable ja-right" icon-js="menu bars" alt="Menu" ng-click="toggleMenu()"></img>
+    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="backHandler()"></img>
+    <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-clickable ja-right" ng-src="{{iconJs('menu bars')}}" alt="Menu" ng-click="toggleMenu()"></img>
 
     <!-- Header -->
     <div ng-if="headerHandlers" id="ja-header" class="ui fixed top sticky segment">
 
         <!-- Back arrow and menu bars icon (when header, inside of it) -->
-        <img ng-if="backHandler" class="ja-item ja-icon ja-hoverable ja-clickable ja-left" icon-js="left arrow" alt="<- Back" ng-click="backHandler()"></img>
-        <img ng-if="menuHandlers" class="ja-item ja-icon ja-hoverable ja-clickable ja-right" icon-js="menu bars" alt="Menu" ng-click="toggleMenu()"></img>
+        <img ng-if="backHandler" class="ja-item ja-icon ja-hoverable ja-clickable ja-left" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="backHandler()"></img>
+        <img ng-if="menuHandlers" class="ja-item ja-icon ja-hoverable ja-clickable ja-right" ng-src="{{iconJs('menu bars')}}" alt="Menu" ng-click="toggleMenu()"></img>
 
         <div ui-view="header">
             <!-- Header contents -->
@@ -148,9 +149,6 @@
 
 </div>
 
-
-    <script type="text/javascript" src="/dist/lib.min.js"></script>
-    <script type="text/javascript" src="/dist/app.min.js"></script>
 
     <script type="text/ng-template" id="common/about.html">
     <div id="ja-common-about">
@@ -1023,6 +1021,7 @@
             <div class="center aligned row">
 
                 <form class="ui {{ sendingAnswer ? 'loading' : '' }} form">
+
                     <div class="field">
                         <label class="nazanin">نام و نام خانوادگی</label>
                         <div class="ui input">
@@ -1057,27 +1056,59 @@
                     <div class="ui horizontal divider">
                         <span class="nazanin">آپلود فایل نتایج</span>
                     </div>
-                    
-                    <img icon-js="pdf file" width=100>
 
-                    <div class="ui violet raised clearing segment ja-preview">
-                        <img class="ui small left floated image ja-preview-image" src="/img/icon-128x128.png">
-                        <img class="ui small right floated image ja-preview-delete" icon-js="delete">
-                        <p class="left floated nazanin ja-preview-filename">my-file-name.txt</p>
-                        <div class="ja-preview-status">
-                            <div class="ui violet progress">
-                                <div class="bar">
-                                    <div class="progress"></div>
+                    <div ng-if="files.length" ng-repeat="file in files">
+                        <div class="ui teal raised clearing segment ja-preview">
+                            <img class="ui small left floated image ja-preview-image" ng-src="{{iconJs(file.srcPreview)}}">
+                            <img class="ui small right floated image ja-preview-delete" ng-src="{{iconJs('delete')}}" ng-click="removeFile(file)">
+                            <p class="left floated nazanin ja-preview-filename" ng-bind="file.name"></p>
+
+                            <div ng-switch="file.status" class="ja-preview-status">
+                                <div ng-switch-when="Preparing" class="nazanin">در حال آماده سازی</div>
+                                <div ng-switch-when="Uploading" id="progress-{{file.id}}" class="ui teal progress">
+                                    <div class="bar">
+                                        <div class="progress"></div>
+                                    </div>
+                                </div>
+                                <div ng-switch-when="Uploaded" class="nazanin"></div>
+                                <div ng-switch-default class="nazanin">
+                                    ({{file.status}})
+                                    <bdi>خطا در ارسال فایل</bdi>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
+                    <div ng-hide="files.length">
+                        <span class="nazanin">لطفاً فایل های نتایج آزمایش را اضافه  کنید</span>
+                    </div>
+
+                    <!-- drop files zone -->
+                    <div id="drop-zone" class="ui center aligned segment">
+
+                        <span id="drop-zone-text" class="nazanin">فایل های نتایج را داخل این کادر بکشید</span>
+
+                        <!-- real input file -->
+                        <input id="input-file" type="file" multiple>
+
+                        <!-- custom face of input file -->
+                        <div class="field">
+                            <button class="fluid ui blue basic button" ng-click="selectFilesDialog()">
+                            <span class="nazanin">یا با این دکمه فایل ها را اضافه کنید</span>
+                        </button>
+                        </div>
+
+                    </div>
+
+                    <div class="ui divider"></div>
 
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="sendAnswer()">
                             <span class="nazanin">ارسال نتایج</span>
                         </button>
                     </div>
+
                 </form>
 
             </div>
@@ -1219,6 +1250,33 @@
     password
 </script>
 
+
+    <script>
+        // Load CSS files dynamically
+        function loadJsCssFile(filename, filetype) {
+            var fileref;
+            if (filetype == "js") {
+                fileref = document.createElement('script');
+                fileref.setAttribute("type", "text/javascript");
+                fileref.setAttribute("src", filename);
+                document.getElementsByTagName("body")[0].appendChild(fileref);
+            }
+            else if (filetype == "css") {
+                fileref = document.createElement("link");
+                fileref.setAttribute("rel", "stylesheet");
+                fileref.setAttribute("type", "text/css");
+                fileref.setAttribute("href", filename);
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+            }
+        }
+        loadJsCssFile('/dist/lib.min.css', 'css');
+        loadJsCssFile('/dist/app.min.css', 'css');
+        // loadJsCssFile('/dist/lib.min.js', 'js');
+        // loadJsCssFile('/dist/app.min.js', 'js');
+    </script>
+
+    <script type="text/javascript" src="/dist/lib.min.js"></script>
+    <script type="text/javascript" src="/dist/app.min.js"></script>
 
 </body>
 

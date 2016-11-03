@@ -14,18 +14,43 @@
     <!--<base href="/">-->
     <link rel="shortcut icon" type="image/png" href="/img/icon-64x64.png" />
 
-    <link rel="stylesheet" type="text/css" href="/dist/lib.min.css">
-    <link rel="stylesheet" type="text/css" href="/dist/app.min.css">
+    <!-- CSS files will be loaded dynamically -->
+    <!--<link rel="stylesheet" type="text/css" href="/dist/lib.min.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="/dist/app.min.css">-->
 </head>
 
 <body>
 
     <!-- import:./app/view/layout.html -->
 
+    <!-- import:./app/view/partials.html -->
+
+    <script>
+        // Load CSS files dynamically
+        function loadJsCssFile(filename, filetype) {
+            var fileref;
+            if (filetype == "js") {
+                fileref = document.createElement('script');
+                fileref.setAttribute("type", "text/javascript");
+                fileref.setAttribute("src", filename);
+                document.getElementsByTagName("body")[0].appendChild(fileref);
+            }
+            else if (filetype == "css") {
+                fileref = document.createElement("link");
+                fileref.setAttribute("rel", "stylesheet");
+                fileref.setAttribute("type", "text/css");
+                fileref.setAttribute("href", filename);
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+            }
+        }
+        loadJsCssFile('/dist/lib.min.css', 'css');
+        loadJsCssFile('/dist/app.min.css', 'css');
+        // loadJsCssFile('/dist/lib.min.js', 'js');
+        // loadJsCssFile('/dist/app.min.js', 'js');
+    </script>
+
     <script type="text/javascript" src="/dist/lib.min.js"></script>
     <script type="text/javascript" src="/dist/app.min.js"></script>
-
-    <!-- import:./app/view/partials.html -->
 
 </body>
 
