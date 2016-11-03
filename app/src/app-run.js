@@ -1,10 +1,15 @@
 /*global app*/
+/*global $*/
 
 app.run(['$rootScope', '$state', '$stateParams', '$window',
     function($rootScope, $state, $stateParams, $window) {
 
+        $('#ja-initial-loader').hide();
+        $('#ja-sidebar-menu').show();
+        $('#ja-main-site-content').show();
+
         // $state.go('home.find');
-        $state.go('panel.balance');
+        $state.go('panel.send');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;

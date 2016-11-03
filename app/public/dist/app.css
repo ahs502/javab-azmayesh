@@ -109,6 +109,30 @@ body {
 #ja-panel #ja-panel-loading {
   margin-top: 73px;
 }
+#ja-panel #ja-panel-send .ja-preview .ja-preview-image {
+  max-width: 100px;
+  max-height: 100px;
+  margin-bottom: 0;
+  border: 1px solid #c3afd3;
+}
+#ja-panel #ja-panel-send .ja-preview .ja-preview-delete {
+  width: 16px;
+  height: 16px;
+}
+#ja-panel #ja-panel-send .ja-preview .ja-preview-filename {
+  position: absolute;
+  left: 133px;
+  top: 39px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 20px;
+}
+#ja-panel #ja-panel-send .ja-preview .ja-preview-status {
+  margin: 76px 0 0 118px;
+}
+#ja-panel #ja-panel-send .ja-preview .ja-preview-status .ui.progress {
+  margin: 0;
+}
 .ui.modal > .content {
   width: 90%;
 }

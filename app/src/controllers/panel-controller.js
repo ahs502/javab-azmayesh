@@ -6,13 +6,14 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 
         $scope.setLoading = setLoading;
         $scope.setPageTitle = setPageTitle;
+        $scope.refreshUserData = refreshUserDataProvider(false);
 
         $scope.loading = $scope.loadingMessage = false;
 
-        refreshAllUserInfoProvider(false)();
+        refreshUserDataProvider(false)();
 
         // Refresh user data every 1 minute
-        $interval(refreshAllUserInfoProvider(true), 60000);
+        $interval(refreshUserDataProvider(true), 60000);
 
         $scope.setMenuHandlers({
             goToMainPage: function() {
@@ -59,7 +60,7 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
             headerHandlers.pageTitle = title;
         }
 
-        function refreshAllUserInfoProvider(silent) {
+        function refreshUserDataProvider(silent) {
             return function() {
                 silent || $scope.setLoading(true);
                 $timeout(function() { //TODO: Initialize lab info from logged-in user data...

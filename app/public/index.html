@@ -20,7 +20,92 @@
 
 <body>
 
-    <div id="ja-sidebar-menu" class="ui --thin right sidebar --inverted vertical menu">
+    <style>
+    #ja-sidebar-menu,
+#ja-main-site-content {
+    display: none;
+}
+
+#ja-initial-loader {
+    color: #252e5b;
+    font-size: 90px;
+    text-indent: -9999em;
+    overflow: hidden;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    margin: 72px auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -0.5em;
+    margin-left: -0.5em;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load6 1.7s infinite ease;
+    animation: load6 1.7s infinite ease;
+}
+
+@-webkit-keyframes load6 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+        box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+    5%,
+    95% {
+        box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+    10%,
+    59% {
+        box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+    }
+    20% {
+        box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em;
+    }
+    38% {
+        box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em;
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+        box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+}
+
+@keyframes load6 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+        box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+    5%,
+    95% {
+        box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+    10%,
+    59% {
+        box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+    }
+    20% {
+        box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em;
+    }
+    38% {
+        box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em;
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+        box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+}
+
+</style>
+
+<div id="ja-initial-loader"><bdi>لطفا کمی صبر کنید...</bdi></div>
+
+<div id="ja-sidebar-menu" class="ui --thin right sidebar --inverted vertical menu">
     <div class="item">
         <img class="ui centered small image ja-menu-logo" src="/img/logo.png" alt="جواب آزمایش" />
     </div>
@@ -28,19 +113,19 @@
         <!-- Main sidebar menu items -->
     </div>
 </div>
-<div class="dimed pusher">
+<div id="ja-main-site-content" class="dimed pusher">
     <!-- Main site contents -->
 
     <!-- Back arrow and menu bars icon (when no header, outside of it) -->
-    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
-    <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-clickable ja-right" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
+    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left" icon-js="left arrow" alt="<- Back" ng-click="backHandler()"></img>
+    <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-clickable ja-right" icon-js="menu bars" alt="Menu" ng-click="toggleMenu()"></img>
 
     <!-- Header -->
     <div ng-if="headerHandlers" id="ja-header" class="ui fixed top sticky segment">
 
         <!-- Back arrow and menu bars icon (when header, inside of it) -->
-        <img ng-if="backHandler" class="ja-item ja-icon ja-hoverable ja-clickable ja-left" src="/img/icons/left-arrow.svg" alt="<- Back" ng-click="backHandler()"></img>
-        <img ng-if="menuHandlers" class="ja-item ja-icon ja-hoverable ja-clickable ja-right" src="/img/icons/menu-bars.svg" alt="Menu" ng-click="toggleMenu()"></img>
+        <img ng-if="backHandler" class="ja-item ja-icon ja-hoverable ja-clickable ja-left" icon-js="left arrow" alt="<- Back" ng-click="backHandler()"></img>
+        <img ng-if="menuHandlers" class="ja-item ja-icon ja-hoverable ja-clickable ja-right" icon-js="menu bars" alt="Menu" ng-click="toggleMenu()"></img>
 
         <div ui-view="header">
             <!-- Header contents -->
@@ -919,7 +1004,87 @@
 </script>
 
 <script type="text/ng-template" id="panel/send.html">
-    send
+    <div id="ja-panel-send">
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    <bdi>لطفاً اطلاعات زیر را با دقت پُر کنید</bdi>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ sendingAnswer ? 'loading' : '' }} form">
+                    <div class="field">
+                        <label class="nazanin">نام و نام خانوادگی</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="fullName" placeholder="نام و نام خانوادگی">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="nazanin">کد ملی</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="nationalCode" placeholder="کد ملی">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="nazanin">شماره تلفن همراه</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="mobilePhoneNumber" placeholder="09xxxxxxxxx">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="nazanin"><bdi>شماره تلفن دوم (اختیاری)</bdi></label>
+                        <div class="ui input">
+                            <input type="text" ng-model="phoneNumber" placeholder="تلفن همراه یا ثابت">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="nazanin"><bdi>شماره تلفن سوم (اختیاری)</bdi></label>
+                        <div class="ui input">
+                            <input type="text" ng-model="extraPhoneNumber" placeholder="تلفن همراه یا ثابت">
+                        </div>
+                    </div>
+
+                    <div class="ui horizontal divider">
+                        <span class="nazanin">آپلود فایل نتایج</span>
+                    </div>
+                    
+                    <img icon-js="pdf file" width=100>
+
+                    <div class="ui violet raised clearing segment ja-preview">
+                        <img class="ui small left floated image ja-preview-image" src="/img/icon-128x128.png">
+                        <img class="ui small right floated image ja-preview-delete" icon-js="delete">
+                        <p class="left floated nazanin ja-preview-filename">my-file-name.txt</p>
+                        <div class="ja-preview-status">
+                            <div class="ui violet progress">
+                                <div class="bar">
+                                    <div class="progress"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="sendAnswer()">
+                            <span class="nazanin">ارسال نتایج</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
 </script>
 
 <script type="text/ng-template" id="panel/balance.html">
