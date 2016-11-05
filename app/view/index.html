@@ -26,7 +26,6 @@
     <!-- import:./app/view/partials.html -->
 
     <script>
-        // Load CSS files dynamically
         function loadJsCssFile(filename, filetype) {
             var fileref;
             if (filetype == "js") {
@@ -43,12 +42,17 @@
                 document.getElementsByTagName("head")[0].appendChild(fileref);
             }
         }
+        
+        // Load CSS files dynamically
         loadJsCssFile('/dist/lib.min.css', 'css');
         loadJsCssFile('/dist/app.min.css', 'css');
+        
+        // Do NOT load JS files dynamically
         // loadJsCssFile('/dist/lib.min.js', 'js');
         // loadJsCssFile('/dist/app.min.js', 'js');
     </script>
 
+    <!-- JS files will NOT be loaded dynamically -->
     <script type="text/javascript" src="/dist/lib.min.js"></script>
     <script type="text/javascript" src="/dist/app.min.js"></script>
 

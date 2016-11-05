@@ -22,10 +22,7 @@
 <body>
 
     <style>
-    #ja-sidebar-menu,
-#ja-main-site-content {
-    display: none;
-}
+    /* DO NOT INCLUDE THIS FILE IN GULP TASK FOR 'app.css' AND 'app.min.css' */
 
 #ja-initial-loader {
     color: #252e5b;
@@ -114,7 +111,7 @@
         <!-- Main sidebar menu items -->
     </div>
 </div>
-<div id="ja-main-site-content" class="dimed pusher">
+<div class="dimed pusher" id="ja-main-site-content">
     <!-- Main site contents -->
 
     <!-- Back arrow and menu bars icon (when no header, outside of it) -->
@@ -148,6 +145,11 @@
     </div>
 
 </div>
+
+<script>
+    document.getElementById('ja-sidebar-menu').style.display = 'none';
+    document.getElementById('ja-main-site-content').style.display = 'none';
+</script>
 
 
     <script type="text/ng-template" id="common/about.html">
@@ -1085,7 +1087,7 @@
                     </div>
 
                     <!-- drop files zone -->
-                    <div id="drop-zone" class="ui center aligned segment">
+                    <div id="drop-zone" class="ui center aligned basic segment">
 
                         <span id="drop-zone-text" class="nazanin">فایل های نتایج را داخل این کادر بکشید</span>
 
@@ -1252,7 +1254,6 @@
 
 
     <script>
-        // Load CSS files dynamically
         function loadJsCssFile(filename, filetype) {
             var fileref;
             if (filetype == "js") {
@@ -1269,12 +1270,17 @@
                 document.getElementsByTagName("head")[0].appendChild(fileref);
             }
         }
+        
+        // Load CSS files dynamically
         loadJsCssFile('/dist/lib.min.css', 'css');
         loadJsCssFile('/dist/app.min.css', 'css');
+        
+        // Do NOT load JS files dynamically
         // loadJsCssFile('/dist/lib.min.js', 'js');
         // loadJsCssFile('/dist/app.min.js', 'js');
     </script>
 
+    <!-- JS files will NOT be loaded dynamically -->
     <script type="text/javascript" src="/dist/lib.min.js"></script>
     <script type="text/javascript" src="/dist/app.min.js"></script>
 

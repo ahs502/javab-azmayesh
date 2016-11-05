@@ -1,7 +1,4 @@
-#ja-sidebar-menu,
-#ja-main-site-content {
-    display: none;
-}
+/* DO NOT INCLUDE THIS FILE IN GULP TASK FOR 'app.css' AND 'app.min.css' */
 
 #ja-initial-loader {
     color: #252e5b;
