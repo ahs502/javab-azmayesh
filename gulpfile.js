@@ -28,15 +28,16 @@ var bs, bsRaw, browserSync = require("browser-sync");
 var port = 50302;
 
 var javascripts_app = [
-    './app/src/libraries/*.js',
-    './app/src/modules/*.js',
+    './app/src/libraries/**/*.js',
+    './app/src/modules/**/*.js',
     './app/src/utilities.js',
     './app/src/app.js',
     './app/src/app-config.js',
     './app/src/app-run.js',
-    './app/src/services/*.js',
-    './app/src/controllers/*.js',
-    './app/src/directives/*.js',
+    './app/src/services/**/*.js',
+    './app/src/controllers/**/*.js',
+    './app/src/directives/**/*.js',
+    './app/src/filters/**/*.js',
     './app/src/**/*.js',
 ];
 

@@ -207,7 +207,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
             .state('panel.account', {
                 url: '/account',
                 templateUrl: 'panel/account.html',
-                controller: 'PanelAccountController'
+                controller: 'PanelAccountController',
+                abstract: true
             })
             .state('panel.account.summary', {
                 url: '/summary',
@@ -223,6 +224,14 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 url: '/password',
                 templateUrl: 'panel/account/password.html',
                 controller: 'PanelAccountPasswordController'
+            })
+            .state('panel.account.confirm', {
+                url: '/confirm',
+                params: {
+                    action: null
+                },
+                templateUrl: 'panel/account/confirm.html',
+                controller: 'PanelAccountConfirmController'
             });
 
         $urlRouterProvider.otherwise('/home/find');

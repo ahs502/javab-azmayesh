@@ -9,7 +9,7 @@
     <meta name="robots" content="index, noarchive">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 
-    <title>جواب آزمایش - سامانه اینترنتی دریافت نتایج آزمایشگاهی</title>
+    <!--<title>جواب آزمایش - سامانه اینترنتی دریافت نتایج آزمایشگاهی</title>-->
 
     <!--<base href="/">-->
     <link rel="shortcut icon" type="image/png" href="/img/icon-64x64.png" />
@@ -996,11 +996,42 @@
 </script>
 
 <script type="text/ng-template" id="panel/history.html">
-    history
+    <div id="ja-panel-history">
+
+    <div class="ui basic segment">
+
+        <div class="ui three stackable doubling cards">
+
+            <div class="ui link fluid raised card" ng-repeat="post in posts" ng-class="{ 'green': post.status==='Received', 'blue': post.status==='Sending', 'red': post.status==='Error' }" ng-click="postClicked(post)">
+                <div class="content">
+                    <div class="header">header: POST {{post.id}}</div>
+                    <div class="meta">
+                        <span class="category">meta data</span>
+                    </div>
+                    <div class="description">
+                        <p>some description about the post</p>
+                    </div>
+                </div>
+                <!--<div class="extra content">-->
+                <!--    <div class="right floated author">-->
+                <!--        <img class="ui avatar image" src="/images/avatar/small/matt.jpg"> Matt-->
+                <!--    </div>-->
+                <!--</div>-->
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 </script>
 
 <script type="text/ng-template" id="panel/post.html">
+    <div id="ja-panel-post">
+
     post
+
+</div>
 </script>
 
 <script type="text/ng-template" id="panel/send.html">
@@ -1117,6 +1148,22 @@
         </div>
     </div>
 
+    <!-- sent answer acknowledgement -->
+    <div id="ja-sent-answer-acknowledgement-modal" class="ui modal">
+        <div class="header">
+            <span class="nazanin">ازسال موفقیت آمیز نتایج آزمایش</span>
+        </div>
+        <div class="content">
+            <span class="nazanin"><bdi>نتایج آزمایش ثبت شده و اطلاع رسانی لازم به بیمار صورت خواهد گرفت.</bdi></span>
+        </div>
+        <div class="actions">
+            <!--<div class="ui cancel button">Cancel</div>-->
+            <button class="ui --basic blue ok button">
+                <span class="nazanin">تأیید</span>
+            </button>
+        </div>
+    </div>
+
 </div>
 </script>
 
@@ -1223,7 +1270,7 @@
         </div>
         <div class="actions">
             <!--<div class="ui cancel button">Cancel</div>-->
-            <button class="ui --basic blue ok button" ng-click="$state.go('panel.home')">
+            <button class="ui --basic blue ok button">
                 <span class="nazanin">تأیید</span>
             </button>
         </div>
@@ -1241,15 +1288,235 @@
 </script>
 
 <script type="text/ng-template" id="panel/account/summary.html">
-    summary
+    <div id="ja-panel-account-summary">
+
+    <div class="ui equal width grid ja-information-grid">
+
+        <div class="row ja-information-row" ng-repeat="tupple in userDataForDisplay">
+            <div class="left aligned column">
+                <p ng-bind="tupple.value | emptyCheck | toPersianNumber" class="nazanin ja-information-value"></p>
+            </div>
+            <div class="right aligned column">
+                <p ng-bind="tupple.label" class="nazanin ja-information-label"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui form">
+
+                    <div class="field">
+                        <button class="fluid ui blue button" ng-click="editAccountData()">
+                            <span class="nazanin">ویرایش اطلاعات</span>
+                        </button>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui green basic button" ng-click="changePassword()">
+                            <span class="nazanin">تغییر کلمه عبور</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
 </script>
 
 <script type="text/ng-template" id="panel/account/edit.html">
-    edit
+    <div id="ja-panel-account-edit">
+
+    <!--<div class="ui grid">-->
+    <!--    <div class="center aligned row">-->
+    <!--        <div class="sixteen wide column">-->
+
+    <!--            <p class="nazanin">-->
+    <!--                <bdi>لطفاً کادرهای زیر را با دقت پُرکنید</bdi>-->
+    <!--            </p>-->
+
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--</div>-->
+
+    <div class="ui centered grid">
+            <div class="center aligned row">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+
+                <form class="ui {{ editingAccount ? 'loading' : '' }} form">
+
+                    <div class="field">
+                        <label class="nazanin">نام کامل آزمایشگاه</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="labName" placeholder="نام کامل آزمایشگاه">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">تلفن همراه ارتباطی</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="mobilePhoneNumber" placeholder="09123456789">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">تلفن ثابت</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="phoneNumber" placeholder="021-12345678">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">آدرس</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="address" placeholder="نام شهر - خیابان اصلی - خیابان فرعی - پلاک - واحد">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">کد پستی</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="postalCode" placeholder="1234567890">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">آدرس وبسایت</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="websiteAddress" placeholder="example.ir">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="editAccount()">
+                            <span class="nazanin">مرحله بعدی</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
 </script>
 
 <script type="text/ng-template" id="panel/account/password.html">
-    password
+    <div id="ja-panel-password">
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    <bdi>لطفاً کلمه عبور قدیمی و جدید خود را وارد کنید</bdi>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="center aligned row">
+            <div class="fourteen wide small eight wide tablet six wide computer column">
+
+                <form class="ui {{ changingPassword ? 'loading' : '' }} form">
+                    <div class="field">
+                        <!--<label class="nazanin">کلمه عبور قدیمی</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="oldPassword" placeholder="کلمه عبور قدیمی">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <!--<label class="nazanin">کلمه عبور جدید</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="newPassword" placeholder="کلمه عبور جدید">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <!--<label class="nazanin">تکرار کلمه عبور جدید</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="newPasswordAgain" placeholder="تکرار کلمه عبور جدید">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="changePassword()">
+                            <span class="nazanin">تغییر کلمه عبور</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</script>
+
+<script type="text/ng-template" id="panel/account/confirm.html">
+    <div id="ja-panel-password">
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    <bdi>لطفاً کد اعتبار سنجی دریافت شده از طریق پیامک را وارد کنید</bdi>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="center aligned row">
+            <div class="fourteen wide small eight wide tablet six wide computer column">
+
+                <form class="ui {{ confirming ? 'loading' : '' }} form">
+                    <div class="field">
+                        <!--<label class="nazanin">کد اعتبار سنجی</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="verificationCode" placeholder="کد اعتبار سنجی">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="confirm()">
+                            <span class="nazanin">اتمام عملیات</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- confirmed acknowledgement -->
+    <div id="ja-confirmed-acknowledgement-modal" class="ui modal">
+        <div class="header">
+            <span class="nazanin">عملیات با موفقیت انجام شد</span>
+        </div>
+        <div class="content">
+            <span ng-if="action === 'change password'" class="nazanin"><bdi>رمز عبور شما با موفقیت تغییر کرد.</bdi></span>
+            <span ng-if="action === 'edit account'" class="nazanin"><bdi>اصلاحات مورد نظر با موفقیت در سامانه ثبت شدند.</bdi></span>
+        </div>
+        <div class="actions">
+            <!--<div class="ui cancel button">Cancel</div>-->
+            <button class="ui --basic blue ok button">
+                <span class="nazanin">تأیید</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
 </script>
 
 

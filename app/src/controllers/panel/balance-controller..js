@@ -14,7 +14,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
         $scope.setBackHandler(function() {
             $state.go('panel.home');
         });
-        
+
         $scope.setPageTitle('وضعیت حساب و تأمین اعتبار');
 
         //$scope.c2cReceiptCode
@@ -42,7 +42,13 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
             $scope.preparingPayment = true;
             $timeout(function() {
                 $scope.preparingPayment = false;
-                $('#ja-c2c-acknowledgement-modal').modal('show');
+                $('#ja-c2c-acknowledgement-modal')
+                    .modal({
+                        onHide: function() {
+                            $state.go('panel.home');
+                        }
+                    })
+                    .modal('show');
             }, 400);
         }
 

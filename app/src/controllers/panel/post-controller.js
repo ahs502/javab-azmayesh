@@ -4,11 +4,13 @@
 app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$stateParams',
     function($scope, $rootScope, $state, $stateParams) {
 
-        $scope.setBackHandler(function () {
+        // We have: $rootScope.data.post
+
+        $scope.setBackHandler(function() {
             $state.go('panel.history');
         });
 
-        $scope.setPageTitle('آرمان لارآبادی');
+        $scope.setPageTitle('آرمان زیبا کلام');
 
     }
 ]);

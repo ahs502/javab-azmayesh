@@ -1,1 +1,40 @@
-summary
+<div id="ja-panel-account-summary">
+
+    <div class="ui equal width grid ja-information-grid">
+
+        <div class="row ja-information-row" ng-repeat="tupple in userDataForDisplay">
+            <div class="left aligned column">
+                <p ng-bind="tupple.value | emptyCheck | toPersianNumber" class="nazanin ja-information-value"></p>
+            </div>
+            <div class="right aligned column">
+                <p ng-bind="tupple.label" class="nazanin ja-information-label"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui form">
+
+                    <div class="field">
+                        <button class="fluid ui blue button" ng-click="editAccountData()">
+                            <span class="nazanin">ویرایش اطلاعات</span>
+                        </button>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui green basic button" ng-click="changePassword()">
+                            <span class="nazanin">تغییر کلمه عبور</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>

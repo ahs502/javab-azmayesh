@@ -63,7 +63,20 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         function refreshUserDataProvider(silent) {
             return function() {
                 silent || $scope.setLoading(true);
-                $timeout(function() { //TODO: Initialize lab info from logged-in user data...
+                return $timeout(function() { //TODO: Initialize lab info from logged-in user data...
+
+                    $rootScope.data.labData = {
+                        userData: {
+                            labName: 'آزمایشگاه دکتر میر اسدی',
+                            mobilePhoneNumber: '09122343454',
+                            phoneNumber: '02153647586',
+                            address: 'تهران - خ سادات علوی - کوچه صابری - پلاک 217 - واحد 4',
+                            postalCode: '5539110823',
+                            websiteAddress: 'www.mirasadilab.ir',
+                            username: 'drmirasadi'
+                        },
+                    };
+
                     silent || $scope.setLoading(false);
                 }, 400);
             };

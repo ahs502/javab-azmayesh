@@ -1,1 +1,75 @@
-edit
+<div id="ja-panel-account-edit">
+
+    <!--<div class="ui grid">-->
+    <!--    <div class="center aligned row">-->
+    <!--        <div class="sixteen wide column">-->
+
+    <!--            <p class="nazanin">-->
+    <!--                <bdi>لطفاً کادرهای زیر را با دقت پُرکنید</bdi>-->
+    <!--            </p>-->
+
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--</div>-->
+
+    <div class="ui centered grid">
+            <div class="center aligned row">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+
+                <form class="ui {{ editingAccount ? 'loading' : '' }} form">
+
+                    <div class="field">
+                        <label class="nazanin">نام کامل آزمایشگاه</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="labName" placeholder="نام کامل آزمایشگاه">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">تلفن همراه ارتباطی</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="mobilePhoneNumber" placeholder="09123456789">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">تلفن ثابت</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="phoneNumber" placeholder="021-12345678">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">آدرس</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="address" placeholder="نام شهر - خیابان اصلی - خیابان فرعی - پلاک - واحد">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">کد پستی</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="postalCode" placeholder="1234567890">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin">آدرس وبسایت</label>
+                        <div class="ui input">
+                            <input type="text" ng-model="websiteAddress" placeholder="example.ir">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="editAccount()">
+                            <span class="nazanin">مرحله بعدی</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>

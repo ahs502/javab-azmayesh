@@ -1,1 +1,28 @@
-history
+<div id="ja-panel-history">
+
+    <div class="ui basic segment">
+
+        <div class="ui three stackable doubling cards">
+
+            <div class="ui link fluid raised card" ng-repeat="post in posts" ng-class="{ 'green': post.status==='Received', 'blue': post.status==='Sending', 'red': post.status==='Error' }" ng-click="postClicked(post)">
+                <div class="content">
+                    <div class="header">header: POST {{post.id}}</div>
+                    <div class="meta">
+                        <span class="category">meta data</span>
+                    </div>
+                    <div class="description">
+                        <p>some description about the post</p>
+                    </div>
+                </div>
+                <!--<div class="extra content">-->
+                <!--    <div class="right floated author">-->
+                <!--        <img class="ui avatar image" src="/images/avatar/small/matt.jpg"> Matt-->
+                <!--    </div>-->
+                <!--</div>-->
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

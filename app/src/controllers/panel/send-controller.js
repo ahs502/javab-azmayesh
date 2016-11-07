@@ -43,6 +43,18 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
         function sendAnswer() {
             //TODO: not implemented yet.
+            //TODO: check for validity
+            $scope.sendingAnswer = true;
+            $timeout(function() { //TODO: send answer
+                $scope.sendingAnswer = false;
+                $('#ja-sent-answer-acknowledgement-modal')
+                    .modal({
+                        onHide: function() {
+                            $state.go('panel.home');
+                        }
+                    })
+                    .modal('show');
+            }, 400);
         }
 
         function selectFilesDialog() {
@@ -136,7 +148,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
             var xhr = new XMLHttpRequest();
             file.xhr = xhr;
-            xhr.open('post', '/upload', true);
+            xhr.open('post', '/upload', true); //TODO: determine the exact upload url
             xhr.upload.onprogress = function(e) {
                 if (e.lengthComputable) {
                     file.progress = Math.floor((e.loaded / e.total) * 100);
