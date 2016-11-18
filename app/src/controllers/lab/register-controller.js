@@ -1,8 +1,11 @@
 /*global app*/
 
-app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
-    function($rootScope, $scope, $state, $stateParams, $timeout) {
+app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'vcRecaptchaService', 'UserService',
+    function($rootScope, $scope, $state, $stateParams, $timeout, vcRecaptchaService, userService) {
 
+        // $scope.setResponse = setResponse;
+        // $scope.setWidgetId = setWidgetId;
+        // $scope.cbExpiration = cbExpiration;
         $scope.sendRegisterationForm = sendRegisterationForm;
 
         $scope.username = $stateParams.username;
@@ -13,26 +16,47 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
             $state.go('lab.login');
         });
 
-        //$scope.labName
-        //$scope.mobilePhoneNumber
-        //$scope.phoneNumber
-        //$scope.address
-        //$scope.postalCode
-        //$scope.websiteAddress
-        //$scope.username
-        //$scope.password
-        //$scope.passwordAgain
-        //$scope.acceptRules
+        //$scope.model.labName
+        //$scope.model.mobilePhoneNumber
+        //$scope.model.phoneNumber
+        //$scope.model.address
+        //$scope.model.postalCode
+        //$scope.model.websiteAddress
+        //$scope.model.username
+        //$scope.model.password
+        //$scope.model.passwordAgain
+        //$scope.model.acceptRules
+
+        $scope.model = {
+            key: '6LexDAwUAAAAAPXalUBl6eGUWa3dz7PrXXa-a7EG'
+        };
+
+        // function setResponse(response) {
+        //     $scope.response = response;
+        // };
+
+        // function setWidgetId(widgetId) {
+        //     $scope.widgetId = widgetId;
+        // };
+
+        // function cbExpiration() {
+        //     vcRecaptchaService.reload($scope.widgetId);
+        //     $scope.response = null;
+        // };
 
         function sendRegisterationForm() {
             //TODO: check for validity
             $scope.sendingRegisterationForm = true;
-            $timeout(function() {
+            return userService.register($scope.model).then(function() {
                 $state.go('lab.validate', {
                     username: $scope.username
                 });
-                // $scope.sendingRegisterationForm = false;
-            }, 400);
+            }, function(response) {
+                //TODO: Handle errors...
+                $scope.sendingRegisterationForm = false;
+                alert(JSON.stringify(response, null, 4));
+                // vcRecaptchaService.reload($scope.widgetId);
+            });
         }
 
     }

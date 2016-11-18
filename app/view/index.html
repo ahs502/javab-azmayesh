@@ -14,6 +14,8 @@
     <!--<base href="/">-->
     <link rel="shortcut icon" type="image/png" href="/img/icon-64x64.png" />
 
+    <script src="//www.google.com/recaptcha/api.js?render=explicit&onload=vcRecaptchaApiLoaded&hl=fa" async defer></script>
+
     <!-- CSS files will be loaded dynamically -->
     <!--<link rel="stylesheet" type="text/css" href="/dist/lib.min.css">-->
     <!--<link rel="stylesheet" type="text/css" href="/dist/app.min.css">-->
@@ -42,11 +44,11 @@
                 document.getElementsByTagName("head")[0].appendChild(fileref);
             }
         }
-        
+
         // Load CSS files dynamically
         loadJsCssFile('/dist/lib.min.css', 'css');
         loadJsCssFile('/dist/app.min.css', 'css');
-        
+
         // Do NOT load JS files dynamically
         // loadJsCssFile('/dist/lib.min.js', 'js');
         // loadJsCssFile('/dist/app.min.js', 'js');

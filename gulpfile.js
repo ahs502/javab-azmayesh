@@ -49,6 +49,7 @@ var javascripts_lib = [
     './app/lib/jquery/dist/jquery.min.js',
     './app/lib/angular/angular.js',
     './app/lib/angular-ui-router/release/angular-ui-router.min.js',
+    './app/lib/angular-recaptcha/release/angular-recaptcha.min.js',
     './app/lib/persian-date/dist/0.1.8/persian-date-0.1.8.min.js',
     //'./app/lib/semantic/dist/semantic.min.js',
     './app/lib/semantic/dist/components/site.min.js',

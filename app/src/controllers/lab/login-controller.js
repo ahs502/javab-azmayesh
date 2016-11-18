@@ -1,7 +1,7 @@
 /*global app*/
 
-app.controller('LabLoginController', ['$rootScope', '$scope', '$state', '$timeout',
-    function($rootScope, $scope, $state, $timeout) {
+app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserService',
+    function($rootScope, $scope, $state, userService) {
 
         $scope.login = login;
 
@@ -15,10 +15,12 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', '$timeou
         function login() {
             //TODO: check for validity
             $scope.loggingIn = true;
-            $timeout(function() { //TODO: try to login
+            return userService.login($scope.username, $scope.password).then(function() {
                 $state.go('panel.home');
-                // $scope.loggingIn = false;
-            }, 300);
+            }, function(response) {
+                $scope.loggingIn = false;
+                alert(JSON.stringify(response, null, 4));
+            });
         }
 
     }

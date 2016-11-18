@@ -1,7 +1,7 @@
 /*global app*/
 
-app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
-    function($rootScope, $scope, $state, $stateParams, $timeout) {
+app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$stateParams', 'UserService',
+    function($rootScope, $scope, $state, $stateParams, userService) {
 
         $scope.finishRegisteration = finishRegisteration;
 
@@ -18,12 +18,18 @@ app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$sta
         //$scope.validationCode
 
         function finishRegisteration() {
-            //TODO: check for validity
             $scope.registering = true;
-            $timeout(function() {
+            return userService.registerConfirm({
+                username: $scope.username,
+                validationCode: $scope.validationCode
+            }).then(function() {
+                $scope.registering = false;
+                alert('عملیات ثبت نام شما با موفقیت انجام شد.\nلطفاً منتظر تماس اُپراتورهای ما باشید.');
                 $state.go('lab.signedup');
-                // $scope.registering = false;
-            }, 400);
+            }, function(response) {
+                $scope.registering = false;
+                alert(JSON.stringify(response, null, 4));
+            });
         }
 
     }

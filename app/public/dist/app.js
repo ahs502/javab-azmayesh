@@ -6,7 +6,7 @@
 
 /*global angular*/
 
-var app = angular.module('JavabAzmayesh', ['ui.router']);
+var app = angular.module('JavabAzmayesh', ['ui.router', 'vcRecaptcha']);
 
 
 /*
@@ -282,9 +282,10 @@ app.run(['$rootScope', '$state', '$stateParams', '$window',
         $('#ja-main-site-content').show();
         $('#ja-sidebar-menu').show();
 
-        $state.go('home.find');
+        // $state.go('home.find');
         // $state.go('panel.account.summary');
         // $state.go('panel.home');
+        $state.go('lab.register');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -325,383 +326,116 @@ app.run(['$rootScope', '$state', '$stateParams', '$window',
 
 
 /*
-	AHS502 : Start of 'answer-controller.js'
+	AHS502 : Start of 'user-service.js'
 */
 
 /*global app*/
-/*global $*/
-/*global persianDate*/
-/*global toPersianNumber*/
 
-app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$stateParams',
-    function($rootScope, $scope, $state, $stateParams) {
+app.service('UserService', ['$q', '$http', '$window',
+    function($q, $http, $window) {
 
-        $scope.nationalCode = $stateParams.nationalCode;
-        $scope.testNumber = $stateParams.testNumber;
-        $scope.previousState = $stateParams.previousState;
+        this.register = register;
+        this.registerConfirm = registerConfirm;
+        this.login = login;
+        this.logout = logout;
+        this.current = current;
 
-        $scope.answer = $rootScope.data.answer;
-
-        //TODO: remove these lines later
-        // $scope.testDate = persianDate().format('L'); //TODO: ???
-        // $scope.receiptNumber = toPersianNumber(6140); //TODO: ???
-
-        $scope.setBackHandler(function() {
-            var params = $scope.previousState === 'history' ? {
-                nationalCode: $scope.nationalCode
-            } : {};
-            $state.go($scope.previousState, params);
-        });
-
-        $scope.setMenuHandlers({
-            saveFile: function() {
-                // save file ...
-            },
-            shareFile: function() {
-                // share file ...
-            },
-            printFile: function() {
-                // print file ...
-            },
-            goToLaboratory: function() {
-                //$state.go('...');
-            },
-            laboratoryName: $scope.answer.laboratoryName,
-        });
-
-        $scope.setHeaderHandlers({
-            paitentName: $scope.answer.paitentName
-        });
-
-        $scope.setFooterHandlers({
-            testDate: persianDate($scope.answer.testDate).format('L'),
-            testNumber: toPersianNumber($scope.answer.testNumber)
-        });
-
-        $('#answer-test-number').popup({
-            inline: true,
-            transition: 'scale'
-        });
-
-        $('#answer-laboratory-name').popup({
-            inline: true,
-            transition: 'scale'
-        });
-
-    }
-]);
-
-
-/*
-	AHS502 : End of 'answer-controller.js'
-*/
-
-
-/*
-	AHS502 : Start of 'history-controller.js'
-*/
-
-/*global app*/
-/*global $*/
-
-app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
-    function($rootScope, $scope, $state, $stateParams, $timeout) {
-
-        $scope.testClicked = testClicked;
-
-        $scope.nationalCode = $stateParams.nationalCode;
-
-        $scope.paitentName = $rootScope.data.paitentName;
-        $scope.paitentTests = $rootScope.data.paitentTests;
-
-        $scope.setBackHandler(function() {
-            $state.go('home.otp');
-        });
-
-        $scope.setMenuHandlers(false);
-
-        $scope.setHeaderHandlers({
-            paitentName: $scope.paitentName
-        });
-
-        $scope.setFooterHandlers(false);
-
-        function testClicked(test) {
-            $scope.findingAnswer = true;
-            $timeout(function() { //TODO: resolve answer
+        function register(userData) {
+            // 500, 409, 200.
+            return $http.post('/user/register', {
+                userData: userData,
+                // recaptcha: userData.key
+            }).then(function(response) {
+                if (response.status != 200) {
+                    console.log(response.status, response.body);
+                    return $q.reject(response);
+                }
                 return {
-                    testNumber: 1234,
-                    nationalCode: '1234567890',
-                    paitentName: 'حسام شکروی',
-                    testDate: new Date(),
-                    answerDate: new Date(),
-                    laboratoryName: "آزمایشگاه دکتر شاهپوری"
+                    status: 200
                 };
-            }, 400).then(function(answer) {
-                //TODO: validate result
-                $rootScope.data.answer = answer;
-                $state.go('answer', {
-                    nationalCode: $scope.nationalCode,
-                    testNumber: test.testNumber,
-                    previousState: 'history'
+            }, function(err) {
+                console.error(err);
+                return $q.reject({
+                    status: 400
                 });
             });
         }
 
-    }
-]);
-
-
-/*
-	AHS502 : End of 'history-controller.js'
-*/
-
-
-/*
-	AHS502 : Start of 'home-controller.js'
-*/
-
-/*global app*/
-/*global $*/
-
-app.controller('HomeController', ['$scope', '$state',
-    function($scope, $state) {
-
-        $scope.setMenuHandlers({
-            goToHomeFind: function() {
-                $state.go('home.find');
-            },
-            goToHomeOtp: function() {
-                $state.go('home.otp');
-            },
-            goToLabLogin: function() {
-                $state.go('lab.login');
-            },
-            goToHomeAbout: function() {
-                $state.go('home.about', {
-                    previousState: $state.current
+        function registerConfirm(confirm) {
+            // 500, 400, 400, 400, 200.
+            return $http.post('/user/register/confirm', {
+                username: confirm.username,
+                validationCode: confirm.validationCode
+            }).then(function(response) {
+                if (response.status != 200) {
+                    console.log(response.status, response.body);
+                    return $q.reject(response);
+                }
+                return {
+                    status: 200
+                };
+            }, function(err) {
+                console.error(err);
+                return $q.reject({
+                    status: 400
                 });
-            },
-            goToHomeContact: function() {
-                $state.go('home.contact', {
-                    previousState: $state.current
+            });
+        }
+
+        function login(username, password) {
+            // 500, 403, 200.
+            return $http.post('/user/login', {
+                username: username,
+                password: password
+            }).then(function(response) {
+                if (response.status != 200) {
+                    console.log(response.status, response.body);
+                    return $q.reject(response);
+                }
+                var accessKey = response.body.accessKey,
+                    user = response.body.user;
+                $http.defaults.headers.common['X-Access-Token'] = accessKey;
+                $window.sessionStorage['CurrentUser'] = JSON.stringify({
+                    user: user,
+                    accessKey: accessKey
                 });
-            },
-        });
-
-        $scope.setHeaderHandlers(false);
-
-        $scope.setFooterHandlers(true);
-
-        $('#home-contact-us').popup({
-            inline: true,
-            transition: 'scale'
-        });
-
-    }
-]);
-
-
-/*
-	AHS502 : End of 'home-controller.js'
-*/
-
-
-/*
-	AHS502 : Start of 'lab-controller.js'
-*/
-
-/*global app*/
-/*global $*/
-
-app.controller('LabController', ['$scope', '$state',
-    function($scope, $state) {
-
-        $scope.setMenuHandlers({
-            goToLabLogin: function() {
-                $state.go('lab.login');
-            },
-            goToLabRegister: function() {
-                $state.go('lab.register');
-            },
-            goToHomeFind: function() {
-                $state.go('home.find');
-            },
-            goToLabAbout: function() {
-                $state.go('lab.about', {
-                    previousState: $state.current
+                return {
+                    status: 200
+                };
+            }, function(err) {
+                console.error(err);
+                return $q.reject({
+                    status: 400
                 });
-            },
-            goToLabContact: function() {
-                $state.go('lab.contact', {
-                    previousState: $state.current
-                });
-            },
-        });
-
-        $scope.setHeaderHandlers(false);
-
-        $scope.setFooterHandlers(true);
-
-    }
-]);
-
-
-/*
-	AHS502 : End of 'lab-controller.js'
-*/
-
-
-/*
-	AHS502 : Start of 'master-controller.js'
-*/
-
-/*global app*/
-/*global $*/
-
-app.controller('MasterController', ['$scope', '$rootScope', '$window',
-    function($scope, $rootScope, $window) {
-
-        $scope.setBackHandler = setBackHandler;
-        $scope.setMenuHandlers = setMenuHandlers;
-        $scope.setHeaderHandlers = setHeaderHandlers;
-        $scope.setFooterHandlers = setFooterHandlers;
-
-        $scope.toggleMenu = toggleMenu;
-
-        $scope.backHandler = undefined;
-        $scope.menuHandlers = undefined;
-        $scope.headerHandlers = undefined;
-        $scope.footerHandlers = undefined;
-
-        $scope.iconJs = $window.iconJs;
-
-        function setBackHandler(handler) {
-            $scope.backHandler = handler;
+            });
         }
 
-        function setMenuHandlers(handlerObject) {
-            $scope.menuHandlers = handlerObject;
+        function logout() {
+            delete $http.defaults.headers.common['X-Access-Token'];
+            delete $window.sessionStorage['CurrentUser'];
+            return $q.when({
+                status: 200
+            });
         }
 
-        function setHeaderHandlers(handlerObject) {
-            $scope.headerHandlers = handlerObject;
-        }
-
-        function setFooterHandlers(handlerObject) {
-            $scope.footerHandlers = handlerObject;
-        }
-
-        function toggleMenu() {
-            $('#ja-sidebar-menu')
-                .sidebar('setting', 'transition', 'overlay')
-                .sidebar('setting', 'mobileTransition', 'overlay')
-                .sidebar('toggle');
-        }
-
-    }
-]);
-
-
-/*
-	AHS502 : End of 'master-controller.js'
-*/
-
-
-/*
-	AHS502 : Start of 'panel-controller.js'
-*/
-
-/*global app*/
-/*global $*/
-
-app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$interval',
-    function($scope, $rootScope, $state, $stateParams, $timeout, $interval) {
-
-        $scope.setLoading = setLoading;
-        $scope.setPageTitle = setPageTitle;
-        $scope.refreshUserData = refreshUserDataProvider(false);
-
-        $scope.loading = $scope.loadingMessage = false;
-
-        refreshUserDataProvider(false)();
-
-        // Refresh user data every 1 minute
-        $interval(refreshUserDataProvider(true), 60000);
-
-        $scope.setMenuHandlers({
-            goToMainPage: function() {
-                $state.go('panel.home');
-            },
-            goToSendResults: function() {
-                $state.go('panel.send');
-            },
-            goToResultsHistory: function() {
-                $state.go('panel.history');
-            },
-            goToChargeAccount: function() {
-                $state.go('panel.balance');
-            },
-            goToUserAccount: function() {
-                $state.go('panel.account.summary');
-            },
-            logout: function() {
-                //...
-                //TODO: logout
-                //...
-                $state.go('lab.login');
-                console.log('logout');
+        function current() {
+            try {
+                var currentUserEncoded = $window.sessionStorage['CurrentUser'];
+                if (!currentUserEncoded) return null;
+                var currentUser = JSON.parse(currentUserEncoded);
+                if (!currentUser) return null;
+                return currentUser.user || null;
             }
-        });
-
-        var headerHandlers = {
-            pageTitle: ''
-        };
-
-        $scope.setHeaderHandlers(headerHandlers);
-
-        $scope.setFooterHandlers(false);
-
-        function setLoading(loading) {
-            $scope.loading = loading;
-            $scope.loadingMessage = false;
-            loading && $timeout(function() {
-                $scope.loadingMessage = true;
-            }, 1500);
-        }
-
-        function setPageTitle(title) {
-            headerHandlers.pageTitle = title;
-        }
-
-        function refreshUserDataProvider(silent) {
-            return function() {
-                silent || $scope.setLoading(true);
-                return $timeout(function() { //TODO: Initialize lab info from logged-in user data...
-
-                    $rootScope.data.labData = {
-                        userData: {
-                            labName: 'آزمایشگاه دکتر میر اسدی',
-                            mobilePhoneNumber: '09122343454',
-                            phoneNumber: '02153647586',
-                            address: 'تهران - خ سادات علوی - کوچه صابری - پلاک 217 - واحد 4',
-                            postalCode: '5539110823',
-                            websiteAddress: 'www.mirasadilab.ir',
-                            username: 'drmirasadi'
-                        },
-                    };
-
-                    silent || $scope.setLoading(false);
-                }, 400);
-            };
+            catch (err) {
+                return null;
+            }
         }
 
     }
 ]);
 
-
 /*
-	AHS502 : End of 'panel-controller.js'
+	AHS502 : End of 'user-service.js'
 */
 
 
@@ -943,8 +677,8 @@ app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeo
 
 /*global app*/
 
-app.controller('LabLoginController', ['$rootScope', '$scope', '$state', '$timeout',
-    function($rootScope, $scope, $state, $timeout) {
+app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserService',
+    function($rootScope, $scope, $state, userService) {
 
         $scope.login = login;
 
@@ -958,10 +692,12 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', '$timeou
         function login() {
             //TODO: check for validity
             $scope.loggingIn = true;
-            $timeout(function() { //TODO: try to login
+            return userService.login($scope.username, $scope.password).then(function() {
                 $state.go('panel.home');
-                // $scope.loggingIn = false;
-            }, 300);
+            }, function(response) {
+                $scope.loggingIn = false;
+                alert(JSON.stringify(response, null, 4));
+            });
         }
 
     }
@@ -979,9 +715,12 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', '$timeou
 
 /*global app*/
 
-app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
-    function($rootScope, $scope, $state, $stateParams, $timeout) {
+app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'vcRecaptchaService', 'UserService',
+    function($rootScope, $scope, $state, $stateParams, $timeout, vcRecaptchaService, userService) {
 
+        // $scope.setResponse = setResponse;
+        // $scope.setWidgetId = setWidgetId;
+        // $scope.cbExpiration = cbExpiration;
         $scope.sendRegisterationForm = sendRegisterationForm;
 
         $scope.username = $stateParams.username;
@@ -992,26 +731,47 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
             $state.go('lab.login');
         });
 
-        //$scope.labName
-        //$scope.mobilePhoneNumber
-        //$scope.phoneNumber
-        //$scope.address
-        //$scope.postalCode
-        //$scope.websiteAddress
-        //$scope.username
-        //$scope.password
-        //$scope.passwordAgain
-        //$scope.acceptRules
+        //$scope.model.labName
+        //$scope.model.mobilePhoneNumber
+        //$scope.model.phoneNumber
+        //$scope.model.address
+        //$scope.model.postalCode
+        //$scope.model.websiteAddress
+        //$scope.model.username
+        //$scope.model.password
+        //$scope.model.passwordAgain
+        //$scope.model.acceptRules
+
+        $scope.model = {
+            key: '6LexDAwUAAAAAPXalUBl6eGUWa3dz7PrXXa-a7EG'
+        };
+
+        // function setResponse(response) {
+        //     $scope.response = response;
+        // };
+
+        // function setWidgetId(widgetId) {
+        //     $scope.widgetId = widgetId;
+        // };
+
+        // function cbExpiration() {
+        //     vcRecaptchaService.reload($scope.widgetId);
+        //     $scope.response = null;
+        // };
 
         function sendRegisterationForm() {
             //TODO: check for validity
             $scope.sendingRegisterationForm = true;
-            $timeout(function() {
+            return userService.register($scope.model).then(function() {
                 $state.go('lab.validate', {
                     username: $scope.username
                 });
-                // $scope.sendingRegisterationForm = false;
-            }, 400);
+            }, function(response) {
+                //TODO: Handle errors...
+                $scope.sendingRegisterationForm = false;
+                alert(JSON.stringify(response, null, 4));
+                // vcRecaptchaService.reload($scope.widgetId);
+            });
         }
 
     }
@@ -1029,8 +789,8 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
 
 /*global app*/
 
-app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
-    function($rootScope, $scope, $state, $stateParams, $timeout) {
+app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$stateParams', 'UserService',
+    function($rootScope, $scope, $state, $stateParams, userService) {
 
         $scope.finishRegisteration = finishRegisteration;
 
@@ -1047,12 +807,18 @@ app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$sta
         //$scope.validationCode
 
         function finishRegisteration() {
-            //TODO: check for validity
             $scope.registering = true;
-            $timeout(function() {
+            return userService.registerConfirm({
+                username: $scope.username,
+                validationCode: $scope.validationCode
+            }).then(function() {
+                $scope.registering = false;
+                alert('عملیات ثبت نام شما با موفقیت انجام شد.\nلطفاً منتظر تماس اُپراتورهای ما باشید.');
                 $state.go('lab.signedup');
-                // $scope.registering = false;
-            }, 400);
+            }, function(response) {
+                $scope.registering = false;
+                alert(JSON.stringify(response, null, 4));
+            });
         }
 
     }
@@ -1693,6 +1459,387 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
 
 /*
 	AHS502 : End of 'panel/account/summary-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'answer-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+/*global persianDate*/
+/*global toPersianNumber*/
+
+app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$stateParams',
+    function($rootScope, $scope, $state, $stateParams) {
+
+        $scope.nationalCode = $stateParams.nationalCode;
+        $scope.testNumber = $stateParams.testNumber;
+        $scope.previousState = $stateParams.previousState;
+
+        $scope.answer = $rootScope.data.answer;
+
+        //TODO: remove these lines later
+        // $scope.testDate = persianDate().format('L'); //TODO: ???
+        // $scope.receiptNumber = toPersianNumber(6140); //TODO: ???
+
+        $scope.setBackHandler(function() {
+            var params = $scope.previousState === 'history' ? {
+                nationalCode: $scope.nationalCode
+            } : {};
+            $state.go($scope.previousState, params);
+        });
+
+        $scope.setMenuHandlers({
+            saveFile: function() {
+                // save file ...
+            },
+            shareFile: function() {
+                // share file ...
+            },
+            printFile: function() {
+                // print file ...
+            },
+            goToLaboratory: function() {
+                //$state.go('...');
+            },
+            laboratoryName: $scope.answer.laboratoryName,
+        });
+
+        $scope.setHeaderHandlers({
+            paitentName: $scope.answer.paitentName
+        });
+
+        $scope.setFooterHandlers({
+            testDate: persianDate($scope.answer.testDate).format('L'),
+            testNumber: toPersianNumber($scope.answer.testNumber)
+        });
+
+        $('#answer-test-number').popup({
+            inline: true,
+            transition: 'scale'
+        });
+
+        $('#answer-laboratory-name').popup({
+            inline: true,
+            transition: 'scale'
+        });
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'answer-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'history-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
+    function($rootScope, $scope, $state, $stateParams, $timeout) {
+
+        $scope.testClicked = testClicked;
+
+        $scope.nationalCode = $stateParams.nationalCode;
+
+        $scope.paitentName = $rootScope.data.paitentName;
+        $scope.paitentTests = $rootScope.data.paitentTests;
+
+        $scope.setBackHandler(function() {
+            $state.go('home.otp');
+        });
+
+        $scope.setMenuHandlers(false);
+
+        $scope.setHeaderHandlers({
+            paitentName: $scope.paitentName
+        });
+
+        $scope.setFooterHandlers(false);
+
+        function testClicked(test) {
+            $scope.findingAnswer = true;
+            $timeout(function() { //TODO: resolve answer
+                return {
+                    testNumber: 1234,
+                    nationalCode: '1234567890',
+                    paitentName: 'حسام شکروی',
+                    testDate: new Date(),
+                    answerDate: new Date(),
+                    laboratoryName: "آزمایشگاه دکتر شاهپوری"
+                };
+            }, 400).then(function(answer) {
+                //TODO: validate result
+                $rootScope.data.answer = answer;
+                $state.go('answer', {
+                    nationalCode: $scope.nationalCode,
+                    testNumber: test.testNumber,
+                    previousState: 'history'
+                });
+            });
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'history-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'home-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('HomeController', ['$scope', '$state',
+    function($scope, $state) {
+
+        $scope.setMenuHandlers({
+            goToHomeFind: function() {
+                $state.go('home.find');
+            },
+            goToHomeOtp: function() {
+                $state.go('home.otp');
+            },
+            goToLabLogin: function() {
+                $state.go('lab.login');
+            },
+            goToHomeAbout: function() {
+                $state.go('home.about', {
+                    previousState: $state.current
+                });
+            },
+            goToHomeContact: function() {
+                $state.go('home.contact', {
+                    previousState: $state.current
+                });
+            },
+        });
+
+        $scope.setHeaderHandlers(false);
+
+        $scope.setFooterHandlers(true);
+
+        $('#home-contact-us').popup({
+            inline: true,
+            transition: 'scale'
+        });
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'home-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'lab-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('LabController', ['$scope', '$state',
+    function($scope, $state) {
+
+        $scope.setMenuHandlers({
+            goToLabLogin: function() {
+                $state.go('lab.login');
+            },
+            goToLabRegister: function() {
+                $state.go('lab.register');
+            },
+            goToHomeFind: function() {
+                $state.go('home.find');
+            },
+            goToLabAbout: function() {
+                $state.go('lab.about', {
+                    previousState: $state.current
+                });
+            },
+            goToLabContact: function() {
+                $state.go('lab.contact', {
+                    previousState: $state.current
+                });
+            },
+        });
+
+        $scope.setHeaderHandlers(false);
+
+        $scope.setFooterHandlers(true);
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'lab-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'master-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('MasterController', ['$scope', '$rootScope', '$window',
+    function($scope, $rootScope, $window) {
+
+        $scope.setBackHandler = setBackHandler;
+        $scope.setMenuHandlers = setMenuHandlers;
+        $scope.setHeaderHandlers = setHeaderHandlers;
+        $scope.setFooterHandlers = setFooterHandlers;
+
+        $scope.toggleMenu = toggleMenu;
+
+        $scope.backHandler = undefined;
+        $scope.menuHandlers = undefined;
+        $scope.headerHandlers = undefined;
+        $scope.footerHandlers = undefined;
+
+        $scope.iconJs = $window.iconJs;
+
+        function setBackHandler(handler) {
+            $scope.backHandler = handler;
+        }
+
+        function setMenuHandlers(handlerObject) {
+            $scope.menuHandlers = handlerObject;
+        }
+
+        function setHeaderHandlers(handlerObject) {
+            $scope.headerHandlers = handlerObject;
+        }
+
+        function setFooterHandlers(handlerObject) {
+            $scope.footerHandlers = handlerObject;
+        }
+
+        function toggleMenu() {
+            $('#ja-sidebar-menu')
+                .sidebar('setting', 'transition', 'overlay')
+                .sidebar('setting', 'mobileTransition', 'overlay')
+                .sidebar('toggle');
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'master-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'panel-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+
+app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$interval',
+    function($scope, $rootScope, $state, $stateParams, $timeout, $interval) {
+
+        $scope.setLoading = setLoading;
+        $scope.setPageTitle = setPageTitle;
+        $scope.refreshUserData = refreshUserDataProvider(false);
+
+        $scope.loading = $scope.loadingMessage = false;
+
+        refreshUserDataProvider(false)();
+
+        // Refresh user data every 1 minute
+        $interval(refreshUserDataProvider(true), 60000);
+
+        $scope.setMenuHandlers({
+            goToMainPage: function() {
+                $state.go('panel.home');
+            },
+            goToSendResults: function() {
+                $state.go('panel.send');
+            },
+            goToResultsHistory: function() {
+                $state.go('panel.history');
+            },
+            goToChargeAccount: function() {
+                $state.go('panel.balance');
+            },
+            goToUserAccount: function() {
+                $state.go('panel.account.summary');
+            },
+            logout: function() {
+                //...
+                //TODO: logout
+                //...
+                $state.go('lab.login');
+                console.log('logout');
+            }
+        });
+
+        var headerHandlers = {
+            pageTitle: ''
+        };
+
+        $scope.setHeaderHandlers(headerHandlers);
+
+        $scope.setFooterHandlers(false);
+
+        function setLoading(loading) {
+            $scope.loading = loading;
+            $scope.loadingMessage = false;
+            loading && $timeout(function() {
+                $scope.loadingMessage = true;
+            }, 1500);
+        }
+
+        function setPageTitle(title) {
+            headerHandlers.pageTitle = title;
+        }
+
+        function refreshUserDataProvider(silent) {
+            return function() {
+                silent || $scope.setLoading(true);
+                return $timeout(function() { //TODO: Initialize lab info from logged-in user data...
+
+                    $rootScope.data.labData = {
+                        userData: {
+                            labName: 'آزمایشگاه دکتر میر اسدی',
+                            mobilePhoneNumber: '09122343454',
+                            phoneNumber: '02153647586',
+                            address: 'تهران - خ سادات علوی - کوچه صابری - پلاک 217 - واحد 4',
+                            postalCode: '5539110823',
+                            websiteAddress: 'www.mirasadilab.ir',
+                            username: 'drmirasadi'
+                        },
+                    };
+
+                    silent || $scope.setLoading(false);
+                }, 400);
+            };
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'panel-controller.js'
 */
 
 

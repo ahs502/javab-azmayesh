@@ -19,6 +19,8 @@ app/lib/semantic/*
 #app/assets/video/*
 #!app/assets/video/README.md
 
+zxc/*
+
 *.csv
 *.dat
 #*.log

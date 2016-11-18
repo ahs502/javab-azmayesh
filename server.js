@@ -20,6 +20,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.enable('trust proxy');
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'app/public')));
 
 // serving routes
 app.use('/', require('./routes/index'));
+app.use('/user', require('./routes/user'));
 app.use('/upload', require('./routes/upload'));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
