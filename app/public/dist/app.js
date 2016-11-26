@@ -340,95 +340,85 @@ app.service('UserService', ['$q', '$http', '$window',
         this.logout = logout;
         this.current = current;
 
+        /////////////////////////////////////////////////////
+
+        // May reject by code : 1, 2, 5, 10
         function register(userData) {
-            // 500, 409, 200.
             return $http.post('/user/register', {
-                userData: userData,
-                // recaptcha: userData.key
-            }).then(function(response) {
-                if (response.status != 200) {
-                    console.log(response.status, response.body);
-                    return $q.reject(response);
-                }
-                return {
-                    status: 200
-                };
-            }, function(err) {
-                console.error(err);
-                return $q.reject({
-                    status: 400
-                });
-            });
+                    userData: userData,
+                    recaptcha: userData.response
+                })
+                .then(successHandler)
+                .catch(failureHandler);
         }
 
-        function registerConfirm(confirm) {
-            // 500, 400, 400, 400, 200.
+        // May reject by code : 1, 2, 5, 30, 31, 32
+        function registerConfirm(username, validationCode) {
             return $http.post('/user/register/confirm', {
-                username: confirm.username,
-                validationCode: confirm.validationCode
-            }).then(function(response) {
-                if (response.status != 200) {
-                    console.log(response.status, response.body);
-                    return $q.reject(response);
-                }
-                return {
-                    status: 200
-                };
-            }, function(err) {
-                console.error(err);
-                return $q.reject({
-                    status: 400
-                });
-            });
+                    username: username,
+                    validationCode: validationCode
+                })
+                .then(successHandler)
+                .catch(failureHandler);
         }
 
+        // May reject by code : 1, 2, 5, 40
+        // Resolves to current user
         function login(username, password) {
-            // 500, 403, 200.
             return $http.post('/user/login', {
-                username: username,
-                password: password
-            }).then(function(response) {
-                if (response.status != 200) {
-                    console.log(response.status, response.body);
-                    return $q.reject(response);
-                }
-                var accessKey = response.body.accessKey,
-                    user = response.body.user;
-                $http.defaults.headers.common['X-Access-Token'] = accessKey;
-                $window.sessionStorage['CurrentUser'] = JSON.stringify({
-                    user: user,
-                    accessKey: accessKey
+                    username: username,
+                    password: password
+                })
+                .then(successHandler)
+                .catch(failureHandler)
+                .then(function(body) {
+                    var accessKey = body.accessKey,
+                        userInfo = body.userInfo;
+                    $http.defaults.headers.common['X-Access-Token'] = accessKey;
+                    return $window.sessionStorage['CurrentUser'] = JSON.stringify({
+                        userInfo: userInfo,
+                        accessKey: accessKey
+                    });
                 });
-                return {
-                    status: 200
-                };
-            }, function(err) {
-                console.error(err);
-                return $q.reject({
-                    status: 400
-                });
-            });
         }
 
+        // May not reject
         function logout() {
             delete $http.defaults.headers.common['X-Access-Token'];
             delete $window.sessionStorage['CurrentUser'];
-            return $q.when({
-                status: 200
-            });
+            return $q.when();
         }
 
+        // Returns current user
         function current() {
             try {
                 var currentUserEncoded = $window.sessionStorage['CurrentUser'];
                 if (!currentUserEncoded) return null;
                 var currentUser = JSON.parse(currentUserEncoded);
                 if (!currentUser) return null;
-                return currentUser.user || null;
+                return currentUser.userInfo || null;
             }
             catch (err) {
                 return null;
             }
+        }
+
+        /////////////////////////////////////////////////////
+
+        function successHandler(response) {
+            if (response.status != 200) {
+                console.log(response.status, response.data);
+                return $q.reject(1);
+            }
+            if (response.data.code !== 0) {
+                return $q.reject(response.data.code || 1);
+            }
+            return response.data;
+        }
+
+        function failureHandler(err) {
+            console.error(err);
+            return $q.reject(2);
         }
 
     }
@@ -692,12 +682,14 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
         function login() {
             //TODO: check for validity
             $scope.loggingIn = true;
-            return userService.login($scope.username, $scope.password).then(function() {
-                $state.go('panel.home');
-            }, function(response) {
-                $scope.loggingIn = false;
-                alert(JSON.stringify(response, null, 4));
-            });
+            return userService.login($scope.username, $scope.password)
+                .then(function() {
+                    $state.go('panel.home');
+                }, function(code) {
+                    //TODO: Handle errors...
+                    $scope.loggingIn = false;
+                    alert(code);
+                });
         }
 
     }
@@ -718,14 +710,16 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
 app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'vcRecaptchaService', 'UserService',
     function($rootScope, $scope, $state, $stateParams, $timeout, vcRecaptchaService, userService) {
 
-        // $scope.setResponse = setResponse;
-        // $scope.setWidgetId = setWidgetId;
-        // $scope.cbExpiration = cbExpiration;
+        $scope.setResponse = setResponse;
+        $scope.setWidgetId = setWidgetId;
+        $scope.cbExpiration = cbExpiration;
         $scope.sendRegisterationForm = sendRegisterationForm;
 
-        $scope.username = $stateParams.username;
-
+        $scope.key = '6LexDAwUAAAAAPXalUBl6eGUWa3dz7PrXXa-a7EG';
         $scope.sendingRegisterationForm = false;
+        $scope.model = {};
+
+        $scope.model.username = $stateParams.username;
 
         $scope.setBackHandler(function() {
             $state.go('lab.login');
@@ -742,36 +736,34 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
         //$scope.model.passwordAgain
         //$scope.model.acceptRules
 
-        $scope.model = {
-            key: '6LexDAwUAAAAAPXalUBl6eGUWa3dz7PrXXa-a7EG'
-        };
+        function setResponse(response) {
+            $scope.response = response;
+        }
 
-        // function setResponse(response) {
-        //     $scope.response = response;
-        // };
+        function setWidgetId(widgetId) {
+            $scope.widgetId = widgetId;
+        }
 
-        // function setWidgetId(widgetId) {
-        //     $scope.widgetId = widgetId;
-        // };
-
-        // function cbExpiration() {
-        //     vcRecaptchaService.reload($scope.widgetId);
-        //     $scope.response = null;
-        // };
+        function cbExpiration() {
+            vcRecaptchaService.reload($scope.widgetId);
+            $scope.response = null;
+        }
 
         function sendRegisterationForm() {
             //TODO: check for validity
             $scope.sendingRegisterationForm = true;
-            return userService.register($scope.model).then(function() {
-                $state.go('lab.validate', {
-                    username: $scope.username
+            $scope.model.response = $scope.response;
+            return userService.register($scope.model)
+                .then(function() {
+                    $state.go('lab.validate', {
+                        username: $scope.model.username
+                    });
+                }, function(code) {
+                    //TODO: Handle errors...
+                    $scope.sendingRegisterationForm = false;
+                    alert(code);
+                    vcRecaptchaService.reload($scope.widgetId);
                 });
-            }, function(response) {
-                //TODO: Handle errors...
-                $scope.sendingRegisterationForm = false;
-                alert(JSON.stringify(response, null, 4));
-                // vcRecaptchaService.reload($scope.widgetId);
-            });
         }
 
     }
@@ -792,11 +784,11 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
 app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$stateParams', 'UserService',
     function($rootScope, $scope, $state, $stateParams, userService) {
 
-        $scope.finishRegisteration = finishRegisteration;
+        $scope.confirmRegisteration = confirmRegisteration;
 
         $scope.username = $stateParams.username;
 
-        $scope.registering = false;
+        $scope.confirmingRegisteration = false;
 
         $scope.setBackHandler(function() {
             $state.go('lab.register', {
@@ -806,19 +798,17 @@ app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$sta
 
         //$scope.validationCode
 
-        function finishRegisteration() {
-            $scope.registering = true;
-            return userService.registerConfirm({
-                username: $scope.username,
-                validationCode: $scope.validationCode
-            }).then(function() {
-                $scope.registering = false;
-                alert('عملیات ثبت نام شما با موفقیت انجام شد.\nلطفاً منتظر تماس اُپراتورهای ما باشید.');
-                $state.go('lab.signedup');
-            }, function(response) {
-                $scope.registering = false;
-                alert(JSON.stringify(response, null, 4));
-            });
+        function confirmRegisteration() {
+            $scope.confirmingRegisteration = true;
+            return userService.registerConfirm($scope.username, $scope.validationCode)
+                .then(function() {
+                    $scope.confirmingRegisteration = false;
+                    $state.go('lab.signedup');
+                }, function(code) {
+                    //TODO: Handle errors...
+                    $scope.confirmingRegisteration = false;
+                    alert(code);
+                });
         }
 
     }

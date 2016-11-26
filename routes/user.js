@@ -4,77 +4,94 @@ var router = module.exports = express.Router();
 var src = require("../src"),
     kfs = src.kfs;
 
-var http = require('http');
-var minimalRequestPromise = require('minimal-request-promise');
+var https = require('https');
+var querystring = require('querystring');
 
 var Cryptr = require('cryptr'),
     cryptr = new Cryptr('0123456789InTheNameOfGod9876543210');
 
 ////////////////////////////////////////////////////////////////////////////////
 
+var confirmationExpiresAfter = 10; // Hours
+var accessKeyExpiresAfter = 20; // Hours
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.post('/register', function(req, res, next) {
-    var userData = req.body.user;
-    var username = user.username;
-
-    //TODO: Validate user data ...
-
-    var user = userData; //TODO: Extract user from userData ...
-
-    kfs('user/' + username, function(err, user) {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Internal server error.').end();
+    var userData = req.body.userData;
+    var username = userData.username;
+    var recaptcha = req.body.recaptcha;
+    var remoteIp = req.ip; //req.headers['x-real-ip'] || req.connection.remoteAddress; //TODO: It works with Nginx, how about no proxy mode ?
+    var dataVerify = {
+        secret: '6LexDAwUAAAAAP7U7z8YEIcI006D8KGajx3WtR31',
+        response: recaptcha,
+        remoteip: remoteIp
+    };
+    var postDataVerify = querystring.stringify(dataVerify);
+    var options = {
+        hostname: 'www.google.com',
+        port: 443,
+        path: '/recaptcha/api/siteverify',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': postDataVerify.length
         }
-        if (!user) {
-            return res.status(409).send('Already existing user.').end();
+    };
+    var requestVerify = https.request(options, function(responseVerify) {
+        if (responseVerify.statusCode != 200) {
+            return resEndByCode(res, 5);
         }
-        var validationCode = '123456'; //TODO: Generate a validation code ...
-        kfs('/user/_confirming_/' + username, {
-            user,
-            validationCode,
-            timeStamp: new Date()
-        }, function(err) {
-            if (err) {
-                console.error(err);
-                return res.status(500).send('Internal server error.').end();
+        responseVerify.setEncoding('utf8');
+        var resultVerify = '';
+        responseVerify.on('data', function(chunk) {
+            resultVerify += chunk;
+        });
+        responseVerify.on('end', function() {
+            resultVerify = JSON.parse(resultVerify);
+            if (resultVerify.success !== true) {
+                return resEndByCode(res, 11);
             }
-            //TODO: Send verificationCode by SMS ...
-            res.status(200).send('Success!').end(0);
+
+            //TODO: Validate user data ...
+
+            var user = userData; //TODO: Extract user from userData ...
+
+            ('user/' + username) in kfs(function(err, exists) {
+                if (err) {
+                    console.error(err);
+                    return resEndByCode(res, 5);
+                }
+                if (exists) {
+                    return resEndByCode(res, 10);
+                }
+                var validationCode = '123456'; //TODO: Generate a simple validation code ...
+                kfs('/user/_confirming_/' + username, {
+                    user,
+                    validationCode,
+                    timeStamp: new Date()
+                }, function(err) {
+                    if (err) {
+                        console.error(err);
+                        return resEndByCode(res, 5);
+                    }
+                    //TODO: Send verificationCode by SMS ...
+                    resEndByCode(res, 0);
+                });
+            });
+
+        });
+        responseVerify.on('error', function(err) {
+            console.log('reCAPTCHA Response Error: ' + JSON.stringify(err, null, 4));
+            return resEndByCode(res, 5);
         });
     });
-
-    // var recaptcha = req.body.recaptcha;
-    // var remoteip = req.ip; //req.headers['x-real-ip'] || req.connection.remoteAddress; //TODO: It works with Nginx, how about no proxy mod ?
-    // var optionsVerification = {
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: {
-    //         secret: '6LexDAwUAAAAAP7U7z8YEIcI006D8KGajx3WtR31',
-    //         response: recaptcha,
-    //         remoteip: remoteip
-    //     }
-    // };
-    // console.log({
-    //     secret: '6LexDAwUAAAAAP7U7z8YEIcI006D8KGajx3WtR31',
-    //     response: recaptcha,
-    //     remoteip: remoteip
-    // });
-    // minimalRequestPromise.post('https://www.google.com/recaptcha/api/siteverify', optionsVerification)
-    //     .then(function(resp) {
-    //         console.log('OK');
-    //         console.log(`STATUS: ${resp.statusCode} - ${resp.statusMessage}`);
-    //         console.log(`HEADERS: ${JSON.stringify(resp.headers, null, 4)}`);
-    //         console.log(`BODY: ${resp.body}`);
-    //         res.status(200).end();
-    //     }, function(resp) {
-    //         console.log('ERR');
-    //         console.log(`STATUS: ${resp.statusCode} - ${resp.statusMessage}`);
-    //         console.log(`HEADERS: ${JSON.stringify(resp.headers, null, 4)}`);
-    //         console.log(`BODY: ${resp.body}`);
-    //         res.status(200).end();
-    //     });
-
+    requestVerify.on('error', function(err) {
+        console.log('reCAPTCHA Request Error: ' + JSON.stringify(err, null, 4));
+        return resEndByCode(res, 5);
+    });
+    requestVerify.write(postDataVerify);
+    requestVerify.end();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,24 +102,24 @@ router.post('/register/confirm', function(req, res, next) {
     kfs('/user/_confirming_/' + username, function(err, data) {
         if (err) {
             console.error(err);
-            return res.status(500).send('Internal server error.').end();
+            return resEndByCode(res, 5);
         }
         if (!data) {
-            return res.status(400).send('Invalid username.').end();
+            return resEndByCode(res, 30);
         }
-        if (data.timaStamp > new Date((new Date).setHours((new Date).getHours() + 10 /* Hours expiration time */ ))) {
-            return res.status(400).send('Operation expired.').end();
+        if (data.timaStamp > new Date((new Date).setHours((new Date).getHours() + confirmationExpiresAfter))) {
+            return resEndByCode(res, 31);
         }
         if (validationCode != data.validationCode) {
-            return res.status(400).send('Wrong verification code.').end();
+            return resEndByCode(res, 32);
         }
         //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
         kfs('user/' + username, data.user, function(err) {
             if (err) {
                 console.error(err);
-                return res.status(500).send('Internal server error.').end();
+                return resEndByCode(res, 5);
             }
-            res.status(200).send('Success!').end();
+            resEndByCode(res, 0);
         });
     });
 });
@@ -115,51 +132,59 @@ router.post('/login', function(req, res, next) {
     kfs('user/' + username, function(err, user) {
         if (err) {
             console.error(err);
-            return res.status(500).send('Internal server error.').end();
+            return resEndByCode(res, 5);
+        }
+        if (!user) {
+            return resEndByCode(res, 40);
         }
         if (user.password != password) {
-            return res.status(403).send('Wrong username or password.').end();
+            return resEndByCode(res, 40);
         }
-        var accessKey = generateAccessKey(user);
-        res.status(200).send({
+        var remoteIp = req.ip;
+        var accessKey = generateAccessKey(user, remoteIp);
+        resEndByCode(res, 0, {
             accessKey,
-            user: {
+            userInfo: {
                 username: user.username,
                 //...
             }
-        }).end();
+        });
     });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function generateAccessKey(user) {
-    var expirationDate = (new Date).toString();
-    expirationDate.setHours(expirationDate.getHours() + 20);
+function generateAccessKey(user, remoteIp) {
     var accessKeyData = {
-        expiresAt: expirationDate,
-        user: {
+        expiresAt: Date.now() + accessKeyExpiresAfter * 60 * 60 * 1000,
+        userInfo: {
             username: user.username,
             //...
-        }
+        },
+        remoteIp
     };
     return cryptr.encrypt(JSON.stringify(accessKeyData));
 }
 
-function decodeAccessKey(accessKey) {
+function decodeAccessKey(accessKey, remoteIp) {
     try {
         var accessKeyData = JSON.parse(cryptr.decrypt(accessKey));
-        if (!accessKeyData) return null;
-        var expirationDate = new Date(accessKeyData.expiresAt);
+        if (!accessKeyData || accessKeyData.remoteIp != remoteIp) throw 'Invalid access key.';
         return {
-            expired: new Date >= expirationDate,
-            user: {
-                username: accessKeyData.username,
-                //...
-            }
+            invalid: false,
+            expired: Date.now() > accessKeyData.expiresAt,
+            userInfo: accessKeyData.userInfo
         };
     }
     catch (err) {
-        return null;
+        return {
+            invalid: true
+        };
     }
+}
+
+function resEndByCode(res, code, data) {
+    data = data || {};
+    data.code = code;
+    return res.status(200).json(data).end();
 }

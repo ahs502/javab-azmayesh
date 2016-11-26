@@ -783,7 +783,7 @@
                         </div>
                     </div>
 
-                    <!--<div vc-recaptcha theme="'light'" key="model.key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>-->
+                    <div vc-recaptcha theme="'light'" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
 
                     <div class="field">
                         <div class="ui checkbox">
@@ -826,7 +826,7 @@
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
 
-                <form class="ui {{ registering ? 'loading' : '' }} form">
+                <form class="ui {{ confirmingRegisteration ? 'loading' : '' }} form">
                     <div class="field">
                         <!--<label class="nazanin">کد اعتبار سنجی</label>-->
                         <div class="ui input">
@@ -834,7 +834,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <button class="fluid ui blue button" type="submit" ng-click="finishRegisteration()">
+                        <button class="fluid ui blue button" type="submit" ng-click="confirmRegisteration()">
                             <span class="nazanin">ثبت نام</span>
                         </button>
                     </div>
@@ -856,7 +856,7 @@
             <div class="sixteen wide column">
 
                 <p class="nazanin">
-                    <bdi>ثبت نام آزمایشگاه با موفقیت انجام شد!</bdi>
+                    <bdi>عملیات ثبت نام شما با موفقیت انجام شد. لطفاً برای نهایی شدن ثبت نام، منتظر تماس اُپراتورهای ما باشید.</bdi>
                 </p>
 
             </div>
@@ -1544,7 +1544,7 @@
 
         // Load CSS files dynamically
         loadJsCssFile('/dist/lib.min.css', 'css');
-        loadJsCssFile('/dist/app.min.css', 'css');
+        loadJsCssFile('/dist/app.css', 'css');
 
         // Do NOT load JS files dynamically
         // loadJsCssFile('/dist/lib.min.js', 'js');
@@ -1553,7 +1553,7 @@
 
     <!-- JS files will NOT be loaded dynamically -->
     <script type="text/javascript" src="/dist/lib.min.js"></script>
-    <script type="text/javascript" src="/dist/app.min.js"></script>
+    <script type="text/javascript" src="/dist/app.js"></script>
 
 </body>
 

@@ -1,0 +1,49 @@
+---------------------------------------------------------------
+>> Failure :
+
+    Status: 200
+    Headers: {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Fri, 25 Nov 2016 06:21:01 GMT",
+        "expires": "Fri, 25 Nov 2016 06:21:01 GMT",
+        "cache-control": "private, max-age=0",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "server": "GSE",
+        "alt-svc": "quic=\":443\"; ma=2592000; v=\"36,35,34\"",
+        "accept-ranges": "none",
+        "vary": "Accept-Encoding",
+        "connection": "close"
+    }
+    Body: {
+      "success": false,
+      "error-codes": [
+        "missing-input-response",
+        "missing-input-secret"
+      ]
+    }
+
+---------------------------------------------------------------
+>> Success :
+
+    Status: 200
+    Headers: {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sat, 26 Nov 2016 05:20:04 GMT",
+        "expires": "Sat, 26 Nov 2016 05:20:04 GMT",
+        "cache-control": "private, max-age=0",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "server": "GSE",
+        "alt-svc": "quic=\":443\"; ma=2592000; v=\"36,35,34\"",
+        "accept-ranges": "none",
+        "vary": "Accept-Encoding",
+        "connection": "close"
+    }
+    Body: {
+      "success": true,
+      "challenge_ts": "2016-11-26T05:19:43Z", //at 08:49:43
+      "hostname": "dev.javabazmayesh.ir"
+    }
+
+---------------------------------------------------------------

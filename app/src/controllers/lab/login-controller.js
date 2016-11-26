@@ -15,12 +15,14 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
         function login() {
             //TODO: check for validity
             $scope.loggingIn = true;
-            return userService.login($scope.username, $scope.password).then(function() {
-                $state.go('panel.home');
-            }, function(response) {
-                $scope.loggingIn = false;
-                alert(JSON.stringify(response, null, 4));
-            });
+            return userService.login($scope.username, $scope.password)
+                .then(function() {
+                    $state.go('panel.home');
+                }, function(code) {
+                    //TODO: Handle errors...
+                    $scope.loggingIn = false;
+                    alert(code);
+                });
         }
 
     }

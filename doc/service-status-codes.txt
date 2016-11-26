@@ -1,0 +1,16 @@
+
+    0   : Success
+    1   : Unknown error in server
+    2   : Unknown error in client
+    
+    5   : Internal server error
+    
+    10  : Already existing user
+    11  : reCAPTCHA verification error
+
+    30  : User is not waiting for confirmation
+    31  : User confirmation has expired
+    32  : Wrong validation code
+    
+    40  : Wrong username or password
+
