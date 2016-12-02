@@ -355,8 +355,7 @@ app.service('UserService', ['$q', '$http', '$window',
                     userData: userData,
                     recaptcha: userData.response
                 })
-                .then(successHandler)
-                .catch(failureHandler);
+                .then(successHandler, failureHandler);
         }
 
         // May reject by code : 1, 2, 5, 30, 31, 32
@@ -365,8 +364,7 @@ app.service('UserService', ['$q', '$http', '$window',
                     username: username,
                     validationCode: validationCode
                 })
-                .then(successHandler)
-                .catch(failureHandler);
+                .then(successHandler, failureHandler);
         }
 
         // May reject by code : 1, 2, 3, 5, 50, 51, 100, 101
@@ -374,8 +372,7 @@ app.service('UserService', ['$q', '$http', '$window',
             return $http.post('/user/edit/account', {
                     newAccount: newAccount
                 })
-                .then(successHandler)
-                .catch(failureHandler);
+                .then(successHandler, failureHandler);
         }
 
         // May reject by code : 1, 2, 5, 40, 50, 51, 100, 101
@@ -384,8 +381,7 @@ app.service('UserService', ['$q', '$http', '$window',
                     oldPassword: oldPassword,
                     newPassword: newPassword
                 })
-                .then(successHandler)
-                .catch(failureHandler);
+                .then(successHandler, failureHandler);
         }
 
         // May reject by code : 1, 2, 5, 30, 31, 32, 50, 100, 101
@@ -395,8 +391,7 @@ app.service('UserService', ['$q', '$http', '$window',
                     username: username,
                     validationCode: validationCode
                 })
-                .then(successHandler)
-                .catch(failureHandler)
+                .then(successHandler, failureHandler)
                 .then(function(body) {
                     var userInfo = body.userInfo;
                     setCurrent(undefined, userInfo);
@@ -411,8 +406,7 @@ app.service('UserService', ['$q', '$http', '$window',
                     username: username,
                     password: password
                 })
-                .then(successHandler)
-                .catch(failureHandler)
+                .then(successHandler, failureHandler)
                 .then(function(body) {
                     var accessKey = body.accessKey,
                         userInfo = body.userInfo;
@@ -429,8 +423,7 @@ app.service('UserService', ['$q', '$http', '$window',
                 return $q.reject(50);
             }
             return $http.post('/user/refresh', {})
-                .then(successHandler)
-                .catch(failureHandler)
+                .then(successHandler, failureHandler)
                 .then(function(body) {
                     var userInfo = body.userInfo;
                     setCurrent(undefined, userInfo);

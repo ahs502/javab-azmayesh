@@ -1,5 +1,7 @@
 (function(global) {
 
+    global.iconJs = iconJs;
+
     //See this link for more SVG icons: http://www.flaticon.com/
     var dataUrls = {
 
@@ -18,7 +20,5 @@
     function iconJs(dataUrlTitle) {
         return dataUrls[dataUrlTitle] || dataUrlTitle || '';
     }
-
-    global.iconJs = iconJs;
 
 })(window);

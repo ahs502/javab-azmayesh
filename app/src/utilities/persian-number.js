@@ -1,5 +1,7 @@
 (function(global) {
 
+    global.toPersianNumber = toPersianNumber;
+
     var persianDigitConvertions = {
         0: '۰',
         1: '۱',
@@ -23,7 +25,5 @@
                 return char;
         }).join('');
     }
-
-    global.toPersianNumber = toPersianNumber;
 
 })(window);
