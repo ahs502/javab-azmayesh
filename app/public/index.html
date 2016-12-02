@@ -884,7 +884,7 @@
 
 <script type="text/ng-template" id="panel.html">
     <div id="ja-panel">
-
+    
     <div id="ja-panel-loading" ng-if="loading">
         <div class="ui active centered inline text loader">
             <bdi ng-if="loadingMessage" class="nazanin">لطفاً صبر کنید...</bdi>
@@ -1358,42 +1358,42 @@
                     <div class="field">
                         <label class="nazanin">نام کامل آزمایشگاه</label>
                         <div class="ui input">
-                            <input type="text" ng-model="labName" placeholder="نام کامل آزمایشگاه">
+                            <input type="text" ng-model="user.labName" placeholder="نام کامل آزمایشگاه">
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="nazanin">تلفن همراه ارتباطی</label>
                         <div class="ui input">
-                            <input type="text" ng-model="mobilePhoneNumber" placeholder="09123456789">
+                            <input type="text" ng-model="user.mobilePhoneNumber" placeholder="09123456789">
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="nazanin">تلفن ثابت</label>
                         <div class="ui input">
-                            <input type="text" ng-model="phoneNumber" placeholder="021-12345678">
+                            <input type="text" ng-model="user.phoneNumber" placeholder="021-12345678">
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="nazanin">آدرس</label>
                         <div class="ui input">
-                            <input type="text" ng-model="address" placeholder="نام شهر - خیابان اصلی - خیابان فرعی - پلاک - واحد">
+                            <input type="text" ng-model="user.address" placeholder="نام شهر - خیابان اصلی - خیابان فرعی - پلاک - واحد">
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="nazanin">کد پستی</label>
                         <div class="ui input">
-                            <input type="text" ng-model="postalCode" placeholder="1234567890">
+                            <input type="text" ng-model="user.postalCode" placeholder="1234567890">
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="nazanin">آدرس وبسایت</label>
                         <div class="ui input">
-                            <input type="text" ng-model="websiteAddress" placeholder="example.ir">
+                            <input type="text" ng-model="user.websiteAddress" placeholder="example.ir">
                         </div>
                     </div>
 

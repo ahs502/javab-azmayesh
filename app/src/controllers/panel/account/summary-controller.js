@@ -9,25 +9,25 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
 
         $scope.userDataForDisplay = [{
             label: 'نام آزمایشگاه',
-            value: $rootScope.data.labData.userData.labName
+            value: $rootScope.data.labData.labName
         }, {
             label: 'تلفن همراه ارتباطی اصلی',
-            value: $rootScope.data.labData.userData.mobilePhoneNumber
+            value: $rootScope.data.labData.mobilePhoneNumber
         }, {
             label: 'تلفن تماس دوم',
-            value: $rootScope.data.labData.userData.phoneNumber
+            value: $rootScope.data.labData.phoneNumber
         }, {
             label: 'آدرس',
-            value: $rootScope.data.labData.userData.address
+            value: $rootScope.data.labData.address
         }, {
             label: 'کد پستی',
-            value: $rootScope.data.labData.userData.postalCode
+            value: $rootScope.data.labData.postalCode
         }, {
             label: 'آدرس درگاه اینترنتی',
-            value: $rootScope.data.labData.userData.websiteAddress
+            value: $rootScope.data.labData.websiteAddress
         }, {
             label: 'نام کاربری',
-            value: $rootScope.data.labData.userData.username
+            value: $rootScope.data.labData.username
         }];
 
         $scope.setBackHandler(function() {

@@ -1,8 +1,10 @@
 /*global app*/
 /*global $*/
 
-app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$interval',
-    function($scope, $rootScope, $state, $stateParams, $timeout, $interval) {
+app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams',
+    '$timeout', '$interval', 'UserService',
+    function($scope, $rootScope, $state, $stateParams,
+        $timeout, $interval, userService) {
 
         $scope.setLoading = setLoading;
         $scope.setPageTitle = setPageTitle;
@@ -10,10 +12,11 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 
         $scope.loading = $scope.loadingMessage = false;
 
-        refreshUserDataProvider(false)();
-
-        // Refresh user data every 1 minute
-        $interval(refreshUserDataProvider(true), 60000);
+        // Refresh user info every 1 minute
+        var refreshUserDataPromise = $interval(refreshUserDataProvider(true), 60000);
+        $scope.$on('$distroy', function() {
+            $interval.cancel(refreshUserDataPromise);
+        });
 
         $scope.setMenuHandlers({
             goToMainPage: function() {
@@ -32,11 +35,11 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
                 $state.go('panel.account.summary');
             },
             logout: function() {
-                //...
-                //TODO: logout
-                //...
-                $state.go('lab.login');
-                console.log('logout');
+                setLoading(true);
+                return userService.logout().then(function() {
+                    setLoading(false);
+                    $state.go('lab.login');
+                });
             }
         });
 
@@ -63,22 +66,10 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         function refreshUserDataProvider(silent) {
             return function() {
                 silent || $scope.setLoading(true);
-                return $timeout(function() { //TODO: Initialize lab info from logged-in user data...
-
-                    $rootScope.data.labData = {
-                        userData: {
-                            labName: 'آزمایشگاه دکتر میر اسدی',
-                            mobilePhoneNumber: '09122343454',
-                            phoneNumber: '02153647586',
-                            address: 'تهران - خ سادات علوی - کوچه صابری - پلاک 217 - واحد 4',
-                            postalCode: '5539110823',
-                            websiteAddress: 'www.mirasadilab.ir',
-                            username: 'drmirasadi'
-                        },
-                    };
-
+                return userService.refresh().then(function(userInfo) {
+                    $rootScope.data.labData = userInfo;
                     silent || $scope.setLoading(false);
-                }, 400);
+                });
             };
         }
 

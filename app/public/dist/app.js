@@ -285,7 +285,8 @@ app.run(['$rootScope', '$state', '$stateParams', '$window',
         // $state.go('home.find');
         // $state.go('panel.account.summary');
         // $state.go('panel.home');
-        $state.go('lab.register');
+        $state.go('lab.login');
+        // $state.go('lab.register');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -336,13 +337,19 @@ app.service('UserService', ['$q', '$http', '$window',
 
         this.register = register;
         this.registerConfirm = registerConfirm;
+
+        this.editAccount = editAccount;
+        this.editPassword = editPassword;
+        this.editConfirm = editConfirm;
+
         this.login = login;
+        this.refresh = refresh;
         this.logout = logout;
         this.current = current;
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 5, 10
+        // May reject by code : 1, 2, 5, 10, 11
         function register(userData) {
             return $http.post('/user/register', {
                     userData: userData,
@@ -362,8 +369,43 @@ app.service('UserService', ['$q', '$http', '$window',
                 .catch(failureHandler);
         }
 
+        // May reject by code : 1, 2, 3, 5, 50, 51, 100, 101
+        function editAccount(username, newAccount) {
+            return $http.post('/user/edit/account', {
+                    newAccount: newAccount
+                })
+                .then(successHandler)
+                .catch(failureHandler);
+        }
+
+        // May reject by code : 1, 2, 5, 40, 50, 51, 100, 101
+        function editPassword(username, oldPassword, newPassword) {
+            return $http.post('/user/edit/password', {
+                    oldPassword: oldPassword,
+                    newPassword: newPassword
+                })
+                .then(successHandler)
+                .catch(failureHandler);
+        }
+
+        // May reject by code : 1, 2, 5, 30, 31, 32, 50, 100, 101
+        // Resolves to current user new info
+        function editConfirm(username, validationCode) {
+            return $http.post('/user/edit/confirm', {
+                    username: username,
+                    validationCode: validationCode
+                })
+                .then(successHandler)
+                .catch(failureHandler)
+                .then(function(body) {
+                    var userInfo = body.userInfo;
+                    setCurrent(undefined, userInfo);
+                    return userInfo;
+                });
+        }
+
         // May reject by code : 1, 2, 5, 40
-        // Resolves to current user
+        // Resolves to current user info
         function login(username, password) {
             return $http.post('/user/login', {
                     username: username,
@@ -375,14 +417,28 @@ app.service('UserService', ['$q', '$http', '$window',
                     var accessKey = body.accessKey,
                         userInfo = body.userInfo;
                     $http.defaults.headers.common['X-Access-Token'] = accessKey;
-                    return $window.sessionStorage['CurrentUser'] = JSON.stringify({
-                        userInfo: userInfo,
-                        accessKey: accessKey
-                    });
+                    setCurrent(accessKey, userInfo);
+                    return userInfo;
                 });
         }
 
-        // May not reject
+        // May reject by code : 1, 2, 5, 50, 51, 100, 101
+        // Resolves to current user new info
+        function refresh() {
+            if (current() === null) {
+                return $q.reject(50);
+            }
+            return $http.post('/user/refresh', {})
+                .then(successHandler)
+                .catch(failureHandler)
+                .then(function(body) {
+                    var userInfo = body.userInfo;
+                    setCurrent(undefined, userInfo);
+                    return userInfo;
+                });
+        }
+
+        // No rejection
         function logout() {
             delete $http.defaults.headers.common['X-Access-Token'];
             delete $window.sessionStorage['CurrentUser'];
@@ -419,6 +475,19 @@ app.service('UserService', ['$q', '$http', '$window',
         function failureHandler(err) {
             console.error(err);
             return $q.reject(2);
+        }
+
+        function setCurrent(accessKey, userInfo) {
+            var data;
+            try {
+                data = JSON.parse($window.sessionStorage['CurrentUser'] || '{}') || {};
+            }
+            catch (err) {
+                data = {};
+            }
+            (accessKey !== undefined) && (data.accessKey = accessKey);
+            (userInfo !== undefined) && (data.userInfo = userInfo);
+            $window.sessionStorage['CurrentUser'] = JSON.stringify(data);
         }
 
     }
@@ -683,7 +752,8 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
             //TODO: check for validity
             $scope.loggingIn = true;
             return userService.login($scope.username, $scope.password)
-                .then(function() {
+                .then(function(userInfo) {
+                    $rootScope.data.labData = userInfo;
                     $state.go('panel.home');
                 }, function(code) {
                     //TODO: Handle errors...
@@ -1256,8 +1326,8 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 /*global app*/
 /*global $*/
 
-app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
 
         $scope.confirm = confirm;
 
@@ -1265,8 +1335,9 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
 
         $scope.action = $stateParams.action;
 
+        // $scope.verificationCode
+
         $scope.setBackHandler(function() {
-            console.log($scope.action)
             if ($scope.action === 'change password')
                 $state.go('panel.account.password');
             else if ($scope.action === 'edit account')
@@ -1280,17 +1351,23 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
         function confirm() {
             //TODO: check for validity then send request to server...
             $scope.confirming = true;
-            $timeout(function() {
-                $('#ja-confirmed-acknowledgement-modal')
-                    .modal({
-                        onHide: function() {
-                            $state.go('panel.account.summary');
-                            $scope.refreshUserData();
-                        }
-                    })
-                    .modal('show');
-                $scope.confirming = false;
-            }, 400);
+            userService.editConfirm($rootScope.data.labData.username, $scope.verificationCode)
+                .then(function() {
+                    $scope.confirming = false;
+                    $('#ja-confirmed-acknowledgement-modal')
+                        .modal({
+                            onHide: function() {
+                                return $scope.refreshUserData()
+                                    .then(function() {
+                                        $state.go('panel.account.summary');
+                                    });
+                            }
+                        })
+                        .modal('show');
+                }, function(code) {
+                    $scope.confirming = false;
+                    alert(code);
+                });
         }
 
     }
@@ -1307,21 +1384,22 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
 */
 
 /*global app*/
-/*global $*/
 
-app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
 
         $scope.editAccount = editAccount;
 
         $scope.editingAccount = false;
 
-        $scope.labName = $rootScope.data.labData.userData.labName;
-        $scope.mobilePhoneNumber = $rootScope.data.labData.userData.mobilePhoneNumber;
-        $scope.phoneNumber = $rootScope.data.labData.userData.phoneNumber;
-        $scope.address = $rootScope.data.labData.userData.address;
-        $scope.postalCode = $rootScope.data.labData.userData.postalCode;
-        $scope.websiteAddress = $rootScope.data.labData.userData.websiteAddress;
+        $scope.user = {
+            labName: $rootScope.data.labData.labName,
+            mobilePhoneNumber: $rootScope.data.labData.mobilePhoneNumber,
+            phoneNumber: $rootScope.data.labData.phoneNumber,
+            address: $rootScope.data.labData.address,
+            postalCode: $rootScope.data.labData.postalCode,
+            websiteAddress: $rootScope.data.labData.websiteAddress,
+        };
 
         $scope.setBackHandler(function() {
             $state.go('panel.account.summary');
@@ -1332,12 +1410,16 @@ app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', 
         function editAccount() {
             //TODO: check for validity then send request to server...
             $scope.editingAccount = true;
-            $timeout(function() { //TODO: send request to edit account
-                $state.go('panel.account.confirm', {
-                    action: 'edit account'
+            userService.editAccount($rootScope.data.labData.username, $scope.user)
+                .then(function() {
+                    $state.go('panel.account.confirm', {
+                        action: 'edit account'
+                    });
+                    $scope.editingAccount = false;
+                }, function(code) {
+                    $scope.editingAccount = false;
+                    alert(code);
                 });
-                $scope.editingAccount = false;
-            }, 400);
         }
 
     }
@@ -1356,8 +1438,8 @@ app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', 
 /*global app*/
 /*global $*/
 
-app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
 
         $scope.changePassword = changePassword;
 
@@ -1376,12 +1458,16 @@ app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$stat
         function changePassword() {
             //TODO: check for validity then send request to server...
             $scope.changingPassword = true;
-            $timeout(function() { //TODO: send request to change password
-                $state.go('panel.account.confirm', {
-                    action: 'change password'
+            userService.editPassword($rootScope.data.labData.username, $scope.oldPassword, $scope.newPassword)
+                .then(function() {
+                    $state.go('panel.account.confirm', {
+                        action: 'change password'
+                    });
+                    $scope.changingPassword = false;
+                }, function(code) {
+                    $scope.changingPassword = false;
+                    alert(code);
                 });
-                $scope.changingPassword = false;
-            }, 400);
         }
 
     }
@@ -1408,25 +1494,25 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
 
         $scope.userDataForDisplay = [{
             label: 'نام آزمایشگاه',
-            value: $rootScope.data.labData.userData.labName
+            value: $rootScope.data.labData.labName
         }, {
             label: 'تلفن همراه ارتباطی اصلی',
-            value: $rootScope.data.labData.userData.mobilePhoneNumber
+            value: $rootScope.data.labData.mobilePhoneNumber
         }, {
             label: 'تلفن تماس دوم',
-            value: $rootScope.data.labData.userData.phoneNumber
+            value: $rootScope.data.labData.phoneNumber
         }, {
             label: 'آدرس',
-            value: $rootScope.data.labData.userData.address
+            value: $rootScope.data.labData.address
         }, {
             label: 'کد پستی',
-            value: $rootScope.data.labData.userData.postalCode
+            value: $rootScope.data.labData.postalCode
         }, {
             label: 'آدرس درگاه اینترنتی',
-            value: $rootScope.data.labData.userData.websiteAddress
+            value: $rootScope.data.labData.websiteAddress
         }, {
             label: 'نام کاربری',
-            value: $rootScope.data.labData.userData.username
+            value: $rootScope.data.labData.username
         }];
 
         $scope.setBackHandler(function() {
@@ -1743,8 +1829,10 @@ app.controller('MasterController', ['$scope', '$rootScope', '$window',
 /*global app*/
 /*global $*/
 
-app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$interval',
-    function($scope, $rootScope, $state, $stateParams, $timeout, $interval) {
+app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams',
+    '$timeout', '$interval', 'UserService',
+    function($scope, $rootScope, $state, $stateParams,
+        $timeout, $interval, userService) {
 
         $scope.setLoading = setLoading;
         $scope.setPageTitle = setPageTitle;
@@ -1752,10 +1840,11 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 
         $scope.loading = $scope.loadingMessage = false;
 
-        refreshUserDataProvider(false)();
-
-        // Refresh user data every 1 minute
-        $interval(refreshUserDataProvider(true), 60000);
+        // Refresh user info every 1 minute
+        var refreshUserDataPromise = $interval(refreshUserDataProvider(true), 60000);
+        $scope.$on('$distroy', function() {
+            $interval.cancel(refreshUserDataPromise);
+        });
 
         $scope.setMenuHandlers({
             goToMainPage: function() {
@@ -1774,11 +1863,11 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
                 $state.go('panel.account.summary');
             },
             logout: function() {
-                //...
-                //TODO: logout
-                //...
-                $state.go('lab.login');
-                console.log('logout');
+                setLoading(true);
+                return userService.logout().then(function() {
+                    setLoading(false);
+                    $state.go('lab.login');
+                });
             }
         });
 
@@ -1805,22 +1894,10 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         function refreshUserDataProvider(silent) {
             return function() {
                 silent || $scope.setLoading(true);
-                return $timeout(function() { //TODO: Initialize lab info from logged-in user data...
-
-                    $rootScope.data.labData = {
-                        userData: {
-                            labName: 'آزمایشگاه دکتر میر اسدی',
-                            mobilePhoneNumber: '09122343454',
-                            phoneNumber: '02153647586',
-                            address: 'تهران - خ سادات علوی - کوچه صابری - پلاک 217 - واحد 4',
-                            postalCode: '5539110823',
-                            websiteAddress: 'www.mirasadilab.ir',
-                            username: 'drmirasadi'
-                        },
-                    };
-
+                return userService.refresh().then(function(userInfo) {
+                    $rootScope.data.labData = userInfo;
                     silent || $scope.setLoading(false);
-                }, 400);
+                });
             };
         }
 

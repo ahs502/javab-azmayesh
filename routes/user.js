@@ -2,18 +2,15 @@ var express = require('express');
 var router = module.exports = express.Router();
 
 var src = require("../src"),
-    kfs = src.kfs;
+    kfs = src.kfs,
+    access = src.access;
 
 var https = require('https');
 var querystring = require('querystring');
 
-var Cryptr = require('cryptr'),
-    cryptr = new Cryptr('0123456789InTheNameOfGod9876543210');
-
 ////////////////////////////////////////////////////////////////////////////////
 
 var confirmationExpiresAfter = 10; // Hours
-var accessKeyExpiresAfter = 20; // Hours
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -141,50 +138,156 @@ router.post('/login', function(req, res, next) {
             return resEndByCode(res, 40);
         }
         var remoteIp = req.ip;
-        var accessKey = generateAccessKey(user, remoteIp);
+        var accessKey = access.generateAccessKey(user, remoteIp);
         resEndByCode(res, 0, {
             accessKey,
-            userInfo: {
-                username: user.username,
-                //...
-            }
+            userInfo: getUserInfo(user)
         });
     });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function generateAccessKey(user, remoteIp) {
-    var accessKeyData = {
-        expiresAt: Date.now() + accessKeyExpiresAfter * 60 * 60 * 1000,
-        userInfo: {
-            username: user.username,
-            //...
-        },
-        remoteIp
-    };
-    return cryptr.encrypt(JSON.stringify(accessKeyData));
-}
+router.post('/refresh', function(req, res, next) {
+    var userInfo = decodeUserInfo(req, res);
+    if (!userInfo) return;
+    var username = userInfo.username;
+    kfs('user/' + username, function(err, user) {
+        if (err) {
+            console.error(err);
+            return resEndByCode(res, 5);
+        }
+        if (!user) {
+            return resEndByCode(res, 51);
+        }
+        resEndByCode(res, 0, {
+            userInfo: getUserInfo(user)
+        });
+    });
+});
 
-function decodeAccessKey(accessKey, remoteIp) {
-    try {
-        var accessKeyData = JSON.parse(cryptr.decrypt(accessKey));
-        if (!accessKeyData || accessKeyData.remoteIp != remoteIp) throw 'Invalid access key.';
-        return {
-            invalid: false,
-            expired: Date.now() > accessKeyData.expiresAt,
-            userInfo: accessKeyData.userInfo
-        };
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/edit/:action', function(req, res, next) {
+    var userInfo = decodeUserInfo(req, res);
+    if (!userInfo) return;
+    var username = userInfo.username;
+    var action = req.params.action;
+    console.log(req.params)
+    if (action !== 'account' && action !== 'password') {
+        return next();
     }
-    catch (err) {
-        return {
-            invalid: true
-        };
+    kfs('user/' + username, function(err, user) {
+        if (err) {
+            console.error(err);
+            return resEndByCode(res, 5);
+        }
+        if (!user) {
+            return resEndByCode(res, 51);
+        }
+        var newUser;
+        if (action === 'account') {
+            newUser = req.body.newAccount;
+            newUser.username = user.username;
+            newUser.password = user.password;
+            newUser.passwordAgain = user.passwordAgain;
+            newUser.acceptRules = user.acceptRules;
+        }
+        else if (action === 'password') {
+            var oldPassword = req.body.oldPassword,
+                newPassword = req.body.newPassword;
+            if (oldPassword !== user.password) {
+                return resEndByCode(res, 40);
+            }
+            newUser = user;
+            newUser.password = newUser.passwordAgain = newPassword;
+        }
+        var validationCode = '123456'; //TODO: Generate a simple validation code ...
+        kfs('user/_confirming_/' + username, {
+            user: newUser,
+            validationCode,
+            timeStamp: new Date()
+        }, function(err) {
+            if (err) {
+                console.error(err);
+                return resEndByCode(res, 5);
+            }
+            //TODO: Send verificationCode by SMS ...
+            resEndByCode(res, 0);
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/edit/confirm', function(req, res, next) {
+    var userInfo = decodeUserInfo(req, res);
+    if (!userInfo) return;
+    var username = userInfo.username;
+    if (username !== req.body.username) {
+        return resEndByCode(res, 50);
     }
-}
+    var validationCode = req.body.validationCode;
+    kfs('/user/_confirming_/' + username, function(err, data) {
+        if (err) {
+            console.error(err);
+            return resEndByCode(res, 5);
+        }
+        if (!data) {
+            return resEndByCode(res, 30);
+        }
+        if (data.timaStamp > new Date((new Date).setHours((new Date).getHours() + confirmationExpiresAfter))) {
+            return resEndByCode(res, 31);
+        }
+        if (validationCode != data.validationCode) {
+            return resEndByCode(res, 32);
+        }
+        kfs('user/' + username, data.user, function(err) {
+            if (err) {
+                console.error(err);
+                return resEndByCode(res, 5);
+            }
+            resEndByCode(res, 0, {
+                userInfo: getUserInfo(data.user)
+            });
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
 
 function resEndByCode(res, code, data) {
     data = data || {};
     data.code = code;
     return res.status(200).json(data).end();
+}
+
+function decodeUserInfo(req, res) {
+    var accessData = access.decodeRequest(req);
+    if (accessData.invalid) {
+        resEndByCode(res, 100);
+        return null;
+    }
+    if (accessData.expired) {
+        resEndByCode(res, 101);
+        return null;
+    }
+    var userInfo = accessData.userInfo;
+    if (!userInfo) {
+        resEndByCode(res, 50);
+        return null;
+    }
+    return userInfo;
+}
+
+function getUserInfo(user) {
+    return {
+        username: user.username,
+        labName: user.labName,
+        mobilePhoneNumber: user.mobilePhoneNumber,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+        postalCode: user.postalCode,
+        websiteAddress: user.websiteAddress,
+    };
 }

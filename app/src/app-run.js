@@ -12,7 +12,8 @@ app.run(['$rootScope', '$state', '$stateParams', '$window',
         // $state.go('home.find');
         // $state.go('panel.account.summary');
         // $state.go('panel.home');
-        $state.go('lab.register');
+        $state.go('lab.login');
+        // $state.go('lab.register');
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;

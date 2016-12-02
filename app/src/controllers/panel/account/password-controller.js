@@ -1,8 +1,8 @@
 /*global app*/
 /*global $*/
 
-app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
 
         $scope.changePassword = changePassword;
 
@@ -21,12 +21,16 @@ app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$stat
         function changePassword() {
             //TODO: check for validity then send request to server...
             $scope.changingPassword = true;
-            $timeout(function() { //TODO: send request to change password
-                $state.go('panel.account.confirm', {
-                    action: 'change password'
+            userService.editPassword($rootScope.data.labData.username, $scope.oldPassword, $scope.newPassword)
+                .then(function() {
+                    $state.go('panel.account.confirm', {
+                        action: 'change password'
+                    });
+                    $scope.changingPassword = false;
+                }, function(code) {
+                    $scope.changingPassword = false;
+                    alert(code);
                 });
-                $scope.changingPassword = false;
-            }, 400);
         }
 
     }

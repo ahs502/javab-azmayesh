@@ -1,8 +1,8 @@
 /*global app*/
 /*global $*/
 
-app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
 
         $scope.confirm = confirm;
 
@@ -10,8 +10,9 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
 
         $scope.action = $stateParams.action;
 
+        // $scope.verificationCode
+
         $scope.setBackHandler(function() {
-            console.log($scope.action)
             if ($scope.action === 'change password')
                 $state.go('panel.account.password');
             else if ($scope.action === 'edit account')
@@ -25,17 +26,23 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
         function confirm() {
             //TODO: check for validity then send request to server...
             $scope.confirming = true;
-            $timeout(function() {
-                $('#ja-confirmed-acknowledgement-modal')
-                    .modal({
-                        onHide: function() {
-                            $state.go('panel.account.summary');
-                            $scope.refreshUserData();
-                        }
-                    })
-                    .modal('show');
-                $scope.confirming = false;
-            }, 400);
+            userService.editConfirm($rootScope.data.labData.username, $scope.verificationCode)
+                .then(function() {
+                    $scope.confirming = false;
+                    $('#ja-confirmed-acknowledgement-modal')
+                        .modal({
+                            onHide: function() {
+                                return $scope.refreshUserData()
+                                    .then(function() {
+                                        $state.go('panel.account.summary');
+                                    });
+                            }
+                        })
+                        .modal('show');
+                }, function(code) {
+                    $scope.confirming = false;
+                    alert(code);
+                });
         }
 
     }

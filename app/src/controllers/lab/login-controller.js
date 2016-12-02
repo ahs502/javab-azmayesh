@@ -16,7 +16,8 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
             //TODO: check for validity
             $scope.loggingIn = true;
             return userService.login($scope.username, $scope.password)
-                .then(function() {
+                .then(function(userInfo) {
+                    $rootScope.data.labData = userInfo;
                     $state.go('panel.home');
                 }, function(code) {
                     //TODO: Handle errors...

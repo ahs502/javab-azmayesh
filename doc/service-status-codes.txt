@@ -13,4 +13,11 @@
     32  : Wrong validation code
     
     40  : Wrong username or password
+    
+    50  : User have not logged in
+    51  : User not found
+    
+    100 : Invalid access key
+    101 : Expired access key
+    
 
