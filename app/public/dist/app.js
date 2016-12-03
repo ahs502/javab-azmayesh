@@ -332,8 +332,8 @@ app.run(['$rootScope', '$state', '$stateParams', '$window',
 
 /*global app*/
 
-app.service('UserService', ['$q', '$http', '$window',
-    function($q, $http, $window) {
+app.service('UserService', ['$q', '$http', '$window','Utils',
+    function($q, $http, $window,utils) {
 
         this.register = register;
         this.registerConfirm = registerConfirm;
@@ -355,7 +355,7 @@ app.service('UserService', ['$q', '$http', '$window',
                     userData: userData,
                     recaptcha: userData.response
                 })
-                .then(successHandler, failureHandler);
+                .then(utils.successHandler, utils.failureHandler);
         }
 
         // May reject by code : 1, 2, 5, 30, 31, 32
@@ -364,7 +364,7 @@ app.service('UserService', ['$q', '$http', '$window',
                     username: username,
                     validationCode: validationCode
                 })
-                .then(successHandler, failureHandler);
+                .then(utils.successHandler, utils.failureHandler);
         }
 
         // May reject by code : 1, 2, 3, 5, 50, 51, 100, 101
@@ -372,7 +372,7 @@ app.service('UserService', ['$q', '$http', '$window',
             return $http.post('/user/edit/account', {
                     newAccount: newAccount
                 })
-                .then(successHandler, failureHandler);
+                .then(utils.successHandler, utils.failureHandler);
         }
 
         // May reject by code : 1, 2, 5, 40, 50, 51, 100, 101
@@ -381,7 +381,7 @@ app.service('UserService', ['$q', '$http', '$window',
                     oldPassword: oldPassword,
                     newPassword: newPassword
                 })
-                .then(successHandler, failureHandler);
+                .then(utils.successHandler, utils.failureHandler);
         }
 
         // May reject by code : 1, 2, 5, 30, 31, 32, 50, 100, 101
@@ -391,7 +391,7 @@ app.service('UserService', ['$q', '$http', '$window',
                     username: username,
                     validationCode: validationCode
                 })
-                .then(successHandler, failureHandler)
+                .then(utils.successHandler, utils.failureHandler)
                 .then(function(body) {
                     var userInfo = body.userInfo;
                     setCurrent(undefined, userInfo);
@@ -406,7 +406,7 @@ app.service('UserService', ['$q', '$http', '$window',
                     username: username,
                     password: password
                 })
-                .then(successHandler, failureHandler)
+                .then(utils.successHandler, utils.failureHandler)
                 .then(function(body) {
                     var accessKey = body.accessKey,
                         userInfo = body.userInfo;
@@ -423,7 +423,7 @@ app.service('UserService', ['$q', '$http', '$window',
                 return $q.reject(50);
             }
             return $http.post('/user/refresh', {})
-                .then(successHandler, failureHandler)
+                .then(utils.successHandler, utils.failureHandler)
                 .then(function(body) {
                     var userInfo = body.userInfo;
                     setCurrent(undefined, userInfo);
@@ -454,22 +454,6 @@ app.service('UserService', ['$q', '$http', '$window',
 
         /////////////////////////////////////////////////////
 
-        function successHandler(response) {
-            if (response.status != 200) {
-                console.log(response.status, response.data);
-                return $q.reject(1);
-            }
-            if (response.data.code !== 0) {
-                return $q.reject(response.data.code || 1);
-            }
-            return response.data;
-        }
-
-        function failureHandler(err) {
-            console.error(err);
-            return $q.reject(2);
-        }
-
         function setCurrent(accessKey, userInfo) {
             var data;
             try {
@@ -488,6 +472,45 @@ app.service('UserService', ['$q', '$http', '$window',
 
 /*
 	AHS502 : End of 'user-service.js'
+*/
+
+
+/*
+	AHS502 : Start of 'utils.js'
+*/
+
+/*global app*/
+
+app.factory('Utils', ['$q', '$http', '$window',
+    function($q, $http, $window) {
+
+        return {
+            successHandler: successHandler,
+            failureHandler: failureHandler,
+        };
+
+        function successHandler(response) {
+            if (response.status != 200) {
+                console.log(response.status, response.data);
+                return $q.reject(1);
+            }
+            if (response.data.code !== 0) {
+                return $q.reject(response.data.code || 1);
+            }
+            return response.data;
+        }
+
+        function failureHandler(err) {
+            console.error(err);
+            return $q.reject(2);
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'utils.js'
 */
 
 
@@ -1116,7 +1139,6 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         $window.document.addEventListener("dragover", document_OnDragOver, false);
         $window.document.addEventListener("dragleave", document_OnDragLeave, false);
         $window.document.addEventListener("drop", document_OnDrag, false);
-
         $scope.$on('$destroy', function() {
             inputFile.removeEventListener('change', inputFile_OnChange);
             $window.document.removeEventListener("dragover", document_OnDragOver);
@@ -1124,11 +1146,11 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             $window.document.removeEventListener("drop", document_OnDrag);
         });
 
-        //$scope.fullName
-        //$scope.nationalCode
-        //$scope.mobilePhoneNumber
-        //$scope.phoneNumber
-        //$scope.extraPhoneNumber
+        //$scope.person.fullName
+        //$scope.person.nationalCode
+        //$scope.person.mobilePhoneNumber
+        //$scope.person.phoneNumber
+        //$scope.person.extraPhoneNumber
 
         var fileId = 0;
 
@@ -1239,7 +1261,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
             var xhr = new XMLHttpRequest();
             file.xhr = xhr;
-            xhr.open('post', '/upload', true); //TODO: determine the exact upload url
+            xhr.open('post', '/send/upload', true);
             xhr.upload.onprogress = function(e) {
                 if (e.lengthComputable) {
                     file.progress = Math.floor((e.loaded / e.total) * 100);
@@ -1258,10 +1280,15 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
                 $scope.$$phase || $scope.$apply();
             };
             xhr.onload = function(e) {
-                if (e.currentTarget.status == 200)
+                try {
+                    if (e.currentTarget.status != 200)
+                        throw e.currentTarget.response;
+                    file.serverName = JSON.parse(e.currentTarget.response).filename;
                     file.status = 'Uploaded';
-                else
+                }
+                catch (err) {
                     file.status = 'Error';
+                }
                 $scope.$$phase || $scope.$apply();
             };
 
@@ -1947,6 +1974,8 @@ app.filter('toPersianNumber', function() {
 
 (function(global) {
 
+    global.iconJs = iconJs;
+
     //See this link for more SVG icons: http://www.flaticon.com/
     var dataUrls = {
 
@@ -1966,8 +1995,6 @@ app.filter('toPersianNumber', function() {
         return dataUrls[dataUrlTitle] || dataUrlTitle || '';
     }
 
-    global.iconJs = iconJs;
-
 })(window);
 
 /*
@@ -1980,6 +2007,8 @@ app.filter('toPersianNumber', function() {
 */
 
 (function(global) {
+
+    global.toPersianNumber = toPersianNumber;
 
     var persianDigitConvertions = {
         0: '۰',
@@ -2004,8 +2033,6 @@ app.filter('toPersianNumber', function() {
                 return char;
         }).join('');
     }
-
-    global.toPersianNumber = toPersianNumber;
 
 })(window);
 

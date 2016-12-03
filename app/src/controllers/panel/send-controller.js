@@ -25,7 +25,6 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         $window.document.addEventListener("dragover", document_OnDragOver, false);
         $window.document.addEventListener("dragleave", document_OnDragLeave, false);
         $window.document.addEventListener("drop", document_OnDrag, false);
-
         $scope.$on('$destroy', function() {
             inputFile.removeEventListener('change', inputFile_OnChange);
             $window.document.removeEventListener("dragover", document_OnDragOver);
@@ -33,11 +32,11 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             $window.document.removeEventListener("drop", document_OnDrag);
         });
 
-        //$scope.fullName
-        //$scope.nationalCode
-        //$scope.mobilePhoneNumber
-        //$scope.phoneNumber
-        //$scope.extraPhoneNumber
+        //$scope.person.fullName
+        //$scope.person.nationalCode
+        //$scope.person.mobilePhoneNumber
+        //$scope.person.phoneNumber
+        //$scope.person.extraPhoneNumber
 
         var fileId = 0;
 
@@ -148,7 +147,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
             var xhr = new XMLHttpRequest();
             file.xhr = xhr;
-            xhr.open('post', '/upload', true); //TODO: determine the exact upload url
+            xhr.open('post', '/send/upload', true);
             xhr.upload.onprogress = function(e) {
                 if (e.lengthComputable) {
                     file.progress = Math.floor((e.loaded / e.total) * 100);
@@ -167,10 +166,15 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
                 $scope.$$phase || $scope.$apply();
             };
             xhr.onload = function(e) {
-                if (e.currentTarget.status == 200)
+                try {
+                    if (e.currentTarget.status != 200)
+                        throw e.currentTarget.response;
+                    file.serverName = JSON.parse(e.currentTarget.response).filename;
                     file.status = 'Uploaded';
-                else
+                }
+                catch (err) {
                     file.status = 'Error';
+                }
                 $scope.$$phase || $scope.$apply();
             };
 
