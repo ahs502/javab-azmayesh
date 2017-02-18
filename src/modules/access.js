@@ -21,6 +21,7 @@ function generateAccessKey(user, remoteIp) {
         expiresAt: Date.now() + config.access_key_expires_after * 60 * 60 * 1000,
         userInfo: {
             username: user.username,
+            labName: user.labName,
             //...
         },
         remoteIp

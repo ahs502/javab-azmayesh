@@ -1,8 +1,8 @@
 /*global app*/
 /*global $*/
 
-app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $window, $timeout) {
+app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http',
+    function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http) {
 
         $scope.sendAnswer = sendAnswer;
         $scope.selectFilesDialog = selectFilesDialog;
@@ -10,7 +10,19 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         $scope.removeFile = removeFile;
 
         $scope.sendingAnswer = false;
-        $scope.files = []; // File.status : Preparing, Uploading, Uploded, Error, Aborting, Aborted, Removing, Removed
+        $scope.files = [];
+        /* Each file has :
+            status:         Preparing, Uploading, Uploded, Error, Aborting, Aborted, Removing, Removed
+            name:           alpha.beta
+            size:           1024
+            type:           application/beta
+            lastModified:   
+            id:             4
+            srcPreview:     pdf file
+            xhr:            Uploading XHR for this file
+            progress:       73
+            serverName:     1234567
+        */
 
         $scope.setBackHandler(function() {
             $state.go('panel.home');
@@ -32,18 +44,28 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             $window.document.removeEventListener("drop", document_OnDrag);
         });
 
+        $scope.person = {};
         //$scope.person.fullName
         //$scope.person.nationalCode
         //$scope.person.mobilePhoneNumber
         //$scope.person.phoneNumber
         //$scope.person.extraPhoneNumber
+        //$scope.person.email
+        //$scope.notes
 
         var fileId = 0;
 
         function sendAnswer() {
-            //TODO: not implemented yet.
-            //TODO: check for validity
+            //TODO: check for validity ($scope.person.? for example)
             $scope.sendingAnswer = true;
+            $http.post('/send/answer', {
+                person: $scope.person,
+                files: $scope.files.map(function(file) {
+                    return file.serverName;
+                })
+            })
+
+
             $timeout(function() { //TODO: send answer
                 $scope.sendingAnswer = false;
                 $('#ja-sent-answer-acknowledgement-modal')
@@ -62,6 +84,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
         function inputFile_OnChange(e) {
             var files = toArray(inputFile.files);
+            inputFile.value = '';
             addNewFiles(files);
         }
 
@@ -89,7 +112,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
         function addNewFiles(files) {
 
-            // filter bad/duplicated/veryLarge files
+            // filter bad / duplicated / veryLarge files
             files = files.filter(function(file) {
                 return file.size > 0 && file.size <= 10 * 1024 * 1024 && file.type != '' &&
                     $scope.files.filter(function(existingFile) {
@@ -147,7 +170,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
             var xhr = new XMLHttpRequest();
             file.xhr = xhr;
-            xhr.open('post', '/send/upload', true);
+            xhr.open('post', '/answer/file/upload', true);
             xhr.upload.onprogress = function(e) {
                 if (e.lengthComputable) {
                     file.progress = Math.floor((e.loaded / e.total) * 100);

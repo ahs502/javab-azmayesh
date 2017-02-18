@@ -1,10 +1,20 @@
+////////////////////////////////////////////////////////////////////////////////
 // For more information, see: http://niksms.com/fa/panel/#/programming-features/webservice-api
+////////////////////////////////////////////////////////////////////////////////
+
+var config = require("../../config");
+
+////////////////////////////////////////////////////////////////////////////////
 
 var soap = require("soap");
 
+////////////////////////////////////////////////////////////////////////////////
+
 var nikSmsUrl = "http://niksms.com:1370/NiksmsWebservice.svc?wsdl";
 
-module.exports = function nikSms(username, password) {
+module.exports = nikSms(config.nik_sms_username, config.nik_sms_password);
+
+function nikSms(username, password) {
 
     if (typeof username !== 'string' || typeof password !== 'string' || username.length <= 0 || password.length <= 0) {
         throw new Error('Empty username or password.');
@@ -124,7 +134,7 @@ module.exports = function nikSms(username, password) {
      >> Input
           * id              :   Received nik id for the sms (string/long or array of strings/longs, provided in sendSms method's output)
 
-     >> Output              :   Sms status (string or array of string, described below)
+     >> Output              :   Sms status (string or array of strings, described below)
 
      -> Sms status
             0	NotFound	هنگامی که کاربر درخواست مشاهده نتیجه پیامی را دارد که قبلا برای ما ارسال نکرده و در دیتابیس وجود ندارد.
@@ -337,7 +347,7 @@ module.exports = function nikSms(username, password) {
                     ReceiveDate     :   Receive date and time (Date)
                     IsRelayed       :   Is this message sent automaticaly? (boolean)
                     
-            In the case of notNow == false :
+            In the case of notNow == true :
                 A boolean indicating success or failure of the operation of setting the messages status to unread.
 
     ***/
@@ -427,9 +437,11 @@ module.exports = function nikSms(username, password) {
 
 };
 
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 
 
 

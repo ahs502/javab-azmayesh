@@ -18,7 +18,7 @@ router.post('/register', function(req, res, next) {
     var recaptcha = req.body.recaptcha;
     var remoteIp = req.ip; //req.headers['x-real-ip'] || req.connection.remoteAddress; //TODO: It works with Nginx, how about no proxy mode ?
     var dataVerify = {
-        secret: '6LexDAwUAAAAAP7U7z8YEIcI006D8KGajx3WtR31',
+        secret: config.google_recaptcha_secret_key,
         response: recaptcha,
         remoteip: remoteIp
     };
@@ -60,7 +60,7 @@ router.post('/register', function(req, res, next) {
                 if (exists) {
                     return utils.resEndByCode(res, 10);
                 }
-                var validationCode = '123456'; //TODO: Generate a simple validation code ...
+                var validationCode = utils.generateRandomCode(4);
                 kfs('/user/_confirming_/' + username, {
                     user,
                     validationCode,
@@ -94,27 +94,47 @@ router.post('/register', function(req, res, next) {
 router.post('/register/confirm', function(req, res, next) {
     var username = req.body.username;
     var validationCode = req.body.validationCode;
-    kfs('/user/_confirming_/' + username, function(err, data) {
-        if (err) {
-            console.error(err);
-            return utils.resEndByCode(res, 5);
-        }
-        if (!data) {
-            return utils.resEndByCode(res, 30);
-        }
-        if (data.timaStamp > new Date((new Date).setHours((new Date).getHours() + config.confirmation_expires_after))) {
-            return utils.resEndByCode(res, 31);
-        }
-        if (validationCode != data.validationCode) {
-            return utils.resEndByCode(res, 32);
-        }
-        //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
-        kfs('user/' + username, data.user, function(err) {
+    utils.generateId('user').then(function(userId) {
+        kfs('/user/_confirming_/' + username, function(err, data) {
             if (err) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
             }
-            utils.resEndByCode(res, 0);
+            if (!data) {
+                return utils.resEndByCode(res, 30);
+            }
+            if (data.timaStamp > new Date((new Date).setHours((new Date).getHours() + config.confirmation_expires_after))) {
+                return utils.resEndByCode(res, 31);
+            }
+            if (validationCode != data.validationCode) {
+                return utils.resEndByCode(res, 32);
+            }
+            data.user.id = userId;
+            
+            //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
+            
+            // kfs('userIdName', function(err, data) {
+            //     if (err) {
+            //         console.error(err);
+            //         return utils.resEndByCode(res, 5);
+            //     }
+            //     data = data || {};
+            //     data[userId] = username;
+            //     kfs('userIdName', data, function(err) {
+            //         if (err) {
+            //             console.error(err);
+            //             return utils.resEndByCode(res, 5);
+            //         }
+            kfs('user/' + username, data.user, function(err) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                utils.resEndByCode(res, 0);
+            });
+            //     });
+            // });
+            
         });
     });
 });

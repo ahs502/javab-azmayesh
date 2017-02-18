@@ -1,5 +1,7 @@
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
+require("./src/extensions");
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -20,7 +22,9 @@ var app = express();
 app.use(favicon(path.join(__dirname, 'app/public/img', 'icon-64x64.png')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.enable('trust proxy');
 
@@ -34,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'app/public')));
 // serving routes
 app.use('/', require('./routes/index'));
 app.use('/user', require('./routes/user'));
-app.use('/send', require('./routes/send'));
+app.use('/answer', require('./routes/answer'));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 

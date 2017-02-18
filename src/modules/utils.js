@@ -1,11 +1,18 @@
 var kfs = require("./kfs");
+var fs = require("fs-extra");
 
 ////////////////////////////////////////////////////////////////////////////////
 
 module.exports = {
+
     resEndByCode,
+
     generateIdSync,
     generateId,
+    generateRandomCode,
+
+    moveFile,
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,5 +53,29 @@ function generateId(counter) {
         });
     }).catch(function(error) {
         return counters[counter] = 1;
+    });
+}
+
+function generateRandomCode(numberOfDigits, notAllowedCodes) {
+    var code;
+    notAllowedCodes = notAllowedCodes || [];
+    do {
+        code = "";
+        for (var i = 0; i < numberOfDigits; i += 2)
+            code += Math.floor(Math.random() * 90) + 10;
+        code = code.slice(0, numberOfDigits);
+    } while (notAllowedCodes.indexOf(code) >= 0);
+    console.log('#######################', code, '#######################'); //TODO: remove this line later.
+    return code;
+}
+
+function moveFile(src, des) {
+    return new Promise(function(resolve, reject) {
+        fs.move(src, des, {
+            clobber: true
+        }, function(error) {
+            if (error) reject(error);
+            else resolve();
+        });
     });
 }

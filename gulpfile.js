@@ -30,7 +30,7 @@ var port = 50302;
 var javascripts_app = [
     './app/src/libraries/**/*.js',
     './app/src/modules/**/*.js',
-    './app/src/utilities.js',
+    './app/src/utilities/**/*.js',
     './app/src/app.js',
     './app/src/app-config.js',
     './app/src/app-run.js',

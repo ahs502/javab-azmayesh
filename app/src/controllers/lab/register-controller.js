@@ -1,14 +1,16 @@
 /*global app*/
 
-app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'vcRecaptchaService', 'UserService',
-    function($rootScope, $scope, $state, $stateParams, $timeout, vcRecaptchaService, userService) {
+app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', 
+'vcRecaptchaService', 'UserService','Config',
+    function($rootScope, $scope, $state, $stateParams, $timeout,
+    vcRecaptchaService, userService,config) {
 
         $scope.setResponse = setResponse;
         $scope.setWidgetId = setWidgetId;
         $scope.cbExpiration = cbExpiration;
         $scope.sendRegisterationForm = sendRegisterationForm;
 
-        $scope.key = '6LexDAwUAAAAAPXalUBl6eGUWa3dz7PrXXa-a7EG';
+        $scope.key = config.google_recaptcha_public_key;
         $scope.sendingRegisterationForm = false;
         $scope.model = {};
 

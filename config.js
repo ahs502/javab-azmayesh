@@ -1,13 +1,49 @@
 var path = require("path");
 
+////////////////////////////////////////////////////////////////////////////////
+
 var config = {
 
-    storage_path: path.join(__dirname, '_data'),
-    upload_temporary_path: path.join(__dirname, '_upload_temp'),
+    /*---------------------------------*/
+    storage_path: /*-------------------*/ path.join(__dirname, '_data'),
+    upload_path: /*--------------------*/ path.join(__dirname, '_upload'),
+    /*---------------------------------*/
+    confirmation_expires_after: /*-----*/ 10, // Hours
+    access_key_expires_after: /*-------*/ 20, // Hours
+    /*---------------------------------*/
+    nik_sms_username: /*---------------*/ '09337770720',
+    nik_sms_password: /*---------------*/ 'nspassword',
+    nik_sms_main_number: /*------------*/ '50004545454545',
+    /*---------------------------------*/
+    google_recaptcha_secret_key: /*----*/ '6LexDAwUAAAAAP7U7z8YEIcI006D8KGajx3WtR31',
+    google_recaptcha_public_key: /*----*/ '6LexDAwUAAAAAPXalUBl6eGUWa3dz7PrXXa-a7EG',
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
+    /*---------------------------------*/
 
-    confirmation_expires_after: 10, // Hours
-    access_key_expires_after: 20, // Hours
+    client_config: [
+        'google_recaptcha_public_key',
+    ]
 
 };
+
+////////////////////////////////////////////////////////////////////////////////
+
+var clientConfigKeys = config.client_config;
+config.client_config = {};
+clientConfigKeys.forEach(key => config.client_config[key] = config[key]);
+
+////////////////////////////////////////////////////////////////////////////////
 
 module.exports = config;

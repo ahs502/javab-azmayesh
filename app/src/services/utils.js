@@ -6,6 +6,7 @@ app.factory('Utils', ['$q', '$http', '$window',
         return {
             successHandler: successHandler,
             failureHandler: failureHandler,
+            httpPromiseHandler: httpPromiseHandler,
         };
 
         function successHandler(response) {
@@ -22,6 +23,10 @@ app.factory('Utils', ['$q', '$http', '$window',
         function failureHandler(err) {
             console.error(err);
             return $q.reject(2);
+        }
+
+        function httpPromiseHandler(promise) {
+            return promise.then(successHandler, failureHandler);
         }
 
     }

@@ -1,7 +1,7 @@
 /*global app*/
 
-app.service('UserService', ['$q', '$http', '$window','Utils',
-    function($q, $http, $window,utils) {
+app.service('UserService', ['$q', '$http', '$window', 'Utils',
+    function($q, $http, $window, utils) {
 
         this.register = register;
         this.registerConfirm = registerConfirm;
@@ -19,47 +19,42 @@ app.service('UserService', ['$q', '$http', '$window','Utils',
 
         // May reject by code : 1, 2, 5, 10, 11
         function register(userData) {
-            return $http.post('/user/register', {
-                    userData: userData,
-                    recaptcha: userData.response
-                })
-                .then(utils.successHandler, utils.failureHandler);
+            return utils.httpPromiseHandler($http.post('/user/register', {
+                userData: userData,
+                recaptcha: userData.response
+            }));
         }
 
         // May reject by code : 1, 2, 5, 30, 31, 32
         function registerConfirm(username, validationCode) {
-            return $http.post('/user/register/confirm', {
-                    username: username,
-                    validationCode: validationCode
-                })
-                .then(utils.successHandler, utils.failureHandler);
+            return utils.httpPromiseHandler($http.post('/user/register/confirm', {
+                username: username,
+                validationCode: validationCode
+            }));
         }
 
         // May reject by code : 1, 2, 3, 5, 50, 51, 100, 101
         function editAccount(username, newAccount) {
-            return $http.post('/user/edit/account', {
-                    newAccount: newAccount
-                })
-                .then(utils.successHandler, utils.failureHandler);
+            return utils.httpPromiseHandler($http.post('/user/edit/account', {
+                newAccount: newAccount
+            }));
         }
 
         // May reject by code : 1, 2, 5, 40, 50, 51, 100, 101
         function editPassword(username, oldPassword, newPassword) {
-            return $http.post('/user/edit/password', {
-                    oldPassword: oldPassword,
-                    newPassword: newPassword
-                })
-                .then(utils.successHandler, utils.failureHandler);
+            return utils.httpPromiseHandler($http.post('/user/edit/password', {
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            }));
         }
 
         // May reject by code : 1, 2, 5, 30, 31, 32, 50, 100, 101
         // Resolves to current user new info
         function editConfirm(username, validationCode) {
-            return $http.post('/user/edit/confirm', {
+            return utils.httpPromiseHandler($http.post('/user/edit/confirm', {
                     username: username,
                     validationCode: validationCode
-                })
-                .then(utils.successHandler, utils.failureHandler)
+                }))
                 .then(function(body) {
                     var userInfo = body.userInfo;
                     setCurrent(undefined, userInfo);
@@ -70,11 +65,10 @@ app.service('UserService', ['$q', '$http', '$window','Utils',
         // May reject by code : 1, 2, 5, 40
         // Resolves to current user info
         function login(username, password) {
-            return $http.post('/user/login', {
+            return utils.httpPromiseHandler($http.post('/user/login', {
                     username: username,
                     password: password
-                })
-                .then(utils.successHandler, utils.failureHandler)
+                }))
                 .then(function(body) {
                     var accessKey = body.accessKey,
                         userInfo = body.userInfo;
@@ -90,8 +84,7 @@ app.service('UserService', ['$q', '$http', '$window','Utils',
             if (current() === null) {
                 return $q.reject(50);
             }
-            return $http.post('/user/refresh', {})
-                .then(utils.successHandler, utils.failureHandler)
+            return utils.httpPromiseHandler($http.post('/user/refresh', {}))
                 .then(function(body) {
                     var userInfo = body.userInfo;
                     setCurrent(undefined, userInfo);
