@@ -1,8 +1,8 @@
 /*global app*/
 /*global $*/
 
-app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http',
-    function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http) {
+app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http', 'AnswerService',
+    function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http, answerService) {
 
         $scope.sendAnswer = sendAnswer;
         $scope.selectFilesDialog = selectFilesDialog;
@@ -58,24 +58,20 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         function sendAnswer() {
             //TODO: check for validity ($scope.person.? for example)
             $scope.sendingAnswer = true;
-            $http.post('/send/answer', {
-                person: $scope.person,
-                files: $scope.files.map(function(file) {
-                    return file.serverName;
-                })
-            })
-
-
-            $timeout(function() { //TODO: send answer
-                $scope.sendingAnswer = false;
-                $('#ja-sent-answer-acknowledgement-modal')
-                    .modal({
-                        onHide: function() {
-                            $state.go('panel.home');
-                        }
-                    })
-                    .modal('show');
-            }, 400);
+            answerService.send($scope.person, $scope.files, $scope.notes)
+                .then(function() {
+                    $('#ja-sent-answer-acknowledgement-modal')
+                        .modal({
+                            onHide: function() {
+                                $state.go('panel.home');
+                            }
+                        })
+                        .modal('show');
+                    $scope.sendingAnswer = false;
+                }, function(code) {
+                    $scope.sendingAnswer = false;
+                    alert(code);
+                });
         }
 
         function selectFilesDialog() {
@@ -171,6 +167,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             var xhr = new XMLHttpRequest();
             file.xhr = xhr;
             xhr.open('post', '/answer/file/upload', true);
+            xhr.setRequestHeader('X-Access-Token', $http.defaults.headers.common['X-Access-Token']);
             xhr.upload.onprogress = function(e) {
                 if (e.lengthComputable) {
                     file.progress = Math.floor((e.loaded / e.total) * 100);
