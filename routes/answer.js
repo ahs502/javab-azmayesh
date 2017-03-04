@@ -23,10 +23,12 @@ router.post('/file/upload', function(req, res, next) {
     utils.generateId('uploaded-file').then(function(fileId) {
         var form = new formidable.IncomingForm();
         form.parse(req, function(err, fields, files) {
-            err && console.log('Upload error : ', err);
-            res.status(500).json({
-                innerException: err
-            }).end();
+            if (err) {
+                console.log('Upload error : ', err);
+                res.status(500).json({
+                    innerException: err
+                }).end();
+            }
         });
         form.on('fileBegin', function(name, file) {
             // Set actual file path on server
@@ -107,6 +109,7 @@ router.post('/send', function(req, res, next) {
                         return utils.resEndByCode(res, 5);
                     }
                     sms.sendSmsPost([patientKey, postKey], patient, post);
+                    utils.resEndByCode(res, 0);
                 });
             });
         });

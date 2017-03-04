@@ -20,7 +20,7 @@ app/lib/semantic/*
 #!app/assets/video/README.md
 
 _data/*
-_upload_temp/*
+_upload/*
 
 *.csv
 *.dat

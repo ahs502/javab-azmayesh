@@ -1465,7 +1465,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             var xhr = new XMLHttpRequest();
             file.xhr = xhr;
             xhr.open('post', '/answer/file/upload', true);
-            //xhr.setRequestHeader('X-Access-Token', $http.defaults.headers.common['X-Access-Token']);
+            xhr.setRequestHeader('X-Access-Token', $http.defaults.headers.common['X-Access-Token']);
             xhr.upload.onprogress = function(e) {
                 if (e.lengthComputable) {
                     file.progress = Math.floor((e.loaded / e.total) * 100);
