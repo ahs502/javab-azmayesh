@@ -108,7 +108,7 @@ router.post('/send', function(req, res, next) {
                         console.error(err);
                         return utils.resEndByCode(res, 5);
                     }
-                    sms.sendSmsPost([patientKey, postKey], patient, post);
+                    sms.send.postAnswer([patientKey, postKey], patient, post);
                     utils.resEndByCode(res, 0);
                 });
             });

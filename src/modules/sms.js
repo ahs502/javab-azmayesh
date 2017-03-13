@@ -7,12 +7,27 @@ var nikSms = require("./nik-sms");
 ////////////////////////////////////////////////////////////////////////////////
 
 module.exports = {
-    sendSmsPost,
+    send: {
+        validationCodeForRegisteration,
+        postAnswer,
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function sendSmsPost(relatedKeys, patient, post) {
+function validationCodeForRegisteration(relatedKeys, user, validationCode) {
+    var numbers = [user.mobilePhoneNumber];
+    var message = "" + user.labName + "\nسلام!\n" +
+        "به سامانه جواب آزمایش خوش آمدید.\n" +
+        "کد اعتبار سنجی: " + validationCode;
+    return sendSms('verification code', numbers, message, {
+        relatedKeys,
+        user,
+        validationCode
+    });
+}
+
+function postAnswer(relatedKeys, patient, post) {
     var numbers = patient.numbers;
     var message = "" + patient.fullName + " عزیز، سلام!\n" +
         "نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس است.\n" +
@@ -23,6 +38,8 @@ function sendSmsPost(relatedKeys, patient, post) {
         post
     });
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 function sendSms(type, numbers, message, data) {
     return utils.generateId('sms').then(function(smsId) {

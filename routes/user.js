@@ -5,7 +5,8 @@ var config = require("../config");
 var src = require("../src"),
     kfs = src.kfs,
     utils = src.utils,
-    access = src.access;
+    access = src.access,
+    sms = src.sms;
 
 var https = require('https');
 var querystring = require('querystring');
@@ -15,6 +16,42 @@ var querystring = require('querystring');
 router.post('/register', function(req, res, next) {
     var userData = req.body.userData;
     var username = userData.username;
+
+    function registerUser() {
+        //TODO: Validate user data ...
+        var user = userData; //TODO: Extract user from userData ...
+
+        ('user/' + username) in kfs(function(err, exists) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            if (exists) {
+                return utils.resEndByCode(res, 10);
+            }
+            var validationCode = utils.generateRandomCode(4);
+            var userConfirmingKey = '/user/_confirming_/' + username;
+            var userConfirmingData = {
+                user,
+                validationCode,
+                timeStamp: new Date()
+            };
+            kfs(userConfirmingKey, userConfirmingData, function(err) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                sms.send.validationCodeForRegisteration([userConfirmingKey], user, validationCode);
+                utils.resEndByCode(res, 0);
+            });
+        });
+    }
+
+    if (!config.google_recaptcha) {
+        registerUser();
+        return;
+    }
+
     var recaptcha = req.body.recaptcha;
     var remoteIp = req.ip; //req.headers['x-real-ip'] || req.connection.remoteAddress; //TODO: It works with Nginx, how about no proxy mode ?
     var dataVerify = {
@@ -48,32 +85,7 @@ router.post('/register', function(req, res, next) {
                 return utils.resEndByCode(res, 11);
             }
 
-            //TODO: Validate user data ...
-
-            var user = userData; //TODO: Extract user from userData ...
-
-            ('user/' + username) in kfs(function(err, exists) {
-                if (err) {
-                    console.error(err);
-                    return utils.resEndByCode(res, 5);
-                }
-                if (exists) {
-                    return utils.resEndByCode(res, 10);
-                }
-                var validationCode = utils.generateRandomCode(4);
-                kfs('/user/_confirming_/' + username, {
-                    user,
-                    validationCode,
-                    timeStamp: new Date()
-                }, function(err) {
-                    if (err) {
-                        console.error(err);
-                        return utils.resEndByCode(res, 5);
-                    }
-                    //TODO: Send verificationCode by SMS ...
-                    utils.resEndByCode(res, 0);
-                });
-            });
+            registerUser();
 
         });
         responseVerify.on('error', function(err) {
@@ -110,9 +122,9 @@ router.post('/register/confirm', function(req, res, next) {
                 return utils.resEndByCode(res, 32);
             }
             data.user.id = userId;
-            
+
             //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
-            
+
             // kfs('userIdName', function(err, data) {
             //     if (err) {
             //         console.error(err);
@@ -134,7 +146,7 @@ router.post('/register/confirm', function(req, res, next) {
             });
             //     });
             // });
-            
+
         });
     });
 });

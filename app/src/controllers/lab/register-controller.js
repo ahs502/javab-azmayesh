@@ -1,15 +1,16 @@
 /*global app*/
 
-app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', 
-'vcRecaptchaService', 'UserService','Config',
+app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
+    'vcRecaptchaService', 'UserService', 'Config',
     function($rootScope, $scope, $state, $stateParams, $timeout,
-    vcRecaptchaService, userService,config) {
+        vcRecaptchaService, userService, config) {
 
         $scope.setResponse = setResponse;
         $scope.setWidgetId = setWidgetId;
         $scope.cbExpiration = cbExpiration;
         $scope.sendRegisterationForm = sendRegisterationForm;
 
+        $scope.showGoogleRecaptcha = config.google_recaptcha;
         $scope.key = config.google_recaptcha_public_key;
         $scope.sendingRegisterationForm = false;
         $scope.model = {};
@@ -40,14 +41,14 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
         }
 
         function cbExpiration() {
-            vcRecaptchaService.reload($scope.widgetId);
+            config.google_recaptcha && vcRecaptchaService.reload($scope.widgetId);
             $scope.response = null;
         }
 
         function sendRegisterationForm() {
             //TODO: check for validity
             $scope.sendingRegisterationForm = true;
-            $scope.model.response = $scope.response;
+            config.google_recaptcha && ($scope.model.response = $scope.response);
             return userService.register($scope.model)
                 .then(function() {
                     $state.go('lab.validate', {
@@ -57,7 +58,7 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
                     //TODO: Handle errors...
                     $scope.sendingRegisterationForm = false;
                     alert(code);
-                    vcRecaptchaService.reload($scope.widgetId);
+                    config.google_recaptcha && vcRecaptchaService.reload($scope.widgetId);
                 });
         }
 
