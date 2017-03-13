@@ -10,6 +10,7 @@ module.exports = {
     send: {
         validationCodeForRegisteration,
         validationCodeForUpdatingAccount,
+        passwordRecovery,
         postAnswer,
     }
 };
@@ -30,13 +31,24 @@ function validationCodeForRegisteration(relatedKeys, user, validationCode) {
 
 function validationCodeForUpdatingAccount(relatedKeys, newUser, validationCode) {
     var numbers = [newUser.mobilePhoneNumber];
-    var message = "کاربر " + newUser.username + "\nسلام!\n" +
+    var message = "کاربر گرامی " + newUser.username + "\nسلام!\n" +
         "برای تکمیل فرآیند بروزرسانی اطلاعات خود از کد زیر استفاده کنید:\n" +
         "کد اعتبار سنجی: " + validationCode;
     return sendSms('vericodeusrupd', numbers, message, {
         relatedKeys,
         newUser,
         validationCode
+    });
+}
+
+function passwordRecovery(relatedKeys, user) {
+    var numbers = [user.mobilePhoneNumber];
+    var message = "کاربر گرامی " + user.username + "\nسلام!\n" +
+        "کلمه عبور شما این است:\n" +
+        user.password;
+    return sendSms('passrecovery', numbers, message, {
+        relatedKeys,
+        user
     });
 }
 

@@ -17,6 +17,8 @@
     50  : User have not logged in
     51  : User not found
     
+    60  : User data does not match
+    
     100 : Invalid access key
     101 : Expired access key
     

@@ -530,6 +530,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
         this.refresh = refresh;
         this.logout = logout;
         this.current = current;
+        this.restorePassword = restorePassword;
 
         /////////////////////////////////////////////////////
 
@@ -627,6 +628,14 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             catch (err) {
                 return null;
             }
+        }
+
+        // May reject by code : 1, 2, 5, 51, 60
+        function restorePassword(username, mobilePhoneNumber) {
+            return utils.httpPromiseHandler($http.post('/user/restorePassword', {
+                username: username,
+                mobilePhoneNumber: mobilePhoneNumber
+            }));
         }
 
         /////////////////////////////////////////////////////
@@ -896,12 +905,12 @@ app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout
 
 /*global app*/
 
-app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeout',
-    function($rootScope, $scope, $state, $timeout) {
+app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeout', 'UserService',
+    function($rootScope, $scope, $state, $timeout, userService) {
 
-        $scope.sendPassword = sendPassword;
+        $scope.restorePassword = restorePassword;
 
-        $scope.sendingPassword = false;
+        $scope.restoringPassword = false;
 
         $scope.setBackHandler(function() {
             $state.go('lab.login');
@@ -910,13 +919,17 @@ app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeo
         //$scope.username
         //$scope.mobilePhoneNumber
 
-        function sendPassword() {
+        function restorePassword() {
             //TODO: check for validity
-            $scope.sendingPassword = true;
-            $timeout(function() {
-                $state.go('lab.password');
-                // $scope.sendingPassword = false;
-            }, 300);
+            $scope.restoringPassword = true;
+            return userService.restorePassword($scope.username, $scope.mobilePhoneNumber)
+                .then(function() {
+                    $state.go('lab.password');
+                }, function(code) {
+                    //TODO: Handle errors...
+                    $scope.restoringPassword = false;
+                    alert(code);
+                });
         }
 
     }

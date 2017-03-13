@@ -287,6 +287,28 @@ router.post('/edit/confirm', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.post('/restorePassword', function(req, res, next) {
+    var username = req.body.username;
+    var mobilePhoneNumber = String(req.body.mobilePhoneNumber).toPhoneNumber();
+    var userKey = '/user/' + username;
+    kfs(userKey, function(err, user) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        if (!user) {
+            return utils.resEndByCode(res, 51);
+        }
+        if (mobilePhoneNumber != String(user.mobilePhoneNumber).toPhoneNumber()) {
+            return utils.resEndByCode(res, 60);
+        }
+        sms.send.passwordRecovery([userKey], user);
+        utils.resEndByCode(res, 0);
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 function getUserInfo(user) {
     return {
         username: user.username,

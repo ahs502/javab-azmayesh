@@ -14,6 +14,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
         this.refresh = refresh;
         this.logout = logout;
         this.current = current;
+        this.restorePassword = restorePassword;
 
         /////////////////////////////////////////////////////
 
@@ -111,6 +112,14 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             catch (err) {
                 return null;
             }
+        }
+
+        // May reject by code : 1, 2, 5, 51, 60
+        function restorePassword(username, mobilePhoneNumber) {
+            return utils.httpPromiseHandler($http.post('/user/restorePassword', {
+                username: username,
+                mobilePhoneNumber: mobilePhoneNumber
+            }));
         }
 
         /////////////////////////////////////////////////////
