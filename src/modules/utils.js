@@ -65,7 +65,7 @@ function generateRandomCode(numberOfDigits, notAllowedCodes) {
             code += Math.floor(Math.random() * 90) + 10;
         code = code.slice(0, numberOfDigits);
     } while (notAllowedCodes.indexOf(code) >= 0);
-    console.log('#######################', code, '#######################'); //TODO: remove this line later.
+    //console.log('#######################', code, '#######################'); //TODO: remove this line later.
     return code;
 }
 

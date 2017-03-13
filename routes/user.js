@@ -231,17 +231,19 @@ router.post('/edit/:action', function(req, res, next) {
             newUser = user;
             newUser.password = newUser.passwordAgain = newPassword;
         }
-        var validationCode = '123456'; //TODO: Generate a simple validation code ...
-        kfs('user/_confirming_/' + username, {
+        var validationCode = utils.generateRandomCode(4);
+        var userConfirmingKey = 'user/_confirming_/' + username;
+        var userConfirmingData = {
             user: newUser,
             validationCode,
             timeStamp: new Date()
-        }, function(err) {
+        };
+        kfs(userConfirmingKey, userConfirmingData, function(err) {
             if (err) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
             }
-            //TODO: Send verificationCode by SMS ...
+            sms.send.validationCodeForUpdatingAccount([userConfirmingKey], newUser, validationCode);
             utils.resEndByCode(res, 0);
         });
     });
