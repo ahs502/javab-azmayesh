@@ -1,11 +1,13 @@
 /*global app*/
 
-app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
-    function($rootScope, $scope, $state, $stateParams, $timeout) {
+app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'HistoryService',
+    function($rootScope, $scope, $state, $stateParams, $timeout, historyService) {
 
         $scope.findHistory = findHistory;
 
         $scope.nationalCode = $stateParams.nationalCode;
+        var otpId = $stateParams.otpId;
+        var requestCode = $stateParams.requestCode;
 
         $scope.findingHistory = false;
 
@@ -17,28 +19,18 @@ app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$sta
 
         function findHistory() {
             //TODO: check for validity
-            $scope.sendingOtp = true;
-            $timeout(function() {
-                return {
-                    paitentName: "علی رضا محمودی",
-                    paitentTests: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(function(t) {
-                        return {
-                            laboratoryName: "آمایشگاه رازی مرکزی",
-                            testNumber: 6822,
-                            testDate: new Date(),
-                            answerDate: new Date(),
-                            id: t
-                        };
-                    })
-                };
-            }, 400).then(function(res) {
-                //TODO: validate result
-                $rootScope.data.paitentName = res.paitentName;
-                $rootScope.data.paitentTests = res.paitentTests;
-                $state.go('history', {
-                    nationalCode: $scope.nationalCode
+            $scope.findingHistory = true;
+            historyService.findHistory($scope.nationalCode, otpId, requestCode, $scope.otp)
+                .then(function(patient) {
+                    $rootScope.data.patient = patient;
+                    $state.go('history', {
+                        nationalCode: $scope.nationalCode
+                    });
+                }, function(code) {
+                    //TODO: Handle errors...
+                    $scope.findingHistory = false;
+                    alert(code);
                 });
-            });
         }
 
     }

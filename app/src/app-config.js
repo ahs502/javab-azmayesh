@@ -32,6 +32,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
             })
             .state('home.history', {
                 url: '/history',
+                params: {
+                    nationalCode: null,
+                    otpId: null,
+                    requestCode: null
+                },
                 templateUrl: 'home/history.html',
                 controller: 'HomeHistoryController'
             })

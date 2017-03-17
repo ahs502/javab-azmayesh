@@ -19,6 +19,8 @@
     
     60  : User data does not match
     
+    70  : Patient has no history post
+    
     100 : Invalid access key
     101 : Expired access key
     

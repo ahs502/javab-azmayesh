@@ -1,15 +1,14 @@
 /*global app*/
-/*global $*/
 
 app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
     function($rootScope, $scope, $state, $stateParams, $timeout) {
 
-        $scope.testClicked = testClicked;
+        $scope.postClicked = postClicked;
 
         $scope.nationalCode = $stateParams.nationalCode;
 
-        $scope.paitentName = $rootScope.data.paitentName;
-        $scope.paitentTests = $rootScope.data.paitentTests;
+        $scope.patient = $rootScope.data.patient;
+        console.log($scope.patient)
 
         $scope.setBackHandler(function() {
             $state.go('home.otp');
@@ -18,12 +17,12 @@ app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$statePa
         $scope.setMenuHandlers(false);
 
         $scope.setHeaderHandlers({
-            paitentName: $scope.paitentName
+            paitentName: $scope.patient.fullName
         });
 
         $scope.setFooterHandlers(false);
 
-        function testClicked(test) {
+        function postClicked(post) {
             $scope.findingAnswer = true;
             $timeout(function() { //TODO: resolve answer
                 return {

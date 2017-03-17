@@ -9,10 +9,10 @@ app.run(['$rootScope', '$state', '$stateParams', '$window',
         $('#ja-main-site-content').show();
         $('#ja-sidebar-menu').show();
 
-        // $state.go('home.find');
+        $state.go('home.find');
         // $state.go('panel.account.summary');
         // $state.go('panel.home');
-        $state.go('lab.login');
+        // $state.go('lab.login');
         // $state.go('lab.register');
 
         $rootScope.$state = $state;

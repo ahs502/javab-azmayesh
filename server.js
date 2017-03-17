@@ -39,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'app/public')));
 app.use('/', require('./routes/index'));
 app.use('/user', require('./routes/user'));
 app.use('/answer', require('./routes/answer'));
+app.use('/history', require('./routes/history'));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 

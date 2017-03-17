@@ -12,6 +12,7 @@ module.exports = {
         validationCodeForUpdatingAccount,
         passwordRecovery,
         postAnswer,
+        otpGenerated,
     }
 };
 
@@ -64,6 +65,17 @@ function postAnswer(relatedKeys, patient, post) {
     });
 }
 
+function otpGenerated(relatedKeys, otp, patient) {
+    var numbers = [otp.mobilePhoneNumber];
+    var message = "" + patient.fullName + " عزیز، سلام!\n" +
+        "رمز یکبار مصرف: " + otp.otp;
+    return sendSms('otp', numbers, message, {
+        relatedKeys,
+        otp,
+        patient
+    });
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 function sendSms(type, numbers, message, data) {
@@ -76,7 +88,7 @@ function sendSms(type, numbers, message, data) {
         return kfs(smsKey, data).then(function() {
             var number = numbers.filter(number => number.isMobileNumber())[0];
             return nikSms.sendSms(config.nik_sms_main_number, number, message, smsId).then(function(result) {
-                //TODO: Implement message re-sending mechanism.
+                //TODO: Implement message re-sending and restriction mechanism.
             });
         });
     });

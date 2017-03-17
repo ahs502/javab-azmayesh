@@ -29,6 +29,11 @@
 
     <script>
         function loadJsCssFile(filename, filetype) {
+            if (!filetype) {
+                if (filename.slice(-3) == '.js') filetype = 'js';
+                if (filename.slice(-4) == '.css') filetype = 'css';
+                if (!filetype) throw "loadJsCssFile: File type is unknown.";
+            }
             var fileref;
             if (filetype == "js") {
                 fileref = document.createElement('script');
@@ -46,12 +51,12 @@
         }
 
         // Load CSS files dynamically
-        loadJsCssFile('/dist/lib.min.css', 'css');
-        loadJsCssFile('/dist/app.css', 'css');
+        loadJsCssFile('/dist/lib.min.css');
+        loadJsCssFile('/dist/app.css');
 
         // Do NOT load JS files dynamically
-        // loadJsCssFile('/dist/lib.min.js', 'js');
-        // loadJsCssFile('/dist/app.min.js', 'js');
+        // loadJsCssFile('/dist/lib.min.js');
+        // loadJsCssFile('/dist/app.min.js');
     </script>
 
     <!-- JS files will NOT be loaded dynamically -->

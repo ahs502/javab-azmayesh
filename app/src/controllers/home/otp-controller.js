@@ -1,7 +1,7 @@
 /*global app*/
 
-app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout',
-    function($rootScope, $scope, $state, $timeout) {
+app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout', 'HistoryService',
+    function($rootScope, $scope, $state, $timeout, historyService) {
 
         $scope.sendOtp = sendOtp;
 
@@ -17,12 +17,18 @@ app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout
         function sendOtp() {
             //TODO: check for validity
             $scope.sendingOtp = true;
-            $timeout(function() {
-                $state.go('home.history', {
-                    nationalCode: $scope.nationalCode
+            historyService.generateOtp($scope.nationalCode, $scope.mobilePhoneNumber)
+                .then(function(data) {
+                    $state.go('home.history', {
+                        nationalCode: $scope.nationalCode,
+                        otpId: data.otpId,
+                        requestCode: data.requestCode
+                    });
+                }, function(code) {
+                    //TODO: Handle errors...
+                    $scope.sendingOtp = false;
+                    alert(code);
                 });
-                // $scope.sendingOtp = false;
-            }, 300);
         }
 
     }
