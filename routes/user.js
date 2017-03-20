@@ -168,7 +168,7 @@ router.post('/login', function(req, res, next) {
             return utils.resEndByCode(res, 40);
         }
         var remoteIp = req.ip;
-        var accessKey = access.generateAccessKey(user, remoteIp);
+        var accessKey = access.generateUserAccessKey(user, remoteIp);
         utils.resEndByCode(res, 0, {
             accessKey,
             userInfo: getUserInfo(user)

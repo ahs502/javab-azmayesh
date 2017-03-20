@@ -7,8 +7,11 @@ app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$statePa
 
         $scope.nationalCode = $stateParams.nationalCode;
 
-        $scope.patient = $rootScope.data.patient;
-        console.log($scope.patient)
+        $scope.patientInfo = $rootScope.data.patientInfo;
+        $scope.history = $rootScope.data.history;
+        if (!$scope.patientInfo) {
+            return $state.go('home.otp');
+        }
 
         $scope.setBackHandler(function() {
             $state.go('home.otp');
@@ -17,30 +20,25 @@ app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$statePa
         $scope.setMenuHandlers(false);
 
         $scope.setHeaderHandlers({
-            paitentName: $scope.patient.fullName
+            paitentName: $scope.patientInfo.fullName
         });
 
         $scope.setFooterHandlers(false);
 
+        $scope.$on('$destroy', function() {
+            delete $rootScope.data.patientInfo;
+            delete $rootScope.data.history;
+        });
+
         function postClicked(post) {
-            $scope.findingAnswer = true;
-            $timeout(function() { //TODO: resolve answer
-                return {
-                    testNumber: 1234,
-                    nationalCode: '1234567890',
-                    paitentName: 'حسام شکروی',
-                    testDate: new Date(),
-                    answerDate: new Date(),
-                    laboratoryName: "آزمایشگاه دکتر شاهپوری"
-                };
-            }, 400).then(function(answer) {
-                //TODO: validate result
-                $rootScope.data.answer = answer;
-                $state.go('answer', {
-                    nationalCode: $scope.nationalCode,
-                    testNumber: test.testNumber,
-                    previousState: 'history'
-                });
+            $state.go('answer', {
+                p: post.nationalCode,
+                n: post.postCode,
+                previousState: 'history',
+                previousStateData: {
+                    patientInfo: $scope.patientInfo,
+                    history: $scope.history
+                }
             });
         }
 

@@ -358,14 +358,16 @@
 
         <div class="ui three stackable doubling cards">
 
-            <div class="ui link fluid raised blue card" ng-repeat="test in paitentTests" ng-click="testClicked(test)">
+            <div class="ui link fluid raised blue card" ng-repeat="post in history" ng-click="postClicked(post)">
                 <div class="content">
-                    <div class="header">header {{test.id}}</div>
+                    <div class="header" ng-bind="post.labName"></div>
                     <div class="meta">
-                        <span class="category">meta data</span>
+                        <span class="category">عنوان آزمایش</span>
                     </div>
                     <div class="description">
-                        <p>some description about the test</p>
+                        <strong><p ng-bind="post.postCode"></p></strong>
+                        <p ng-if="post.filesCount"><strong>{{post.filesCount}}</strong> فایل پیوست</p>
+                        <p ng-bind="post.timeStamp"></p>
                     </div>
                 </div>
                 <!--<div class="extra content">-->

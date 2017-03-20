@@ -76,11 +76,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
 
         $stateProvider
             .state('answer', {
-                url: '/answer',
+                url: '/answer?p&n', // p := nationalCode, n := postCode
                 params: {
-                    nationalCode: null,
-                    testNumber: null,
-                    previousState: null
+                    previousState: null,
+                    previousStateData: null
                 },
                 views: {
                     '': {

@@ -1,7 +1,7 @@
 /*global app*/
 
-app.service('HistoryService', ['$q', '$http', '$window', 'Utils',
-    function($q, $http, $window, utils) {
+app.service('HistoryService', ['$http', 'Utils',
+    function($http, utils) {
 
         this.generateOtp = generateOtp;
         this.findHistory = findHistory;
@@ -25,8 +25,8 @@ app.service('HistoryService', ['$q', '$http', '$window', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 40, 70
-        // Resolves to patient's history
+        // May reject by code : 1, 2, 5, 40, /*71*/
+        // Resolves to patient's information and history
         function findHistory(nationalCode, otpId, requestCode, otp) {
             return utils.httpPromiseHandler($http.post('/history/find/history', {
                     nationalCode: nationalCode,
@@ -35,7 +35,13 @@ app.service('HistoryService', ['$q', '$http', '$window', 'Utils',
                     otp: otp
                 }))
                 .then(function(body) {
-                    return body.patient;
+                    var //accessKey = body.accessKey,
+                        patientInfo = body.patientInfo,
+                        history = body.history;
+                    return {
+                        patientInfo: patientInfo,
+                        history: history
+                    };
                 });
         }
 

@@ -5,7 +5,7 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
 
         $scope.seeAnswer = seeAnswer;
 
-        $scope.findingAnswer = false;
+        $scope.findingAnswer = false; // No need to!
 
         $scope.setBackHandler(false);
 
@@ -14,24 +14,11 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
 
         function seeAnswer() {
             //TODO: check for validity
-            $scope.findingAnswer = true;
-            $timeout(function() { //TODO: resolve answer
-                return {
-                    testNumber: 1234,
-                    nationalCode: '1234567890',
-                    paitentName: 'حسام شکروی',
-                    testDate: new Date(),
-                    answerDate: new Date(),
-                    laboratoryName: "آزمایشگاه دکتر شاهپوری"
-                };
-            }, 400).then(function(answer) {
-                //TODO: validate result
-                $rootScope.data.answer = answer;
-                $state.go('answer', {
-                    nationalCode: $scope.nationalCode,
-                    testNumber: $scope.testNumber,
-                    previousState: 'home.find'
-                });
+            $state.go('answer', {
+                p: $scope.nationalCode,
+                n: $scope.testNumber,
+                previousState: 'home.find',
+                previousStateData: null
             });
         }
 

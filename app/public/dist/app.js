@@ -233,11 +233,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
 
         $stateProvider
             .state('answer', {
-                url: '/answer',
+                url: '/answer?p&n', // p := nationalCode, n := postCode
                 params: {
-                    nationalCode: null,
-                    testNumber: null,
-                    previousState: null
+                    previousState: null,
+                    previousStateData: null
                 },
                 views: {
                     '': {
@@ -424,11 +423,13 @@ app.run(['$rootScope', '$state', '$stateParams', '$window',
         $('#ja-main-site-content').show();
         $('#ja-sidebar-menu').show();
 
-        $state.go('home.find');
-        // $state.go('panel.account.summary');
-        // $state.go('panel.home');
-        // $state.go('lab.login');
-        // $state.go('lab.register');
+        if ($window.location.hash.indexOf('#/answer') !== 0) {
+            $state.go('home.find');
+            // $state.go('panel.account.summary');
+            // $state.go('panel.home');
+            // $state.go('lab.login');
+            // $state.go('lab.register');
+        }
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -521,8 +522,8 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
 
 /*global app*/
 
-app.service('HistoryService', ['$q', '$http', '$window', 'Utils',
-    function($q, $http, $window, utils) {
+app.service('HistoryService', ['$http', 'Utils',
+    function($http, utils) {
 
         this.generateOtp = generateOtp;
         this.findHistory = findHistory;
@@ -546,8 +547,8 @@ app.service('HistoryService', ['$q', '$http', '$window', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 40, 70
-        // Resolves to patient's history
+        // May reject by code : 1, 2, 5, 40, /*71*/
+        // Resolves to patient's information and history
         function findHistory(nationalCode, otpId, requestCode, otp) {
             return utils.httpPromiseHandler($http.post('/history/find/history', {
                     nationalCode: nationalCode,
@@ -556,7 +557,13 @@ app.service('HistoryService', ['$q', '$http', '$window', 'Utils',
                     otp: otp
                 }))
                 .then(function(body) {
-                    return body.patient;
+                    var //accessKey = body.accessKey,
+                        patientInfo = body.patientInfo,
+                        history = body.history;
+                    return {
+                        patientInfo: patientInfo,
+                        history: history
+                    };
                 });
         }
 
@@ -822,7 +829,7 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
 
         $scope.seeAnswer = seeAnswer;
 
-        $scope.findingAnswer = false;
+        $scope.findingAnswer = false; // No need to!
 
         $scope.setBackHandler(false);
 
@@ -831,24 +838,11 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
 
         function seeAnswer() {
             //TODO: check for validity
-            $scope.findingAnswer = true;
-            $timeout(function() { //TODO: resolve answer
-                return {
-                    testNumber: 1234,
-                    nationalCode: '1234567890',
-                    paitentName: 'حسام شکروی',
-                    testDate: new Date(),
-                    answerDate: new Date(),
-                    laboratoryName: "آزمایشگاه دکتر شاهپوری"
-                };
-            }, 400).then(function(answer) {
-                //TODO: validate result
-                $rootScope.data.answer = answer;
-                $state.go('answer', {
-                    nationalCode: $scope.nationalCode,
-                    testNumber: $scope.testNumber,
-                    previousState: 'home.find'
-                });
+            $state.go('answer', {
+                p: $scope.nationalCode,
+                n: $scope.testNumber,
+                previousState: 'home.find',
+                previousStateData: null
             });
         }
 
@@ -888,8 +882,9 @@ app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$sta
             //TODO: check for validity
             $scope.findingHistory = true;
             historyService.findHistory($scope.nationalCode, otpId, requestCode, $scope.otp)
-                .then(function(patient) {
-                    $rootScope.data.patient = patient;
+                .then(function(data) {
+                    $rootScope.data.patientInfo = data.patientInfo;
+                    $rootScope.data.history = data.history;
                     $state.go('history', {
                         nationalCode: $scope.nationalCode
                     });
@@ -1844,21 +1839,26 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
 app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$stateParams',
     function($rootScope, $scope, $state, $stateParams) {
 
-        $scope.nationalCode = $stateParams.nationalCode;
-        $scope.testNumber = $stateParams.testNumber;
+        $scope.nationalCode = $stateParams.p;
+        $scope.postCode = $stateParams.n;
         $scope.previousState = $stateParams.previousState;
-
-        $scope.answer = $rootScope.data.answer;
+        var previousStateData = $stateParams.previousStateData;
 
         //TODO: remove these lines later
         // $scope.testDate = persianDate().format('L'); //TODO: ???
         // $scope.receiptNumber = toPersianNumber(6140); //TODO: ???
 
         $scope.setBackHandler(function() {
-            var params = $scope.previousState === 'history' ? {
-                nationalCode: $scope.nationalCode
-            } : {};
-            $state.go($scope.previousState, params);
+            if ($scope.previousState === 'history') {
+                $rootScope.data.patientInfo = previousStateData.patientInfo;
+                $rootScope.data.history = previousStateData.history;
+                $state.go($scope.previousState, {
+                    nationalCode: $scope.nationalCode
+                });
+            }
+            else {
+                $state.go($scope.previousState);
+            }
         });
 
         $scope.setMenuHandlers({
@@ -1874,16 +1874,16 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$statePar
             goToLaboratory: function() {
                 //$state.go('...');
             },
-            laboratoryName: $scope.answer.laboratoryName,
+            laboratoryName: '...' || $scope.answer.laboratoryName,
         });
 
         $scope.setHeaderHandlers({
-            paitentName: $scope.answer.paitentName
+            paitentName: '...' || $scope.answer.paitentName
         });
 
         $scope.setFooterHandlers({
-            testDate: persianDate($scope.answer.testDate).format('L'),
-            testNumber: toPersianNumber($scope.answer.testNumber)
+            testDate: '...' || persianDate($scope.answer.testDate).format('L'),
+            testNumber: '...' || toPersianNumber($scope.answer.testNumber)
         });
 
         $('#answer-test-number').popup({
@@ -1918,8 +1918,11 @@ app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$statePa
 
         $scope.nationalCode = $stateParams.nationalCode;
 
-        $scope.patient = $rootScope.data.patient;
-        console.log($scope.patient)
+        $scope.patientInfo = $rootScope.data.patientInfo;
+        $scope.history = $rootScope.data.history;
+        if (!$scope.patientInfo) {
+            return $state.go('home.otp');
+        }
 
         $scope.setBackHandler(function() {
             $state.go('home.otp');
@@ -1928,30 +1931,25 @@ app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$statePa
         $scope.setMenuHandlers(false);
 
         $scope.setHeaderHandlers({
-            paitentName: $scope.patient.fullName
+            paitentName: $scope.patientInfo.fullName
         });
 
         $scope.setFooterHandlers(false);
 
+        $scope.$on('$destroy', function() {
+            delete $rootScope.data.patientInfo;
+            delete $rootScope.data.history;
+        });
+
         function postClicked(post) {
-            $scope.findingAnswer = true;
-            $timeout(function() { //TODO: resolve answer
-                return {
-                    testNumber: 1234,
-                    nationalCode: '1234567890',
-                    paitentName: 'حسام شکروی',
-                    testDate: new Date(),
-                    answerDate: new Date(),
-                    laboratoryName: "آزمایشگاه دکتر شاهپوری"
-                };
-            }, 400).then(function(answer) {
-                //TODO: validate result
-                $rootScope.data.answer = answer;
-                $state.go('answer', {
-                    nationalCode: $scope.nationalCode,
-                    testNumber: test.testNumber,
-                    previousState: 'history'
-                });
+            $state.go('answer', {
+                p: post.nationalCode,
+                n: post.postCode,
+                previousState: 'history',
+                previousStateData: {
+                    patientInfo: $scope.patientInfo,
+                    history: $scope.history
+                }
             });
         }
 

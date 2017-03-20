@@ -14,12 +14,13 @@
     
     40  : Wrong username or password
     
-    50  : User have not logged in
+    50  : User has not logged in correctly
     51  : User not found
     
     60  : User data does not match
     
-    70  : Patient has no history post
+    70  : Patient has not accessed history correctly
+    71  : Patient has no history post
     
     100 : Invalid access key
     101 : Expired access key

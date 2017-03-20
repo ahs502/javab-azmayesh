@@ -21,8 +21,9 @@ app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$sta
             //TODO: check for validity
             $scope.findingHistory = true;
             historyService.findHistory($scope.nationalCode, otpId, requestCode, $scope.otp)
-                .then(function(patient) {
-                    $rootScope.data.patient = patient;
+                .then(function(data) {
+                    $rootScope.data.patientInfo = data.patientInfo;
+                    $rootScope.data.history = data.history;
                     $state.go('history', {
                         nationalCode: $scope.nationalCode
                     });

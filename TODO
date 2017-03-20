@@ -5,4 +5,11 @@
     
     *   Develope validation and messaging to all forms.
     
+    *   Add the ability to send answer to patient only by his/her nationalCode.
+    
+    *   Add query stringified direct url in informing SMS to patient.
+    
+    *   Add the ability to upload some test results without sending or as private posts,
+        where are harder to seek than url encoded data headers.
+    
     

@@ -83,14 +83,25 @@ router.post('/find/history', function(req, res, next) {
                     return utils.resEndByCode(res, 5);
                 }
                 if (!patient) {
-                    return utils.resEndByCode(res, 70);
+                    return utils.resEndByCode(res, 71);
                 }
                 var posts = patient.posts || {};
                 Promise.all(Object.keys(posts).map(key => kfs(posts[key])))
                     .then(function(postsData) {
-                        patient.postsData = postsData;
+                        var history = postsData.filter(postData => postData);
+                        history.forEach(postData => {
+                            postData.filesCount = (postData.files && postData.files.length) || 0;
+                            delete postData.files;
+                        });
+                        // var remoteIp = req.ip;
+                        // var accessKey = access.generatePatientAccessKey(patient, remoteIp);
                         utils.resEndByCode(res, 0, {
-                            patient
+                            // accessKey,
+                            patientInfo: {
+                                nationalCode: patient.nationalCode,
+                                fullName: patient.fullName
+                            },
+                            history
                         });
                     }, function(err) {
                         console.error(err);

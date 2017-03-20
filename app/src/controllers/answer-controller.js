@@ -6,21 +6,26 @@
 app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$stateParams',
     function($rootScope, $scope, $state, $stateParams) {
 
-        $scope.nationalCode = $stateParams.nationalCode;
-        $scope.testNumber = $stateParams.testNumber;
+        $scope.nationalCode = $stateParams.p;
+        $scope.postCode = $stateParams.n;
         $scope.previousState = $stateParams.previousState;
-
-        $scope.answer = $rootScope.data.answer;
+        var previousStateData = $stateParams.previousStateData;
 
         //TODO: remove these lines later
         // $scope.testDate = persianDate().format('L'); //TODO: ???
         // $scope.receiptNumber = toPersianNumber(6140); //TODO: ???
 
         $scope.setBackHandler(function() {
-            var params = $scope.previousState === 'history' ? {
-                nationalCode: $scope.nationalCode
-            } : {};
-            $state.go($scope.previousState, params);
+            if ($scope.previousState === 'history') {
+                $rootScope.data.patientInfo = previousStateData.patientInfo;
+                $rootScope.data.history = previousStateData.history;
+                $state.go($scope.previousState, {
+                    nationalCode: $scope.nationalCode
+                });
+            }
+            else {
+                $state.go($scope.previousState);
+            }
         });
 
         $scope.setMenuHandlers({
@@ -36,16 +41,16 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$statePar
             goToLaboratory: function() {
                 //$state.go('...');
             },
-            laboratoryName: $scope.answer.laboratoryName,
+            laboratoryName: '...' || $scope.answer.laboratoryName,
         });
 
         $scope.setHeaderHandlers({
-            paitentName: $scope.answer.paitentName
+            paitentName: '...' || $scope.answer.paitentName
         });
 
         $scope.setFooterHandlers({
-            testDate: persianDate($scope.answer.testDate).format('L'),
-            testNumber: toPersianNumber($scope.answer.testNumber)
+            testDate: '...' || persianDate($scope.answer.testDate).format('L'),
+            testNumber: '...' || toPersianNumber($scope.answer.testNumber)
         });
 
         $('#answer-test-number').popup({
