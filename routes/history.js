@@ -114,4 +114,51 @@ router.post('/find/history', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.post('/load/answer', function(req, res, next) {
+    var nationalCode = req.body.nationalCode;
+    var postCode = req.body.postCode;
+    var patientKey = 'patient/' + nationalCode;
+    kfs(patientKey, function(err, patient) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        if (!patient) {
+            return utils.resEndByCode(res, 71);
+        }
+        var posts = patient.posts || {};
+        var postKey = posts[postCode];
+        if (!postKey) {
+            return utils.resEndByCode(res, 72);
+        }
+        kfs(postKey, function(err, post) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            if (!post) {
+                return utils.resEndByCode(res, 73);
+            }
+            var files = (post.files || []).map(file => {
+                return {
+                    serverName: file.serverName,
+                    type: file.type
+                };
+            });
+            console.log(post.timeStamp)
+            console.log(post.timeStamp.toDate())
+            utils.resEndByCode(res, 0, {
+                patientName: patient.fullName,
+                labName: post.labName,
+                labUsername: post.username,
+                postDate: String(post.timeStamp).toDate(),
+                notes: post.notes,
+                files
+            });
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 module.exports = router;

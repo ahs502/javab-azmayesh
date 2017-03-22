@@ -5,6 +5,7 @@ app.service('HistoryService', ['$http', 'Utils',
 
         this.generateOtp = generateOtp;
         this.findHistory = findHistory;
+        this.loadAnswer = loadAnswer;
 
         /////////////////////////////////////////////////////
 
@@ -16,16 +17,14 @@ app.service('HistoryService', ['$http', 'Utils',
                     mobilePhoneNumber: mobilePhoneNumber
                 }))
                 .then(function(body) {
-                    var otpId = body.otpId,
-                        requestCode = body.requestCode;
                     return {
-                        otpId: otpId,
-                        requestCode: requestCode
+                        otpId: body.otpId,
+                        requestCode: body.requestCode
                     };
                 });
         }
 
-        // May reject by code : 1, 2, 5, 40, /*71*/
+        // May reject by code : 1, 2, 5, 40, /*70*/, 71
         // Resolves to patient's information and history
         function findHistory(nationalCode, otpId, requestCode, otp) {
             return utils.httpPromiseHandler($http.post('/history/find/history', {
@@ -35,12 +34,29 @@ app.service('HistoryService', ['$http', 'Utils',
                     otp: otp
                 }))
                 .then(function(body) {
-                    var //accessKey = body.accessKey,
-                        patientInfo = body.patientInfo,
-                        history = body.history;
                     return {
-                        patientInfo: patientInfo,
-                        history: history
+                        // accessKey = body.accessKey,
+                        patientInfo: body.patientInfo,
+                        history: body.history
+                    };
+                });
+        }
+
+        // May reject by code : 1, 2, 5, 71, 72, 73
+        // Resolves to patient's answer content
+        function loadAnswer(nationalCode, postCode) {
+            return utils.httpPromiseHandler($http.post('/history/load/answer', {
+                    nationalCode: nationalCode,
+                    postCode: postCode
+                }))
+                .then(function(body) {
+                    return {
+                        patientName: body.patientName,
+                        labName: body.labName,
+                        labUsername: body.labUsername,
+                        postDate: String(body.postDate).toDate(),
+                        notes: body.notes,
+                        files: body.files
                     };
                 });
         }

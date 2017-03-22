@@ -1,6 +1,6 @@
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.testDate"></a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.postDateGetter()"></a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.testNumber" id="answer-test-number"></a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.postCodeGetter()" id="answer-test-number"></a>
 <div class="ui popup ja-align-right">
     <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>
     <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>
@@ -8,7 +8,7 @@
 
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="answer-laboratory-name" data-position="top right" ng-click="menuHandlers.goToLaboratory()">
-    <span ng-bind="menuHandlers.laboratoryName"></span>
+    <span ng-bind="menuHandlers.labNameGetter()"></span>
 </a>
 <div class="ui popup ja-align-right">
     <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>

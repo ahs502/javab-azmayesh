@@ -48,6 +48,50 @@ router.post('/file/upload', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.get('/file/download', function(req, res, next) {
+    var nationalCode = req.query.p;
+    var postCode = req.query.n;
+    var serverName = req.query.f;
+    if (!nationalCode || !postCode || !serverName) {
+        return res.status(400).end();
+    }
+    var patientKey = 'patient/' + nationalCode;
+    kfs(patientKey, function(err, patient) {
+        if (err) {
+            console.error(err);
+            return res.status(500).end();
+        }
+        if (!patient) {
+            return res.status(404).end();
+        }
+        var posts = patient.posts || {};
+        var postKey = posts[postCode];
+        if (!postKey) {
+            return res.status(403).end();
+        }
+        kfs(postKey, function(err, post) {
+            if (err) {
+                console.error(err);
+                return res.status(500).end();
+            }
+            if (!post) {
+                return res.status(404).end();
+            }
+            var file = (post.files || []).find(file => file.serverName == serverName);
+            if (!file) {
+                return res.status(404).end();
+            }
+            var filePath = path.join(config.upload_path, String(file.serverName));
+            res.set('Content-Type', file.type);
+            res.set('Content-Length', file.size); //TODO: does it required?
+            //TODO: what about file.name? can we use it here?
+            res.sendFile(filePath);
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.post('/send', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res);
     if (!userInfo) return;

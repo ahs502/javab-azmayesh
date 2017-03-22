@@ -13,3 +13,12 @@
         where are harder to seek than url encoded data headers.
     
     
+    
+    
+    
+    
+    
+    *   Make some documentation for developers of this project, containing these data:
+    
+        // $scope.postDate = persianDate(new Date()).format('L');
+        // $scope.postCode = toPersianNumber(6140);

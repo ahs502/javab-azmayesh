@@ -2,63 +2,24 @@
 
     <div class="ui basic segment">
 
-        <p>1contents....</p>
-        <p>2contents....</p>
-        <p>3contents....</p>
-        <p>4contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>---</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>---</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>---</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>---</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>---</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>---</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>---</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>contents....</p>
-        <p>---</p>
-        <p>END!</p>
+        <p ng-show="loading">Loading, please wait...</p>
+
+        <p ng-show="!loading && !(answer && answer.files && answer.files.length)">No files have been uploaded for this post.</p>
+
+        <div ng-if="!loading && (answer && answer.files && answer.files.length)" ng-repeat="file in answer.files">
+
+            <img ng-if="file.material === 'image'" ng-src="{{file.url}}" width="100%">
+
+            <object ng-if="file.material !== 'image'" data="{{file.url}}" type="{{file.type}}" width="100%">
+                <iframe ng-src="{{file.url}}" width="100%" style="border: none;">
+                    No browser support for this file, please download and open the file on your own:
+                    <a href="{{file.url}}">Download</a>
+                </iframe>
+            </object>
+
+            <!--<embed ng-if="file.material === '...'" ng-src="{{file.url}}" type="{{file.type}}" width="100%" />-->
+
+        </div>
 
     </div>
 

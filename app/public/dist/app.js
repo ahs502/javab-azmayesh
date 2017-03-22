@@ -8,7 +8,7 @@
 
 Date.prototype.toLocalString = toLocalString;
 
-Date.parse = parse();
+Date.parse = parseMaker();
 
 String.prototype.toDate = toDate;
 String.prototype.toPhoneNumber = toPhoneNumber;
@@ -28,14 +28,15 @@ function toLocalString(noGMT) {
     return s;
 }
 
-function parse() {
+function parseMaker() {
     var Date_parse = Date.parse;
     return function(str) {
+        str = (str || '').toString()
         if (typeof str === 'string' && str.slice(-6, -5) === 'O') {
             var gmt = str.slice(-5);
             var offset = Number(gmt.slice(1, 3)) * 60 + Number(gmt.slice(3, 5));
             if (gmt.slice(0, 1) === '-') offset = -offset;
-            return Date_parse(str.slice(0, -6) + 'Z') - offset;
+            return Date_parse(str.slice(0, -6) + 'Z') - offset * 60 * 1000;
         }
         return Date_parse(str);
     };
@@ -527,6 +528,7 @@ app.service('HistoryService', ['$http', 'Utils',
 
         this.generateOtp = generateOtp;
         this.findHistory = findHistory;
+        this.loadAnswer = loadAnswer;
 
         /////////////////////////////////////////////////////
 
@@ -538,16 +540,14 @@ app.service('HistoryService', ['$http', 'Utils',
                     mobilePhoneNumber: mobilePhoneNumber
                 }))
                 .then(function(body) {
-                    var otpId = body.otpId,
-                        requestCode = body.requestCode;
                     return {
-                        otpId: otpId,
-                        requestCode: requestCode
+                        otpId: body.otpId,
+                        requestCode: body.requestCode
                     };
                 });
         }
 
-        // May reject by code : 1, 2, 5, 40, /*71*/
+        // May reject by code : 1, 2, 5, 40, /*70*/, 71
         // Resolves to patient's information and history
         function findHistory(nationalCode, otpId, requestCode, otp) {
             return utils.httpPromiseHandler($http.post('/history/find/history', {
@@ -557,12 +557,29 @@ app.service('HistoryService', ['$http', 'Utils',
                     otp: otp
                 }))
                 .then(function(body) {
-                    var //accessKey = body.accessKey,
-                        patientInfo = body.patientInfo,
-                        history = body.history;
                     return {
-                        patientInfo: patientInfo,
-                        history: history
+                        // accessKey = body.accessKey,
+                        patientInfo: body.patientInfo,
+                        history: body.history
+                    };
+                });
+        }
+
+        // May reject by code : 1, 2, 5, 71, 72, 73
+        // Resolves to patient's answer content
+        function loadAnswer(nationalCode, postCode) {
+            return utils.httpPromiseHandler($http.post('/history/load/answer', {
+                    nationalCode: nationalCode,
+                    postCode: postCode
+                }))
+                .then(function(body) {
+                    return {
+                        patientName: body.patientName,
+                        labName: body.labName,
+                        labUsername: body.labUsername,
+                        postDate: String(body.postDate).toDate(),
+                        notes: body.notes,
+                        files: body.files
                     };
                 });
         }
@@ -1836,28 +1853,25 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
 /*global persianDate*/
 /*global toPersianNumber*/
 
-app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$stateParams',
-    function($rootScope, $scope, $state, $stateParams) {
+app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$stateParams', 'HistoryService',
+    function($rootScope, $scope, $state, $stateParams, historyService) {
 
         $scope.nationalCode = $stateParams.p;
         $scope.postCode = $stateParams.n;
-        $scope.previousState = $stateParams.previousState;
-        var previousStateData = $stateParams.previousStateData;
 
-        //TODO: remove these lines later
-        // $scope.testDate = persianDate().format('L'); //TODO: ???
-        // $scope.receiptNumber = toPersianNumber(6140); //TODO: ???
+        var previousState = $stateParams.previousState,
+            previousStateData = $stateParams.previousStateData;
 
         $scope.setBackHandler(function() {
-            if ($scope.previousState === 'history') {
+            if (previousState === 'history') {
                 $rootScope.data.patientInfo = previousStateData.patientInfo;
                 $rootScope.data.history = previousStateData.history;
-                $state.go($scope.previousState, {
+                $state.go(previousState, {
                     nationalCode: $scope.nationalCode
                 });
             }
             else {
-                $state.go($scope.previousState);
+                $state.go(previousState || 'home.find');
             }
         });
 
@@ -1874,16 +1888,24 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$statePar
             goToLaboratory: function() {
                 //$state.go('...');
             },
-            laboratoryName: '...' || $scope.answer.laboratoryName,
+            labNameGetter: function() {
+                return $scope.answer ? $scope.answer.labName : ' ';
+            },
         });
 
         $scope.setHeaderHandlers({
-            paitentName: '...' || $scope.answer.paitentName
+            paitentNameGetter: function() {
+                return $scope.answer ? $scope.answer.patientName : ' ';
+            }
         });
 
         $scope.setFooterHandlers({
-            testDate: '...' || persianDate($scope.answer.testDate).format('L'),
-            testNumber: '...' || toPersianNumber($scope.answer.testNumber)
+            postDateGetter: function() {
+                return $scope.answer ? persianDate($scope.answer.postDate).format('L') : ' ';
+            },
+            postCodeGetter: function() {
+                return toPersianNumber($scope.postCode);
+            }
         });
 
         $('#answer-test-number').popup({
@@ -1895,6 +1917,23 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$statePar
             inline: true,
             transition: 'scale'
         });
+
+        $scope.loading = true;
+        historyService.loadAnswer($scope.nationalCode, $scope.postCode)
+            .then(function(answer) {
+                answer.files.forEach(function(file) {
+                    file.url = '/answer/file/download?p=' + $scope.nationalCode +
+                        '&n=' + $scope.postCode + '&f=' + file.serverName;
+                    if (file.type.indexOf('image') >= 0) file.material = 'image';
+                    else if (file.type === 'application/pdf') file.material = 'pdf';
+                });
+                $scope.answer = answer;
+                $scope.loading = false;
+            }, function(code) {
+                //TODO: Handle errors...
+                $scope.loading = false;
+                alert(code);
+            });
 
     }
 ]);

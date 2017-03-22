@@ -2,7 +2,7 @@
 
 Date.prototype.toLocalString = toLocalString;
 
-Date.parse = parse();
+Date.parse = parseMaker();
 
 String.prototype.toDate = toDate;
 String.prototype.toPhoneNumber = toPhoneNumber;
@@ -22,14 +22,15 @@ function toLocalString(noGMT) {
     return s;
 }
 
-function parse() {
+function parseMaker() {
     var Date_parse = Date.parse;
     return function(str) {
+        str = (str || '').toString()
         if (typeof str === 'string' && str.slice(-6, -5) === 'O') {
             var gmt = str.slice(-5);
             var offset = Number(gmt.slice(1, 3)) * 60 + Number(gmt.slice(3, 5));
             if (gmt.slice(0, 1) === '-') offset = -offset;
-            return Date_parse(str.slice(0, -6) + 'Z') - offset;
+            return Date_parse(str.slice(0, -6) + 'Z') - offset * 60 * 1000;
         }
         return Date_parse(str);
     };
