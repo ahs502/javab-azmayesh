@@ -104,7 +104,7 @@ router.post('/send', function(req, res, next) {
     //TODO: Validate input data...
     var nationalCode = person.nationalCode;
     utils.generateId('post/' + username).then(function(postId) {
-        postId = String(1000000000 - postId);
+        postId = ('000000000' + String(1000000000 - postId)).slice(-9);
         var patientKey = 'patient/' + nationalCode;
         kfs(patientKey, function(err, patient) {
             if (err) {

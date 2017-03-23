@@ -1,5 +1,4 @@
 /*global app*/
-/*global $*/
 
 app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams',
     '$timeout', '$interval', 'UserService',

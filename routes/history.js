@@ -5,7 +5,7 @@ var config = require("../config");
 var src = require("../src"),
     kfs = src.kfs,
     utils = src.utils,
-    access = src.access,
+    // access = src.access,
     sms = src.sms;
 
 var path = require("path");
@@ -105,7 +105,7 @@ router.post('/find/history', function(req, res, next) {
                         });
                     }, function(err) {
                         console.error(err);
-                        return utils.resEndByCode(res, 5);
+                        utils.resEndByCode(res, 5);
                     });
             });
         });

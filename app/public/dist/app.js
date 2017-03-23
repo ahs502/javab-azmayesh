@@ -593,6 +593,70 @@ app.service('HistoryService', ['$http', 'Utils',
 
 
 /*
+	AHS502 : Start of 'post-serveice.js'
+*/
+
+/*global app*/
+
+app.service('PostService', ['$q', '$http', 'Utils',
+    function($q, $http, utils) {
+
+        this.initializePostStream = initializePostStream;
+        this.readPostStream = readPostStream;
+
+        /////////////////////////////////////////////////////
+
+        var postCollection, postsAreFinished;
+
+        function initializePostStream() {
+            postCollection = 9999999;
+            postsAreFinished = false;
+        }
+
+        // May reject by code : 1, 2, 5
+        function readPostStream(postsHandler /* (newPosts) => readMore */ ) {
+            var promise;
+            if (postCollection < 0 || postsAreFinished) {
+                postsAreFinished = true;
+                promise = $q.when(postsHandler([]));
+            }
+            else {
+                promise = utils.httpPromiseHandler($http.post('/post/read/posts', {
+                        postCollection: postCollection--
+                    }))
+                    .then(function(body) {
+                        var newEncodedPosts = body.newEncodedPosts || '';
+                        var newPosts = newEncodedPosts.split('|')
+                            .filter(function(encodedPost) {
+                                return !!encodedPost;
+                            })
+                            .map(function(encodedPost) {
+                                return {
+                                    postId: encodedPost.slice(0, 9),
+                                    nationalCode: encodedPost.slice(9, 19),
+                                    filesCount: Number(encodedPost.slice(19, 21)),
+                                    postCode: encodedPost.slice(21, 25),
+                                    timeStamp: encodedPost.slice(25, 54).toDate()
+                                };
+                            });
+                        if (!newPosts.length) postsAreFinished = true;
+                        return postsHandler(newPosts);
+                    });
+            }
+            return promise.then(function(readMore) {
+                if (readMore && !postsAreFinished) return readPostStream(postsHandler);
+            });
+        }
+
+    }
+]);
+
+/*
+	AHS502 : End of 'post-serveice.js'
+*/
+
+
+/*
 	AHS502 : Start of 'user-service.js'
 */
 
@@ -1269,40 +1333,48 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
 */
 
 /*global app*/
-/*global $*/
 
-app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$stateParams', 'PostService',
+    function($scope, $rootScope, $state, $stateParams, postService) {
 
         $scope.postClicked = postClicked;
 
         $scope.posts = [];
-        $scope.setLoading(true);
-        $timeout(function() { //TODO: load posts...
-            $scope.posts = [{
-                id: 1,
-                status: 'Sending'
-            }, {
-                id: 2,
-                status: 'Error'
-            }, {
-                id: 3,
-                status: 'Sending'
-            }, {
-                id: 4,
-                status: 'Received'
-            }, {
-                id: 5,
-                status: 'Received'
-            }, {
-                id: 6,
-                status: 'Error'
-            }, {
-                id: 7,
-                status: 'Received'
-            }, ];
-            $scope.setLoading(false);
-        }, 700);
+        // $scope.setLoading(true);
+
+        postService.initializePostStream();
+        postService.readPostStream(function(newPosts) {
+            console.log('00--', newPosts);
+            return true;
+        }).then(function () {
+            console.log('done!')
+        });
+
+        // $timeout(function() { //TODO: load posts...
+        //     $scope.posts = [{
+        //         id: 1,
+        //         status: 'Sending'
+        //     }, {
+        //         id: 2,
+        //         status: 'Error'
+        //     }, {
+        //         id: 3,
+        //         status: 'Sending'
+        //     }, {
+        //         id: 4,
+        //         status: 'Received'
+        //     }, {
+        //         id: 5,
+        //         status: 'Received'
+        //     }, {
+        //         id: 6,
+        //         status: 'Error'
+        //     }, {
+        //         id: 7,
+        //         status: 'Received'
+        //     }, ];
+        //     $scope.setLoading(false);
+        // }, 700);
 
         $scope.setBackHandler(function() {
             $state.go('panel.home');
@@ -1329,14 +1401,15 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
 */
 
 /*global app*/
-/*global $*/
 
-app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$stateParams', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, userService) {
 
         $scope.setBackHandler($scope.menuHandlers.logout);
 
-        $scope.setPageTitle('نام آزمایشگاه');
+        var userInfo = userService.current();
+
+        $scope.setPageTitle((userInfo && userInfo.labName) || ' ');
 
     }
 ]);
@@ -2157,7 +2230,6 @@ app.controller('MasterController', ['$scope', '$rootScope', '$window',
 */
 
 /*global app*/
-/*global $*/
 
 app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams',
     '$timeout', '$interval', 'UserService',

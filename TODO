@@ -1,13 +1,11 @@
 
-    *   Implement environment in config: Development, Test, Production.
+    *   Implement environment setting in config file: Development, Test, Production.
 
     *   Implement a status code decoder angular service.
     
-    *   Develope validation and messaging to all forms.
+    *   Develope validation and messaging in all forms.
     
     *   Add the ability to send answer to patient only by his/her nationalCode.
-    
-    *   Add query stringified direct url in informing SMS to patient.
     
     *   Add the ability to upload some test results without sending or as private posts,
         where are harder to seek than url encoded data headers.
@@ -18,7 +16,7 @@
     
     
     
-    *   Make some documentation for developers of this project, containing these data:
+    *   Make some documentation for developers of this project in 'doc' folder, containing these data:
     
         // $scope.postDate = persianDate(new Date()).format('L');
         // $scope.postCode = toPersianNumber(6140);

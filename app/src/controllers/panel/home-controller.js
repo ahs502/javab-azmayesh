@@ -1,12 +1,13 @@
 /*global app*/
-/*global $*/
 
-app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$stateParams', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, userService) {
 
         $scope.setBackHandler($scope.menuHandlers.logout);
 
-        $scope.setPageTitle('نام آزمایشگاه');
+        var userInfo = userService.current();
+
+        $scope.setPageTitle((userInfo && userInfo.labName) || ' ');
 
     }
 ]);
