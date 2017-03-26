@@ -51,11 +51,13 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         $scope.setFooterHandlers(false);
 
         function setLoading(loading) {
-            $scope.loading = loading;
-            $scope.loadingMessage = false;
-            loading && $timeout(function() {
-                $scope.loadingMessage = true;
-            }, 1500);
+            $timeout(function() {
+                $scope.loading = loading;
+                $scope.loadingMessage = false;
+                loading && $timeout(function() {
+                    $scope.loadingMessage = true;
+                }, 1500);
+            });
         }
 
         function setPageTitle(title) {

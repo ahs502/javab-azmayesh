@@ -963,32 +963,73 @@
 </script>
 
 <script type="text/ng-template" id="panel/history.html">
-    <div id="ja-panel-history">
+    <div id="ja-panel-history" class="ui basic segment">
 
-    <div class="ui basic segment">
-
-        <div class="ui three stackable doubling cards">
-
-            <div class="ui link fluid raised card" ng-repeat="post in posts" ng-class="{ 'green': post.status==='Received', 'blue': post.status==='Sending', 'red': post.status==='Error' }" ng-click="postClicked(post)">
-                <div class="content">
-                    <div class="header">header: POST {{post.id}}</div>
-                    <div class="meta">
-                        <span class="category">meta data</span>
-                    </div>
-                    <div class="description">
-                        <p>some description about the post</p>
+    <div class="ui green segment">
+        <div class="ui four column centered grid container">
+            
+            <div class="row">
+                <div class="column">
+                    <div class="text nazanin">سال</div>
+                </div>
+                <div class="column">
+                    <div class="text nazanin">ماه شروع</div>
+                </div>
+                <div class="column">
+                    <div class="text nazanin">ماه پایان</div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="column">
+                    <div class="ui dropdown" id="select-year">
+                        <div class="text nazanin" ng-bind="selectedYear | toPersianNumber"></div>
+                        <div class="menu">
+                            <div class="item nazanin" ng-repeat="year in allYears" data-value="{{year}}" ng-bind="year | toPersianNumber"></div>
+                        </div>
                     </div>
                 </div>
-                <!--<div class="extra content">-->
-                <!--    <div class="right floated author">-->
-                <!--        <img class="ui avatar image" src="/images/avatar/small/matt.jpg"> Matt-->
-                <!--    </div>-->
-                <!--</div>-->
+                <div class="column">
+                    <div class="ui dropdown" id="select-month-from">
+                        <div class="text nazanin" ng-bind="selectedMonthFromText"></div>
+                        <div class="menu">
+                            <div class="item nazanin" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui dropdown" id="select-month-to">
+                        <div class="text nazanin" ng-bind="selectedMonthToText"></div>
+                        <div class="menu">
+                            <div class="item nazanin" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            
+        </div>
+    </div>
+
+    <md-virtual-repeat-container class="ui cards" md-top-index="topPostIndex">
+        <div class="ui link fluid raised blue card" md-virtual-repeat="post in posts" md-item-size="92.15" ng-click="postClicked(post)">
+
+            <div class="content">
+                <div class="header">header: {{post.id}}</div>
+                <div class="meta">
+                    <span class="category">meta data</span>
+                </div>
+                <div class="description">
+                    <p>description</p>
+                </div>
+            </div>
+            <!--<div class="extra content">-->
+            <!--    <div class="right floated author">-->
+            <!--        <img class="ui avatar image" src="/images/avatar/small/matt.jpg"> Matt-->
+            <!--    </div>-->
+            <!--</div>-->
 
         </div>
-
-    </div>
+    </md-virtual-repeat-container>
 
 </div>
 </script>

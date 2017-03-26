@@ -10,7 +10,7 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
             $state.go('panel.history');
         });
 
-        $scope.setPageTitle('آرمان زیبا کلام');
+        $scope.setPageTitle('محسن کامرانی');
 
     }
 ]);

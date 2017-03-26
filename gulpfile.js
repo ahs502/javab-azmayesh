@@ -49,6 +49,7 @@ var javascripts_lib = [
     './app/lib/jquery/dist/jquery.min.js',
     './app/lib/angular/angular.js',
     './app/lib/angular-ui-router/release/angular-ui-router.min.js',
+    './app/lib/md-virtual-repeater/virtual-repeater.js',
     './app/lib/angular-recaptcha/release/angular-recaptcha.min.js',
     './app/lib/persian-date/dist/0.1.8/persian-date-0.1.8.min.js',
     //'./app/lib/semantic/dist/semantic.min.js',
@@ -62,6 +63,7 @@ var javascripts_lib = [
     './app/lib/semantic/dist/components/popup.min.js',
     './app/lib/semantic/dist/components/sidebar.min.js',
     './app/lib/semantic/dist/components/sticky.min.js',
+    './app/lib/semantic/dist/components/dropdown.min.js',
 ];
 
 var stylesheets_lib = [
@@ -87,6 +89,7 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/sticky.min.css',
     './app/lib/semantic/dist/components/statistic.min.css',
     './app/lib/semantic/dist/components/divider.min.css',
+    './app/lib/semantic/dist/components/dropdown.rtl.min.css',
     //'./app/lib/semantic/dist/components/icon.min.css',
 ];
 

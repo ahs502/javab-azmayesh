@@ -31812,6 +31812,1054 @@ a.get("$state.runtime").autoinject&&a.get("$state")}]),w.$inject=[],b.module("ui
 
 
 /*
+	AHS502 : Start of 'virtual-repeater.js'
+*/
+
+/**
+ * @ngdoc module
+ * @name material.components.virtualRepeat
+ */
+angular.module('virtualRepeat', [])
+.config(setupCSS)
+.directive('mdVirtualRepeatContainer', VirtualRepeatContainerDirective)
+.directive('mdVirtualRepeat', ['$parse', VirtualRepeatDirective]);
+
+function setupCSS() {
+  var styleEl = document.createElement('style');
+
+  var virtualRepeatContainer = [
+    'box-sizing: border-box;',
+    'display: block;',
+    'margin: 0;',
+    'overflow: hidden;',
+    'padding: 0;',
+    'position: relative;'
+  ];
+
+  var virtualRepeatContainer_virtualRepeatScroller = [
+    'bottom: 0;',
+    'box-sizing: border-box;',
+    'left: 0;',
+    'margin: 0;',
+    'overflow-x: hidden;',
+    'padding: 0;',
+    'position: absolute;',
+    'right: 0;',
+    'top: 0;',
+    '-webkit-overflow-scrolling: touch;'
+  ];
+
+  var virtualRepeatContainer_virtualRepeatSizer = [
+    'box-sizing: border-box;',
+    'height: 1px;',
+    'display: block;',
+    'margin: 0;',
+    'padding: 0;',
+    'width: 1px;'
+  ];
+
+  var virtualRepeatContainer_virtualRepeatOffsetter = [
+    'box-sizing: border-box;',
+    'left: 0;',
+    'margin: 0;',
+    'padding: 0;',
+    'position: absolute;',
+    'right: 0;',
+    'top: 0;'
+  ];
+
+  var virtualRepeatContainerOrientHorizontal_virtualRepeatScroller = [
+    'overflow-x: auto;',
+    'overflow-y: hidden;'
+  ];
+
+  var virtualRepeatContainerOrientHorizontal_virtualRepeatOffsetter = [
+    'bottom: 16px;',
+    'right: auto;',
+    'white-space: nowrap;'
+  ];
+
+  document.head.appendChild(styleEl);
+  styleSheet = styleEl.sheet;
+  styleSheet.insertRule('.md-virtual-repeat-container {' + virtualRepeatContainer.join('') + '}', 0);
+  styleSheet.insertRule('.md-virtual-repeat-container .md-virtual-repeat-scroller {' + virtualRepeatContainer_virtualRepeatScroller.join('')  + '}', 0);
+  styleSheet.insertRule('.md-virtual-repeat-container .md-virtual-repeat-sizer {' + virtualRepeatContainer_virtualRepeatSizer.join('') + '}', 0);
+  styleSheet.insertRule('.md-virtual-repeat-container .md-virtual-repeat-offsetter {' + virtualRepeatContainer_virtualRepeatOffsetter.join('') + '}', 0);
+  styleSheet.insertRule('.md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-scroller {' + virtualRepeatContainerOrientHorizontal_virtualRepeatScroller.join('') + '}', 0);
+  styleSheet.insertRule('.md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter {' + virtualRepeatContainerOrientHorizontal_virtualRepeatOffsetter.join('') + '}', 0);
+}
+
+/**
+ * @ngdoc directive
+ * @name mdVirtualRepeatContainer
+ * @module material.components.virtualRepeat
+ * @restrict E
+ * @description
+ * `md-virtual-repeat-container` provides the scroll container for md-virtual-repeat.
+ *
+ * VirtualRepeat is a limited substitute for ng-repeat that renders only
+ * enough DOM nodes to fill the container and recycling them as the user scrolls.
+ *
+ * Once an element is not visible anymore, the VirtualRepeat recycles it and will reuse it for
+ * another visible item by replacing the previous dataset with the new one.
+ *
+ * ### Common Issues
+ *
+ * > When having one-time bindings inside of the view template, the VirtualRepeat will not properly
+ * > update the bindings for new items, since the view will be recycled.
+ *
+ * ### Notes
+ *
+ * > The VirtualRepeat is a similar implementation to the Android
+ * [RecyclerView](https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html)
+ *
+ * <!-- This comment forces a break between blockquotes //-->
+ *
+ * > Please also review the <a ng-href="api/directive/mdVirtualRepeat">VirtualRepeat</a>
+ * documentation for more information.
+ *
+ *
+ * @usage
+ * <hljs lang="html">
+ *
+ * <md-virtual-repeat-container md-top-index="topIndex">
+ *   <div md-virtual-repeat="i in items" md-item-size="20">Hello {{i}}!</div>
+ * </md-virtual-repeat-container>
+ * </hljs>
+ *
+ * @param {number=} md-top-index Binds the index of the item that is at the top of the scroll
+ *     container to $scope. It can both read and set the scroll position.
+ * @param {boolean=} md-orient-horizontal Whether the container should scroll horizontally
+ *     (defaults to orientation and scrolling vertically).
+ * @param {boolean=} md-auto-shrink When present, the container will shrink to fit
+ *     the number of items when that number is less than its original size.
+ * @param {number=} md-auto-shrink-min Minimum number of items that md-auto-shrink
+ *     will shrink to (default: 0).
+ */
+function VirtualRepeatContainerDirective() {
+  return {
+    controller: ['$$rAF', '$parse', '$rootScope', '$timeout', '$window', '$scope', '$element', '$attrs', VirtualRepeatContainerController],
+    template: virtualRepeatContainerTemplate,
+    compile: function virtualRepeatContainerCompile($element, $attrs) {
+      $element
+          .addClass('md-virtual-repeat-container')
+          .addClass($attrs.hasOwnProperty('mdOrientHorizontal')
+              ? 'md-orient-horizontal'
+              : 'md-orient-vertical');
+    }
+  };
+}
+
+
+function virtualRepeatContainerTemplate($element) {
+  return '<div class="md-virtual-repeat-scroller">' +
+    '<div class="md-virtual-repeat-sizer"></div>' +
+    '<div class="md-virtual-repeat-offsetter">' +
+      $element[0].innerHTML +
+    '</div></div>';
+}
+
+/**
+ * Number of additional elements to render above and below the visible area inside
+ * of the virtual repeat container. A higher number results in less flicker when scrolling
+ * very quickly in Safari, but comes with a higher rendering and dirty-checking cost.
+ * @const {number}
+ */
+var NUM_EXTRA = 3;
+
+/** @ngInject */
+function VirtualRepeatContainerController($$rAF, $parse, $rootScope, $timeout, $window, $scope,
+                                          $element, $attrs) {
+  var ELEMENT_MAX_PIXELS = 1533917;
+
+  this.$rootScope = $rootScope;
+  this.$scope = $scope;
+  this.$element = $element;
+  this.$attrs = $attrs;
+
+  /** @type {number} The width or height of the container */
+  this.size = 0;
+  /** @type {number} The scroll width or height of the scroller */
+  this.scrollSize = 0;
+  /** @type {number} The scrollLeft or scrollTop of the scroller */
+  this.scrollOffset = 0;
+  /** @type {boolean} Whether the scroller is oriented horizontally */
+  this.horizontal = this.$attrs.hasOwnProperty('mdOrientHorizontal');
+  /** @type {!VirtualRepeatController} The repeater inside of this container */
+  this.repeater = null;
+  /** @type {boolean} Whether auto-shrink is enabled */
+  this.autoShrink = this.$attrs.hasOwnProperty('mdAutoShrink');
+  /** @type {number} Minimum number of items to auto-shrink to */
+  this.autoShrinkMin = parseInt(this.$attrs.mdAutoShrinkMin, 10) || 0;
+  /** @type {?number} Original container size when shrank */
+  this.originalSize = null;
+  /** @type {number} Amount to offset the total scroll size by. */
+  this.offsetSize = parseInt(this.$attrs.mdOffsetSize, 10) || 0;
+  /** @type {?string} height or width element style on the container prior to auto-shrinking. */
+  this.oldElementSize = null;
+  /** @type {!number} Maximum amount of pixels allowed for a single DOM element */
+  this.maxElementPixels = ELEMENT_MAX_PIXELS;
+
+  if (this.$attrs.mdTopIndex) {
+    /** @type {function(angular.Scope): number} Binds to topIndex on Angular scope */
+    this.bindTopIndex = $parse(this.$attrs.mdTopIndex);
+    /** @type {number} The index of the item that is at the top of the scroll container */
+    this.topIndex = this.bindTopIndex(this.$scope);
+
+    if (!angular.isDefined(this.topIndex)) {
+      this.topIndex = 0;
+      this.bindTopIndex.assign(this.$scope, 0);
+    }
+
+    this.$scope.$watch(this.bindTopIndex, angular.bind(this, function(newIndex) {
+      if (newIndex !== this.topIndex) {
+        this.scrollToIndex(newIndex);
+      }
+    }));
+  } else {
+    this.topIndex = 0;
+  }
+
+  this.scroller = $element[0].querySelector('.md-virtual-repeat-scroller');
+  this.sizer = this.scroller.querySelector('.md-virtual-repeat-sizer');
+  this.offsetter = this.scroller.querySelector('.md-virtual-repeat-offsetter');
+
+  // After the dom stablizes, measure the initial size of the container and
+  // make a best effort at re-measuring as it changes.
+  var boundUpdateSize = angular.bind(this, this.updateSize);
+
+  $$rAF(angular.bind(this, function() {
+    boundUpdateSize();
+
+    var debouncedUpdateSize = debounce(boundUpdateSize, 10, null, false);
+    var jWindow = angular.element($window);
+
+    // Make one more attempt to get the size if it is 0.
+    // This is not by any means a perfect approach, but there's really no
+    // silver bullet here.
+    if (!this.size) {
+      debouncedUpdateSize();
+    }
+
+    jWindow.on('resize', debouncedUpdateSize);
+    $scope.$on('$destroy', function() {
+      jWindow.off('resize', debouncedUpdateSize);
+    });
+
+    $scope.$emit('$md-resize-enable');
+    $scope.$on('$md-resize', boundUpdateSize);
+  }));
+
+  function debounce(func, wait, scope, invokeApply) {
+    var timer;
+
+    return function debounced() {
+      var context = scope,
+        args = Array.prototype.slice.call(arguments);
+
+      $timeout.cancel(timer);
+      timer = $timeout(function() {
+
+        timer = undefined;
+        func.apply(context, args);
+
+      }, wait || 10, invokeApply);
+    };
+  }
+}
+
+
+/** Called by the md-virtual-repeat inside of the container at startup. */
+VirtualRepeatContainerController.prototype.register = function(repeaterCtrl) {
+  this.repeater = repeaterCtrl;
+
+  angular.element(this.scroller)
+      .on('scroll wheel touchmove touchend', angular.bind(this, this.handleScroll_));
+};
+
+
+/** @return {boolean} Whether the container is configured for horizontal scrolling. */
+VirtualRepeatContainerController.prototype.isHorizontal = function() {
+  return this.horizontal;
+};
+
+
+/** @return {number} The size (width or height) of the container. */
+VirtualRepeatContainerController.prototype.getSize = function() {
+  return this.size;
+};
+
+
+/**
+ * Resizes the container.
+ * @private
+ * @param {number} size The new size to set.
+ */
+VirtualRepeatContainerController.prototype.setSize_ = function(size) {
+  var dimension = this.getDimensionName_();
+
+  this.size = size;
+  this.$element[0].style[dimension] = size + 'px';
+};
+
+
+VirtualRepeatContainerController.prototype.unsetSize_ = function() {
+  this.$element[0].style[this.getDimensionName_()] = this.oldElementSize;
+  this.oldElementSize = null;
+};
+
+
+/** Instructs the container to re-measure its size. */
+VirtualRepeatContainerController.prototype.updateSize = function() {
+  // If the original size is already determined, we can skip the update.
+  if (this.originalSize) return;
+
+  this.size = this.isHorizontal()
+      ? this.$element[0].clientWidth
+      : this.$element[0].clientHeight;
+
+  // Recheck the scroll position after updating the size. This resolves
+  // problems that can result if the scroll position was measured while the
+  // element was display: none or detached from the document.
+  this.handleScroll_();
+
+  this.repeater && this.repeater.containerUpdated();
+};
+
+
+/** @return {number} The container's scrollHeight or scrollWidth. */
+VirtualRepeatContainerController.prototype.getScrollSize = function() {
+  return this.scrollSize;
+};
+
+
+VirtualRepeatContainerController.prototype.getDimensionName_ = function() {
+  return this.isHorizontal() ? 'width' : 'height';
+};
+
+
+/**
+ * Sets the scroller element to the specified size.
+ * @private
+ * @param {number} size The new size.
+ */
+VirtualRepeatContainerController.prototype.sizeScroller_ = function(size) {
+  var dimension =  this.getDimensionName_();
+  var crossDimension = this.isHorizontal() ? 'height' : 'width';
+
+  // Clear any existing dimensions.
+  this.sizer.innerHTML = '';
+
+  // If the size falls within the browser's maximum explicit size for a single element, we can
+  // set the size and be done. Otherwise, we have to create children that add up the the desired
+  // size.
+  if (size < this.maxElementPixels) {
+    this.sizer.style[dimension] = size + 'px';
+  } else {
+    this.sizer.style[dimension] = 'auto';
+    this.sizer.style[crossDimension] = 'auto';
+
+    // Divide the total size we have to render into N max-size pieces.
+    var numChildren = Math.floor(size / this.maxElementPixels);
+
+    // Element template to clone for each max-size piece.
+    var sizerChild = document.createElement('div');
+    sizerChild.style[dimension] = this.maxElementPixels + 'px';
+    sizerChild.style[crossDimension] = '1px';
+
+    for (var i = 0; i < numChildren; i++) {
+      this.sizer.appendChild(sizerChild.cloneNode(false));
+    }
+
+    // Re-use the element template for the remainder.
+    sizerChild.style[dimension] = (size - (numChildren * this.maxElementPixels)) + 'px';
+    this.sizer.appendChild(sizerChild);
+  }
+};
+
+
+/**
+ * If auto-shrinking is enabled, shrinks or unshrinks as appropriate.
+ * @private
+ * @param {number} size The new size.
+ */
+VirtualRepeatContainerController.prototype.autoShrink_ = function(size) {
+  var shrinkSize = Math.max(size, this.autoShrinkMin * this.repeater.getItemSize());
+
+  if (this.autoShrink && shrinkSize !== this.size) {
+    if (this.oldElementSize === null) {
+      this.oldElementSize = this.$element[0].style[this.getDimensionName_()];
+    }
+
+    var currentSize = this.originalSize || this.size;
+
+    if (!currentSize || shrinkSize < currentSize) {
+      if (!this.originalSize) {
+        this.originalSize = this.size;
+      }
+
+      // Now we update the containers size, because shrinking is enabled.
+      this.setSize_(shrinkSize);
+    } else if (this.originalSize !== null) {
+      // Set the size back to our initial size.
+      this.unsetSize_();
+
+      var _originalSize = this.originalSize;
+      this.originalSize = null;
+
+      // We determine the repeaters size again, if the original size was zero.
+      // The originalSize needs to be null, to be able to determine the size.
+      if (!_originalSize) this.updateSize();
+
+      // Apply the original size or the determined size back to the container, because
+      // it has been overwritten before, in the shrink block.
+      this.setSize_(_originalSize || this.size);
+    }
+
+    this.repeater.containerUpdated();
+  }
+};
+
+
+/**
+ * Sets the scrollHeight or scrollWidth. Called by the repeater based on
+ * its item count and item size.
+ * @param {number} itemsSize The total size of the items.
+ */
+VirtualRepeatContainerController.prototype.setScrollSize = function(itemsSize) {
+  var size = itemsSize + this.offsetSize;
+  if (this.scrollSize === size) return;
+
+  this.sizeScroller_(size);
+  this.autoShrink_(size);
+  this.scrollSize = size;
+};
+
+
+/** @return {number} The container's current scroll offset. */
+VirtualRepeatContainerController.prototype.getScrollOffset = function() {
+  return this.scrollOffset;
+};
+
+/**
+ * Scrolls to a given scrollTop position.
+ * @param {number} position
+ */
+VirtualRepeatContainerController.prototype.scrollTo = function(position) {
+  this.scroller[this.isHorizontal() ? 'scrollLeft' : 'scrollTop'] = position;
+  this.handleScroll_();
+};
+
+/**
+ * Scrolls the item with the given index to the top of the scroll container.
+ * @param {number} index
+ */
+VirtualRepeatContainerController.prototype.scrollToIndex = function(index) {
+  var itemSize = this.repeater.getItemSize();
+  var itemsLength = this.repeater.itemsLength;
+  if(index > itemsLength) {
+    index = itemsLength - 1;
+  }
+  this.scrollTo(itemSize * index);
+};
+
+VirtualRepeatContainerController.prototype.resetScroll = function() {
+  this.scrollTo(0);
+};
+
+
+VirtualRepeatContainerController.prototype.handleScroll_ = function() {
+  var doc = angular.element(document)[0];
+  var ltr = doc.dir != 'rtl' && doc.body.dir != 'rtl';
+  if(!ltr && !this.maxSize) {
+    this.scroller.scrollLeft = this.scrollSize;
+    this.maxSize = this.scroller.scrollLeft;
+  }
+  var offset = this.isHorizontal() ?
+      (ltr?this.scroller.scrollLeft : this.maxSize - this.scroller.scrollLeft)
+      : this.scroller.scrollTop;
+  if (offset === this.scrollOffset || offset > this.scrollSize - this.size) return;
+
+  var itemSize = this.repeater.getItemSize();
+  if (!itemSize) return;
+
+  var numItems = Math.max(0, Math.floor(offset / itemSize) - NUM_EXTRA);
+
+  var transform = (this.isHorizontal() ? 'translateX(' : 'translateY(') +
+      (!this.isHorizontal() || ltr ? (numItems * itemSize) : - (numItems * itemSize))  + 'px)';
+
+  this.scrollOffset = offset;
+  this.offsetter.style.webkitTransform = transform;
+  this.offsetter.style.transform = transform;
+
+  if (this.bindTopIndex) {
+    var topIndex = Math.floor(offset / itemSize);
+    if (topIndex !== this.topIndex && topIndex < this.repeater.getItemCount()) {
+      this.topIndex = topIndex;
+      this.bindTopIndex.assign(this.$scope, topIndex);
+      if (!this.$rootScope.$$phase) this.$scope.$digest();
+    }
+  }
+
+  this.repeater.containerUpdated();
+};
+
+
+/**
+ * @ngdoc directive
+ * @name mdVirtualRepeat
+ * @module material.components.virtualRepeat
+ * @restrict A
+ * @priority 1000
+ * @description
+ * `md-virtual-repeat` specifies an element to repeat using virtual scrolling.
+ *
+ * Virtual repeat is a limited substitute for ng-repeat that renders only
+ * enough dom nodes to fill the container and recycling them as the user scrolls.
+ * Arrays, but not objects are supported for iteration.
+ * Track by, as alias, and (key, value) syntax are not supported.
+ *
+ * > <b>Note:</b> Please also review the
+ *   <a ng-href="api/directive/mdVirtualRepeatContainer">VirtualRepeatContainer</a> documentation
+ *   for more information.
+ *
+ * @usage
+ * <hljs lang="html">
+ * <md-virtual-repeat-container>
+ *   <div md-virtual-repeat="i in items">Hello {{i}}!</div>
+ * </md-virtual-repeat-container>
+ *
+ * <md-virtual-repeat-container md-orient-horizontal>
+ *   <div md-virtual-repeat="i in items" md-item-size="20">Hello {{i}}!</div>
+ * </md-virtual-repeat-container>
+ * </hljs>
+ *
+ * @param {number=} md-item-size The height or width of the repeated elements (which must be
+ *   identical for each element). Optional. Will attempt to read the size from the dom if missing,
+ *   but still assumes that all repeated nodes have same height or width.
+ * @param {string=} md-extra-name Evaluates to an additional name to which the current iterated item
+ *   can be assigned on the repeated scope (needed for use in `md-autocomplete`).
+ * @param {boolean=} md-on-demand When present, treats the md-virtual-repeat argument as an object
+ *   that can fetch rows rather than an array.
+ *
+ *   **NOTE:** This object must implement the following interface with two (2) methods:
+ *
+ *   - `getItemAtIndex: function(index) [object]` The item at that index or null if it is not yet
+ *     loaded (it should start downloading the item in that case).
+ *   - `getLength: function() [number]` The data length to which the repeater container
+ *     should be sized. Ideally, when the count is known, this method should return it.
+ *     Otherwise, return a higher number than the currently loaded items to produce an
+ *     infinite-scroll behavior.
+ */
+function VirtualRepeatDirective($parse) {
+  return {
+    controller: ['$scope', '$element', '$attrs', '$browser', '$document', '$rootScope', '$$rAF', VirtualRepeatController],
+    priority: 1000,
+    require: ['mdVirtualRepeat', '^^mdVirtualRepeatContainer'],
+    restrict: 'A',
+    terminal: true,
+    transclude: 'element',
+    compile: function VirtualRepeatCompile($element, $attrs) {
+      var expression = $attrs.mdVirtualRepeat;
+      var match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)\s*$/);
+      var repeatName = match[1];
+      var repeatListExpression = $parse(match[2]);
+      var extraName = $attrs.mdExtraName && $parse($attrs.mdExtraName);
+
+      return function VirtualRepeatLink($scope, $element, $attrs, ctrl, $transclude) {
+        ctrl[0].link_(ctrl[1], $transclude, repeatName, repeatListExpression, extraName);
+      };
+    }
+  };
+}
+
+
+/** @ngInject */
+function VirtualRepeatController($scope, $element, $attrs, $browser, $document, $rootScope,
+    $$rAF) {
+  this.$scope = $scope;
+  this.$element = $element;
+  this.$attrs = $attrs;
+  this.$browser = $browser;
+  this.$document = $document;
+  this.$rootScope = $rootScope;
+  this.$$rAF = $$rAF;
+
+  /** @type {boolean} Whether we are in on-demand mode. */
+  this.onDemand = parseAttributeBoolean($attrs.mdOnDemand);
+  /** @type {!Function} Backup reference to $browser.$$checkUrlChange */
+  this.browserCheckUrlChange = $browser.$$checkUrlChange;
+  /** @type {number} Most recent starting repeat index (based on scroll offset) */
+  this.newStartIndex = 0;
+  /** @type {number} Most recent ending repeat index (based on scroll offset) */
+  this.newEndIndex = 0;
+  /** @type {number} Most recent end visible index (based on scroll offset) */
+  this.newVisibleEnd = 0;
+  /** @type {number} Previous starting repeat index (based on scroll offset) */
+  this.startIndex = 0;
+  /** @type {number} Previous ending repeat index (based on scroll offset) */
+  this.endIndex = 0;
+  // TODO: measure width/height of first element from dom if not provided.
+  // getComputedStyle?
+  /** @type {?number} Height/width of repeated elements. */
+  this.itemSize = $scope.$eval($attrs.mdItemSize) || null;
+
+  /** @type {boolean} Whether this is the first time that items are rendered. */
+  this.isFirstRender = true;
+
+  /**
+   * @private {boolean} Whether the items in the list are already being updated. Used to prevent
+   *     nested calls to virtualRepeatUpdate_.
+   */
+  this.isVirtualRepeatUpdating_ = false;
+
+  /** @type {number} Most recently seen length of items. */
+  this.itemsLength = 0;
+
+  /**
+   * @type {!Function} Unwatch callback for item size (when md-items-size is
+   *     not specified), or angular.noop otherwise.
+   */
+  this.unwatchItemSize_ = angular.noop;
+
+  /**
+   * Presently rendered blocks by repeat index.
+   * @type {Object<number, !VirtualRepeatController.Block}
+   */
+  this.blocks = {};
+  /** @type {Array<!VirtualRepeatController.Block>} A pool of presently unused blocks. */
+  this.pooledBlocks = [];
+
+  $scope.$on('$destroy', angular.bind(this, this.cleanupBlocks_));
+
+  function parseAttributeBoolean(value, negatedCheck) {
+    return value === '' || !!value && (negatedCheck === false || value !== 'false' && value !== '0');
+  }
+}
+
+
+/**
+ * An object representing a repeated item.
+ * @typedef {{element: !jqLite, new: boolean, scope: !angular.Scope}}
+ */
+VirtualRepeatController.Block;
+
+
+/**
+ * Called at startup by the md-virtual-repeat postLink function.
+ * @param {!VirtualRepeatContainerController} container The container's controller.
+ * @param {!Function} transclude The repeated element's bound transclude function.
+ * @param {string} repeatName The left hand side of the repeat expression, indicating
+ *     the name for each item in the array.
+ * @param {!Function} repeatListExpression A compiled expression based on the right hand side
+ *     of the repeat expression. Points to the array to repeat over.
+ * @param {string|undefined} extraName The optional extra repeatName.
+ */
+VirtualRepeatController.prototype.link_ =
+    function(container, transclude, repeatName, repeatListExpression, extraName) {
+  this.container = container;
+  this.transclude = transclude;
+  this.repeatName = repeatName;
+  this.rawRepeatListExpression = repeatListExpression;
+  this.extraName = extraName;
+  this.sized = false;
+
+  this.repeatListExpression = angular.bind(this, this.repeatListExpression_);
+
+  this.container.register(this);
+};
+
+
+/** @private Cleans up unused blocks. */
+VirtualRepeatController.prototype.cleanupBlocks_ = function() {
+  angular.forEach(this.pooledBlocks, function cleanupBlock(block) {
+    block.element.remove();
+  });
+};
+
+
+/** @private Attempts to set itemSize by measuring a repeated element in the dom */
+VirtualRepeatController.prototype.readItemSize_ = function() {
+  if (this.itemSize) {
+    // itemSize was successfully read in a different asynchronous call.
+    return;
+  }
+
+  this.items = this.repeatListExpression(this.$scope);
+  this.parentNode = this.$element[0].parentNode;
+  var block = this.getBlock_(0);
+  if (!block.element[0].parentNode) {
+    this.parentNode.appendChild(block.element[0]);
+  }
+
+  this.itemSize = block.element[0][
+      this.container.isHorizontal() ? 'offsetWidth' : 'offsetHeight'] || null;
+
+  this.blocks[0] = block;
+  this.poolBlock_(0);
+
+  if (this.itemSize) {
+    this.containerUpdated();
+  }
+};
+
+
+/**
+ * Returns the user-specified repeat list, transforming it into an array-like
+ * object in the case of infinite scroll/dynamic load mode.
+ * @param {!angular.Scope} The scope.
+ * @return {!Array|!Object} An array or array-like object for iteration.
+ */
+VirtualRepeatController.prototype.repeatListExpression_ = function(scope) {
+  var repeatList = this.rawRepeatListExpression(scope);
+
+  if (this.onDemand && repeatList) {
+    var virtualList = new VirtualRepeatModelArrayLike(repeatList);
+    virtualList.$$includeIndexes(this.newStartIndex, this.newVisibleEnd);
+    return virtualList;
+  } else {
+    return repeatList;
+  }
+};
+
+
+/**
+ * Called by the container. Informs us that the containers scroll or size has
+ * changed.
+ */
+VirtualRepeatController.prototype.containerUpdated = function() {
+  // If itemSize is unknown, attempt to measure it.
+  if (!this.itemSize) {
+    // Make sure to clean up watchers if we can (see #8178)
+    if(this.unwatchItemSize_ && this.unwatchItemSize_ !== angular.noop){
+      this.unwatchItemSize_();
+    }
+    this.unwatchItemSize_ = this.$scope.$watchCollection(
+        this.repeatListExpression,
+        angular.bind(this, function(items) {
+          if (items && items.length) {
+            this.readItemSize_();
+          }
+        }));
+    if (!this.$rootScope.$$phase) this.$scope.$digest();
+
+    return;
+  } else if (!this.sized) {
+    this.items = this.repeatListExpression(this.$scope);
+  }
+
+  if (!this.sized) {
+    this.unwatchItemSize_();
+    this.sized = true;
+    this.$scope.$watchCollection(this.repeatListExpression,
+        angular.bind(this, function(items, oldItems) {
+          if (!this.isVirtualRepeatUpdating_) {
+            this.virtualRepeatUpdate_(items, oldItems);
+          }
+        }));
+  }
+
+  this.updateIndexes_();
+
+  if (this.newStartIndex !== this.startIndex ||
+      this.newEndIndex !== this.endIndex ||
+      this.container.getScrollOffset() > this.container.getScrollSize()) {
+    if (this.items instanceof VirtualRepeatModelArrayLike) {
+      this.items.$$includeIndexes(this.newStartIndex, this.newEndIndex);
+    }
+    this.virtualRepeatUpdate_(this.items, this.items);
+  }
+};
+
+
+/**
+ * Called by the container. Returns the size of a single repeated item.
+ * @return {?number} Size of a repeated item.
+ */
+VirtualRepeatController.prototype.getItemSize = function() {
+  return this.itemSize;
+};
+
+
+/**
+ * Called by the container. Returns the size of a single repeated item.
+ * @return {?number} Size of a repeated item.
+ */
+VirtualRepeatController.prototype.getItemCount = function() {
+  return this.itemsLength;
+};
+
+
+/**
+ * Updates the order and visible offset of repeated blocks in response to scrolling
+ * or items updates.
+ * @private
+ */
+VirtualRepeatController.prototype.virtualRepeatUpdate_ = function(items, oldItems) {
+  this.isVirtualRepeatUpdating_ = true;
+
+  var itemsLength = items && items.length || 0;
+  var lengthChanged = false;
+
+  // If the number of items shrank, keep the scroll position.
+  if (this.items && itemsLength < this.items.length && this.container.getScrollOffset() !== 0) {
+    this.items = items;
+    var previousScrollOffset = this.container.getScrollOffset();
+    this.container.resetScroll();
+    this.container.scrollTo(previousScrollOffset);
+  }
+
+  if (itemsLength !== this.itemsLength) {
+    lengthChanged = true;
+    this.itemsLength = itemsLength;
+  }
+
+  this.items = items;
+  if (items !== oldItems || lengthChanged) {
+    this.updateIndexes_();
+  }
+
+  this.parentNode = this.$element[0].parentNode;
+
+  if (lengthChanged) {
+    this.container.setScrollSize(itemsLength * this.itemSize);
+  }
+
+  if (this.isFirstRender) {
+    this.isFirstRender = false;
+    var startIndex = this.$attrs.mdStartIndex ?
+      this.$scope.$eval(this.$attrs.mdStartIndex) :
+      this.container.topIndex;
+    this.container.scrollToIndex(startIndex);
+  }
+
+  // Detach and pool any blocks that are no longer in the viewport.
+  Object.keys(this.blocks).forEach(function(blockIndex) {
+    var index = parseInt(blockIndex, 10);
+    if (index < this.newStartIndex || index >= this.newEndIndex) {
+      this.poolBlock_(index);
+    }
+  }, this);
+
+  // Add needed blocks.
+  // For performance reasons, temporarily block browser url checks as we digest
+  // the restored block scopes ($$checkUrlChange reads window.location to
+  // check for changes and trigger route change, etc, which we don't need when
+  // trying to scroll at 60fps).
+  this.$browser.$$checkUrlChange = angular.noop;
+
+  var i, block,
+      newStartBlocks = [],
+      newEndBlocks = [];
+
+  // Collect blocks at the top.
+  for (i = this.newStartIndex; i < this.newEndIndex && this.blocks[i] == null; i++) {
+    block = this.getBlock_(i);
+    this.updateBlock_(block, i);
+    newStartBlocks.push(block);
+  }
+
+  // Update blocks that are already rendered.
+  for (; this.blocks[i] != null; i++) {
+    this.updateBlock_(this.blocks[i], i);
+  }
+  var maxIndex = i - 1;
+
+  // Collect blocks at the end.
+  for (; i < this.newEndIndex; i++) {
+    block = this.getBlock_(i);
+    this.updateBlock_(block, i);
+    newEndBlocks.push(block);
+  }
+
+  // Attach collected blocks to the document.
+  if (newStartBlocks.length) {
+    this.parentNode.insertBefore(
+        this.domFragmentFromBlocks_(newStartBlocks),
+        this.$element[0].nextSibling);
+  }
+  if (newEndBlocks.length) {
+    this.parentNode.insertBefore(
+        this.domFragmentFromBlocks_(newEndBlocks),
+        this.blocks[maxIndex] && this.blocks[maxIndex].element[0].nextSibling);
+  }
+
+  // Restore $$checkUrlChange.
+  this.$browser.$$checkUrlChange = this.browserCheckUrlChange;
+
+  this.startIndex = this.newStartIndex;
+  this.endIndex = this.newEndIndex;
+
+  this.isVirtualRepeatUpdating_ = false;
+};
+
+
+/**
+ * @param {number} index Where the block is to be in the repeated list.
+ * @return {!VirtualRepeatController.Block} A new or pooled block to place at the specified index.
+ * @private
+ */
+VirtualRepeatController.prototype.getBlock_ = function(index) {
+  if (this.pooledBlocks.length) {
+    return this.pooledBlocks.pop();
+  }
+
+  var block;
+  this.transclude(angular.bind(this, function(clone, scope) {
+    block = {
+      element: clone,
+      new: true,
+      scope: scope
+    };
+
+    this.updateScope_(scope, index);
+    this.parentNode.appendChild(clone[0]);
+  }));
+
+  return block;
+};
+
+
+/**
+ * Updates and if not in a digest cycle, digests the specified block's scope to the data
+ * at the specified index.
+ * @param {!VirtualRepeatController.Block} block The block whose scope should be updated.
+ * @param {number} index The index to set.
+ * @private
+ */
+VirtualRepeatController.prototype.updateBlock_ = function(block, index) {
+  this.blocks[index] = block;
+
+  if (!block.new &&
+      (block.scope.$index === index && block.scope[this.repeatName] === this.items[index])) {
+    return;
+  }
+  block.new = false;
+
+  // Update and digest the block's scope.
+  this.updateScope_(block.scope, index);
+
+  // Perform digest before reattaching the block.
+  // Any resulting synchronous dom mutations should be much faster as a result.
+  // This might break some directives, but I'm going to try it for now.
+  if (!this.$rootScope.$$phase) {
+    block.scope.$digest();
+  }
+};
+
+
+/**
+ * Updates scope to the data at the specified index.
+ * @param {!angular.Scope} scope The scope which should be updated.
+ * @param {number} index The index to set.
+ * @private
+ */
+VirtualRepeatController.prototype.updateScope_ = function(scope, index) {
+  scope.$index = index;
+  scope[this.repeatName] = this.items && this.items[index];
+  if (this.extraName) scope[this.extraName(this.$scope)] = this.items[index];
+};
+
+
+/**
+ * Pools the block at the specified index (Pulls its element out of the dom and stores it).
+ * @param {number} index The index at which the block to pool is stored.
+ * @private
+ */
+VirtualRepeatController.prototype.poolBlock_ = function(index) {
+  this.pooledBlocks.push(this.blocks[index]);
+  this.parentNode.removeChild(this.blocks[index].element[0]);
+  delete this.blocks[index];
+};
+
+
+/**
+ * Produces a dom fragment containing the elements from the list of blocks.
+ * @param {!Array<!VirtualRepeatController.Block>} blocks The blocks whose elements
+ *     should be added to the document fragment.
+ * @return {DocumentFragment}
+ * @private
+ */
+VirtualRepeatController.prototype.domFragmentFromBlocks_ = function(blocks) {
+  var fragment = this.$document[0].createDocumentFragment();
+  blocks.forEach(function(block) {
+    fragment.appendChild(block.element[0]);
+  });
+  return fragment;
+};
+
+
+/**
+ * Updates start and end indexes based on length of repeated items and container size.
+ * @private
+ */
+VirtualRepeatController.prototype.updateIndexes_ = function() {
+  var itemsLength = this.items ? this.items.length : 0;
+  var containerLength = Math.ceil(this.container.getSize() / this.itemSize);
+
+  this.newStartIndex = Math.max(0, Math.min(
+      itemsLength - containerLength,
+      Math.floor(this.container.getScrollOffset() / this.itemSize)));
+  this.newVisibleEnd = this.newStartIndex + containerLength + NUM_EXTRA;
+  this.newEndIndex = Math.min(itemsLength, this.newVisibleEnd);
+  this.newStartIndex = Math.max(0, this.newStartIndex - NUM_EXTRA);
+};
+
+/**
+ * This VirtualRepeatModelArrayLike class enforces the interface requirements
+ * for infinite scrolling within a mdVirtualRepeatContainer. An object with this
+ * interface must implement the following interface with two (2) methods:
+ *
+ * getItemAtIndex: function(index) -> item at that index or null if it is not yet
+ *     loaded (It should start downloading the item in that case).
+ *
+ * getLength: function() -> number The data legnth to which the repeater container
+ *     should be sized. Ideally, when the count is known, this method should return it.
+ *     Otherwise, return a higher number than the currently loaded items to produce an
+ *     infinite-scroll behavior.
+ *
+ * @usage
+ * <hljs lang="html">
+ *  <md-virtual-repeat-container md-orient-horizontal>
+ *    <div md-virtual-repeat="i in items" md-on-demand>
+ *      Hello {{i}}!
+ *    </div>
+ *  </md-virtual-repeat-container>
+ * </hljs>
+ *
+ */
+function VirtualRepeatModelArrayLike(model) {
+  if (!angular.isFunction(model.getItemAtIndex) ||
+      !angular.isFunction(model.getLength)) {
+    throw Error('When md-on-demand is enabled, the Object passed to md-virtual-repeat must implement ' +
+        'functions getItemAtIndex() and getLength() ');
+  }
+
+  this.model = model;
+}
+
+
+VirtualRepeatModelArrayLike.prototype.$$includeIndexes = function(start, end) {
+  for (var i = start; i < end; i++) {
+    if (!this.hasOwnProperty(i)) {
+      this[i] = this.model.getItemAtIndex(i);
+    }
+  }
+  this.length = this.model.getLength();
+};
+
+
+function abstractMethod() {
+  throw Error('Non-overridden abstract method called.');
+}
+
+
+/*
+	AHS502 : End of 'virtual-repeater.js'
+*/
+
+
+/*
 	AHS502 : Start of 'angular-recaptcha.min.js'
 */
 
@@ -32036,4 +33084,25 @@ a.get("$state.runtime").autoinject&&a.get("$state")}]),w.$inject=[],b.module("ui
 
 /*
 	AHS502 : End of 'sticky.min.js'
+*/
+
+
+/*
+	AHS502 : Start of 'dropdown.min.js'
+*/
+
+/*!
+ * # Semantic UI 2.2.4 - Dropdown
+ * http://github.com/semantic-org/semantic-ui/
+ *
+ *
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
+!function(e,t,n,i){"use strict";t="undefined"!=typeof t&&t.Math==Math?t:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")(),e.fn.dropdown=function(a){var o,s=e(this),r=e(n),l=s.selector||"",c="ontouchstart"in n.documentElement,u=(new Date).getTime(),d=[],v=arguments[0],m="string"==typeof v,f=[].slice.call(arguments,1);return s.each(function(h){var g,p,b,w,x,C,S,y,A=e.isPlainObject(a)?e.extend(!0,{},e.fn.dropdown.settings,a):e.extend({},e.fn.dropdown.settings),T=A.className,k=A.message,L=A.fields,I=A.keys,D=A.metadata,q=A.namespace,R=A.regExp,O=A.selector,V=A.error,E=A.templates,F="."+q,M="module-"+q,z=e(this),P=e(A.context),H=z.find(O.text),j=z.find(O.search),U=z.find(O.sizer),N=z.find(O.input),K=z.find(O.icon),B=z.prev().find(O.text).length>0?z.prev().find(O.text):z.prev(),W=z.children(O.menu),$=W.find(O.item),Q=!1,Y=!1,G=!1,J=this,X=z.data(M);y={initialize:function(){y.debug("Initializing dropdown",A),y.is.alreadySetup()?y.setup.reference():(y.setup.layout(),y.refreshData(),y.save.defaults(),y.restore.selected(),y.create.id(),y.bind.events(),y.observeChanges(),y.instantiate())},instantiate:function(){y.verbose("Storing instance of dropdown",y),X=y,z.data(M,y)},destroy:function(){y.verbose("Destroying previous dropdown",z),y.remove.tabbable(),z.off(F).removeData(M),W.off(F),r.off(w),y.disconnect.menuObserver(),y.disconnect.selectObserver()},observeChanges:function(){"MutationObserver"in t&&(C=new MutationObserver(y.event.select.mutation),S=new MutationObserver(y.event.menu.mutation),y.debug("Setting up mutation observer",C,S),y.observe.select(),y.observe.menu())},disconnect:{menuObserver:function(){S&&S.disconnect()},selectObserver:function(){C&&C.disconnect()}},observe:{select:function(){y.has.input()&&C.observe(N[0],{childList:!0,subtree:!0})},menu:function(){y.has.menu()&&S.observe(W[0],{childList:!0,subtree:!0})}},create:{id:function(){x=(Math.random().toString(16)+"000000000").substr(2,8),w="."+x,y.verbose("Creating unique id for element",x)},userChoice:function(t){var n,a,o;return!!(t=t||y.get.userValues())&&(t=e.isArray(t)?t:[t],e.each(t,function(t,s){y.get.item(s)===!1&&(o=A.templates.addition(y.add.variables(k.addResult,s)),a=e("<div />").html(o).attr("data-"+D.value,s).attr("data-"+D.text,s).addClass(T.addition).addClass(T.item),A.hideAdditions&&a.addClass(T.hidden),n=n===i?a:n.add(a),y.verbose("Creating user choices for value",s,a))}),n)},userLabels:function(t){var n=y.get.userValues();n&&(y.debug("Adding user labels",n),e.each(n,function(e,t){y.verbose("Adding custom user value"),y.add.label(t,t)}))},menu:function(){W=e("<div />").addClass(T.menu).appendTo(z)},sizer:function(){U=e("<span />").addClass(T.sizer).insertAfter(j)}},search:function(e){e=e!==i?e:y.get.query(),y.verbose("Searching for query",e),y.has.minCharacters(e)?y.filter(e):y.hide()},select:{firstUnfiltered:function(){y.verbose("Selecting first non-filtered element"),y.remove.selectedItem(),$.not(O.unselectable).not(O.addition+O.hidden).eq(0).addClass(T.selected)},nextAvailable:function(e){e=e.eq(0);var t=e.nextAll(O.item).not(O.unselectable).eq(0),n=e.prevAll(O.item).not(O.unselectable).eq(0),i=t.length>0;i?(y.verbose("Moving selection to",t),t.addClass(T.selected)):(y.verbose("Moving selection to",n),n.addClass(T.selected))}},setup:{api:function(){var e={debug:A.debug,urlData:{value:y.get.value(),query:y.get.query()},on:!1};y.verbose("First request, initializing API"),z.api(e)},layout:function(){z.is("select")&&(y.setup.select(),y.setup.returnedObject()),y.has.menu()||y.create.menu(),y.is.search()&&!y.has.search()&&(y.verbose("Adding search input"),j=e("<input />").addClass(T.search).prop("autocomplete","off").insertBefore(H)),y.is.multiple()&&y.is.searchSelection()&&!y.has.sizer()&&y.create.sizer(),A.allowTab&&y.set.tabbable()},select:function(){var t=y.get.selectValues();y.debug("Dropdown initialized on a select",t),z.is("select")&&(N=z),N.parent(O.dropdown).length>0?(y.debug("UI dropdown already exists. Creating dropdown menu only"),z=N.closest(O.dropdown),y.has.menu()||y.create.menu(),W=z.children(O.menu),y.setup.menu(t)):(y.debug("Creating entire dropdown from select"),z=e("<div />").attr("class",N.attr("class")).addClass(T.selection).addClass(T.dropdown).html(E.dropdown(t)).insertBefore(N),N.hasClass(T.multiple)&&N.prop("multiple")===!1&&(y.error(V.missingMultiple),N.prop("multiple",!0)),N.is("[multiple]")&&y.set.multiple(),N.prop("disabled")&&(y.debug("Disabling dropdown"),z.addClass(T.disabled)),N.removeAttr("class").detach().prependTo(z)),y.refresh()},menu:function(e){W.html(E.menu(e,L)),$=W.find(O.item)},reference:function(){y.debug("Dropdown behavior was called on select, replacing with closest dropdown"),z=z.parent(O.dropdown),y.refresh(),y.setup.returnedObject(),m&&(X=y,y.invoke(v))},returnedObject:function(){var e=s.slice(0,h),t=s.slice(h+1);s=e.add(z).add(t)}},refresh:function(){y.refreshSelectors(),y.refreshData()},refreshItems:function(){$=W.find(O.item)},refreshSelectors:function(){y.verbose("Refreshing selector cache"),H=z.find(O.text),j=z.find(O.search),N=z.find(O.input),K=z.find(O.icon),B=z.prev().find(O.text).length>0?z.prev().find(O.text):z.prev(),W=z.children(O.menu),$=W.find(O.item)},refreshData:function(){y.verbose("Refreshing cached metadata"),$.removeData(D.text).removeData(D.value)},clearData:function(){y.verbose("Clearing metadata"),$.removeData(D.text).removeData(D.value),z.removeData(D.defaultText).removeData(D.defaultValue).removeData(D.placeholderText)},toggle:function(){y.verbose("Toggling menu visibility"),y.is.active()?y.hide():y.show()},show:function(t){if(t=e.isFunction(t)?t:function(){},y.can.show()&&!y.is.active()){if(y.debug("Showing dropdown"),!y.has.message()||y.has.maxSelections()||y.has.allResultsFiltered()||y.remove.message(),y.is.allFiltered())return!0;A.onShow.call(J)!==!1&&y.animate.show(function(){y.can.click()&&y.bind.intent(),y.has.menuSearch()&&y.focusSearch(),y.set.visible(),t.call(J)})}},hide:function(t){t=e.isFunction(t)?t:function(){},y.is.active()&&(y.debug("Hiding dropdown"),A.onHide.call(J)!==!1&&y.animate.hide(function(){y.remove.visible(),t.call(J)}))},hideOthers:function(){y.verbose("Finding other dropdowns to hide"),s.not(z).has(O.menu+"."+T.visible).dropdown("hide")},hideMenu:function(){y.verbose("Hiding menu  instantaneously"),y.remove.active(),y.remove.visible(),W.transition("hide")},hideSubMenus:function(){var e=W.children(O.item).find(O.menu);y.verbose("Hiding sub menus",e),e.transition("hide")},bind:{events:function(){c&&y.bind.touchEvents(),y.bind.keyboardEvents(),y.bind.inputEvents(),y.bind.mouseEvents()},touchEvents:function(){y.debug("Touch device detected binding additional touch events"),y.is.searchSelection()||y.is.single()&&z.on("touchstart"+F,y.event.test.toggle),W.on("touchstart"+F,O.item,y.event.item.mouseenter)},keyboardEvents:function(){y.verbose("Binding keyboard events"),z.on("keydown"+F,y.event.keydown),y.has.search()&&z.on(y.get.inputEvent()+F,O.search,y.event.input),y.is.multiple()&&r.on("keydown"+w,y.event.document.keydown)},inputEvents:function(){y.verbose("Binding input change events"),z.on("change"+F,O.input,y.event.change)},mouseEvents:function(){y.verbose("Binding mouse events"),y.is.multiple()&&z.on("click"+F,O.label,y.event.label.click).on("click"+F,O.remove,y.event.remove.click),y.is.searchSelection()?(z.on("mousedown"+F,y.event.mousedown).on("mouseup"+F,y.event.mouseup).on("mousedown"+F,O.menu,y.event.menu.mousedown).on("mouseup"+F,O.menu,y.event.menu.mouseup).on("click"+F,O.icon,y.event.icon.click).on("focus"+F,O.search,y.event.search.focus).on("click"+F,O.search,y.event.search.focus).on("blur"+F,O.search,y.event.search.blur).on("click"+F,O.text,y.event.text.focus),y.is.multiple()&&z.on("click"+F,y.event.click)):("click"==A.on?z.on("click"+F,O.icon,y.event.icon.click).on("click"+F,y.event.test.toggle):"hover"==A.on?z.on("mouseenter"+F,y.delay.show).on("mouseleave"+F,y.delay.hide):z.on(A.on+F,y.toggle),z.on("mousedown"+F,y.event.mousedown).on("mouseup"+F,y.event.mouseup).on("focus"+F,y.event.focus).on("blur"+F,y.event.blur)),W.on("mouseenter"+F,O.item,y.event.item.mouseenter).on("mouseleave"+F,O.item,y.event.item.mouseleave).on("click"+F,O.item,y.event.item.click)},intent:function(){y.verbose("Binding hide intent event to document"),c&&r.on("touchstart"+w,y.event.test.touch).on("touchmove"+w,y.event.test.touch),r.on("click"+w,y.event.test.hide)}},unbind:{intent:function(){y.verbose("Removing hide intent event from document"),c&&r.off("touchstart"+w).off("touchmove"+w),r.off("click"+w)}},filter:function(e){var t=e!==i?e:y.get.query(),n=function(){y.is.multiple()&&y.filterActive(),y.select.firstUnfiltered(),y.has.allResultsFiltered()?A.onNoResults.call(J,t)?A.allowAdditions?A.hideAdditions&&(y.verbose("User addition with no menu, setting empty style"),y.set.empty(),y.hideMenu()):(y.verbose("All items filtered, showing message",t),y.add.message(k.noResults)):(y.verbose("All items filtered, hiding dropdown",t),y.hideMenu()):(y.remove.empty(),y.remove.message()),A.allowAdditions&&y.add.userSuggestion(e),y.is.searchSelection()&&y.can.show()&&y.is.focusedOnSearch()&&y.show()};A.useLabels&&y.has.maxSelections()||(A.apiSettings?y.can.useAPI()?y.queryRemote(t,function(){n()}):y.error(V.noAPI):(y.filterItems(t),n()))},queryRemote:function(t,n){var i={errorDuration:!1,cache:"local",throttle:A.throttle,urlData:{query:t},onError:function(){y.add.message(k.serverError),n()},onFailure:function(){y.add.message(k.serverError),n()},onSuccess:function(e){y.remove.message(),y.setup.menu({values:e[L.remoteValues]}),n()}};z.api("get request")||y.setup.api(),i=e.extend(!0,{},i,A.apiSettings),z.api("setting",i).api("query")},filterItems:function(t){var n=t!==i?t:y.get.query(),a=null,o=y.escape.regExp(n),s=new RegExp("^"+o,"igm");y.has.query()&&(a=[],y.verbose("Searching for matching values",n),$.each(function(){var t,i,o=e(this);if("both"==A.match||"text"==A.match){if(t=String(y.get.choiceText(o,!1)),t.search(s)!==-1)return a.push(this),!0;if("exact"===A.fullTextSearch&&y.exactSearch(n,t))return a.push(this),!0;if(A.fullTextSearch===!0&&y.fuzzySearch(n,t))return a.push(this),!0}if("both"==A.match||"value"==A.match){if(i=String(y.get.choiceValue(o,t)),i.search(s)!==-1)return a.push(this),!0;if(A.fullTextSearch&&y.fuzzySearch(n,i))return a.push(this),!0}})),y.debug("Showing only matched items",n),y.remove.filteredItem(),a&&$.not(a).addClass(T.filtered)},fuzzySearch:function(e,t){var n=t.length,i=e.length;if(e=e.toLowerCase(),t=t.toLowerCase(),i>n)return!1;if(i===n)return e===t;e:for(var a=0,o=0;a<i;a++){for(var s=e.charCodeAt(a);o<n;)if(t.charCodeAt(o++)===s)continue e;return!1}return!0},exactSearch:function(e,t){return e=e.toLowerCase(),t=t.toLowerCase(),t.indexOf(e)>-1},filterActive:function(){A.useLabels&&$.filter("."+T.active).addClass(T.filtered)},focusSearch:function(e){y.has.search()&&!y.is.focusedOnSearch()&&(e?(z.off("focus"+F,O.search),j.focus(),z.on("focus"+F,O.search,y.event.search.focus)):j.focus())},forceSelection:function(){var e=$.not(T.filtered).filter("."+T.selected).eq(0),t=$.not(T.filtered).filter("."+T.active).eq(0),n=e.length>0?e:t,i=n.length>0;return i?(y.debug("Forcing partial selection to selected item",n),void y.event.item.click.call(n,{},!0)):void(A.allowAdditions?(y.set.selected(y.get.query()),y.remove.searchTerm()):y.remove.searchTerm())},event:{change:function(){G||(y.debug("Input changed, updating selection"),y.set.selected())},focus:function(){A.showOnFocus&&!Q&&y.is.hidden()&&!p&&y.show()},blur:function(e){p=n.activeElement===this,Q||p||(y.remove.activeLabel(),y.hide())},mousedown:function(){y.is.searchSelection()?b=!0:Q=!0},mouseup:function(){y.is.searchSelection()?b=!1:Q=!1},click:function(t){var n=e(t.target);n.is(z)&&(y.is.focusedOnSearch()?y.show():y.focusSearch())},search:{focus:function(){Q=!0,y.is.multiple()&&y.remove.activeLabel(),A.showOnFocus&&y.search()},blur:function(e){p=n.activeElement===this,b||Y||p||(A.forceSelection&&y.forceSelection(),y.hide()),b=!1}},icon:{click:function(e){y.toggle()}},text:{focus:function(e){Q=!0,y.focusSearch()}},input:function(e){(y.is.multiple()||y.is.searchSelection())&&y.set.filtered(),clearTimeout(y.timer),y.timer=setTimeout(y.search,A.delay.search)},label:{click:function(t){var n=e(this),i=z.find(O.label),a=i.filter("."+T.active),o=n.nextAll("."+T.active),s=n.prevAll("."+T.active),r=o.length>0?n.nextUntil(o).add(a).add(n):n.prevUntil(s).add(a).add(n);t.shiftKey?(a.removeClass(T.active),r.addClass(T.active)):t.ctrlKey?n.toggleClass(T.active):(a.removeClass(T.active),n.addClass(T.active)),A.onLabelSelect.apply(this,i.filter("."+T.active))}},remove:{click:function(){var t=e(this).parent();t.hasClass(T.active)?y.remove.activeLabels():y.remove.activeLabels(t)}},test:{toggle:function(e){var t=y.is.multiple()?y.show:y.toggle;y.is.bubbledLabelClick(e)||y.is.bubbledIconClick(e)||y.determine.eventOnElement(e,t)&&e.preventDefault()},touch:function(e){y.determine.eventOnElement(e,function(){"touchstart"==e.type?y.timer=setTimeout(function(){y.hide()},A.delay.touch):"touchmove"==e.type&&clearTimeout(y.timer)}),e.stopPropagation()},hide:function(e){y.determine.eventInModule(e,y.hide)}},select:{mutation:function(e){y.debug("<select> modified, recreating menu"),y.setup.select()}},menu:{mutation:function(t){var n=t[0],i=e(n.addedNodes?n.addedNodes[0]:!1),a=e(n.removedNodes?n.removedNodes[0]:!1),o=i.add(a),s=o.is(O.addition)||o.closest(O.addition).length>0,r=o.is(O.message)||o.closest(O.message).length>0;s||r?(y.debug("Updating item selector cache"),y.refreshItems()):(y.debug("Menu modified, updating selector cache"),y.refresh())},mousedown:function(){Y=!0},mouseup:function(){Y=!1}},item:{mouseenter:function(t){var n=e(t.target),i=e(this),a=i.children(O.menu),o=i.siblings(O.item).children(O.menu),s=a.length>0,r=a.find(n).length>0;!r&&s&&(clearTimeout(y.itemTimer),y.itemTimer=setTimeout(function(){y.verbose("Showing sub-menu",a),e.each(o,function(){y.animate.hide(!1,e(this))}),y.animate.show(!1,a)},A.delay.show),t.preventDefault())},mouseleave:function(t){var n=e(this).children(O.menu);n.length>0&&(clearTimeout(y.itemTimer),y.itemTimer=setTimeout(function(){y.verbose("Hiding sub-menu",n),y.animate.hide(!1,n)},A.delay.hide))},click:function(t,n){var i=e(this),a=e(t?t.target:""),o=i.find(O.menu),s=y.get.choiceText(i),r=y.get.choiceValue(i,s),l=o.length>0,c=o.find(a).length>0;c||l&&!A.allowCategorySelection||(y.is.searchSelection()&&(A.allowAdditions&&y.remove.userAddition(),y.remove.searchTerm(),y.is.focusedOnSearch()||1==n||y.focusSearch(!0)),A.useLabels||(y.remove.filteredItem(),y.set.scrollPosition(i)),y.determine.selectAction.call(this,s,r))}},document:{keydown:function(e){var t=e.which,n=y.is.inObject(t,I);if(n){var i=z.find(O.label),a=i.filter("."+T.active),o=(a.data(D.value),i.index(a)),s=i.length,r=a.length>0,l=a.length>1,c=0===o,u=o+1==s,d=y.is.searchSelection(),v=y.is.focusedOnSearch(),m=y.is.focused(),f=v&&0===y.get.caretPosition();if(d&&!r&&!v)return;t==I.leftArrow?!m&&!f||r?r&&(e.shiftKey?y.verbose("Adding previous label to selection"):(y.verbose("Selecting previous label"),i.removeClass(T.active)),c&&!l?a.addClass(T.active):a.prev(O.siblingLabel).addClass(T.active).end(),e.preventDefault()):(y.verbose("Selecting previous label"),i.last().addClass(T.active)):t==I.rightArrow?(m&&!r&&i.first().addClass(T.active),r&&(e.shiftKey?y.verbose("Adding next label to selection"):(y.verbose("Selecting next label"),i.removeClass(T.active)),u?d?v?i.removeClass(T.active):y.focusSearch():l?a.next(O.siblingLabel).addClass(T.active):a.addClass(T.active):a.next(O.siblingLabel).addClass(T.active),e.preventDefault())):t==I.deleteKey||t==I.backspace?r?(y.verbose("Removing active labels"),u&&d&&!v&&y.focusSearch(),a.last().next(O.siblingLabel).addClass(T.active),y.remove.activeLabels(a),e.preventDefault()):f&&!r&&t==I.backspace&&(y.verbose("Removing last label on input backspace"),a=i.last().addClass(T.active),y.remove.activeLabels(a)):a.removeClass(T.active)}}},keydown:function(e){var t=e.which,n=y.is.inObject(t,I);if(n){var i,a,o=$.not(O.unselectable).filter("."+T.selected).eq(0),s=W.children("."+T.active).eq(0),r=o.length>0?o:s,l=r.length>0?r.siblings(":not(."+T.filtered+")").addBack():W.children(":not(."+T.filtered+")"),c=r.children(O.menu),u=r.closest(O.menu),d=u.hasClass(T.visible)||u.hasClass(T.animating)||u.parent(O.menu).length>0,v=c.length>0,m=r.length>0,f=r.not(O.unselectable).length>0,h=t==I.delimiter&&A.allowAdditions&&y.is.multiple(),g=A.allowAdditions&&A.hideAdditions&&(t==I.enter||h)&&f;if(g&&(y.verbose("Selecting item from keyboard shortcut",r),y.event.item.click.call(r,e),y.is.searchSelection()&&y.remove.searchTerm()),y.is.visible()){if((t==I.enter||h)&&(t==I.enter&&m&&v&&!A.allowCategorySelection?(y.verbose("Pressed enter on unselectable category, opening sub menu"),t=I.rightArrow):f&&(y.verbose("Selecting item from keyboard shortcut",r),y.event.item.click.call(r,e),y.is.searchSelection()&&y.remove.searchTerm()),e.preventDefault()),m&&(t==I.leftArrow&&(a=u[0]!==W[0],a&&(y.verbose("Left key pressed, closing sub-menu"),y.animate.hide(!1,u),r.removeClass(T.selected),u.closest(O.item).addClass(T.selected),e.preventDefault())),t==I.rightArrow&&v&&(y.verbose("Right key pressed, opening sub-menu"),y.animate.show(!1,c),r.removeClass(T.selected),c.find(O.item).eq(0).addClass(T.selected),e.preventDefault())),t==I.upArrow){if(i=m&&d?r.prevAll(O.item+":not("+O.unselectable+")").eq(0):$.eq(0),l.index(i)<0)return y.verbose("Up key pressed but reached top of current menu"),void e.preventDefault();y.verbose("Up key pressed, changing active item"),r.removeClass(T.selected),i.addClass(T.selected),y.set.scrollPosition(i),A.selectOnKeydown&&y.is.single()&&y.set.selectedItem(i),e.preventDefault()}if(t==I.downArrow){if(i=m&&d?i=r.nextAll(O.item+":not("+O.unselectable+")").eq(0):$.eq(0),0===i.length)return y.verbose("Down key pressed but reached bottom of current menu"),void e.preventDefault();y.verbose("Down key pressed, changing active item"),$.removeClass(T.selected),i.addClass(T.selected),y.set.scrollPosition(i),A.selectOnKeydown&&y.is.single()&&y.set.selectedItem(i),e.preventDefault()}t==I.pageUp&&(y.scrollPage("up"),e.preventDefault()),t==I.pageDown&&(y.scrollPage("down"),e.preventDefault()),t==I.escape&&(y.verbose("Escape key pressed, closing dropdown"),y.hide())}else h&&e.preventDefault(),t!=I.downArrow||y.is.visible()||(y.verbose("Down key pressed, showing dropdown"),y.select.firstUnfiltered(),y.show(),e.preventDefault())}else y.has.search()||y.set.selectedLetter(String.fromCharCode(t))}},trigger:{change:function(){var e=n.createEvent("HTMLEvents"),t=N[0];t&&(y.verbose("Triggering native change event"),e.initEvent("change",!0,!1),t.dispatchEvent(e))}},determine:{selectAction:function(t,n){y.verbose("Determining action",A.action),e.isFunction(y.action[A.action])?(y.verbose("Triggering preset action",A.action,t,n),y.action[A.action].call(J,t,n,this)):e.isFunction(A.action)?(y.verbose("Triggering user action",A.action,t,n),A.action.call(J,t,n,this)):y.error(V.action,A.action)},eventInModule:function(t,i){var a=e(t.target),o=a.closest(n.documentElement).length>0,s=a.closest(z).length>0;return i=e.isFunction(i)?i:function(){},o&&!s?(y.verbose("Triggering event",i),i(),!0):(y.verbose("Event occurred in dropdown, canceling callback"),!1)},eventOnElement:function(t,i){var a=e(t.target),o=a.closest(O.siblingLabel),s=n.body.contains(t.target),r=0===z.find(o).length,l=0===a.closest(W).length;return i=e.isFunction(i)?i:function(){},s&&r&&l?(y.verbose("Triggering event",i),i(),!0):(y.verbose("Event occurred in dropdown menu, canceling callback"),!1)}},action:{nothing:function(){},activate:function(t,n,a){if(n=n!==i?n:t,y.can.activate(e(a))){if(y.set.selected(n,e(a)),y.is.multiple()&&!y.is.allFiltered())return;y.hideAndClear()}},select:function(t,n,a){if(n=n!==i?n:t,y.can.activate(e(a))){if(y.set.value(n,e(a)),y.is.multiple()&&!y.is.allFiltered())return;y.hideAndClear()}},combo:function(t,n,a){n=n!==i?n:t,y.set.selected(n,e(a)),y.hideAndClear()},hide:function(e,t,n){y.set.value(t,e),y.hideAndClear()}},get:{id:function(){return x},defaultText:function(){return z.data(D.defaultText)},defaultValue:function(){return z.data(D.defaultValue)},placeholderText:function(){return z.data(D.placeholderText)||""},text:function(){return H.text()},query:function(){return e.trim(j.val())},searchWidth:function(e){return e=e!==i?e:j.val(),U.text(e),Math.ceil(U.width()+1)},selectionCount:function(){var t,n=y.get.values();return t=y.is.multiple()?e.isArray(n)?n.length:0:""!==y.get.value()?1:0},transition:function(e){return"auto"==A.transition?y.is.upward(e)?"slide up":"slide down":A.transition},userValues:function(){var t=y.get.values();return!!t&&(t=e.isArray(t)?t:[t],e.grep(t,function(e){return y.get.item(e)===!1}))},uniqueArray:function(t){return e.grep(t,function(n,i){return e.inArray(n,t)===i})},caretPosition:function(){var e,t,i=j.get(0);return"selectionStart"in i?i.selectionStart:n.selection?(i.focus(),e=n.selection.createRange(),t=e.text.length,e.moveStart("character",-i.value.length),e.text.length-t):void 0},value:function(){var t=N.length>0?N.val():z.data(D.value),n=e.isArray(t)&&1===t.length&&""===t[0];return t===i||n?"":t},values:function(){var e=y.get.value();return""===e?"":!y.has.selectInput()&&y.is.multiple()?"string"==typeof e?e.split(A.delimiter):"":e},remoteValues:function(){var t=y.get.values(),n=!1;return t&&("string"==typeof t&&(t=[t]),e.each(t,function(e,t){var i=y.read.remoteData(t);y.verbose("Restoring value from session data",i,t),i&&(n||(n={}),n[t]=i)})),n},choiceText:function(t,n){if(n=n!==i?n:A.preserveHTML,t)return t.find(O.menu).length>0&&(y.verbose("Retrieving text of element with sub-menu"),t=t.clone(),t.find(O.menu).remove(),t.find(O.menuIcon).remove()),t.data(D.text)!==i?t.data(D.text):n?e.trim(t.html()):e.trim(t.text())},choiceValue:function(t,n){return n=n||y.get.choiceText(t),!!t&&(t.data(D.value)!==i?String(t.data(D.value)):"string"==typeof n?e.trim(n.toLowerCase()):String(n))},inputEvent:function(){var e=j[0];return!!e&&(e.oninput!==i?"input":e.onpropertychange!==i?"propertychange":"keyup")},selectValues:function(){var t={};return t.values=[],z.find("option").each(function(){var n=e(this),a=n.html(),o=n.attr("disabled"),s=n.attr("value")!==i?n.attr("value"):a;"auto"===A.placeholder&&""===s?t.placeholder=a:t.values.push({name:a,value:s,disabled:o})}),A.placeholder&&"auto"!==A.placeholder&&(y.debug("Setting placeholder value to",A.placeholder),t.placeholder=A.placeholder),A.sortSelect?(t.values.sort(function(e,t){return e.name>t.name?1:-1}),y.debug("Retrieved and sorted values from select",t)):y.debug("Retrieved values from select",t),t},activeItem:function(){return $.filter("."+T.active)},selectedItem:function(){var e=$.not(O.unselectable).filter("."+T.selected);return e.length>0?e:$.eq(0)},itemWithAdditions:function(e){var t=y.get.item(e),n=y.create.userChoice(e),i=n&&n.length>0;return i&&(t=t.length>0?t.add(n):n),t},item:function(t,n){var a,o,s=!1;return t=t!==i?t:y.get.values()!==i?y.get.values():y.get.text(),a=o?t.length>0:t!==i&&null!==t,o=y.is.multiple()&&e.isArray(t),n=""===t||0===t||(n||!1),a&&$.each(function(){var a=e(this),r=y.get.choiceText(a),l=y.get.choiceValue(a,r);if(null!==l&&l!==i)if(o)e.inArray(String(l),t)===-1&&e.inArray(r,t)===-1||(s=s?s.add(a):a);else if(n){if(y.verbose("Ambiguous dropdown value using strict type check",a,t),l===t||r===t)return s=a,!0}else if(String(l)==String(t)||r==t)return y.verbose("Found select item by value",l,t),s=a,!0}),s}},check:{maxSelections:function(e){return!A.maxSelections||(e=e!==i?e:y.get.selectionCount(),e>=A.maxSelections?(y.debug("Maximum selection count reached"),A.useLabels&&($.addClass(T.filtered),y.add.message(k.maxSelections)),!0):(y.verbose("No longer at maximum selection count"),y.remove.message(),y.remove.filteredItem(),y.is.searchSelection()&&y.filterItems(),!1))}},restore:{defaults:function(){y.clear(),y.restore.defaultText(),y.restore.defaultValue()},defaultText:function(){var e=y.get.defaultText(),t=y.get.placeholderText;e===t?(y.debug("Restoring default placeholder text",e),y.set.placeholderText(e)):(y.debug("Restoring default text",e),y.set.text(e))},placeholderText:function(){y.set.placeholderText()},defaultValue:function(){var e=y.get.defaultValue();e!==i&&(y.debug("Restoring default value",e),""!==e?(y.set.value(e),y.set.selected()):(y.remove.activeItem(),y.remove.selectedItem()))},labels:function(){A.allowAdditions&&(A.useLabels||(y.error(V.labels),A.useLabels=!0),y.debug("Restoring selected values"),y.create.userLabels()),y.check.maxSelections()},selected:function(){y.restore.values(),y.is.multiple()?(y.debug("Restoring previously selected values and labels"),y.restore.labels()):y.debug("Restoring previously selected values")},values:function(){y.set.initialLoad(),A.apiSettings&&A.saveRemoteData&&y.get.remoteValues()?y.restore.remoteValues():y.set.selected(),y.remove.initialLoad()},remoteValues:function(){var t=y.get.remoteValues();y.debug("Recreating selected from session data",t),t&&(y.is.single()?e.each(t,function(e,t){y.set.text(t)}):e.each(t,function(e,t){y.add.label(e,t)}))}},read:{remoteData:function(e){var n;return t.Storage===i?void y.error(V.noStorage):(n=sessionStorage.getItem(e),n!==i&&n)}},save:{defaults:function(){y.save.defaultText(),y.save.placeholderText(),y.save.defaultValue()},defaultValue:function(){var e=y.get.value();y.verbose("Saving default value as",e),z.data(D.defaultValue,e)},defaultText:function(){var e=y.get.text();y.verbose("Saving default text as",e),z.data(D.defaultText,e)},placeholderText:function(){var e;A.placeholder!==!1&&H.hasClass(T.placeholder)&&(e=y.get.text(),y.verbose("Saving placeholder text as",e),z.data(D.placeholderText,e))},remoteData:function(e,n){return t.Storage===i?void y.error(V.noStorage):(y.verbose("Saving remote data to session storage",n,e),void sessionStorage.setItem(n,e))}},clear:function(){y.is.multiple()&&A.useLabels?y.remove.labels():(y.remove.activeItem(),y.remove.selectedItem()),y.set.placeholderText(),y.clearValue()},clearValue:function(){y.set.value("")},scrollPage:function(e,t){var n,i,a,o=t||y.get.selectedItem(),s=o.closest(O.menu),r=s.outerHeight(),l=s.scrollTop(),c=$.eq(0).outerHeight(),u=Math.floor(r/c),d=(s.prop("scrollHeight"),"up"==e?l-c*u:l+c*u),v=$.not(O.unselectable);a="up"==e?v.index(o)-u:v.index(o)+u,n="up"==e?a>=0:a<v.length,i=n?v.eq(a):"up"==e?v.first():v.last(),i.length>0&&(y.debug("Scrolling page",e,i),o.removeClass(T.selected),i.addClass(T.selected),A.selectOnKeydown&&y.is.single()&&y.set.selectedItem(i),s.scrollTop(d))},set:{filtered:function(){var e=y.is.multiple(),t=y.is.searchSelection(),n=e&&t,i=t?y.get.query():"",a="string"==typeof i&&i.length>0,o=y.get.searchWidth(),s=""!==i;e&&a&&(y.verbose("Adjusting input width",o,A.glyphWidth),j.css("width",o)),a||n&&s?(y.verbose("Hiding placeholder text"),H.addClass(T.filtered)):(!e||n&&!s)&&(y.verbose("Showing placeholder text"),H.removeClass(T.filtered))},empty:function(){z.addClass(T.empty)},loading:function(){z.addClass(T.loading)},placeholderText:function(e){e=e||y.get.placeholderText(),y.debug("Setting placeholder text",e),y.set.text(e),H.addClass(T.placeholder)},tabbable:function(){y.has.search()?(y.debug("Added tabindex to searchable dropdown"),j.val("").attr("tabindex",0),W.attr("tabindex",-1)):(y.debug("Added tabindex to dropdown"),z.attr("tabindex")===i&&(z.attr("tabindex",0),W.attr("tabindex",-1)))},initialLoad:function(){y.verbose("Setting initial load"),g=!0},activeItem:function(e){A.allowAdditions&&e.filter(O.addition).length>0?e.addClass(T.filtered):e.addClass(T.active)},partialSearch:function(e){var t=y.get.query().length;j.val(e.substr(0,t))},scrollPosition:function(e,t){var n,a,o,s,r,l,c,u,d,v=5;e=e||y.get.selectedItem(),n=e.closest(O.menu),a=e&&e.length>0,t=t!==i&&t,e&&n.length>0&&a&&(s=e.position().top,n.addClass(T.loading),l=n.scrollTop(),r=n.offset().top,s=e.offset().top,o=l-r+s,t||(c=n.height(),d=l+c<o+v,u=o-v<l),y.debug("Scrolling to active item",o),(t||u||d)&&n.scrollTop(o),n.removeClass(T.loading))},text:function(e){"select"!==A.action&&("combo"==A.action?(y.debug("Changing combo button text",e,B),A.preserveHTML?B.html(e):B.text(e)):(e!==y.get.placeholderText()&&H.removeClass(T.placeholder),y.debug("Changing text",e,H),H.removeClass(T.filtered),A.preserveHTML?H.html(e):H.text(e)))},selectedItem:function(e){var t=y.get.choiceValue(e),n=y.get.choiceText(e,!1);y.debug("Setting user selection to item",e),y.remove.activeItem(),y.set.partialSearch(n),y.set.activeItem(e),y.set.selected(t,e),y.set.text(n)},selectedLetter:function(t){var n,i=$.filter("."+T.selected),a=i.length>0&&y.has.firstLetter(i,t),o=!1;a&&(n=i.nextAll($).eq(0),y.has.firstLetter(n,t)&&(o=n)),o||$.each(function(){if(y.has.firstLetter(e(this),t))return o=e(this),!1}),o&&(y.verbose("Scrolling to next value with letter",t),y.set.scrollPosition(o),i.removeClass(T.selected),o.addClass(T.selected),A.selectOnKeydown&&y.is.single()&&y.set.selectedItem(o))},direction:function(e){"auto"==A.direction?y.is.onScreen(e)?y.remove.upward(e):y.set.upward(e):"upward"==A.direction&&y.set.upward(e)},upward:function(e){var t=e||z;t.addClass(T.upward)},value:function(e,t,n){var a=y.escape.value(e),o=N.length>0,s=(!y.has.value(e),y.get.values()),r=e!==i?String(e):e;if(o){if(!A.allowReselection&&r==s&&(y.verbose("Skipping value update already same value",e,s),!y.is.initialLoad()))return;y.is.single()&&y.has.selectInput()&&y.can.extendSelect()&&(y.debug("Adding user option",e),y.add.optionValue(e)),y.debug("Updating input value",a,s),G=!0,N.val(a),A.fireOnInit===!1&&y.is.initialLoad()?y.debug("Input native change event ignored on initial load"):y.trigger.change(),G=!1}else y.verbose("Storing value in metadata",a,N),a!==s&&z.data(D.value,r);A.fireOnInit===!1&&y.is.initialLoad()?y.verbose("No callback on initial load",A.onChange):A.onChange.call(J,e,t,n)},active:function(){z.addClass(T.active)},multiple:function(){z.addClass(T.multiple)},visible:function(){z.addClass(T.visible)},exactly:function(e,t){y.debug("Setting selected to exact values"),y.clear(),y.set.selected(e,t)},selected:function(t,n){var i=y.is.multiple();n=A.allowAdditions?n||y.get.itemWithAdditions(t):n||y.get.item(t),n&&(y.debug("Setting selected menu item to",n),y.is.multiple()&&y.remove.searchWidth(),y.is.single()?(y.remove.activeItem(),y.remove.selectedItem()):A.useLabels&&y.remove.selectedItem(),n.each(function(){var t=e(this),a=y.get.choiceText(t),o=y.get.choiceValue(t,a),s=t.hasClass(T.filtered),r=t.hasClass(T.active),l=t.hasClass(T.addition),c=i&&1==n.length;i?!r||l?(A.apiSettings&&A.saveRemoteData&&y.save.remoteData(a,o),A.useLabels?(y.add.value(o,a,t),y.add.label(o,a,c),y.set.activeItem(t),y.filterActive(),y.select.nextAvailable(n)):(y.add.value(o,a,t),y.set.text(y.add.variables(k.count)),y.set.activeItem(t))):s||(y.debug("Selected active value, removing label"),y.remove.selected(o)):(A.apiSettings&&A.saveRemoteData&&y.save.remoteData(a,o),y.set.text(a),y.set.value(o,a,t),t.addClass(T.active).addClass(T.selected))}))}},add:{label:function(t,n,i){var a,o=y.is.searchSelection()?j:H,s=y.escape.value(t);return a=e("<a />").addClass(T.label).attr("data-value",s).html(E.label(s,n)),a=A.onLabelCreate.call(a,s,n),y.has.label(t)?void y.debug("Label already exists, skipping",s):(A.label.variation&&a.addClass(A.label.variation),void(i===!0?(y.debug("Animating in label",a),a.addClass(T.hidden).insertBefore(o).transition(A.label.transition,A.label.duration)):(y.debug("Adding selection label",a),a.insertBefore(o))))},message:function(t){var n=W.children(O.message),i=A.templates.message(y.add.variables(t));n.length>0?n.html(i):n=e("<div/>").html(i).addClass(T.message).appendTo(W)},optionValue:function(t){var n=y.escape.value(t),i=N.find('option[value="'+n+'"]'),a=i.length>0;a||(y.disconnect.selectObserver(),y.is.single()&&(y.verbose("Removing previous user addition"),N.find("option."+T.addition).remove()),e("<option/>").prop("value",n).addClass(T.addition).html(t).appendTo(N),
+y.verbose("Adding user addition as an <option>",t),y.observe.select())},userSuggestion:function(e){var t,n=W.children(O.addition),i=y.get.item(e),a=i&&i.not(O.addition).length,o=n.length>0;if(!A.useLabels||!y.has.maxSelections()){if(""===e||a)return void n.remove();o?(n.data(D.value,e).data(D.text,e).attr("data-"+D.value,e).attr("data-"+D.text,e).removeClass(T.filtered),A.hideAdditions||(t=A.templates.addition(y.add.variables(k.addResult,e)),n.html(t)),y.verbose("Replacing user suggestion with new value",n)):(n=y.create.userChoice(e),n.prependTo(W),y.verbose("Adding item choice to menu corresponding with user choice addition",n)),A.hideAdditions&&!y.is.allFiltered()||n.addClass(T.selected).siblings().removeClass(T.selected),y.refreshItems()}},variables:function(e,t){var n,i,a=e.search("{count}")!==-1,o=e.search("{maxCount}")!==-1,s=e.search("{term}")!==-1;return y.verbose("Adding templated variables to message",e),a&&(n=y.get.selectionCount(),e=e.replace("{count}",n)),o&&(n=y.get.selectionCount(),e=e.replace("{maxCount}",A.maxSelections)),s&&(i=t||y.get.query(),e=e.replace("{term}",i)),e},value:function(t,n,i){var a,o=y.get.values();return""===t?void y.debug("Cannot select blank values from multiselect"):(e.isArray(o)?(a=o.concat([t]),a=y.get.uniqueArray(a)):a=[t],y.has.selectInput()?y.can.extendSelect()&&(y.debug("Adding value to select",t,a,N),y.add.optionValue(t)):(a=a.join(A.delimiter),y.debug("Setting hidden input to delimited value",a,N)),A.fireOnInit===!1&&y.is.initialLoad()?y.verbose("Skipping onadd callback on initial load",A.onAdd):A.onAdd.call(J,t,n,i),y.set.value(a,t,n,i),void y.check.maxSelections())}},remove:{active:function(){z.removeClass(T.active)},activeLabel:function(){z.find(O.label).removeClass(T.active)},empty:function(){z.removeClass(T.empty)},loading:function(){z.removeClass(T.loading)},initialLoad:function(){g=!1},upward:function(e){var t=e||z;t.removeClass(T.upward)},visible:function(){z.removeClass(T.visible)},activeItem:function(){$.removeClass(T.active)},filteredItem:function(){A.useLabels&&y.has.maxSelections()||(A.useLabels&&y.is.multiple()?$.not("."+T.active).removeClass(T.filtered):$.removeClass(T.filtered),y.remove.empty())},optionValue:function(e){var t=y.escape.value(e),n=N.find('option[value="'+t+'"]'),i=n.length>0;i&&n.hasClass(T.addition)&&(C&&(C.disconnect(),y.verbose("Temporarily disconnecting mutation observer")),n.remove(),y.verbose("Removing user addition as an <option>",t),C&&C.observe(N[0],{childList:!0,subtree:!0}))},message:function(){W.children(O.message).remove()},searchWidth:function(){j.css("width","")},searchTerm:function(){y.verbose("Cleared search term"),j.val(""),y.set.filtered()},userAddition:function(){$.filter(O.addition).remove()},selected:function(t,n){return!!(n=A.allowAdditions?n||y.get.itemWithAdditions(t):n||y.get.item(t))&&void n.each(function(){var t=e(this),n=y.get.choiceText(t),i=y.get.choiceValue(t,n);y.is.multiple()?A.useLabels?(y.remove.value(i,n,t),y.remove.label(i)):(y.remove.value(i,n,t),0===y.get.selectionCount()?y.set.placeholderText():y.set.text(y.add.variables(k.count))):y.remove.value(i,n,t),t.removeClass(T.filtered).removeClass(T.active),A.useLabels&&t.removeClass(T.selected)})},selectedItem:function(){$.removeClass(T.selected)},value:function(e,t,n){var i,a=y.get.values();y.has.selectInput()?(y.verbose("Input is <select> removing selected option",e),i=y.remove.arrayValue(e,a),y.remove.optionValue(e)):(y.verbose("Removing from delimited values",e),i=y.remove.arrayValue(e,a),i=i.join(A.delimiter)),A.fireOnInit===!1&&y.is.initialLoad()?y.verbose("No callback on initial load",A.onRemove):A.onRemove.call(J,e,t,n),y.set.value(i,t,n),y.check.maxSelections()},arrayValue:function(t,n){return e.isArray(n)||(n=[n]),n=e.grep(n,function(e){return t!=e}),y.verbose("Removed value from delimited string",t,n),n},label:function(e,t){var n=z.find(O.label),i=n.filter('[data-value="'+e+'"]');y.verbose("Removing label",i),i.remove()},activeLabels:function(e){e=e||z.find(O.label).filter("."+T.active),y.verbose("Removing active label selections",e),y.remove.labels(e)},labels:function(t){t=t||z.find(O.label),y.verbose("Removing labels",t),t.each(function(){var t=e(this),n=t.data(D.value),a=n!==i?String(n):n,o=y.is.userValue(a);return A.onLabelRemove.call(t,n)===!1?void y.debug("Label remove callback cancelled removal"):(y.remove.message(),void(o?(y.remove.value(a),y.remove.label(a)):y.remove.selected(a)))})},tabbable:function(){y.has.search()?(y.debug("Searchable dropdown initialized"),j.removeAttr("tabindex"),W.removeAttr("tabindex")):(y.debug("Simple selection dropdown initialized"),z.removeAttr("tabindex"),W.removeAttr("tabindex"))}},has:{menuSearch:function(){return y.has.search()&&j.closest(W).length>0},search:function(){return j.length>0},sizer:function(){return U.length>0},selectInput:function(){return N.is("select")},minCharacters:function(e){return!A.minCharacters||(e=e!==i?String(e):String(y.get.query()),e.length>=A.minCharacters)},firstLetter:function(e,t){var n,i;return!(!e||0===e.length||"string"!=typeof t)&&(n=y.get.choiceText(e,!1),t=t.toLowerCase(),i=String(n).charAt(0).toLowerCase(),t==i)},input:function(){return N.length>0},items:function(){return $.length>0},menu:function(){return W.length>0},message:function(){return 0!==W.children(O.message).length},label:function(e){var t=y.escape.value(e),n=z.find(O.label);return n.filter('[data-value="'+t+'"]').length>0},maxSelections:function(){return A.maxSelections&&y.get.selectionCount()>=A.maxSelections},allResultsFiltered:function(){var e=$.not(O.addition);return e.filter(O.unselectable).length===e.length},userSuggestion:function(){return W.children(O.addition).length>0},query:function(){return""!==y.get.query()},value:function(t){var n=y.get.values(),i=e.isArray(n)?n&&e.inArray(t,n)!==-1:n==t;return!!i}},is:{active:function(){return z.hasClass(T.active)},bubbledLabelClick:function(t){return e(t.target).is("select, input")&&z.closest("label").length>0},bubbledIconClick:function(t){return e(t.target).closest(K).length>0},alreadySetup:function(){return z.is("select")&&z.parent(O.dropdown).length>0&&0===z.prev().length},animating:function(e){return e?e.transition&&e.transition("is animating"):W.transition&&W.transition("is animating")},disabled:function(){return z.hasClass(T.disabled)},focused:function(){return n.activeElement===z[0]},focusedOnSearch:function(){return n.activeElement===j[0]},allFiltered:function(){return(y.is.multiple()||y.has.search())&&!(0==A.hideAdditions&&y.has.userSuggestion())&&!y.has.message()&&y.has.allResultsFiltered()},hidden:function(e){return!y.is.visible(e)},initialLoad:function(){return g},onScreen:function(e){var t,n=e||W,i=!0,a={};return n.addClass(T.loading),t={context:{scrollTop:P.scrollTop(),height:P.outerHeight()},menu:{offset:n.offset(),height:n.outerHeight()}},a={above:t.context.scrollTop<=t.menu.offset.top-t.menu.height,below:t.context.scrollTop+t.context.height>=t.menu.offset.top+t.menu.height},a.below?(y.verbose("Dropdown can fit in context downward",a),i=!0):a.below||a.above?(y.verbose("Dropdown cannot fit below, opening upward",a),i=!1):(y.verbose("Dropdown cannot fit in either direction, favoring downward",a),i=!0),n.removeClass(T.loading),i},inObject:function(t,n){var i=!1;return e.each(n,function(e,n){if(n==t)return i=!0,!0}),i},multiple:function(){return z.hasClass(T.multiple)},single:function(){return!y.is.multiple()},selectMutation:function(t){var n=!1;return e.each(t,function(t,i){if(i.target&&e(i.target).is("select"))return n=!0,!0}),n},search:function(){return z.hasClass(T.search)},searchSelection:function(){return y.has.search()&&1===j.parent(O.dropdown).length},selection:function(){return z.hasClass(T.selection)},userValue:function(t){return e.inArray(t,y.get.userValues())!==-1},upward:function(e){var t=e||z;return t.hasClass(T.upward)},visible:function(e){return e?e.hasClass(T.visible):W.hasClass(T.visible)}},can:{activate:function(e){return!!A.useLabels||(!y.has.maxSelections()||!(!y.has.maxSelections()||!e.hasClass(T.active)))},click:function(){return c||"click"==A.on},extendSelect:function(){return A.allowAdditions||A.apiSettings},show:function(){return!y.is.disabled()&&(y.has.items()||y.has.message())},useAPI:function(){return e.fn.api!==i}},animate:{show:function(t,n){var a,o=n||W,s=n?function(){}:function(){y.hideSubMenus(),y.hideOthers(),y.set.active()};t=e.isFunction(t)?t:function(){},y.verbose("Doing menu show animation",o),y.set.direction(n),a=y.get.transition(n),y.is.selection()&&y.set.scrollPosition(y.get.selectedItem(),!0),(y.is.hidden(o)||y.is.animating(o))&&("none"==a?(s(),o.transition("show"),t.call(J)):e.fn.transition!==i&&z.transition("is supported")?o.transition({animation:a+" in",debug:A.debug,verbose:A.verbose,duration:A.duration,queue:!0,onStart:s,onComplete:function(){t.call(J)}}):y.error(V.noTransition,a))},hide:function(t,n){var a=n||W,o=(n?.9*A.duration:A.duration,n?function(){}:function(){y.can.click()&&y.unbind.intent(),y.remove.active()}),s=y.get.transition(n);t=e.isFunction(t)?t:function(){},(y.is.visible(a)||y.is.animating(a))&&(y.verbose("Doing menu hide animation",a),"none"==s?(o(),a.transition("hide"),t.call(J)):e.fn.transition!==i&&z.transition("is supported")?a.transition({animation:s+" out",duration:A.duration,debug:A.debug,verbose:A.verbose,queue:!0,onStart:o,onComplete:function(){"auto"==A.direction&&y.remove.upward(n),t.call(J)}}):y.error(V.transition))}},hideAndClear:function(){y.remove.searchTerm(),y.has.maxSelections()||(y.has.search()?y.hide(function(){y.remove.filteredItem()}):y.hide())},delay:{show:function(){y.verbose("Delaying show event to ensure user intent"),clearTimeout(y.timer),y.timer=setTimeout(y.show,A.delay.show)},hide:function(){y.verbose("Delaying hide event to ensure user intent"),clearTimeout(y.timer),y.timer=setTimeout(y.hide,A.delay.hide)}},escape:{value:function(t){var n=e.isArray(t),i="string"==typeof t,a=!i&&!n,o=i&&t.search(R.quote)!==-1,s=[];return y.has.selectInput()&&!a&&o?(y.debug("Encoding quote values for use in select",t),n?(e.each(t,function(e,t){s.push(t.replace(R.quote,"&quot;"))}),s):t.replace(R.quote,"&quot;")):t},regExp:function(e){return e=String(e),e.replace(R.escape,"\\$&")}},setting:function(t,n){if(y.debug("Changing setting",t,n),e.isPlainObject(t))e.extend(!0,A,t);else{if(n===i)return A[t];e.isPlainObject(A[t])?e.extend(!0,A[t],n):A[t]=n}},internal:function(t,n){if(e.isPlainObject(t))e.extend(!0,y,t);else{if(n===i)return y[t];y[t]=n}},debug:function(){!A.silent&&A.debug&&(A.performance?y.performance.log(arguments):(y.debug=Function.prototype.bind.call(console.info,console,A.name+":"),y.debug.apply(console,arguments)))},verbose:function(){!A.silent&&A.verbose&&A.debug&&(A.performance?y.performance.log(arguments):(y.verbose=Function.prototype.bind.call(console.info,console,A.name+":"),y.verbose.apply(console,arguments)))},error:function(){A.silent||(y.error=Function.prototype.bind.call(console.error,console,A.name+":"),y.error.apply(console,arguments))},performance:{log:function(e){var t,n,i;A.performance&&(t=(new Date).getTime(),i=u||t,n=t-i,u=t,d.push({Name:e[0],Arguments:[].slice.call(e,1)||"",Element:J,"Execution Time":n})),clearTimeout(y.performance.timer),y.performance.timer=setTimeout(y.performance.display,500)},display:function(){var t=A.name+":",n=0;u=!1,clearTimeout(y.performance.timer),e.each(d,function(e,t){n+=t["Execution Time"]}),t+=" "+n+"ms",l&&(t+=" '"+l+"'"),(console.group!==i||console.table!==i)&&d.length>0&&(console.groupCollapsed(t),console.table?console.table(d):e.each(d,function(e,t){console.log(t.Name+": "+t["Execution Time"]+"ms")}),console.groupEnd()),d=[]}},invoke:function(t,n,a){var s,r,l,c=X;return n=n||f,a=J||a,"string"==typeof t&&c!==i&&(t=t.split(/[\. ]/),s=t.length-1,e.each(t,function(n,a){var o=n!=s?a+t[n+1].charAt(0).toUpperCase()+t[n+1].slice(1):t;if(e.isPlainObject(c[o])&&n!=s)c=c[o];else{if(c[o]!==i)return r=c[o],!1;if(!e.isPlainObject(c[a])||n==s)return c[a]!==i?(r=c[a],!1):(y.error(V.method,t),!1);c=c[a]}})),e.isFunction(r)?l=r.apply(a,n):r!==i&&(l=r),e.isArray(o)?o.push(l):o!==i?o=[o,l]:l!==i&&(o=l),r}},m?(X===i&&y.initialize(),y.invoke(v)):(X!==i&&X.invoke("destroy"),y.initialize())}),o!==i?o:s},e.fn.dropdown.settings={silent:!1,debug:!1,verbose:!1,performance:!0,on:"click",action:"activate",apiSettings:!1,selectOnKeydown:!0,minCharacters:0,saveRemoteData:!0,throttle:200,context:t,direction:"auto",keepOnScreen:!0,match:"both",fullTextSearch:!1,placeholder:"auto",preserveHTML:!0,sortSelect:!1,forceSelection:!0,allowAdditions:!1,hideAdditions:!0,maxSelections:!1,useLabels:!0,delimiter:",",showOnFocus:!0,allowReselection:!1,allowTab:!0,allowCategorySelection:!1,fireOnInit:!1,transition:"auto",duration:200,glyphWidth:1.037,label:{transition:"scale",duration:200,variation:!1},delay:{hide:300,show:200,search:20,touch:50},onChange:function(e,t,n){},onAdd:function(e,t,n){},onRemove:function(e,t,n){},onLabelSelect:function(e){},onLabelCreate:function(t,n){return e(this)},onLabelRemove:function(e){return!0},onNoResults:function(e){return!0},onShow:function(){},onHide:function(){},name:"Dropdown",namespace:"dropdown",message:{addResult:"Add <b>{term}</b>",count:"{count} selected",maxSelections:"Max {maxCount} selections",noResults:"No results found.",serverError:"There was an error contacting the server"},error:{action:"You called a dropdown action that was not defined",alreadySetup:"Once a select has been initialized behaviors must be called on the created ui dropdown",labels:"Allowing user additions currently requires the use of labels.",missingMultiple:"<select> requires multiple property to be set to correctly preserve multiple values",method:"The method you called is not defined.",noAPI:"The API module is required to load resources remotely",noStorage:"Saving remote data requires session storage",noTransition:"This module requires ui transitions <https://github.com/Semantic-Org/UI-Transition>"},regExp:{escape:/[-[\]{}()*+?.,\\^$|#\s]/g,quote:/"/g},metadata:{defaultText:"defaultText",defaultValue:"defaultValue",placeholderText:"placeholder",text:"text",value:"value"},fields:{remoteValues:"results",values:"values",disabled:"disabled",name:"name",value:"value",text:"text"},keys:{backspace:8,delimiter:188,deleteKey:46,enter:13,escape:27,pageUp:33,pageDown:34,leftArrow:37,upArrow:38,rightArrow:39,downArrow:40},selector:{addition:".addition",dropdown:".ui.dropdown",hidden:".hidden",icon:"> .dropdown.icon",input:'> input[type="hidden"], > select',item:".item",label:"> .label",remove:"> .label > .delete.icon",siblingLabel:".label",menu:".menu",message:".message",menuIcon:".dropdown.icon",search:"input.search, .menu > .search > input, .menu input.search",sizer:"> input.sizer",text:"> .text:not(.icon)",unselectable:".disabled, .filtered"},className:{active:"active",addition:"addition",animating:"animating",disabled:"disabled",empty:"empty",dropdown:"ui dropdown",filtered:"filtered",hidden:"hidden transition",item:"item",label:"ui label",loading:"loading",menu:"menu",message:"message",multiple:"multiple",placeholder:"default",sizer:"sizer",search:"search",selected:"selected",selection:"selection",upward:"upward",visible:"visible"}},e.fn.dropdown.settings.templates={dropdown:function(t){var n=t.placeholder||!1,i=(t.values||{},"");return i+='<i class="dropdown icon"></i>',i+=t.placeholder?'<div class="default text">'+n+"</div>":'<div class="text"></div>',i+='<div class="menu">',e.each(t.values,function(e,t){i+=t.disabled?'<div class="disabled item" data-value="'+t.value+'">'+t.name+"</div>":'<div class="item" data-value="'+t.value+'">'+t.name+"</div>"}),i+="</div>"},menu:function(t,n){var i=t[n.values]||{},a="";return e.each(i,function(e,t){var i=t[n.text]?'data-text="'+t[n.text]+'"':"",o=t[n.disabled]?"disabled ":"";a+='<div class="'+o+'item" data-value="'+t[n.value]+'"'+i+">",a+=t[n.name],a+="</div>"}),a},label:function(e,t){return t+'<i class="delete icon"></i>'},message:function(e){return e},addition:function(e){return e}}}(jQuery,window,document);
+
+/*
+	AHS502 : End of 'dropdown.min.js'
 */

@@ -176,6 +176,16 @@ body {
   color: #000;
   font-size: 140%;
 }
+#ja-panel #ja-panel-history md-virtual-repeat-container {
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: absolute;
+  width: 100%;
+}
+#ja-panel #ja-panel-history md-virtual-repeat-container:-webkit-scrollbar {
+  width: 0 !important;
+}
 .ui.modal > .content {
   width: 90%;
 }

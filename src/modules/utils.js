@@ -28,10 +28,10 @@ var counters = {};
 function generateIdSync(counter) {
     if (!counters[counter]) {
         try {
-            counters[counter] = kfs.counters[counter] || 1;
+            counters[counter] = kfs.counters[counter] || 0;
         }
         catch (err) {
-            counters[counter] = 1;
+            counters[counter] = 0;
         }
     }
     counters[counter]++;
@@ -47,7 +47,7 @@ function generateId(counter) {
     if (!counters[counter]) promise = kfs('counter/' + counter);
     else promise = Promise.resolve(counters[counter]);
     return promise.then(function(count) {
-        counters[counter] = count = (count || 1) + 1;
+        counters[counter] = count = (count || 0) + 1;
         return kfs('counter/' + counter, count).then(function() {
             return count;
         });
