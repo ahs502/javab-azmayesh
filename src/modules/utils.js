@@ -5,13 +5,13 @@ var fs = require("fs-extra");
 
 module.exports = {
 
-    resEndByCode,
+    resEndByCode, // (res, code, data)
 
-    generateIdSync,
-    generateId,
-    generateRandomCode,
+    generateIdSync, // ('counter/name') => 123
+    generateId, // ('counter/name') => Promise->123
+    generateRandomCode, // (6) => 108273    // (4, ['7355', '6038']) => '9351'
 
-    moveFile,
+    moveFile, // ('path/to/a/file', 'path/to/a/folder') => Promise
 
 };
 

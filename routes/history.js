@@ -1,14 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-var config = require("../config");
+// var config = require("../config");
 var src = require("../src"),
     kfs = src.kfs,
     utils = src.utils,
     // access = src.access,
     sms = src.sms;
 
-var path = require("path");
+// var path = require("path");
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -145,13 +145,11 @@ router.post('/load/answer', function(req, res, next) {
                     type: file.type
                 };
             });
-            console.log(post.timeStamp)
-            console.log(post.timeStamp.toDate())
             utils.resEndByCode(res, 0, {
                 patientName: patient.fullName,
                 labName: post.labName,
                 labUsername: post.username,
-                postDate: String(post.timeStamp).toDate(),
+                timeStamp: post.timeStamp,
                 notes: post.notes,
                 files
             });

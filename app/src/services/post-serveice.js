@@ -3,51 +3,37 @@
 app.service('PostService', ['$q', '$http', 'Utils',
     function($q, $http, utils) {
 
-        this.initializePostStream = initializePostStream;
-        this.readPostStream = readPostStream;
+        this.getPosts = getPosts;
 
         /////////////////////////////////////////////////////
 
-        var postCollection, postsAreFinished;
-
-        function initializePostStream() {
-            postCollection = 9999999;
-            postsAreFinished = false;
-        }
-
         // May reject by code : 1, 2, 5
-        function readPostStream(postsHandler /* (newPosts) => readMore */ ) {
-            var promise;
-            if (postCollection < 0 || postsAreFinished) {
-                postsAreFinished = true;
-                promise = $q.when(postsHandler([]));
-            }
-            else {
-                promise = utils.httpPromiseHandler($http.post('/post/read/posts', {
-                        postCollection: postCollection--
-                    }))
-                    .then(function(body) {
-                        var newEncodedPosts = body.newEncodedPosts || '';
-                        var newPosts = newEncodedPosts.split('|')
+        // Resolves to user's posts: { '1396/1': [{...post-data...}, ...], ... }
+        function getPosts(year, months) {
+            return utils.httpPromiseHandler($http.post('/post/load', {
+                    year: year,
+                    months: months
+                }))
+                .then(function(body) {
+                    var postPacks = body.postPacks || {};
+                    for (var postPackKey in postPacks) {
+                        var encodedPosts = postPacks[postPackKey] || '';
+                        var posts = encodedPosts.split('|')
                             .filter(function(encodedPost) {
                                 return !!encodedPost;
                             })
                             .map(function(encodedPost) {
                                 return {
-                                    postId: encodedPost.slice(0, 9),
-                                    nationalCode: encodedPost.slice(9, 19),
-                                    filesCount: Number(encodedPost.slice(19, 21)),
-                                    postCode: encodedPost.slice(21, 25),
-                                    timeStamp: encodedPost.slice(25, 54).toDate()
+                                    nationalCode: encodedPost.slice(0, 10),
+                                    filesCount: Number(encodedPost.slice(10, 12)),
+                                    postCode: encodedPost.slice(12, 16),
+                                    postDate: new Date(Number(encodedPost.slice(16, 29)))
                                 };
                             });
-                        if (!newPosts.length) postsAreFinished = true;
-                        return postsHandler(newPosts);
-                    });
-            }
-            return promise.then(function(readMore) {
-                if (readMore && !postsAreFinished) return readPostStream(postsHandler);
-            });
+                        postPacks[postPackKey] = posts;
+                    }
+                    return postPacks;
+                });
         }
 
     }

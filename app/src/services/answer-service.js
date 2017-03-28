@@ -10,7 +10,7 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
         // May reject by code : 1, 2, 5, 50, 100, 101
         function send(person, files, notes) {
             return utils.httpPromiseHandler($http.post('/answer/send', {
-                timeStamp: (new Date()).toLocalString(),
+                timeStamp: Date.now(),
                 person: {
                     fullName: person.fullName,
                     nationalCode: person.nationalCode,

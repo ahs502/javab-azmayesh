@@ -30,11 +30,11 @@ router.post('/register', function(req, res, next) {
                 return utils.resEndByCode(res, 10);
             }
             var validationCode = utils.generateRandomCode(4);
-            var userConfirmingKey = '/user/_confirming_/' + username;
+            var userConfirmingKey = '/user/confirming/' + username;
             var userConfirmingData = {
                 user,
                 validationCode,
-                timeStamp: new Date()
+                timeStamp: Date.now()
             };
             kfs(userConfirmingKey, userConfirmingData, function(err) {
                 if (err) {
@@ -107,7 +107,7 @@ router.post('/register/confirm', function(req, res, next) {
     var username = req.body.username;
     var validationCode = req.body.validationCode;
     utils.generateId('user').then(function(userId) {
-        kfs('/user/_confirming_/' + username, function(err, data) {
+        kfs('/user/confirming/' + username, function(err, data) {
             if (err) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
@@ -115,13 +115,14 @@ router.post('/register/confirm', function(req, res, next) {
             if (!data) {
                 return utils.resEndByCode(res, 30);
             }
-            if (data.timaStamp > new Date((new Date).setHours((new Date).getHours() + config.confirmation_expires_after))) {
+            if (data.timeStamp > Date.now() + config.confirmation_expires_after * 3600 * 1000) {
                 return utils.resEndByCode(res, 31);
             }
             if (validationCode != data.validationCode) {
                 return utils.resEndByCode(res, 32);
             }
             data.user.id = userId;
+            data.user.timeStamp = Date.now();
 
             //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
 
@@ -219,8 +220,9 @@ router.post('/edit/:action', function(req, res, next) {
             newUser = req.body.newAccount;
             newUser.username = user.username;
             newUser.password = user.password;
-            newUser.passwordAgain = user.passwordAgain;
-            newUser.acceptRules = user.acceptRules;
+            // newUser.passwordAgain = user.passwordAgain;
+            // newUser.acceptRules = user.acceptRules;
+            newUser.timeStamp = user.timeStamp;
         }
         else if (action === 'password') {
             var oldPassword = req.body.oldPassword,
@@ -229,14 +231,14 @@ router.post('/edit/:action', function(req, res, next) {
                 return utils.resEndByCode(res, 40);
             }
             newUser = user;
-            newUser.password = newUser.passwordAgain = newPassword;
+            newUser.password /*= newUser.passwordAgain*/ = newPassword;
         }
         var validationCode = utils.generateRandomCode(4);
-        var userConfirmingKey = 'user/_confirming_/' + username;
+        var userConfirmingKey = 'user/confirming/' + username;
         var userConfirmingData = {
             user: newUser,
             validationCode,
-            timeStamp: new Date()
+            timeStamp: Date.now()
         };
         kfs(userConfirmingKey, userConfirmingData, function(err) {
             if (err) {
@@ -259,7 +261,7 @@ router.post('/edit/confirm', function(req, res, next) {
         return utils.resEndByCode(res, 50);
     }
     var validationCode = req.body.validationCode;
-    kfs('/user/_confirming_/' + username, function(err, data) {
+    kfs('/user/confirming/' + username, function(err, data) {
         if (err) {
             console.error(err);
             return utils.resEndByCode(res, 5);
@@ -267,7 +269,7 @@ router.post('/edit/confirm', function(req, res, next) {
         if (!data) {
             return utils.resEndByCode(res, 30);
         }
-        if (data.timaStamp > new Date((new Date).setHours((new Date).getHours() + config.confirmation_expires_after))) {
+        if (data.timeStamp > Date.now() + config.confirmation_expires_after * 3600 * 1000) {
             return utils.resEndByCode(res, 31);
         }
         if (validationCode != data.validationCode) {
@@ -318,5 +320,6 @@ function getUserInfo(user) {
         address: user.address,
         postalCode: user.postalCode,
         websiteAddress: user.websiteAddress,
+        timeStamp: user.timeStamp,
     };
 }

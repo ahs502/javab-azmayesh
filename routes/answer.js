@@ -103,8 +103,8 @@ router.post('/send', function(req, res, next) {
     var notes = req.body.notes;
     //TODO: Validate input data...
     var nationalCode = person.nationalCode;
-    utils.generateId('post/' + username).then(function(postId) {
-        postId = ('000000000' + String(1000000000 - postId)).slice(-9);
+    var jYMD = new Date(timeStamp);
+    utils.generateId('post/' + username + '/' + jYMD[0] + '/' + jYMD[1]).then(function(postId) {
         var patientKey = 'patient/' + nationalCode;
         kfs(patientKey, function(err, patient) {
             if (err) {
@@ -130,7 +130,7 @@ router.post('/send', function(req, res, next) {
             patient.email = person.email;
             patient.posts = patient.posts || {};
             var postCode = utils.generateRandomCode(4, Object.keys(patient.posts));
-            var postKey = 'post/' + username + '/' + postId.slice(0, -2) + '/' + postId.slice(-2);
+            var postKey = 'post/' + username + '/' + jYMD[0] + '/' + jYMD[1] + '/' + postId;
             patient.posts[postCode] = postKey;
             kfs(patientKey, patient, function(err) {
                 if (err) {
@@ -138,7 +138,7 @@ router.post('/send', function(req, res, next) {
                     return utils.resEndByCode(res, 5);
                 }
                 var post = {
-                    postId: postId,
+                    postKey: postKey,
                     username: username,
                     labName: labName,
                     nationalCode: nationalCode,

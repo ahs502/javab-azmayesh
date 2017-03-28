@@ -54,7 +54,7 @@ app.service('HistoryService', ['$http', 'Utils',
                         patientName: body.patientName,
                         labName: body.labName,
                         labUsername: body.labUsername,
-                        postDate: String(body.postDate).toDate(),
+                        postDate: new Date(body.timeStamp),
                         notes: body.notes,
                         files: body.files
                     };

@@ -12,7 +12,6 @@ var config = {
     /*-------------------------------------*/
     confirmation_expires_after: /*---------*/ 10, // Hours
     user_access_key_expires_after: /*------*/ 24, // Hours
-    patient_access_key_expires_after: /*---*/ 8, // Hours
     /*-------------------------------------*/
     cryptr_key: /*-------------------------*/ '0123456789InTheNameOfGod9876543210',
     /*-------------------------------------*/

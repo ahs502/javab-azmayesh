@@ -107,7 +107,10 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 if (!currentUserEncoded) return null;
                 var currentUser = JSON.parse(currentUserEncoded);
                 if (!currentUser) return null;
-                return currentUser.userInfo || null;
+                var userInfo = currentUser.userInfo;
+                if (!userInfo) return null;
+                userInfo.timeStamp = new Date(userInfo.timeStamp);
+                return userInfo;
             }
             catch (err) {
                 return null;

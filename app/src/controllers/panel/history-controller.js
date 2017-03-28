@@ -1,11 +1,12 @@
 /*global app*/
 /*global $*/
 
-app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'PostService',
-    function($scope, $rootScope, $state, $stateParams, $timeout, postService) {
+app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout','UserService', 'PostService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, userService,postService) {
 
         $scope.postClicked = postClicked;
 
+console.log(userService.current())
         $scope.allYears = [1396, 1395, 1394];
         $scope.persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
 
@@ -60,13 +61,16 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
         function loadPosts() {
             $scope.setLoading(true);
 
-            // postService.initializePostStream();
-            // postService.readPostStream(function(newPosts) {
-            //     console.log('00--', newPosts);
-            //     return true;
-            // }).then(function () {
-            //     console.log('done!')
-            // });
+
+
+            postService.getPosts(1396, [3, 4, 5, 6, 7, 8])
+                .then(function(postPacks) {
+                    console.log(postPacks);
+                }, function(code) {
+                    console.error(code);
+                });
+
+
 
             $timeout(function() { //TODO: load posts...
                 $scope.posts = $scope.posts.length ? $scope.posts : Array(300).join('.').split('.').map(function(x, i) {
@@ -75,8 +79,10 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
                         data: 'data-' + i
                     };
                 });
+
                 $scope.topPostIndex = 0;
                 $scope.setLoading(false);
+
             }, 300);
         }
 
