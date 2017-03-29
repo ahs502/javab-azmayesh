@@ -4,13 +4,14 @@ app.service('PostService', ['$q', '$http', 'Utils',
     function($q, $http, utils) {
 
         this.getPosts = getPosts;
+        this.getOnePost = getOnePost;
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 5
+        // May reject by code : 1, 2, 5, 50, 100, 101
         // Resolves to user's posts: { '1396/1': [{...post-data...}, ...], ... }
         function getPosts(year, months) {
-            return utils.httpPromiseHandler($http.post('/post/load', {
+            return utils.httpPromiseHandler($http.post('/post/load/all', {
                     year: year,
                     months: months
                 }))
@@ -33,6 +34,27 @@ app.service('PostService', ['$q', '$http', 'Utils',
                         postPacks[postPackKey] = posts;
                     }
                     return postPacks;
+                });
+        }
+
+        // May reject by code : 1, 2, 5, 50, 71, 72, 73, 100, 101
+        // Resolves to the answer data
+        function getOnePost(nationalCode, postCode) {
+            return utils.httpPromiseHandler($http.post('/post/load/one', {
+                    nationalCode: nationalCode,
+                    postCode: postCode
+                }))
+                .then(function(body) {
+                    return {
+                        fullName: body.fullName,
+                        nationalCode: body.nationalCode,
+                        numbers: body.numbers || [],
+                        email: body.email,
+                        postCode: body.postCode,
+                        postDate: new Date(body.timeStamp),
+                        notes: body.notes,
+                        files: body.files || []
+                    };
                 });
         }
 

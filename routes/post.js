@@ -12,7 +12,7 @@ var src = require("../src"),
 
 ////////////////////////////////////////////////////////////////////////////////
 
-router.post('/load', function(req, res, next) {
+router.post('/load/all', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res);
     if (!userInfo) return;
     var username = userInfo.username;
@@ -55,6 +55,56 @@ router.post('/load', function(req, res, next) {
             console.error(err);
             utils.resEndByCode(res, 5);
         });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/load/one', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res);
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var nationalCode = req.body.nationalCode;
+    var postCode = req.body.postCode;
+    var patientKey = 'patient/' + nationalCode;
+    kfs(patientKey, function(err, patient) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        if (!patient) {
+            return utils.resEndByCode(res, 71);
+        }
+        var posts = patient.posts || {};
+        var postKey = posts[postCode];
+        if (!postKey) {
+            return utils.resEndByCode(res, 72);
+        }
+        kfs(postKey, function(err, post) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            if (!post) {
+                return utils.resEndByCode(res, 73);
+            }
+            var files = (post.files || []).map(file => {
+                return {
+                    serverName: file.serverName,
+                    type: file.type
+                };
+            });
+            utils.resEndByCode(res, 0, {
+                fullName: patient.fullName,
+                nationalCode: patient.nationalCode,
+                numbers: patient.numbers,
+                email: patient.email,
+                postCode: post.postCode,
+                timeStamp: post.timeStamp,
+                notes: post.notes,
+                files
+            });
+        });
+    });
 });
 
 ////////////////////////////////////////////////////////////////////////////////

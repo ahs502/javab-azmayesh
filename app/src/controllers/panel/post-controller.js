@@ -1,16 +1,29 @@
 /*global app*/
 /*global $*/
 
-app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$stateParams',
-    function($scope, $rootScope, $state, $stateParams) {
+app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$stateParams', 'PostService',
+    function($scope, $rootScope, $state, $stateParams, postService) {
 
-        // We have: $rootScope.data.post
+        var postSummary = $rootScope.data.post;
 
         $scope.setBackHandler(function() {
             $state.go('panel.history');
         });
 
-        $scope.setPageTitle('محسن کامرانی');
+        $scope.setPageTitle('لطفاً کمی صبر کنید...');
+
+        $scope.setLoading(true);
+        postService.getOnePost(postSummary.nationalCode, postSummary.postCode)
+            .then(function(post) {
+                $scope.post = post;
+                $scope.setPageTitle($scope.post.fullName);
+            }, function(code) {
+                //TODO: Handle errors...
+                alert(code);
+            })
+            .then(function() {
+                $scope.setLoading(false);
+            });
 
     }
 ]);
