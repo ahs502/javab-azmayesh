@@ -57,7 +57,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                     validationCode: validationCode
                 }))
                 .then(function(body) {
-                    var userInfo = body.userInfo;
+                    var userInfo = processUserInfo(body.userInfo);
                     setCurrent(undefined, userInfo);
                     return userInfo;
                 });
@@ -72,7 +72,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 }))
                 .then(function(body) {
                     var accessKey = body.accessKey,
-                        userInfo = body.userInfo;
+                        userInfo = processUserInfo(body.userInfo);
                     $http.defaults.headers.common['X-Access-Token'] = accessKey;
                     setCurrent(accessKey, userInfo);
                     return userInfo;
@@ -87,7 +87,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }
             return utils.httpPromiseHandler($http.post('/user/refresh', {}))
                 .then(function(body) {
-                    var userInfo = body.userInfo;
+                    var userInfo = processUserInfo(body.userInfo);
                     setCurrent(undefined, userInfo);
                     return userInfo;
                 });
@@ -107,9 +107,8 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 if (!currentUserEncoded) return null;
                 var currentUser = JSON.parse(currentUserEncoded);
                 if (!currentUser) return null;
-                var userInfo = currentUser.userInfo;
+                var userInfo = processUserInfo(currentUser.userInfo);
                 if (!userInfo) return null;
-                userInfo.timeStamp = new Date(userInfo.timeStamp);
                 return userInfo;
             }
             catch (err) {
@@ -138,6 +137,14 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             (accessKey !== undefined) && (data.accessKey = accessKey);
             (userInfo !== undefined) && (data.userInfo = userInfo);
             $window.sessionStorage['CurrentUser'] = JSON.stringify(data);
+        }
+
+        function processUserInfo(userInfo) {
+            if (userInfo) {
+                userInfo.subscriptionDate = new Date(userInfo.timeStamp);
+                delete userInfo.timeStamp;
+            }
+            return userInfo;
         }
 
     }

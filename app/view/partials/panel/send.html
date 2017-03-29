@@ -19,15 +19,15 @@
                 <form class="ui {{ sendingAnswer ? 'loading' : '' }} form">
 
                     <div class="field">
-                        <label class="nazanin">نام و نام خانوادگی بیمار</label>
+                        <label class="nazanin">کد ملی بیمار</label>
                         <div class="ui input">
-                            <input type="text" ng-model="person.fullName" placeholder="نام و نام خانوادگی بیمار">
+                            <input type="text" ng-model="person.nationalCode" ng-blur="loadPatientInfo()" placeholder="کد ملی بیمار">
                         </div>
                     </div>
                     <div class="field">
-                        <label class="nazanin">کد ملی بیمار</label>
+                        <label class="nazanin">نام و نام خانوادگی بیمار</label>
                         <div class="ui input">
-                            <input type="text" ng-model="person.nationalCode" placeholder="کد ملی بیمار">
+                            <input type="text" ng-model="person.fullName" placeholder="نام و نام خانوادگی بیمار">
                         </div>
                     </div>
                     <div class="field">

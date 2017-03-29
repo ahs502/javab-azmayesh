@@ -4,6 +4,7 @@
 app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http', 'AnswerService',
     function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http, answerService) {
 
+        $scope.loadPatientInfo = loadPatientInfo;
         $scope.sendAnswer = sendAnswer;
         $scope.selectFilesDialog = selectFilesDialog;
         $scope.abortUpload = abortUpload;
@@ -45,8 +46,8 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         });
 
         $scope.person = {};
-        //$scope.person.fullName
         //$scope.person.nationalCode
+        //$scope.person.fullName
         //$scope.person.mobilePhoneNumber
         //$scope.person.phoneNumber
         //$scope.person.extraPhoneNumber
@@ -54,6 +55,25 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         //$scope.notes
 
         var fileId = 0;
+
+        function loadPatientInfo() {
+            //TODO: check for validity of $scope.person.nationalCode
+            if (!$scope.person.nationalCode) return;
+            $scope.sendingAnswer = true;
+            return answerService.patientInfo($scope.person.nationalCode)
+                .then(function(patient) {
+                    $scope.person.fullName = patient.fullName;
+                    $scope.person.mobilePhoneNumber = patient.numbers[0];
+                    $scope.person.phoneNumber = patient.numbers[1];
+                    $scope.person.extraPhoneNumber = patient.numbers[2];
+                    $scope.person.email = patient.email;
+                }, function(code) {
+                    // No problem!
+                })
+                .then(function() {
+                    $scope.sendingAnswer = false;
+                });
+        }
 
         function sendAnswer() {
             //TODO: check for validity ($scope.person.? for example)

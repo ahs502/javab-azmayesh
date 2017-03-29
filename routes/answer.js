@@ -92,6 +92,30 @@ router.get('/file/download', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.post('/patient/info', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res);
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var nationalCode = req.body.nationalCode;
+    var patientKey = 'patient/' + nationalCode;
+    kfs(patientKey, function(err, patient) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        if (!patient) {
+            return utils.resEndByCode(res, 71);
+        }
+        utils.resEndByCode(res, 0, {
+            fullName: patient.fullName,
+            numbers: patient.numbers,
+            email: patient.email
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.post('/send', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res);
     if (!userInfo) return;

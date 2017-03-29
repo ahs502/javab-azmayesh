@@ -584,17 +584,33 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService',
 app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
 
+        this.patientInfo = patientInfo;
         this.send = send;
 
         /////////////////////////////////////////////////////
+
+        // May reject by code : 1, 2, 5, 50, 71, 100, 101
+        // Resolves to patient personal information
+        function patientInfo(nationalCode) {
+            return utils.httpPromiseHandler($http.post('/answer/patient/info', {
+                    nationalCode: nationalCode
+                }))
+                .then(function(body) {
+                    return {
+                        fullName: body.fullName,
+                        numbers: body.numbers || [],
+                        email: body.email
+                    };
+                });
+        }
 
         // May reject by code : 1, 2, 5, 50, 100, 101
         function send(person, files, notes) {
             return utils.httpPromiseHandler($http.post('/answer/send', {
                 timeStamp: Date.now(),
                 person: {
-                    fullName: person.fullName,
                     nationalCode: person.nationalCode,
+                    fullName: person.fullName,
                     mobilePhoneNumber: person.mobilePhoneNumber,
                     phoneNumber: person.phoneNumber,
                     extraPhoneNumber: person.extraPhoneNumber,
@@ -832,7 +848,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                     validationCode: validationCode
                 }))
                 .then(function(body) {
-                    var userInfo = body.userInfo;
+                    var userInfo = processUserInfo(body.userInfo);
                     setCurrent(undefined, userInfo);
                     return userInfo;
                 });
@@ -847,7 +863,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 }))
                 .then(function(body) {
                     var accessKey = body.accessKey,
-                        userInfo = body.userInfo;
+                        userInfo = processUserInfo(body.userInfo);
                     $http.defaults.headers.common['X-Access-Token'] = accessKey;
                     setCurrent(accessKey, userInfo);
                     return userInfo;
@@ -862,7 +878,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }
             return utils.httpPromiseHandler($http.post('/user/refresh', {}))
                 .then(function(body) {
-                    var userInfo = body.userInfo;
+                    var userInfo = processUserInfo(body.userInfo);
                     setCurrent(undefined, userInfo);
                     return userInfo;
                 });
@@ -882,9 +898,8 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 if (!currentUserEncoded) return null;
                 var currentUser = JSON.parse(currentUserEncoded);
                 if (!currentUser) return null;
-                var userInfo = currentUser.userInfo;
+                var userInfo = processUserInfo(currentUser.userInfo);
                 if (!userInfo) return null;
-                userInfo.timeStamp = new Date(userInfo.timeStamp);
                 return userInfo;
             }
             catch (err) {
@@ -913,6 +928,14 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             (accessKey !== undefined) && (data.accessKey = accessKey);
             (userInfo !== undefined) && (data.userInfo = userInfo);
             $window.sessionStorage['CurrentUser'] = JSON.stringify(data);
+        }
+
+        function processUserInfo(userInfo) {
+            if (userInfo) {
+                userInfo.subscriptionDate = new Date(userInfo.timeStamp);
+                delete userInfo.timeStamp;
+            }
+            return userInfo;
         }
 
     }
@@ -1651,6 +1674,7 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
 app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http', 'AnswerService',
     function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http, answerService) {
 
+        $scope.loadPatientInfo = loadPatientInfo;
         $scope.sendAnswer = sendAnswer;
         $scope.selectFilesDialog = selectFilesDialog;
         $scope.abortUpload = abortUpload;
@@ -1692,8 +1716,8 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         });
 
         $scope.person = {};
-        //$scope.person.fullName
         //$scope.person.nationalCode
+        //$scope.person.fullName
         //$scope.person.mobilePhoneNumber
         //$scope.person.phoneNumber
         //$scope.person.extraPhoneNumber
@@ -1701,6 +1725,25 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         //$scope.notes
 
         var fileId = 0;
+
+        function loadPatientInfo() {
+            //TODO: check for validity of $scope.person.nationalCode
+            if (!$scope.person.nationalCode) return;
+            $scope.sendingAnswer = true;
+            return answerService.patientInfo($scope.person.nationalCode)
+                .then(function(patient) {
+                    $scope.person.fullName = patient.fullName;
+                    $scope.person.mobilePhoneNumber = patient.numbers[0];
+                    $scope.person.phoneNumber = patient.numbers[1];
+                    $scope.person.extraPhoneNumber = patient.numbers[2];
+                    $scope.person.email = patient.email;
+                }, function(code) {
+                    // No problem!
+                })
+                .then(function() {
+                    $scope.sendingAnswer = false;
+                });
+        }
 
         function sendAnswer() {
             //TODO: check for validity ($scope.person.? for example)
@@ -2057,7 +2100,7 @@ app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$stat
 */
 
 /*global app*/
-/*global $*/
+/*global persianDate*/
 
 app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
     function($scope, $rootScope, $state, $stateParams, $timeout) {
@@ -2086,6 +2129,9 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
         }, {
             label: 'نام کاربری',
             value: $rootScope.data.labData.username
+        }, {
+            label: 'تاریخ عضویت',
+            value: persianDate($rootScope.data.labData.subscriptionDate).format('L')
         }];
 
         $scope.setBackHandler(function() {
@@ -2525,6 +2571,24 @@ app.filter('emptyCheck', function() {
 
 /*
 	AHS502 : End of 'empty-check.js'
+*/
+
+
+/*
+	AHS502 : Start of 'to-persian-date.js'
+*/
+
+/*global app*/
+/*global persianDate*/
+
+app.filter('toPersianDate', function() {
+    return function(input, format) {
+        return persianDate(new Date(input)).format(format || 'L');
+    }
+});
+
+/*
+	AHS502 : End of 'to-persian-date.js'
 */
 
 

@@ -1015,13 +1015,15 @@
         <div class="ui link fluid raised blue card" md-virtual-repeat="post in posts" md-item-size="92.15" ng-click="postClicked(post)">
 
             <div class="content">
-                <div class="header">header: {{post.postCode}}</div>
+                <div class="header">{{ post.nationalCode | toPersianNumber }}</div>
                 <div class="meta">
-                    <span class="category">meta data</span>
+                    <span class="category">{{ post.postDate | toPersianDate: "dddd - YYYY/MM/DD - h:mm:ss a" }}</span>
                 </div>
                 <div class="description">
-                    <!--<p>description</p>-->
-                    <p>{{post.nationalCode}}</p>
+                    <p>
+                        <strong>{{ post.postCode | toPersianNumber }}</strong>
+                        <span ng-show="post.filesCount">- {{ post.filesCount | toPersianNumber }} فایل</span>
+                    </p>
                 </div>
             </div>
             <!--<div class="extra content">-->
@@ -1066,15 +1068,15 @@
                 <form class="ui {{ sendingAnswer ? 'loading' : '' }} form">
 
                     <div class="field">
-                        <label class="nazanin">نام و نام خانوادگی بیمار</label>
+                        <label class="nazanin">کد ملی بیمار</label>
                         <div class="ui input">
-                            <input type="text" ng-model="person.fullName" placeholder="نام و نام خانوادگی بیمار">
+                            <input type="text" ng-model="person.nationalCode" ng-blur="loadPatientInfo()" placeholder="کد ملی بیمار">
                         </div>
                     </div>
                     <div class="field">
-                        <label class="nazanin">کد ملی بیمار</label>
+                        <label class="nazanin">نام و نام خانوادگی بیمار</label>
                         <div class="ui input">
-                            <input type="text" ng-model="person.nationalCode" placeholder="کد ملی بیمار">
+                            <input type="text" ng-model="person.fullName" placeholder="نام و نام خانوادگی بیمار">
                         </div>
                     </div>
                     <div class="field">

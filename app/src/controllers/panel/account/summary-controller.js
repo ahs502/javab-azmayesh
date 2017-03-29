@@ -1,5 +1,5 @@
 /*global app*/
-/*global $*/
+/*global persianDate*/
 
 app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
     function($scope, $rootScope, $state, $stateParams, $timeout) {
@@ -28,6 +28,9 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
         }, {
             label: 'نام کاربری',
             value: $rootScope.data.labData.username
+        }, {
+            label: 'تاریخ عضویت',
+            value: persianDate($rootScope.data.labData.subscriptionDate).format('L')
         }];
 
         $scope.setBackHandler(function() {
