@@ -1,13 +1,18 @@
 /*global app*/
 /*global $*/
 
-app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout','UserService', 'PostService',
-    function($scope, $rootScope, $state, $stateParams, $timeout, userService,postService) {
+app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService', 'PostService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, userService, postService) {
 
         $scope.postClicked = postClicked;
 
-console.log(userService.current())
-        $scope.allYears = [1396, 1395, 1394];
+        var userInfo = userService.current(),
+            userYear = userInfo.timeStamp.jYMD()[0],
+            jYMD = (new Date()).jYMD(),
+            currentYear = jYMD[0],
+            currentMonth = jYMD[1];
+
+        $scope.allYears = Array.range(currentYear, userYear);
         $scope.persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
 
         $scope.selectedYear = $scope.allYears[0];
@@ -18,8 +23,9 @@ console.log(userService.current())
         $scope.selectedMonthTo = 1;
         $scope.selectedMonthToText = $scope.persianMonths[0];
 
+        var postCache = $rootScope.data.postCache = $rootScope.data.postCache || [];
         $scope.posts = [];
-        loadPosts();
+        loadPosts(/*!!postCache[currentYear]*/);
 
         $scope.setBackHandler(function() {
             $state.go('panel.home');
@@ -58,32 +64,44 @@ console.log(userService.current())
             }
         });
 
-        function loadPosts() {
+        function loadPosts(forceReload) {
             $scope.setLoading(true);
 
+            var yearPostCache = postCache[$scope.selectedYear] = postCache[$scope.selectedYear] || [],
+                months = Array.range($scope.selectedMonthFrom, $scope.selectedMonthTo),
+                filteredMonths = months.filter(function(month) {
+                    return !yearPostCache[month];
+                });
+            if (forceReload && $scope.selectedYear == currentYear &&
+                months.indexOf(currentMonth) >= 0 && filteredMonths.indexOf(currentMonth) < 0) {
+                filteredMonths.push(currentMonth);
+            }
 
+            var promise;
+            if (Object.keys(filteredMonths).length) {
+                promise = postService.getPosts($scope.selectedYear, filteredMonths)
+                    .catch(function(code) {
+                        //TODO: Handle errors...
+                        alert(code);
+                    });
+            }
+            else {
+                promise = Promise.resolve({});
+            }
 
-            postService.getPosts(1396, [3, 4, 5, 6, 7, 8])
+            return promise
                 .then(function(postPacks) {
-                    console.log(postPacks);
-                }, function(code) {
-                    console.error(code);
+                    $scope.posts = [];
+                    for (var month = 12; month >= 1; month--)
+                        if (months.indexOf(month) >= 0) {
+                            yearPostCache[month] = postPacks[$scope.selectedYear + '/' + month] || yearPostCache[month] || [];
+                            $scope.posts = $scope.posts.concat(yearPostCache[month]);
+                        }
+                })
+                .then(function() {
+                    $scope.topPostIndex = 0;
+                    $scope.setLoading(false);
                 });
-
-
-
-            $timeout(function() { //TODO: load posts...
-                $scope.posts = $scope.posts.length ? $scope.posts : Array(300).join('.').split('.').map(function(x, i) {
-                    return {
-                        id: i,
-                        data: 'data-' + i
-                    };
-                });
-
-                $scope.topPostIndex = 0;
-                $scope.setLoading(false);
-
-            }, 300);
         }
 
         function postClicked(post) {

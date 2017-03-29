@@ -50,12 +50,13 @@
         <div class="ui link fluid raised blue card" md-virtual-repeat="post in posts" md-item-size="92.15" ng-click="postClicked(post)">
 
             <div class="content">
-                <div class="header">header: {{post.id}}</div>
+                <div class="header">header: {{post.postCode}}</div>
                 <div class="meta">
                     <span class="category">meta data</span>
                 </div>
                 <div class="description">
-                    <p>description</p>
+                    <!--<p>description</p>-->
+                    <p>{{post.nationalCode}}</p>
                 </div>
             </div>
             <!--<div class="extra content">-->

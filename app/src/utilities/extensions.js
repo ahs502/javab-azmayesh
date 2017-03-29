@@ -23,6 +23,8 @@ String.prototype.toDate = toDate; // (All stringified dates even LocalStringifie
 String.prototype.toPhoneNumber = toPhoneNumber; // ('  +981x23g 45 pp # ') => 012345
 String.prototype.isMobileNumber = isMobileNumber; // ('+989125557685') => true
 
+Array.range = range; // (2, 11, 3) => [2, 5, 8, 11]    // (7, 4) => [7, 6, 5, 4]
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // Source: http://jdf.scr.ir/jdf
@@ -132,4 +134,18 @@ function toPhoneNumber() {
 function isMobileNumber() {
     var n = this.toPhoneNumber();
     return n.length === 11 && n.slice(0, 2) === '09';
+}
+
+function range(from, to, step) {
+    step = step || 1;
+    if (typeof from !== 'number' || typeof to !== 'number' || typeof step !== 'number') {
+        throw new Error('Provided from & to & step are not all numbers.');
+    }
+    if (step < 0) step = -step;
+    var array = [];
+    if (from <= to)
+        while (from <= to) array.push(from++);
+    else
+        while (from >= to) array.push(from--);
+    return array;
 }

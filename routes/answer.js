@@ -14,7 +14,7 @@ var formidable = require('formidable');
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/file/upload', function(req, res, next) {
-    var accessData = access.decodeRequest(req);
+    var accessData = access.decodeUserRequest(req);
     if (accessData.invalid || accessData.expired) {
         return res.status(401).end();
     }
@@ -103,7 +103,7 @@ router.post('/send', function(req, res, next) {
     var notes = req.body.notes;
     //TODO: Validate input data...
     var nationalCode = person.nationalCode;
-    var jYMD = new Date(timeStamp);
+    var jYMD = new Date(timeStamp).jYMD();
     utils.generateId('post/' + username + '/' + jYMD[0] + '/' + jYMD[1]).then(function(postId) {
         var patientKey = 'patient/' + nationalCode;
         kfs(patientKey, function(err, patient) {

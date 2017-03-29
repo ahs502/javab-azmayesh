@@ -1,8 +1,8 @@
 /*global app*/
 /*global $*/
 
-app.run(['$rootScope', '$state', '$stateParams', '$window',
-    function($rootScope, $state, $stateParams, $window) {
+app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService',
+    function($rootScope, $state, $stateParams, $window, userService) {
 
         // No need to initial loader anymore
         $('#ja-initial-loader').hide();
@@ -24,9 +24,20 @@ app.run(['$rootScope', '$state', '$stateParams', '$window',
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams, options) {
+                //NOTE: Use  event.preventDefault()  if it's needed.
 
-                //event.preventDefault(); 
-                //...
+                if (toState.name.indexOf('panel.') === 0) {
+                    if (!userService.current()) {
+                        event.preventDefault();
+                        $state.go('lab.login');
+                    }
+                }
+                else {
+                    delete $rootScope.data.postCache;
+                    if (userService.current()) {
+                        userService.logout();
+                    }
+                }
 
             });
 
@@ -34,8 +45,6 @@ app.run(['$rootScope', '$state', '$stateParams', '$window',
             function(event, toState, toParams, fromState, fromParams) {
 
                 $window.scrollTo(0, 0);
-
-                //...
 
             });
 

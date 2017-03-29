@@ -1,7 +1,7 @@
 
     *   Implement environment setting in config file: Development, Test, Production.
                 Load Google reCAPTCHA or not,
-                Minified app.js and app.css or not,
+                Minified app.js and app.css or not (both in gulp and index.html),
                 Full error message in client or not,
 
     *   Implement a status code decoder angular service.
