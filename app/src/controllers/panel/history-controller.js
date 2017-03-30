@@ -7,7 +7,7 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
         $scope.postClicked = postClicked;
 
         var userInfo = userService.current(),
-            userYear = userInfo.timeStamp.jYMD()[0],
+            userYear = userInfo.subscriptionDate.jYMD()[0],
             jYMD = (new Date()).jYMD(),
             currentYear = jYMD[0],
             currentMonth = jYMD[1];

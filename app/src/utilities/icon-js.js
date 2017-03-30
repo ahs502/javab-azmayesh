@@ -21,4 +21,4 @@
         return dataUrls[dataUrlTitle] || dataUrlTitle || '';
     }
 
-})(window);
+})(global);

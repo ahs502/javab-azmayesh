@@ -1,10 +1,11 @@
 // AHS502 : Application javascript file :
 
 /*
-	AHS502 : Start of 'extensions.js'
+	AHS502 : Start of 'global.js'
 */
 
 var global;
+
 try {
     global = Function('return this')() || (502, eval)('this');
 }
@@ -12,149 +13,388 @@ catch (e) {
     global = window;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
 global.global = global;
-global.gregorianToJalali = gregorianToJalali; // ([2017, 3, 27]) => [1396, 1, 7]
-global.jalaliToGregorian = jalaliToGregorian; // ([1396, 1, 7]) => [2017, 3, 27]
 
-Date.prototype.gYMD = gYMD; // () => [2017, 3, 27]
-Date.prototype.jYMD = jYMD; // () => [1396, 1, 7]
-Date.prototype.isValid = isValid; // (new Date()).isValid() === true
-Date.prototype.toLocalString = toLocalString; // () => "2017-03-27T18:02:34.591O+0330"    // (true) => "2017-03-27T18:02:34.591" (non-convertible to Date again)
 
-Date.parse = parseMaker(); // (All dates even LocalStringified) => 1490540446225
+/*
+	AHS502 : End of 'global.js'
+*/
 
-String.prototype.toDate = toDate; // (All stringified dates even LocalStringified) => Date
-String.prototype.toPhoneNumber = toPhoneNumber; // ('  +981x23g 45 pp # ') => 012345
-String.prototype.isMobileNumber = isMobileNumber; // ('+989125557685') => true
 
-Array.range = range; // (2, 11, 3) => [2, 5, 8, 11]    // (7, 4) => [7, 6, 5, 4]
+/*
+	AHS502 : Start of 'ValidationSystem.js'
+*/
 
-////////////////////////////////////////////////////////////////////////////////
+(function(global) {
 
-// Source: http://jdf.scr.ir/jdf
-function gregorianToJalali(gYMD) {
-    var gy = gYMD[0],
-        gm = gYMD[1],
-        gd = gYMD[2];
-    var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-    var jy = (gy <= 1600) ? 0 : 979;
-    gy -= (gy <= 1600) ? 621 : 1600;
-    var gy2 = (gm > 2) ? (gy + 1) : gy;
-    var days = (365 * gy) + parseInt((gy2 + 3) / 4, 10) - parseInt((gy2 + 99) / 100, 10) + parseInt((gy2 + 399) / 400, 10) - 80 + gd + g_d_m[gm - 1];
-    jy += 33 * parseInt(days / 12053, 10);
-    days %= 12053;
-    jy += 4 * parseInt(days / 1461, 10);
-    days %= 1461;
-    jy += parseInt((days - 1) / 365, 10);
-    if (days > 365) days = (days - 1) % 365;
-    var jm = (days < 186) ? 1 + parseInt(days / 31, 10) : 7 + parseInt((days - 186) / 30, 10);
-    var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
-    return [jy, jm, jd];
-}
+    global.ValidationSystem = ValidationSystem;
 
-// Source: http://jdf.scr.ir/jdf
-function jalaliToGregorian(jYMD) {
-    var jy = jYMD[0],
-        jm = jYMD[1],
-        jd = jYMD[2];
-    var gy = (jy <= 979) ? 621 : 1600;
-    jy -= (jy <= 979) ? 0 : 979;
-    var days = (365 * jy) + (parseInt(jy / 33, 10) * 8) + parseInt(((jy % 33) + 3) / 4, 10) + 78 + jd + ((jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186);
-    gy += 400 * parseInt(days / 146097, 10);
-    days %= 146097;
-    if (days > 36524) {
-        gy += 100 * parseInt(--days / 36524, 10);
-        days %= 36524;
-        if (days >= 365) days++;
-    }
-    gy += 4 * parseInt((days) / 1461, 10);
-    days %= 1461;
-    gy += parseInt((days - 1) / 365, 10);
-    if (days > 365) days = (days - 1) % 365;
-    var gd = days + 1;
-    var sal_a = [0, 31, ((gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    for (var gm = 0; gm < 13; gm++) {
-        var v = sal_a[gm];
-        if (gd <= v) break;
-        gd -= v;
-    }
-    return [gy, gm, gd];
-}
-
-function gYMD() {
-    var y = this.getFullYear(),
-        m = this.getMonth() + 1,
-        d = this.getDate();
-    return [y, m, d];
-}
-
-function jYMD() {
-    return gregorianToJalali(this.gYMD());
-}
-
-function isValid() {
-    // NaN !== NaN, so:
-    return this.getTime() === this.getTime();
-}
-
-function toLocalString(noGMT) {
-    var d = new Date(this);
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    var s = d.toISOString().slice(0, -1);
-    if (!noGMT) {
-        var ds = this.toString();
-        var gmt = ds.indexOf('GMT') + 3;
-        s += 'O' + ds.slice(gmt, gmt + 5);
-    }
-    return s;
-}
-
-function parseMaker() {
-    var Date_parse = Date.parse;
-    return function(str) {
-        str = (str || '').toString();
-        if (typeof str === 'string' && str.slice(-6, -5) === 'O') {
-            var gmt = str.slice(-5);
-            var offset = Number(gmt.slice(1, 3)) * 60 + Number(gmt.slice(3, 5));
-            if (gmt.slice(0, 1) === '-') offset = -offset;
-            return Date_parse(str.slice(0, -6) + 'Z') - offset * 60 * 1000;
-        }
-        return Date_parse(str);
+    ValidationSystem.validators = {
+        notEmpty: notEmptyValidator,
+        nationalCode: nationalCodeValidator,
+        numberCode: numberCodeValidator,
     };
-}
 
-function toDate() {
-    return new Date(Date.parse(this));
-}
+    function ValidationSystem(scope) {
 
-function toPhoneNumber() {
-    var s = this.replace(/\s/g, "");
-    if (s.slice(0, 3) === '+98') s = '0' + s.slice(3);
-    return s.split('').filter(function(char) {
-        return '0123456789'.indexOf(char) >= 0;
-    }).join('');
-}
+        var fields = {};
 
-function isMobileNumber() {
-    var n = this.toPhoneNumber();
-    return n.length === 11 && n.slice(0, 2) === '09';
-}
+        this.field = field;
+        this.error = error;
+        this.clear = clear;
+        this.check = check;
+        this.validate = validate;
+        this.status = status;
 
-function range(from, to, step) {
-    step = step || 1;
-    if (typeof from !== 'number' || typeof to !== 'number' || typeof step !== 'number') {
-        throw new Error('Provided from & to & step are not all numbers.');
+        function field(fieldName, validators) {
+            fields[fieldName] = {
+                validators: [].concat(validators),
+                error: null
+            };
+            return this;
+        }
+
+        function error(fieldName, errorMessage) {
+            if (arguments.length === 1)
+                return (fields[fieldName] || {}).error || null;
+            else if (arguments.length === 2)
+                return (fields[fieldName] || {}).error = errorMessage || null;
+        }
+
+        function clear() {
+            fieldNames(arguments).forEach(function(fieldName) {
+                fields[fieldName].error = null;
+            });
+        }
+
+        function check() {
+            fieldNames(arguments).forEach(function(fieldName) {
+                var fieldData = fields[fieldName];
+                if (!run(fieldName, fieldData.validators)) {
+                    fieldData.error = null;
+                }
+            });
+        }
+
+        function validate() {
+            fieldNames(arguments).forEach(function(fieldName) {
+                var fieldData = fields[fieldName];
+                fieldData.error = run(fieldName, fieldData.validators);
+            });
+        }
+
+        function status() {
+            var allFieldNames = Object.keys(fields);
+            for (var i = 0; i < allFieldNames.length; i++) {
+                if (fields[allFieldNames[i]].error) return false;
+            }
+            return true;
+        }
+
+        function fieldNames(fieldNamesArguments) {
+            var allFieldNames = Object.keys(fields);
+            if (fieldNamesArguments.length) {
+                return Array.from(fieldNamesArguments)
+                    .filter(function(fieldName) {
+                        return allFieldNames.indexOf(fieldName) >= 0;
+                    });
+            }
+            return allFieldNames;
+        }
+
+        function run(fieldName, validators) {
+            if (!validators) return null;
+            var value = scope[fieldName];
+            for (var i = 0; i < validators.length; i++) {
+                var res = validators[i](value);
+                if (res === true) break;
+                if (res) return res;
+            }
+            return null;
+        }
+
     }
-    if (step < 0) step = -step;
-    var array = [];
-    if (from <= to)
-        while (from <= to) array.push(from++);
-    else
-        while (from >= to) array.push(from--);
-    return array;
-}
+
+    function notEmptyValidator(message) {
+        message = message || 'پُر کردن این فیلد الزامی است';
+        return function(value) {
+            return value ? null : message;
+        };
+    }
+
+    function nationalCodeValidator(message) {
+        message = message || 'کد ملی صحیح نمی باشد';
+        return function(value) {
+            return /^[0-9]{10}$/.test(value) ? null : message;
+        };
+    }
+
+    function numberCodeValidator(length, message) {
+        message = message || 'کد وارد شده صحیح نمی باشد';
+        return function(value) {
+            return String(value).length === length && /^[0-9]+$/.test(value) ? null : message;
+        };
+    }
+
+})(global);
+
+/*
+	AHS502 : End of 'ValidationSystem.js'
+*/
+
+
+/*
+	AHS502 : Start of 'calendar-converter.js'
+*/
+
+(function() {
+    ////////////////////////////////////////////////////////////////////////////
+
+    global.gregorianToJalali = gregorianToJalali; // ([2017, 3, 27]) => [1396, 1, 7]
+    global.jalaliToGregorian = jalaliToGregorian; // ([1396, 1, 7]) => [2017, 3, 27]
+    
+    //// Not needed yet:
+    // global.gregorianToIslamic = gregorianToIslamic; // ([2017, 3, 27]) => [1438, 6, 28]
+    // global.islamicToGregorian = islamicToGregorian; // ([1438, 6, 28]) => [2017, 3, 27]
+    
+    //// Not needed yet:
+    // global.jalaliToIslamic = jalaliToIslamic; // ([1396, 1, 7]) => [1438, 6, 28]
+    // global.islamicToJalali = islamicToJalali; // ([1438, 6, 28]) => [1396, 1, 7]
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Source: http://jdf.scr.ir/jdf
+    function gregorianToJalali(gYMD) {
+        var gy = gYMD[0],
+            gm = gYMD[1],
+            gd = gYMD[2];
+        var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+        var jy = (gy <= 1600) ? 0 : 979;
+        gy -= (gy <= 1600) ? 621 : 1600;
+        var gy2 = (gm > 2) ? (gy + 1) : gy;
+        var days = (365 * gy) + parseInt((gy2 + 3) / 4, 10) - parseInt((gy2 + 99) / 100, 10) + parseInt((gy2 + 399) / 400, 10) - 80 + gd + g_d_m[gm - 1];
+        jy += 33 * parseInt(days / 12053, 10);
+        days %= 12053;
+        jy += 4 * parseInt(days / 1461, 10);
+        days %= 1461;
+        jy += parseInt((days - 1) / 365, 10);
+        if (days > 365) days = (days - 1) % 365;
+        var jm = (days < 186) ? 1 + parseInt(days / 31, 10) : 7 + parseInt((days - 186) / 30, 10);
+        var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+        return [jy, jm, jd];
+    }
+
+    // Source: http://jdf.scr.ir/jdf
+    function jalaliToGregorian(jYMD) {
+        var jy = jYMD[0],
+            jm = jYMD[1],
+            jd = jYMD[2];
+        var gy = (jy <= 979) ? 621 : 1600;
+        jy -= (jy <= 979) ? 0 : 979;
+        var days = (365 * jy) + (parseInt(jy / 33, 10) * 8) + parseInt(((jy % 33) + 3) / 4, 10) + 78 + jd + ((jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186);
+        gy += 400 * parseInt(days / 146097, 10);
+        days %= 146097;
+        if (days > 36524) {
+            gy += 100 * parseInt(--days / 36524, 10);
+            days %= 36524;
+            if (days >= 365) days++;
+        }
+        gy += 4 * parseInt((days) / 1461, 10);
+        days %= 1461;
+        gy += parseInt((days - 1) / 365, 10);
+        if (days > 365) days = (days - 1) % 365;
+        var gd = days + 1;
+        var sal_a = [0, 31, ((gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        for (var gm = 0; gm < 13; gm++) {
+            var v = sal_a[gm];
+            if (gd <= v) break;
+            gd -= v;
+        }
+        return [gy, gm, gd];
+    }
+
+    // // Source: http://123.scr.ir
+    // function gregorianToIslamic(gYMD) {
+    //     var gy = gYMD[0],
+    //         gm = gYMD[1],
+    //         gd = gYMD[2];
+    //     if (gy > 1582 || (gy == 1581 && gm > 9 && gd > 14)) {
+    //         var a = parseInt((gm - 14) / 12, 10);
+    //         var jd = parseInt((1461 * (gy + 4800 + a)) / 4, 10) + parseInt((367 * (gm - 2 - (12 * a))) / 12, 10) - parseInt((3 * (parseInt((gy + 4900 + a) / 100, 10))) / 4, 10) + gd - 32075;
+    //     }
+    //     else {
+    //         jd = (367 * gy) - parseInt((7 * (gy + 5001 + parseInt((gm - 9) / 7, 10))) / 4, 10) + parseInt((275 * gm) / 9, 10) + gd + 1729777;
+    //     }
+    //     var l = jd - 1948440 + 10632;
+    //     var n = parseInt((l - 1) / 10631, 10);
+    //     l = l - 10631 * n + 354;
+    //     var j = ((parseInt((10985 - l) / 5316, 10)) * (parseInt((50 * l) / 17719, 10))) + ((parseInt(l / 5670, 10)) * (parseInt((43 * l) / 15238, 10)));
+    //     l = l - (parseInt((30 - j) / 15, 10)) * (parseInt((17719 * j) / 50, 10)) - (parseInt(j / 16, 10)) * (parseInt((15238 * j) / 43, 10)) + 29;
+    //     gm = parseInt((24 * l) / 709, 10);
+    //     gd = l - parseInt((709 * gm) / 24, 10);
+    //     gy = (30 * n) + j - 30;
+    //     return [gy, gm, gd];
+    // }
+
+    // // Source: http://123.scr.ir
+    // function islamicToGregorian(iYMD) {
+    //     var iy = iYMD[0],
+    //         im = iYMD[1],
+    //         id = iYMD[2];
+    //     var jd = parseInt(((11 * iy) + 3) / 30, 10) + (354 * iy) + (30 * im) - parseInt((im - 1) / 2, 10) + id + 1948440 - 385;
+    //     if (jd > 2299160) {
+    //         var l = jd + 68569;
+    //         var n = parseInt((4 * l) / 146097, 10);
+    //         l = l - parseInt((146097 * n + 3) / 4, 10);
+    //         var i = parseInt((4000 * (l + 1)) / 1461001, 10);
+    //         l = l - parseInt((1461 * i) / 4, 10) + 31;
+    //         var j = parseInt((80 * l) / 2447, 10);
+    //         id = l - parseInt((2447 * j) / 80, 10);
+    //         l = parseInt(j / 11, 10);
+    //         im = j + 2 - (12 * l);
+    //         iy = (100 * (n - 49)) + i + l;
+    //     }
+    //     else {
+    //         j = jd + 1402;
+    //         var k = parseInt((j - 1) / 1461, 10);
+    //         l = j - (1461 * k);
+    //         n = parseInt((l - 1) / 365, 10) - parseInt(l / 1461, 10);
+    //         i = l - (365 * n, 10) + 30;
+    //         j = parseInt((80 * i) / 2447, 10);
+    //         id = i - parseInt((2447 * j) / 80, 10);
+    //         i = parseInt(j / 11, 10);
+    //         im = j + 2 - (12 * i);
+    //         iy = (4 * k) + n + i - 4716;
+    //     }
+    //     return [iy, im, id];
+    // }
+
+    // function jalaliToIslamic(jYMD) {
+    //     return gregorianToIslamic(jalaliToGregorian(jYMD));
+    // }
+
+    // function islamicToJalali(iYMD) {
+    //     return gregorianToJalali(islamicToGregorian(iYMD));
+    // }
+
+    ////////////////////////////////////////////////////////////////////////////
+})();
+
+/*
+	AHS502 : End of 'calendar-converter.js'
+*/
+
+
+/*
+	AHS502 : Start of 'extensions.js'
+*/
+
+/*global gregorianToJalali*/
+
+(function() {
+    ////////////////////////////////////////////////////////////////////////////
+
+    Date.prototype.gYMD = gYMD; // () => [2017, 3, 27]
+    Date.prototype.jYMD = jYMD; // () => [1396, 1, 7]
+    // Date.prototype.iYMD = iYMD; // () => [1438, 6, 28]
+    Date.prototype.isValid = isValid; // (new Date()).isValid() === true
+    Date.prototype.toLocalString = toLocalString; // () => "2017-03-27T18:02:34.591O+0330"    // (true) => "2017-03-27T18:02:34.591" (non-convertible to Date again)
+
+    Date.parse = parseMaker(); // (All dates even LocalStringified) => 1490540446225
+
+    String.prototype.toDate = toDate; // (All stringified dates even LocalStringified) => Date
+    String.prototype.toPhoneNumber = toPhoneNumber; // ('  +981x23g 45 pp # ') => 012345
+    String.prototype.isMobileNumber = isMobileNumber; // ('+989125557685') => true
+
+    Array.range = range; // (2, 11, 3) => [2, 5, 8, 11]    // (7, 4) => [7, 6, 5, 4]
+    Array.from = from; // ({0: true, 1: 12345, length: 2}) => [true, 12345]
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    function gYMD() {
+        var y = this.getFullYear(),
+            m = this.getMonth() + 1,
+            d = this.getDate();
+        return [y, m, d];
+    }
+
+    function jYMD() {
+        return gregorianToJalali(this.gYMD());
+    }
+
+    // function iYMD() {
+    //     return gregorianToIslamic(this.gYMD());
+    // }
+
+    function isValid() {
+        // NaN !== NaN, so:
+        return this.getTime() === this.getTime();
+    }
+
+    function toLocalString(noGMT) {
+        var d = new Date(this);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        var s = d.toISOString().slice(0, -1);
+        if (!noGMT) {
+            var ds = this.toString();
+            var gmt = ds.indexOf('GMT') + 3;
+            s += 'O' + ds.slice(gmt, gmt + 5);
+        }
+        return s;
+    }
+
+    function parseMaker() {
+        var Date_parse = Date.parse;
+        return function(str) {
+            str = (str || '').toString();
+            if (typeof str === 'string' && str.slice(-6, -5) === 'O') {
+                var gmt = str.slice(-5);
+                var offset = Number(gmt.slice(1, 3)) * 60 + Number(gmt.slice(3, 5));
+                if (gmt.slice(0, 1) === '-') offset = -offset;
+                return Date_parse(str.slice(0, -6) + 'Z') - offset * 60 * 1000;
+            }
+            return Date_parse(str);
+        };
+    }
+
+    function toDate() {
+        return new Date(Date.parse(this));
+    }
+
+    function toPhoneNumber() {
+        var s = this.replace(/\s/g, "");
+        if (s.slice(0, 3) === '+98') s = '0' + s.slice(3);
+        return s.split('').filter(function(char) {
+            return '0123456789'.indexOf(char) >= 0;
+        }).join('');
+    }
+
+    function isMobileNumber() {
+        var n = this.toPhoneNumber();
+        return n.length === 11 && n.slice(0, 2) === '09';
+    }
+
+    function range(from, to, step) {
+        step = step || 1;
+        if (typeof from !== 'number' || typeof to !== 'number' || typeof step !== 'number') {
+            throw new Error('Provided from & to & step are not all numbers.');
+        }
+        if (step < 0) step = -step;
+        var array = [];
+        if (from <= to)
+            while (from <= to) array.push(from++);
+        else
+            while (from >= to) array.push(from--);
+        return array;
+    }
+
+    function from(arrayLike) {
+        if (!arrayLike) return [];
+        return Array.prototype.slice.call(arrayLike);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+})();
 
 /*
 	AHS502 : End of 'extensions.js'
@@ -188,7 +428,7 @@ function range(from, to, step) {
         return dataUrls[dataUrlTitle] || dataUrlTitle || '';
     }
 
-})(window);
+})(global);
 
 /*
 	AHS502 : End of 'icon-js.js'
@@ -227,7 +467,7 @@ function range(from, to, step) {
         }).join('');
     }
 
-})(window);
+})(global);
 
 /*
 	AHS502 : End of 'persian-number.js'
@@ -521,10 +761,10 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService',
         $('#ja-sidebar-menu').show();
 
         if ($window.location.hash.indexOf('#/answer') !== 0) {
-            // $state.go('home.find');
+            $state.go('home.find');
             // $state.go('panel.account.summary');
             // $state.go('panel.home');
-            $state.go('lab.login');
+            // $state.go('lab.login');
             // $state.go('lab.register');
         }
 
@@ -933,7 +1173,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
         function processUserInfo(userInfo) {
             if (userInfo) {
                 userInfo.subscriptionDate = new Date(userInfo.timeStamp);
-                delete userInfo.timeStamp;
+                // delete userInfo.timeStamp; // DO NOT ACTIVATE THIS LINE EVER!
             }
             return userInfo;
         }
@@ -1043,6 +1283,7 @@ app.controller('CommonContactController', ['$scope', '$state', '$stateParams',
 */
 
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeout',
     function($rootScope, $scope, $state, $timeout) {
@@ -1054,13 +1295,25 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
         $scope.setBackHandler(false);
 
         //$scope.nationalCode
-        //$scope.testNumber
+        //$scope.postCode
+
+        $scope.vs = new ValidationSystem($scope)
+            .field('nationalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.nationalCode()
+            ])
+            .field('postCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.numberCode(4)
+            ]);
 
         function seeAnswer() {
-            //TODO: check for validity
+            $scope.vs.validate();
+            if (!$scope.vs.status()) return;
+
             $state.go('answer', {
                 p: $scope.nationalCode,
-                n: $scope.testNumber,
+                n: $scope.postCode,
                 previousState: 'home.find',
                 previousStateData: null
             });
@@ -1480,7 +1733,7 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
         $scope.postClicked = postClicked;
 
         var userInfo = userService.current(),
-            userYear = userInfo.timeStamp.jYMD()[0],
+            userYear = userInfo.subscriptionDate.jYMD()[0],
             jYMD = (new Date()).jYMD(),
             currentYear = jYMD[0],
             currentMonth = jYMD[1];

@@ -30,6 +30,7 @@ var port = 50302;
 var javascripts_app = [
     './app/src/libraries/**/*.js',
     './app/src/modules/**/*.js',
+    './app/src/utilities/global.js',
     './app/src/utilities/**/*.js',
     './app/src/app.js',
     './app/src/app-config.js',
@@ -80,6 +81,8 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/modal.rtl.min.css',
     './app/lib/semantic/dist/components/loader.rtl.min.css',
     './app/lib/semantic/dist/components/progress.rtl.min.css',
+    './app/lib/semantic/dist/components/dropdown.rtl.min.css',
+    './app/lib/semantic/dist/components/label.rtl.min.css',
     './app/lib/semantic/dist/components/image.min.css',
     './app/lib/semantic/dist/components/menu.min.css',
     './app/lib/semantic/dist/components/button.min.css',
@@ -89,7 +92,6 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/sticky.min.css',
     './app/lib/semantic/dist/components/statistic.min.css',
     './app/lib/semantic/dist/components/divider.min.css',
-    './app/lib/semantic/dist/components/dropdown.rtl.min.css',
     //'./app/lib/semantic/dist/components/icon.min.css',
 ];
 

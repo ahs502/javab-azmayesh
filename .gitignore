@@ -22,6 +22,8 @@ app/lib/semantic/*
 _data/*
 _file/*
 
+test.js
+
 *.csv
 *.dat
 #*.log

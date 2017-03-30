@@ -142,7 +142,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
         function processUserInfo(userInfo) {
             if (userInfo) {
                 userInfo.subscriptionDate = new Date(userInfo.timeStamp);
-                delete userInfo.timeStamp;
+                // delete userInfo.timeStamp; // DO NOT ACTIVATE THIS LINE EVER!
             }
             return userInfo;
         }

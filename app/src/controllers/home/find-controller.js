@@ -1,4 +1,5 @@
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeout',
     function($rootScope, $scope, $state, $timeout) {
@@ -10,13 +11,25 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
         $scope.setBackHandler(false);
 
         //$scope.nationalCode
-        //$scope.testNumber
+        //$scope.postCode
+
+        $scope.vs = new ValidationSystem($scope)
+            .field('nationalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.nationalCode()
+            ])
+            .field('postCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.numberCode(4)
+            ]);
 
         function seeAnswer() {
-            //TODO: check for validity
+            $scope.vs.validate();
+            if (!$scope.vs.status()) return;
+
             $state.go('answer', {
                 p: $scope.nationalCode,
-                n: $scope.testNumber,
+                n: $scope.postCode,
                 previousState: 'home.find',
                 previousStateData: null
             });

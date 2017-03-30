@@ -5,18 +5,23 @@
             <div class="center aligned row">
 
                 <form class="ui {{ findingAnswer ? 'loading' : '' }} form">
-                    <div class="field">
+
+                    <div class="field" ng-class="{'error': vs.error('nationalCode')}">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
-                            <input type="text" ng-model="nationalCode" placeholder="کد ملی">
+                            <input type="text" ng-model="nationalCode" ng-change="vs.check('nationalCode')" placeholder="کد ملی">
                         </div>
+                        <div class="ui pointing red basic label" ng-if="vs.error('nationalCode')" ng-bind="vs.error('nationalCode')"></div>
                     </div>
-                    <div class="field">
-                        <!--<label class="nazanin">شماره رسید آزمایش</label>-->
+
+                    <div class="field" ng-class="{'error': vs.error('postCode')}">
+                        <!--<label class="nazanin">شماره آزمایش</label>-->
                         <div class="ui input">
-                            <input type="text" ng-model="testNumber" placeholder="شماره آزمایش">
+                            <input type="text" ng-model="postCode" ng-change="vs.check('postCode')" placeholder="شماره آزمایش">
                         </div>
+                        <div class="ui pointing red basic label" ng-if="vs.error('postCode')" ng-bind="vs.error('postCode')"></div>
                     </div>
+
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="seeAnswer()">
                             <span class="nazanin">مشاهده نتیجه آزمایش</span>
@@ -27,6 +32,7 @@
                             <span class="nazanin">شماره آزمایش خود را فراموش کرده ام</span>
                         </button>
                     </div>
+
                 </form>
 
             </div>
