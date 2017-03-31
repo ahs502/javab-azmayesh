@@ -1,4 +1,5 @@
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$stateParams', 'UserService',
     function($rootScope, $scope, $state, $stateParams, userService) {
@@ -17,7 +18,15 @@ app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$sta
 
         //$scope.validationCode
 
+        $scope.vs = new ValidationSystem($scope)
+            .field('validationCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.numberCode(6)
+            ]);
+
         function confirmRegisteration() {
+            if (!$scope.vs.validate()) return;
+
             $scope.confirmingRegisteration = true;
             return userService.registerConfirm($scope.username, $scope.validationCode)
                 .then(function() {

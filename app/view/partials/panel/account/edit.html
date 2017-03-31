@@ -18,46 +18,52 @@
 
                 <form class="ui {{ editingAccount ? 'loading' : '' }} form">
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('labName')}">
                         <label class="nazanin">نام کامل آزمایشگاه</label>
                         <div class="ui input">
-                            <input type="text" ng-model="user.labName" placeholder="نام کامل آزمایشگاه">
+                            <input class="nazanin ja-rtl" type="text" ng-model="user.labName" ng-change="vs.check('labName')" placeholder="نام کامل آزمایشگاه">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('labName')" ng-bind="vs.error('labName')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
                         <label class="nazanin">تلفن همراه ارتباطی</label>
                         <div class="ui input">
-                            <input type="text" ng-model="user.mobilePhoneNumber" placeholder="09123456789">
+                            <input type="tel" ng-model="user.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" placeholder="f=09xxxxxxxxx">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
                         <label class="nazanin">تلفن ثابت</label>
                         <div class="ui input">
-                            <input type="text" ng-model="user.phoneNumber" placeholder="021-12345678">
+                            <input type="tel" ng-model="user.phoneNumber" ng-change="vs.check('phoneNumber')" placeholder="تلفن ثابت">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('phoneNumber')" ng-bind="vs.error('phoneNumber')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('address')}">
                         <label class="nazanin">آدرس</label>
                         <div class="ui input">
-                            <input type="text" ng-model="user.address" placeholder="نام شهر - خیابان اصلی - خیابان فرعی - پلاک - واحد">
+                            <input class="nazanin ja-rtl" type="text" ng-model="user.address" ng-change="vs.check('address')" placeholder="آدرس کامل آزمایشگاه">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('address')" ng-bind="vs.error('address')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('postalCode')}">
                         <label class="nazanin">کد پستی</label>
                         <div class="ui input">
-                            <input type="text" ng-model="user.postalCode" placeholder="1234567890">
+                            <input type="tel" ng-model="user.postalCode" ng-change="vs.check('postalCode')" placeholder="کد پستی 10 رقمی">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('postalCode')" ng-bind="vs.error('postalCode')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('websiteAddress')}">
                         <label class="nazanin">آدرس وبسایت</label>
                         <div class="ui input">
-                            <input type="text" ng-model="user.websiteAddress" placeholder="example.ir">
+                            <input type="url" ng-model="user.websiteAddress" ng-change="vs.check('websiteAddress')" placeholder="you.ir">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('websiteAddress')" ng-bind="vs.error('websiteAddress')"></div>
                     </div>
 
                     <div class="field">

@@ -1,4 +1,5 @@
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserService',
     function($rootScope, $scope, $state, userService) {
@@ -12,8 +13,20 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
         //$scope.username
         //$scope.password
 
+        $scope.vs = new ValidationSystem($scope)
+            .field('username', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.username(),
+                ValidationSystem.validators.minLength(4)
+            ])
+            .field('password', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(4)
+            ]);
+
         function login() {
-            //TODO: check for validity
+            if (!$scope.vs.validate()) return;
+
             $scope.loggingIn = true;
             return userService.login($scope.username, $scope.password)
                 .then(function(userInfo) {

@@ -17,17 +17,21 @@
             <div class="center aligned row">
 
                 <form class="ui {{ confirmingRegisteration ? 'loading' : '' }} form">
-                    <div class="field">
+                    
+                    <div class="field" ng-class="{'error': vs.error('validationCode')}">
                         <!--<label class="nazanin">کد اعتبار سنجی</label>-->
                         <div class="ui input">
-                            <input type="text" ng-model="validationCode" placeholder="کد اعتبار سنجی">
+                            <input type="tel" ng-model="validationCode" ng-change="vs.check('validationCode')" placeholder="کد اعتبار سنجی">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('validationCode')" ng-bind="vs.error('validationCode')"></div>
                     </div>
+                    
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="confirmRegisteration()">
                             <span class="nazanin">ثبت نام</span>
                         </button>
                     </div>
+                    
                 </form>
 
             </div>

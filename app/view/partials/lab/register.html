@@ -18,78 +18,88 @@
 
                 <form class="ui {{ sendingRegisterationForm ? 'loading' : '' }} form" ng-submit="sendRegisterationForm()">
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('labName')}">
                         <label class="nazanin">نام کامل آزمایشگاه</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.labName" placeholder="نام کامل آزمایشگاه">
+                            <input class="nazanin ja-rtl" type="text" ng-model="model.labName" ng-change="vs.check('labName')" placeholder="نام کامل آزمایشگاه">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('labName')" ng-bind="vs.error('labName')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
                         <label class="nazanin">تلفن همراه ارتباطی</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.mobilePhoneNumber" placeholder="09123456789">
+                            <input type="tel" ng-model="model.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" placeholder="09xxxxxxxxx">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
                         <label class="nazanin">تلفن ثابت</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.phoneNumber" placeholder="021-12345678">
+                            <input type="tel" ng-model="model.phoneNumber" ng-change="vs.check('phoneNumber')" placeholder="تلفن ثابت">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('phoneNumber')" ng-bind="vs.error('phoneNumber')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('address')}">
                         <label class="nazanin">آدرس</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.address" placeholder="نام شهر - خیابان اصلی - خیابان فرعی - پلاک - واحد">
+                            <input class="nazanin ja-rtl" type="text" ng-model="model.address" ng-change="vs.check('address')" placeholder="آدرس کامل آزمایشگاه">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('address')" ng-bind="vs.error('address')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('postalCode')}">
                         <label class="nazanin">کد پستی</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.postalCode" placeholder="1234567890">
+                            <input type="tel" ng-model="model.postalCode" ng-change="vs.check('postalCode')" placeholder="کد پستی 10 رقمی">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('postalCode')" ng-bind="vs.error('postalCode')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('websiteAddress')}">
                         <label class="nazanin">آدرس وبسایت</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.websiteAddress" placeholder="example.ir">
+                            <input type="url" ng-model="model.websiteAddress" ng-change="vs.check('websiteAddress')" placeholder="you.ir">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('websiteAddress')" ng-bind="vs.error('websiteAddress')"></div>
                     </div>
 
                     <p class="nazanin">
                         <bdi>مشخصات شناسه کاربری</bdi>
                     </p>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('username')}">
                         <label class="nazanin">نام کاربری</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.username" placeholder="username">
+                            <input type="text" ng-model="model.username" ng-change="vs.check('username')" placeholder="username">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('password')}">
                         <label class="nazanin">کلمه عبور</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.password">
+                            <input type="password" ng-model="model.password" ng-change="vs.check('password', 'passwordAgain')">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('password')" ng-bind="vs.error('password')"></div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('passwordAgain')}">
                         <label class="nazanin">تکرار کلمه عبور</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.passwordAgain">
+                            <input type="password" ng-model="model.passwordAgain" ng-change="vs.check('password', 'passwordAgain')">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('passwordAgain')" ng-bind="vs.error('passwordAgain')"></div>
                     </div>
 
                     <div ng-if="showGoogleRecaptcha" vc-recaptcha theme="'light'" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('acceptRules')}">
+                        <div class="ui left pointing red basic label nazanin" ng-if="vs.error('acceptRules')" ng-bind="vs.error('acceptRules')"></div>
                         <div class="ui checkbox">
-                            <input type="checkbox" ng-model="model.acceptRules">
+                            <input type="checkbox" ng-model="model.acceptRules" ng-change="vs.check('acceptRules')">
                             <label class="nazanin">قوانین و مقررات را می پذیرم</label>
                         </div>
                     </div>

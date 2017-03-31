@@ -1,4 +1,5 @@
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'HistoryService',
     function($rootScope, $scope, $state, $stateParams, $timeout, historyService) {
@@ -17,8 +18,15 @@ app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$sta
 
         //$scope.otp
 
+        $scope.vs = new ValidationSystem($scope)
+            .field('otp', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.numberCode(6)
+            ]);
+
         function findHistory() {
-            //TODO: check for validity
+            if (!$scope.vs.validate()) return;
+
             $scope.findingHistory = true;
             historyService.findHistory($scope.nationalCode, otpId, requestCode, $scope.otp)
                 .then(function(data) {

@@ -1,4 +1,5 @@
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout', 'HistoryService',
     function($rootScope, $scope, $state, $timeout, historyService) {
@@ -14,8 +15,19 @@ app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout
         //$scope.nationalCode
         //$scope.mobilePhoneNumber
 
+        $scope.vs = new ValidationSystem($scope)
+            .field('nationalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.nationalCode()
+            ])
+            .field('mobilePhoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.mobilePhoneNumber()
+            ]);
+
         function sendOtp() {
-            //TODO: check for validity
+            if (!$scope.vs.validate()) return;
+
             $scope.sendingOtp = true;
             historyService.generateOtp($scope.nationalCode, $scope.mobilePhoneNumber)
                 .then(function(data) {

@@ -17,17 +17,21 @@
             <div class="center aligned row">
 
                 <form class="ui {{ findingHistory ? 'loading' : '' }} form">
-                    <div class="field">
+                    
+                    <div class="field" ng-class="{'error': vs.error('otp')}">
                         <!--<label class="nazanin">رمز یک بار مصرف</label>-->
                         <div class="ui input">
-                            <input type="text" ng-model="otp" placeholder="رمز یک بار مصرف">
+                            <input type="tel" ng-model="otp" ng-change="vs.check('otp')" placeholder="رمز یک بار مصرف">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('otp')" ng-bind="vs.error('otp')"></div>
                     </div>
+                    
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="findHistory()">
                             <span class="nazanin">مشاهده سوابق آزمایشگاهی</span>
                         </button>
                     </div>
+                    
                 </form>
 
             </div>

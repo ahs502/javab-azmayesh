@@ -5,18 +5,23 @@
             <div class="center aligned row">
 
                 <form class="ui {{ loggingIn ? 'loading' : '' }} form">
-                    <div class="field">
+                    
+                    <div class="field" ng-class="{'error': vs.error('username')}">
                         <!--<label class="nazanin">نام کاربری</label>-->
                         <div class="ui input">
-                            <input type="text" ng-model="username" placeholder="نام کاربری">
+                            <input type="text" ng-model="username" ng-change="vs.check('username')" placeholder="نام کاربری">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>
-                    <div class="field">
+                    
+                    <div class="field" ng-class="{'error': vs.error('password')}">
                         <!--<label class="nazanin">کلمه عبور</label>-->
                         <div class="ui input">
-                            <input type="password" ng-model="password" placeholder="کلمه عبور">
+                            <input type="password" ng-model="password" ng-change="vs.check('password')" placeholder="کلمه عبور">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('password')" ng-bind="vs.error('password')"></div>
                     </div>
+                    
                     <div class="field">
                         <div class="two ui buttons">
                             <button class="fluid ui green button" ng-click="$state.go('lab.register')">
@@ -33,6 +38,7 @@
                             <span class="nazanin">کلمه عبور خود را فراموش کرده ام</span>
                         </button>
                     </div>
+                    
                 </form>
 
             </div>

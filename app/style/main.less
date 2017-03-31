@@ -14,26 +14,26 @@ body {
 }
 
 .ja-rtl {
-	directiorn: rtl;
+	direction: rtl;
 }
 
 .ja-ltr {
-	directiorn: ltr;
+	direction: ltr;
 }
 
 .ja-align-right {
-	text-align: -webkit-right;
-	text-align: right;
+	text-align: -webkit-right !important;
+	text-align: right !important;
 }
 
 .ja-align-left {
-	text-align: -webkit-left;
-	text-align: left;
+	text-align: -webkit-left !important;
+	text-align: left !important;
 }
 
 .ja-align-center {
-	text-align: -webkit-center;
-	text-align: center;
+	text-align: -webkit-center !important;
+	text-align: center !important;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -230,6 +230,18 @@ body {
 ////////////////////////////////////////////////////////////////////////////
 .ui.modal> .content {
 	width: 90%;
+}
+
+.ui.form {
+	.ui.input input.nazanin {
+		font-family: BNazanin;
+		font-size: 130%;
+		padding: 7px;
+		text-rendering: geometricPrecision;
+	}
+	textarea.nazanin {
+		font-size: 120%;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////

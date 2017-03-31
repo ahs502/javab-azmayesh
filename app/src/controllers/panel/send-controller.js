@@ -1,5 +1,6 @@
 /*global app*/
 /*global $*/
+/*global ValidationSystem*/
 
 app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http', 'AnswerService',
     function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http, answerService) {
@@ -54,19 +55,52 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         //$scope.person.email
         //$scope.notes
 
+        $scope.vs = new ValidationSystem($scope.person)
+            .field('nationalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.nationalCode()
+            ])
+            .field('fullName', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(3)
+            ])
+            .field('mobilePhoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.mobilePhoneNumber()
+            ])
+            .field('phoneNumber', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.phoneNumber()
+            ])
+            .field('extraPhoneNumber', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.phoneNumber()
+            ])
+            .field('email', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.email()
+            ]);
+
         var fileId = 0;
 
         function loadPatientInfo() {
-            //TODO: check for validity of $scope.person.nationalCode
-            if (!$scope.person.nationalCode) return;
+            if (!$scope.vs.see('nationalCode')) return;
+
+            if ($scope.person.fullName && $scope.person.mobilePhoneNumber && $scope.person.phoneNumber &&
+                $scope.person.extraPhoneNumber && $scope.person.email) return;
+
             $scope.sendingAnswer = true;
             return answerService.patientInfo($scope.person.nationalCode)
                 .then(function(patient) {
-                    $scope.person.fullName = patient.fullName;
-                    $scope.person.mobilePhoneNumber = patient.numbers[0];
-                    $scope.person.phoneNumber = patient.numbers[1];
-                    $scope.person.extraPhoneNumber = patient.numbers[2];
-                    $scope.person.email = patient.email;
+
+                    $scope.person.fullName = $scope.person.fullName || patient.fullName;
+                    $scope.person.mobilePhoneNumber = $scope.person.mobilePhoneNumber || patient.numbers[0];
+                    $scope.person.phoneNumber = $scope.person.phoneNumber || patient.numbers[1];
+                    $scope.person.extraPhoneNumber = $scope.person.extraPhoneNumber || patient.numbers[2];
+                    $scope.person.email = $scope.person.email || patient.email;
+
+                    $scope.vs.check('fullName', 'mobilePhoneNumber', 'phoneNumber', 'extraPhoneNumber', 'email');
+
                 }, function(code) {
                     // No problem!
                 })
@@ -76,7 +110,8 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         }
 
         function sendAnswer() {
-            //TODO: check for validity ($scope.person.? for example)
+            if (!$scope.vs.validate()) return;
+
             $scope.sendingAnswer = true;
             answerService.send($scope.person, $scope.files, $scope.notes)
                 .then(function() {

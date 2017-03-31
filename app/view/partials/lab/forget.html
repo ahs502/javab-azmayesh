@@ -17,23 +17,29 @@
             <div class="center aligned row">
 
                 <form class="ui {{ restoringPassword ? 'loading' : '' }} form">
-                    <div class="field">
+                    
+                    <div class="field" ng-class="{'error': vs.error('username')}">
                         <!--<label class="nazanin">نام کاربری</label>-->
                         <div class="ui input">
-                            <input type="text" ng-model="username" placeholder="نام کاربری">
+                            <input type="text" ng-model="username" ng-change="vs.check('username')" placeholder="نام کاربری">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>
-                    <div class="field">
+                    
+                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
                         <!--<label class="nazanin">شماره تلفن همراه</label>-->
                         <div class="ui input">
-                            <input type="text" ng-model="mobilePhoneNumber" placeholder="شماره تلفن همراه">
+                            <input type="tel" ng-model="mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" placeholder="شماره تلفن همراه">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
                     </div>
+                    
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="restorePassword()">
                             <span class="nazanin">دریافت رمز</span>
                         </button>
                     </div>
+                    
                 </form>
 
             </div>

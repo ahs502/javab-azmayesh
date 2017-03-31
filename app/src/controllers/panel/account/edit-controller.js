@@ -1,4 +1,5 @@
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
     function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
@@ -22,8 +23,37 @@ app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', 
 
         $scope.setPageTitle('ویرایش اطلاعات کاربری آزمایشگاه');
 
+        $scope.vs = new ValidationSystem($scope.user)
+            .field('labName', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(5)
+            ])
+            .field('mobilePhoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.mobilePhoneNumber()
+            ])
+            .field('phoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.phoneNumber()
+            ])
+            .field('address', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(10)
+            ])
+            .field('postalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.integer(),
+                ValidationSystem.validators.length(10)
+            ])
+            .field('websiteAddress', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.minLength(5),
+                ValidationSystem.validators.url()
+            ]);
+
         function editAccount() {
-            //TODO: check for validity then send request to server...
+            if (!$scope.vs.validate()) return;
+
             $scope.editingAccount = true;
             userService.editAccount($rootScope.data.labData.username, $scope.user)
                 .then(function() {

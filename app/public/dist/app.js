@@ -25,26 +25,25 @@ global.global = global;
 	AHS502 : Start of 'ValidationSystem.js'
 */
 
+/*global toPersianNumber*/
+
 (function(global) {
 
     global.ValidationSystem = ValidationSystem;
 
-    ValidationSystem.validators = {
-        notEmpty: notEmptyValidator,
-        nationalCode: nationalCodeValidator,
-        numberCode: numberCodeValidator,
-    };
+    ////////////////////////////////////////////////////////////////////////////
 
     function ValidationSystem(scope) {
 
         var fields = {};
 
-        this.field = field;
-        this.error = error;
-        this.clear = clear;
-        this.check = check;
-        this.validate = validate;
-        this.status = status;
+        this.field = field; // Define a new field => this (so you could chain them)
+        this.error = error; // Get/Set error message for a field => field's error message
+        this.clear = clear; // Clear some or all error messages => nothing!
+        this.see = see; // Checks some or all fields validity status without setting/removing any error messages => summary of those fields validity
+        this.check = check; // Checks some or all fields validity status and tries to remove their error messages if possible => summary of those fields validity
+        this.validate = validate; // Checks some or all fields validity status and updates their error messages => summary of those fields validity
+        this.status = status; // Summarize some of all fields validity status without checking or updating their error messages => summary of those fields validity
 
         function field(fieldName, validators) {
             fields[fieldName] = {
@@ -67,20 +66,33 @@ global.global = global;
             });
         }
 
-        function check() {
+        function see() {
+            var valid = true;
             fieldNames(arguments).forEach(function(fieldName) {
                 var fieldData = fields[fieldName];
-                if (!run(fieldName, fieldData.validators)) {
-                    fieldData.error = null;
-                }
+                if (run(fieldName, fieldData.validators)) valid = false;
             });
+            return valid;
+        }
+
+        function check() {
+            var valid = true;
+            fieldNames(arguments).forEach(function(fieldName) {
+                var fieldData = fields[fieldName];
+                fieldData.error = fieldData.error && run(fieldName, fieldData.validators);
+                if (fieldData.error) valid = false;
+            });
+            return valid;
         }
 
         function validate() {
+            var valid = true;
             fieldNames(arguments).forEach(function(fieldName) {
                 var fieldData = fields[fieldName];
                 fieldData.error = run(fieldName, fieldData.validators);
+                if (fieldData.error) valid = false;
             });
+            return valid;
         }
 
         function status() {
@@ -115,10 +127,35 @@ global.global = global;
 
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    ValidationSystem.validators = {
+        notEmpty: notEmptyValidator,
+        notRequired: notRequiredValidator,
+        nationalCode: nationalCodeValidator,
+        numberCode: numberCodeValidator,
+        phoneNumber: phoneNumberValidator,
+        mobilePhoneNumber: mobilePhoneNumberValidator,
+        minLength: minLengthValidator,
+        length: lengthValidator,
+        username: usernameValidator,
+        integer: integerValidator,
+        url: urlValidator,
+        email: emailValidator,
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+
     function notEmptyValidator(message) {
         message = message || 'پُر کردن این فیلد الزامی است';
         return function(value) {
             return value ? null : message;
+        };
+    }
+
+    function notRequiredValidator() {
+        return function(value) {
+            return !value;
         };
     }
 
@@ -133,6 +170,62 @@ global.global = global;
         message = message || 'کد وارد شده صحیح نمی باشد';
         return function(value) {
             return String(value).length === length && /^[0-9]+$/.test(value) ? null : message;
+        };
+    }
+
+    function phoneNumberValidator(message) {
+        message = message || 'شماره تلفن وارد شده صحیح نمی باشد';
+        return function(value) {
+            return /^(\+98)?[0-9]{5,15}$/.test(value) ? null : message;
+        };
+    }
+
+    function mobilePhoneNumberValidator(message) {
+        message = message || 'شماره موبایل وارد شده صحیح نمی باشد';
+        return function(value) {
+            return /^(\+989|09)[0-9]{9}$/.test(value) ? null : message;
+        };
+    }
+
+    function minLengthValidator(length, message) {
+        message = message || 'این فیلد باید حداقل ' + toPersianNumber(length) + ' حرف داشته باشد';
+        return function(value) {
+            return String(value).length >= length ? null : message;
+        };
+    }
+
+    function lengthValidator(length, message) {
+        message = message || 'این فیلد باید دقیقاً ' + toPersianNumber(length) + ' حرف داشته باشد';
+        return function(value) {
+            return String(value).length === length ? null : message;
+        };
+    }
+
+    function usernameValidator(message) {
+        message = message || 'نام کاربری فقط باید شامل حروف لاتین، ارقام و علامت های نقطه و خط زیر _ باشد';
+        return function(value) {
+            return /^[a-zA-Z_][a-zA-Z_0-9]+$/.test(value) ? null : message;
+        };
+    }
+
+    function integerValidator(message) {
+        message = message || 'در این فیلد فقط استفاده از ارقام مجاز است';
+        return function(value) {
+            return /^[0-9]*$/.test(value) ? null : message;
+        };
+    }
+
+    function urlValidator(message) {
+        message = message || 'آدرس وب سایت صحیح نمی باشد';
+        return function(value) {
+            return /^((http|https):\/\/)?[a-zA-Z0-9-_\.]+\.[a-zA-Z0-9]+/.test(value) ? null : message;
+        };
+    }
+
+    function emailValidator(message) {
+        message = message || 'پست الکترونیکی صحیح نمی باشد';
+        return function(value) {
+            return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(value) ? null : message;
         };
     }
 
@@ -1308,9 +1401,8 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
             ]);
 
         function seeAnswer() {
-            $scope.vs.validate();
-            if (!$scope.vs.status()) return;
-
+            if (!$scope.vs.validate()) return;
+            
             $state.go('answer', {
                 p: $scope.nationalCode,
                 n: $scope.postCode,
@@ -1333,6 +1425,7 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
 */
 
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'HistoryService',
     function($rootScope, $scope, $state, $stateParams, $timeout, historyService) {
@@ -1351,8 +1444,15 @@ app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$sta
 
         //$scope.otp
 
+        $scope.vs = new ValidationSystem($scope)
+            .field('otp', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.numberCode(6)
+            ]);
+
         function findHistory() {
-            //TODO: check for validity
+            if (!$scope.vs.validate()) return;
+
             $scope.findingHistory = true;
             historyService.findHistory($scope.nationalCode, otpId, requestCode, $scope.otp)
                 .then(function(data) {
@@ -1382,6 +1482,7 @@ app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$sta
 */
 
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout', 'HistoryService',
     function($rootScope, $scope, $state, $timeout, historyService) {
@@ -1397,8 +1498,19 @@ app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout
         //$scope.nationalCode
         //$scope.mobilePhoneNumber
 
+        $scope.vs = new ValidationSystem($scope)
+            .field('nationalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.nationalCode()
+            ])
+            .field('mobilePhoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.mobilePhoneNumber()
+            ]);
+
         function sendOtp() {
-            //TODO: check for validity
+            if (!$scope.vs.validate()) return;
+
             $scope.sendingOtp = true;
             historyService.generateOtp($scope.nationalCode, $scope.mobilePhoneNumber)
                 .then(function(data) {
@@ -1428,6 +1540,7 @@ app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout
 */
 
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeout', 'UserService',
     function($rootScope, $scope, $state, $timeout, userService) {
@@ -1443,8 +1556,20 @@ app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeo
         //$scope.username
         //$scope.mobilePhoneNumber
 
+        $scope.vs = new ValidationSystem($scope)
+            .field('username', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.username(),
+                ValidationSystem.validators.minLength(4)
+            ])
+            .field('mobilePhoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.mobilePhoneNumber()
+            ]);
+
         function restorePassword() {
-            //TODO: check for validity
+            if (!$scope.vs.validate()) return;
+
             $scope.restoringPassword = true;
             return userService.restorePassword($scope.username, $scope.mobilePhoneNumber)
                 .then(function() {
@@ -1470,6 +1595,7 @@ app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeo
 */
 
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserService',
     function($rootScope, $scope, $state, userService) {
@@ -1483,8 +1609,20 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
         //$scope.username
         //$scope.password
 
+        $scope.vs = new ValidationSystem($scope)
+            .field('username', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.username(),
+                ValidationSystem.validators.minLength(4)
+            ])
+            .field('password', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(4)
+            ]);
+
         function login() {
-            //TODO: check for validity
+            if (!$scope.vs.validate()) return;
+
             $scope.loggingIn = true;
             return userService.login($scope.username, $scope.password)
                 .then(function(userInfo) {
@@ -1511,6 +1649,7 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
 */
 
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
     'vcRecaptchaService', 'UserService', 'Config',
@@ -1544,6 +1683,63 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
         //$scope.model.passwordAgain
         //$scope.model.acceptRules
 
+        $scope.vs = new ValidationSystem($scope.model)
+            .field('labName', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(5)
+            ])
+            .field('mobilePhoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.mobilePhoneNumber()
+            ])
+            .field('phoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.phoneNumber()
+            ])
+            .field('address', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(10)
+            ])
+            .field('postalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.integer(),
+                ValidationSystem.validators.length(10)
+            ])
+            .field('websiteAddress', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.minLength(5),
+                ValidationSystem.validators.url()
+            ])
+            .field('username', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.username(),
+                ValidationSystem.validators.minLength(4)
+            ])
+            .field('password', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(4),
+                function(value) {
+                    if ($scope.model.passwordAgain && $scope.model.passwordAgain != value) {
+                        return 'کلمه های عبور وارد شده یکسان نیستند';
+                    }
+                }
+            ])
+            .field('passwordAgain', [
+                function(value) {
+                    if (!$scope.model.password) return true;
+                },
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(4),
+                function(value) {
+                    if ($scope.model.password != value) {
+                        return 'کلمه های عبور وارد شده یکسان نیستند';
+                    }
+                }
+            ])
+            .field('acceptRules', [
+                ValidationSystem.validators.notEmpty('پذیرفتن قوانین و مقررات الزامی است')
+            ]);
+
         function setResponse(response) {
             $scope.response = response;
         }
@@ -1558,7 +1754,8 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
         }
 
         function sendRegisterationForm() {
-            //TODO: check for validity
+            if (!$scope.vs.validate()) return;
+
             $scope.sendingRegisterationForm = true;
             config.google_recaptcha && ($scope.model.response = $scope.response);
             return userService.register($scope.model)
@@ -1588,6 +1785,7 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
 */
 
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$stateParams', 'UserService',
     function($rootScope, $scope, $state, $stateParams, userService) {
@@ -1606,7 +1804,15 @@ app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$sta
 
         //$scope.validationCode
 
+        $scope.vs = new ValidationSystem($scope)
+            .field('validationCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.numberCode(6)
+            ]);
+
         function confirmRegisteration() {
+            if (!$scope.vs.validate()) return;
+
             $scope.confirmingRegisteration = true;
             return userService.registerConfirm($scope.username, $scope.validationCode)
                 .then(function() {
@@ -1923,6 +2129,7 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
 
 /*global app*/
 /*global $*/
+/*global ValidationSystem*/
 
 app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http', 'AnswerService',
     function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http, answerService) {
@@ -1977,19 +2184,52 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         //$scope.person.email
         //$scope.notes
 
+        $scope.vs = new ValidationSystem($scope.person)
+            .field('nationalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.nationalCode()
+            ])
+            .field('fullName', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(3)
+            ])
+            .field('mobilePhoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.mobilePhoneNumber()
+            ])
+            .field('phoneNumber', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.phoneNumber()
+            ])
+            .field('extraPhoneNumber', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.phoneNumber()
+            ])
+            .field('email', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.email()
+            ]);
+
         var fileId = 0;
 
         function loadPatientInfo() {
-            //TODO: check for validity of $scope.person.nationalCode
-            if (!$scope.person.nationalCode) return;
+            if (!$scope.vs.see('nationalCode')) return;
+
+            if ($scope.person.fullName && $scope.person.mobilePhoneNumber && $scope.person.phoneNumber &&
+                $scope.person.extraPhoneNumber && $scope.person.email) return;
+
             $scope.sendingAnswer = true;
             return answerService.patientInfo($scope.person.nationalCode)
                 .then(function(patient) {
-                    $scope.person.fullName = patient.fullName;
-                    $scope.person.mobilePhoneNumber = patient.numbers[0];
-                    $scope.person.phoneNumber = patient.numbers[1];
-                    $scope.person.extraPhoneNumber = patient.numbers[2];
-                    $scope.person.email = patient.email;
+
+                    $scope.person.fullName = $scope.person.fullName || patient.fullName;
+                    $scope.person.mobilePhoneNumber = $scope.person.mobilePhoneNumber || patient.numbers[0];
+                    $scope.person.phoneNumber = $scope.person.phoneNumber || patient.numbers[1];
+                    $scope.person.extraPhoneNumber = $scope.person.extraPhoneNumber || patient.numbers[2];
+                    $scope.person.email = $scope.person.email || patient.email;
+
+                    $scope.vs.check('fullName', 'mobilePhoneNumber', 'phoneNumber', 'extraPhoneNumber', 'email');
+
                 }, function(code) {
                     // No problem!
                 })
@@ -1999,7 +2239,8 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         }
 
         function sendAnswer() {
-            //TODO: check for validity ($scope.person.? for example)
+            if (!$scope.vs.validate()) return;
+
             $scope.sendingAnswer = true;
             answerService.send($scope.person, $scope.files, $scope.notes)
                 .then(function() {
@@ -2194,6 +2435,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
 /*global app*/
 /*global $*/
+/*global ValidationSystem*/
 
 app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
     function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
@@ -2203,8 +2445,6 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
         $scope.confirming = false;
 
         $scope.action = $stateParams.action;
-
-        // $scope.verificationCode
 
         $scope.setBackHandler(function() {
             if ($scope.action === 'change password')
@@ -2217,8 +2457,17 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
 
         $scope.setPageTitle('تأیید عملیات');
 
+        // $scope.verificationCode
+
+        $scope.vs = new ValidationSystem($scope)
+            .field('verificationCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.numberCode(4)
+            ]);
+
         function confirm() {
-            //TODO: check for validity then send request to server...
+            if (!$scope.vs.validate()) return;
+
             $scope.confirming = true;
             userService.editConfirm($rootScope.data.labData.username, $scope.verificationCode)
                 .then(function() {
@@ -2253,6 +2502,7 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
 */
 
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
     function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
@@ -2276,8 +2526,37 @@ app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', 
 
         $scope.setPageTitle('ویرایش اطلاعات کاربری آزمایشگاه');
 
+        $scope.vs = new ValidationSystem($scope.user)
+            .field('labName', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(5)
+            ])
+            .field('mobilePhoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.mobilePhoneNumber()
+            ])
+            .field('phoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.phoneNumber()
+            ])
+            .field('address', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(10)
+            ])
+            .field('postalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.integer(),
+                ValidationSystem.validators.length(10)
+            ])
+            .field('websiteAddress', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.minLength(5),
+                ValidationSystem.validators.url()
+            ]);
+
         function editAccount() {
-            //TODO: check for validity then send request to server...
+            if (!$scope.vs.validate()) return;
+
             $scope.editingAccount = true;
             userService.editAccount($rootScope.data.labData.username, $scope.user)
                 .then(function() {
@@ -2305,7 +2584,7 @@ app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', 
 */
 
 /*global app*/
-/*global $*/
+/*global ValidationSystem*/
 
 app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
     function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
@@ -2314,18 +2593,46 @@ app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$stat
 
         $scope.changingPassword = false;
 
-        // $scope.oldPassword
-        // $scope.newPassword
-        // $scope.newPasswordAgain
-
         $scope.setBackHandler(function() {
             $state.go('panel.account.summary');
         });
 
         $scope.setPageTitle('تغییر کلمه عبور');
 
+        // $scope.oldPassword
+        // $scope.newPassword
+        // $scope.newPasswordAgain
+
+        $scope.vs = new ValidationSystem($scope)
+            .field('oldPassword', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(4),
+            ])
+            .field('newPassword', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(4),
+                function(value) {
+                    if ($scope.newPasswordAgain && $scope.newPasswordAgain != value) {
+                        return 'کلمه های عبور وارد شده یکسان نیستند';
+                    }
+                }
+            ])
+            .field('newPasswordAgain', [
+                function(value) {
+                    if (!$scope.newPassword) return true;
+                },
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(4),
+                function(value) {
+                    if ($scope.newPassword != value) {
+                        return 'کلمه های عبور وارد شده یکسان نیستند';
+                    }
+                }
+            ]);
+
         function changePassword() {
-            //TODO: check for validity then send request to server...
+            if (!$scope.vs.validate()) return;
+
             $scope.changingPassword = true;
             userService.editPassword($rootScope.data.labData.username, $scope.oldPassword, $scope.newPassword)
                 .then(function() {
@@ -2334,6 +2641,7 @@ app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$stat
                     });
                     $scope.changingPassword = false;
                 }, function(code) {
+                    //TODO: handle error...
                     $scope.changingPassword = false;
                     alert(code);
                 });

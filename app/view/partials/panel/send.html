@@ -18,41 +18,52 @@
 
                 <form class="ui {{ sendingAnswer ? 'loading' : '' }} form">
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('nationalCode')}">
                         <label class="nazanin">کد ملی بیمار</label>
                         <div class="ui input">
-                            <input type="text" ng-model="person.nationalCode" ng-blur="loadPatientInfo()" placeholder="کد ملی بیمار">
+                            <input type="tel" ng-model="person.nationalCode" ng-change="vs.check('nationalCode'); loadPatientInfo()" placeholder="کد ملی">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('nationalCode')" ng-bind="vs.error('nationalCode')"></div>
                     </div>
-                    <div class="field">
+
+                    <div class="field" ng-class="{'error': vs.error('fullName')}">
                         <label class="nazanin">نام و نام خانوادگی بیمار</label>
                         <div class="ui input">
-                            <input type="text" ng-model="person.fullName" placeholder="نام و نام خانوادگی بیمار">
+                            <input class="nazanin ja-rtl" type="text" ng-model="person.fullName" ng-change="vs.check('fullName')" placeholder="نام و نام خانوادگی">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('fullName')" ng-bind="vs.error('fullName')"></div>
                     </div>
-                    <div class="field">
+
+                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
                         <label class="nazanin">شماره تلفن همراه</label>
                         <div class="ui input">
-                            <input type="text" ng-model="person.mobilePhoneNumber" placeholder="09xxxxxxxxx">
+                            <input type="tel" ng-model="person.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" placeholder="09xxxxxxxxx">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
                     </div>
-                    <div class="field">
+
+                    <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
                         <label class="nazanin"><bdi>شماره تلفن دوم (اختیاری)</bdi></label>
                         <div class="ui input">
-                            <input type="text" ng-model="person.phoneNumber" placeholder="تلفن همراه یا ثابت">
+                            <input type="tel" ng-model="person.phoneNumber" ng-change="vs.check('phoneNumber')" placeholder="تلفن همراه یا ثابت">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('phoneNumber')" ng-bind="vs.error('phoneNumber')"></div>
                     </div>
-                    <div class="field">
+
+                    <div class="field" ng-class="{'error': vs.error('extraPhoneNumber')}">
                         <label class="nazanin"><bdi>شماره تلفن سوم (اختیاری)</bdi></label>
                         <div class="ui input">
-                            <input type="text" ng-model="person.extraPhoneNumber" placeholder="تلفن همراه یا ثابت">
+                            <input type="tel" ng-model="person.extraPhoneNumber" ng-change="vs.check('extraPhoneNumber')" placeholder="تلفن همراه یا ثابت">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('extraPhoneNumber')" ng-bind="vs.error('extraPhoneNumber')"></div>
                     </div>
-                    <div class="field">
+
+                    <div class="field" ng-class="{'error': vs.error('email')}">
                         <label class="nazanin"><bdi>آدرس پست الکترونیک (اختیاری)</bdi></label>
                         <div class="ui input">
-                            <input type="text" ng-model="person.email" placeholder="yourname@example.com">
+                            <input type="email" ng-model="person.email" ng-change="vs.check('email')" placeholder="your@email.com">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('email')" ng-bind="vs.error('email')"></div>
                     </div>
 
                     <div class="ui horizontal divider">
@@ -83,7 +94,7 @@
                     </div>
 
                     <div ng-hide="files.length">
-                        <span class="nazanin">لطفاً فایل های نتایج آزمایش را اضافه  کنید</span>
+                        <span class="nazanin">لطفاً فایل های نتایج آزمایش را اضافه کنید</span>
                     </div>
 
                     <!-- drop files zone -->
@@ -108,10 +119,10 @@
                     <div class="field">
                         <label class="nazanin"><bdi>توضیحات</bdi></label>
                         <div class="ui input">
-                            <input type="text" ng-model="notes" placeholder="">
+                            <textarea class="nazanin ja-rtl" ng-model="notes" rows=6 maxlength=10000 placeholder="توضیحات درباره نتایج"></textarea>
                         </div>
                     </div>
-
+                    
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="sendAnswer()">
                             <span class="nazanin">ارسال نتایج</span>

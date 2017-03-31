@@ -1,4 +1,5 @@
 /*global app*/
+/*global ValidationSystem*/
 
 app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeout', 'UserService',
     function($rootScope, $scope, $state, $timeout, userService) {
@@ -14,8 +15,20 @@ app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeo
         //$scope.username
         //$scope.mobilePhoneNumber
 
+        $scope.vs = new ValidationSystem($scope)
+            .field('username', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.username(),
+                ValidationSystem.validators.minLength(4)
+            ])
+            .field('mobilePhoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.mobilePhoneNumber()
+            ]);
+
         function restorePassword() {
-            //TODO: check for validity
+            if (!$scope.vs.validate()) return;
+
             $scope.restoringPassword = true;
             return userService.restorePassword($scope.username, $scope.mobilePhoneNumber)
                 .then(function() {

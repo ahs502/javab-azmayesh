@@ -1,5 +1,6 @@
 /*global app*/
 /*global $*/
+/*global ValidationSystem*/
 
 app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
     function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
@@ -9,8 +10,6 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
         $scope.confirming = false;
 
         $scope.action = $stateParams.action;
-
-        // $scope.verificationCode
 
         $scope.setBackHandler(function() {
             if ($scope.action === 'change password')
@@ -23,8 +22,17 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
 
         $scope.setPageTitle('تأیید عملیات');
 
+        // $scope.verificationCode
+
+        $scope.vs = new ValidationSystem($scope)
+            .field('verificationCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.numberCode(4)
+            ]);
+
         function confirm() {
-            //TODO: check for validity then send request to server...
+            if (!$scope.vs.validate()) return;
+
             $scope.confirming = true;
             userService.editConfirm($rootScope.data.labData.username, $scope.verificationCode)
                 .then(function() {
