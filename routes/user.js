@@ -1,3 +1,6 @@
+/*global Validator*/
+/*global ValidationSystem*/
+
 var express = require('express');
 var router = module.exports = express.Router();
 
@@ -14,13 +17,65 @@ var querystring = require('querystring');
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/register', function(req, res, next) {
-    var userData = req.body.userData;
-    var username = userData.username;
+    var userData = req.body.userData || {};
+    var user = {
+        labName: userData.labName,
+        mobilePhoneNumber: userData.mobilePhoneNumber,
+        phoneNumber: userData.phoneNumber,
+        address: userData.address,
+        postalCode: userData.postalCode,
+        websiteAddress: userData.websiteAddress,
+        username: userData.username,
+        password: userData.password
+    };
+
+    var userValidator = new Validator(user)
+        .field('labName', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.minLength(5)
+        ])
+        .field('mobilePhoneNumber', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.mobilePhoneNumber()
+        ])
+        .field('phoneNumber', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.phoneNumber()
+        ])
+        .field('address', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.minLength(10)
+        ])
+        .field('postalCode', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.integer(),
+            ValidationSystem.validators.length(10)
+        ])
+        .field('websiteAddress', [
+            ValidationSystem.validators.notRequired(),
+            ValidationSystem.validators.minLength(5),
+            ValidationSystem.validators.url()
+        ])
+        .field('username', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.username(),
+            ValidationSystem.validators.minLength(4)
+        ])
+        .field('password', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.minLength(4)
+        ]);
+    if (!userValidator.isValid()) {
+        return utils.resEndByCode(res, 80, {
+            errors: userValidator.getErrors()
+        });
+    }
+
+    user.mobilePhoneNumber = String(user.mobilePhoneNumber).toPhoneNumber();
+    user.phoneNumber = String(user.phoneNumber).toPhoneNumber();
 
     function registerUser() {
-        //TODO: Validate user data ...
-        var user = userData; //TODO: Extract user from userData ...
-
+        var username = user.username;
         ('user/' + username) in kfs(function(err, exists) {
             if (err) {
                 console.error(err);
@@ -125,19 +180,6 @@ router.post('/register/confirm', function(req, res, next) {
             data.user.timeStamp = Date.now();
 
             //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
-
-            // kfs('userIdName', function(err, data) {
-            //     if (err) {
-            //         console.error(err);
-            //         return utils.resEndByCode(res, 5);
-            //     }
-            //     data = data || {};
-            //     data[userId] = username;
-            //     kfs('userIdName', data, function(err) {
-            //         if (err) {
-            //             console.error(err);
-            //             return utils.resEndByCode(res, 5);
-            //         }
             kfs('user/' + username, data.user, function(err) {
                 if (err) {
                     console.error(err);
@@ -145,8 +187,6 @@ router.post('/register/confirm', function(req, res, next) {
                 }
                 utils.resEndByCode(res, 0);
             });
-            //     });
-            // });
 
         });
     });
@@ -218,20 +258,62 @@ router.post('/edit/:action', function(req, res, next) {
         var newUser;
         if (action === 'account') {
             newUser = req.body.newAccount;
+
+            var newUserValidator = new Validator(newUser)
+                .field('labName', [
+                    ValidationSystem.validators.notEmpty(),
+                    ValidationSystem.validators.minLength(5)
+                ])
+                .field('mobilePhoneNumber', [
+                    ValidationSystem.validators.notEmpty(),
+                    ValidationSystem.validators.mobilePhoneNumber()
+                ])
+                .field('phoneNumber', [
+                    ValidationSystem.validators.notEmpty(),
+                    ValidationSystem.validators.phoneNumber()
+                ])
+                .field('address', [
+                    ValidationSystem.validators.notEmpty(),
+                    ValidationSystem.validators.minLength(10)
+                ])
+                .field('postalCode', [
+                    ValidationSystem.validators.notEmpty(),
+                    ValidationSystem.validators.integer(),
+                    ValidationSystem.validators.length(10)
+                ])
+                .field('websiteAddress', [
+                    ValidationSystem.validators.notRequired(),
+                    ValidationSystem.validators.minLength(5),
+                    ValidationSystem.validators.url()
+                ]);
+            if (!newUserValidator.isValid()) {
+                return utils.resEndByCode(res, 80, {
+                    errors: newUserValidator.getErrors()
+                });
+            }
+
+            newUser.mobilePhoneNumber = String(newUser.mobilePhoneNumber).toPhoneNumber();
+            newUser.phoneNumber = String(newUser.phoneNumber).toPhoneNumber();
             newUser.username = user.username;
             newUser.password = user.password;
-            // newUser.passwordAgain = user.passwordAgain;
-            // newUser.acceptRules = user.acceptRules;
             newUser.timeStamp = user.timeStamp;
         }
         else if (action === 'password') {
-            var oldPassword = req.body.oldPassword,
-                newPassword = req.body.newPassword;
-            if (oldPassword !== user.password) {
-                return utils.resEndByCode(res, 40);
+            var newPassword = req.body.newPassword;
+
+            var newPasswordValidator = new ValidationSystem()
+                .field('newPassword', newPassword, [
+                    ValidationSystem.validators.notEmpty(),
+                    ValidationSystem.validators.minLength(4),
+                ]);
+            if (!newPasswordValidator.isValid()) {
+                return utils.resEndByCode(res, 80, {
+                    errors: newPasswordValidator.getErrors()
+                });
             }
+
             newUser = user;
-            newUser.password /*= newUser.passwordAgain*/ = newPassword;
+            newUser.password = newPassword;
         }
         var validationCode = utils.generateRandomCode(4);
         var userConfirmingKey = 'user/confirming/' + username;
@@ -275,6 +357,8 @@ router.post('/edit/confirm', function(req, res, next) {
         if (validationCode != data.validationCode) {
             return utils.resEndByCode(res, 32);
         }
+
+        //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
         kfs('user/' + username, data.user, function(err) {
             if (err) {
                 console.error(err);
@@ -284,6 +368,7 @@ router.post('/edit/confirm', function(req, res, next) {
                 userInfo: getUserInfo(data.user)
             });
         });
+
     });
 });
 
@@ -301,7 +386,7 @@ router.post('/restorePassword', function(req, res, next) {
         if (!user) {
             return utils.resEndByCode(res, 51);
         }
-        if (mobilePhoneNumber != String(user.mobilePhoneNumber).toPhoneNumber()) {
+        if (mobilePhoneNumber != user.mobilePhoneNumber) {
             return utils.resEndByCode(res, 60);
         }
         sms.send.passwordRecovery([userKey], user);

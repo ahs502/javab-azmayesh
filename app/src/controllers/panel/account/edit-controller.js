@@ -55,7 +55,7 @@ app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', 
             if (!$scope.vs.validate()) return;
 
             $scope.editingAccount = true;
-            userService.editAccount($rootScope.data.labData.username, $scope.user)
+            userService.editAccount($rootScope.data.labData.username, $scope.user, $scope.vs.dictate)
                 .then(function() {
                     $state.go('panel.account.confirm', {
                         action: 'edit account'

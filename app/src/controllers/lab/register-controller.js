@@ -108,7 +108,7 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
 
             $scope.sendingRegisterationForm = true;
             config.google_recaptcha && ($scope.model.response = $scope.response);
-            return userService.register($scope.model)
+            return userService.register($scope.model, $scope.vs.dictate)
                 .then(function() {
                     $state.go('lab.validate', {
                         username: $scope.model.username

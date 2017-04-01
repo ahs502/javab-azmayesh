@@ -18,12 +18,24 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 5, 10, 11
-        function register(userData) {
+        // May reject by code : 1, 2, 5, 10, 11, 80
+        function register(model, invalidModelHandler) {
             return utils.httpPromiseHandler($http.post('/user/register', {
-                userData: userData,
-                recaptcha: userData.response
-            }));
+                userData: {
+                    labName: model.labName,
+                    mobilePhoneNumber: model.mobilePhoneNumber,
+                    phoneNumber: model.phoneNumber,
+                    address: model.address,
+                    postalCode: model.postalCode,
+                    websiteAddress: model.websiteAddress,
+                    username: model.username,
+                    password: model.password
+                },
+                recaptcha: model.response
+            }), function(data) {
+                if (invalidModelHandler)
+                    invalidModelHandler(data.errors || {});
+            });
         }
 
         // May reject by code : 1, 2, 5, 30, 31, 32
@@ -34,19 +46,31 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }));
         }
 
-        // May reject by code : 1, 2, 3, 5, 50, 51, 100, 101
-        function editAccount(username, newAccount) {
+        // May reject by code : 1, 2, 3, 5, 50, 51, 80, 100, 101
+        function editAccount(username, newAccount, invalidNewAccountHandler) {
             return utils.httpPromiseHandler($http.post('/user/edit/account', {
-                newAccount: newAccount
-            }));
+                newAccount: {
+                    labName: newAccount.labName,
+                    mobilePhoneNumber: newAccount.mobilePhoneNumber,
+                    phoneNumber: newAccount.phoneNumber,
+                    address: newAccount.address,
+                    postalCode: newAccount.postalCode,
+                    websiteAddress: newAccount.websiteAddress,
+                }
+            }), function(data) {
+                if (invalidNewAccountHandler)
+                    invalidNewAccountHandler(data.errors || {});
+            });
         }
 
-        // May reject by code : 1, 2, 5, 40, 50, 51, 100, 101
-        function editPassword(username, oldPassword, newPassword) {
+        // May reject by code : 1, 2, 5, 50, 51, 80, 100, 101
+        function editPassword(username, newPassword, invalidNewPasswordHandler) {
             return utils.httpPromiseHandler($http.post('/user/edit/password', {
-                oldPassword: oldPassword,
                 newPassword: newPassword
-            }));
+            }), function(data) {
+                if (invalidNewPasswordHandler)
+                    invalidNewPasswordHandler(data.errors || {});
+            });
         }
 
         // May reject by code : 1, 2, 5, 30, 31, 32, 50, 100, 101
@@ -142,7 +166,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
         function processUserInfo(userInfo) {
             if (userInfo) {
                 userInfo.subscriptionDate = new Date(userInfo.timeStamp);
-                // delete userInfo.timeStamp; // DO NOT ACTIVATE THIS LINE EVER!
+                // delete userInfo.timeStamp; // DO NOT ACTIVATE THIS LINE EVER AGAIN!
             }
             return userInfo;
         }

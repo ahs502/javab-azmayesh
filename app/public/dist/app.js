@@ -44,6 +44,7 @@ global.global = global;
         this.check = check; // Checks some or all fields validity status and tries to remove their error messages if possible => summary of those fields validity
         this.validate = validate; // Checks some or all fields validity status and updates their error messages => summary of those fields validity
         this.status = status; // Summarize some of all fields validity status without checking or updating their error messages => summary of those fields validity
+        this.dictate = dictate; // Forces all fields error messages according to the errors object provided => nothing!
 
         function field(fieldName, validators) {
             fields[fieldName] = {
@@ -101,6 +102,12 @@ global.global = global;
                 if (fields[allFieldNames[i]].error) return false;
             }
             return true;
+        }
+
+        function dictate(errors) {
+            Object.keys(fields).forEach(function(fieldName) {
+                fields[fieldName].error = errors[fieldName] || null;
+            });
         }
 
         function fieldNames(fieldNamesArguments) {
@@ -938,7 +945,7 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
         }
 
         // May reject by code : 1, 2, 5, 50, 100, 101
-        function send(person, files, notes) {
+        function send(person, files, notes, invalidPersonHandler) {
             return utils.httpPromiseHandler($http.post('/answer/send', {
                 timeStamp: Date.now(),
                 person: {
@@ -958,7 +965,10 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                     };
                 }),
                 notes: notes
-            }));
+            }), function(data) {
+                if (invalidPersonHandler)
+                    invalidPersonHandler(data.errors || {});
+            });
         }
 
         /////////////////////////////////////////////////////
@@ -1266,7 +1276,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
         function processUserInfo(userInfo) {
             if (userInfo) {
                 userInfo.subscriptionDate = new Date(userInfo.timeStamp);
-                // delete userInfo.timeStamp; // DO NOT ACTIVATE THIS LINE EVER!
+                // delete userInfo.timeStamp; // DO NOT ACTIVATE THIS LINE EVER AGAIN!
             }
             return userInfo;
         }
@@ -1289,29 +1299,32 @@ app.factory('Utils', ['$q', '$http', '$window',
     function($q, $http, $window) {
 
         return {
-            successHandler: successHandler,
-            failureHandler: failureHandler,
             httpPromiseHandler: httpPromiseHandler,
         };
 
-        function successHandler(response) {
-            if (response.status != 200) {
-                console.log(response.status, response.data);
-                return $q.reject(1);
-            }
-            if (response.data.code !== 0) {
-                return $q.reject(response.data.code || 1);
-            }
-            return response.data;
+        function httpPromiseHandler(promise, rejectionDataProcessor) {
+            return promise.then(successHandlerMaker(rejectionDataProcessor), failureHandler);
+        }
+
+        function successHandlerMaker(rejectionDataProcessor) {
+            return function successHandler(response) {
+                if (response.status != 200) {
+                    console.log(response.status, response.data);
+                    return $q.reject(1);
+                }
+                if (response.data.code !== 0) {
+                    if (typeof rejectionDataProcessor === 'function') {
+                        rejectionDataProcessor(response.data);
+                    }
+                    return $q.reject(response.data.code || 1);
+                }
+                return response.data;
+            };
         }
 
         function failureHandler(err) {
             console.error(err);
             return $q.reject(2);
-        }
-
-        function httpPromiseHandler(promise) {
-            return promise.then(successHandler, failureHandler);
         }
 
     }
@@ -2186,28 +2199,28 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
         $scope.vs = new ValidationSystem($scope.person)
             .field('nationalCode', [
-                ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.nationalCode()
+                // ValidationSystem.validators.notEmpty(),
+                // ValidationSystem.validators.nationalCode()
             ])
             .field('fullName', [
-                ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.minLength(3)
+                // ValidationSystem.validators.notEmpty(),
+                // ValidationSystem.validators.minLength(3)
             ])
             .field('mobilePhoneNumber', [
-                ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.mobilePhoneNumber()
+                // ValidationSystem.validators.notEmpty(),
+                // ValidationSystem.validators.mobilePhoneNumber()
             ])
             .field('phoneNumber', [
-                ValidationSystem.validators.notRequired(),
-                ValidationSystem.validators.phoneNumber()
+                // ValidationSystem.validators.notRequired(),
+                // ValidationSystem.validators.phoneNumber()
             ])
             .field('extraPhoneNumber', [
-                ValidationSystem.validators.notRequired(),
-                ValidationSystem.validators.phoneNumber()
+                // ValidationSystem.validators.notRequired(),
+                // ValidationSystem.validators.phoneNumber()
             ])
             .field('email', [
-                ValidationSystem.validators.notRequired(),
-                ValidationSystem.validators.email()
+                // ValidationSystem.validators.notRequired(),
+                // ValidationSystem.validators.email()
             ]);
 
         var fileId = 0;
@@ -2242,7 +2255,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             if (!$scope.vs.validate()) return;
 
             $scope.sendingAnswer = true;
-            answerService.send($scope.person, $scope.files, $scope.notes)
+            answerService.send($scope.person, $scope.files, $scope.notes, $scope.vs.dictate)
                 .then(function() {
                     $('#ja-sent-answer-acknowledgement-modal')
                         .modal({

@@ -17,6 +17,7 @@
         this.check = check; // Checks some or all fields validity status and tries to remove their error messages if possible => summary of those fields validity
         this.validate = validate; // Checks some or all fields validity status and updates their error messages => summary of those fields validity
         this.status = status; // Summarize some of all fields validity status without checking or updating their error messages => summary of those fields validity
+        this.dictate = dictate; // Forces all fields error messages according to the errors object provided => nothing!
 
         function field(fieldName, validators) {
             fields[fieldName] = {
@@ -74,6 +75,12 @@
                 if (fields[allFieldNames[i]].error) return false;
             }
             return true;
+        }
+
+        function dictate(errors) {
+            Object.keys(fields).forEach(function(fieldName) {
+                fields[fieldName].error = errors[fieldName] || null;
+            });
         }
 
         function fieldNames(fieldNamesArguments) {
@@ -175,9 +182,9 @@
     }
 
     function usernameValidator(message) {
-        message = message || 'نام کاربری فقط باید شامل حروف لاتین، ارقام و علامت های نقطه و خط زیر _ باشد';
+        message = message || 'نام کاربری فقط باید شامل حروف کوپک لاتین، ارقام، نقطه و خط زیر _ باشد';
         return function(value) {
-            return /^[a-zA-Z_][a-zA-Z_0-9]+$/.test(value) ? null : message;
+            return /^[a-z_][a-z_0-9]+$/.test(value) ? null : message;
         };
     }
 

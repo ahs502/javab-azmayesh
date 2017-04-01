@@ -23,8 +23,8 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 50, 100, 101
-        function send(person, files, notes) {
+        // May reject by code : 1, 2, 5, 50, 80, 100, 101
+        function send(person, files, notes, invalidPersonHandler) {
             return utils.httpPromiseHandler($http.post('/answer/send', {
                 timeStamp: Date.now(),
                 person: {
@@ -44,7 +44,10 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                     };
                 }),
                 notes: notes
-            }));
+            }), function(data) {
+                if (invalidPersonHandler)
+                    invalidPersonHandler(data.errors || {});
+            });
         }
 
         /////////////////////////////////////////////////////

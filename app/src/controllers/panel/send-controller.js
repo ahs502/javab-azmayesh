@@ -113,7 +113,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             if (!$scope.vs.validate()) return;
 
             $scope.sendingAnswer = true;
-            answerService.send($scope.person, $scope.files, $scope.notes)
+            answerService.send($scope.person, $scope.files, $scope.notes, $scope.vs.dictate)
                 .then(function() {
                     $('#ja-sent-answer-acknowledgement-modal')
                         .modal({

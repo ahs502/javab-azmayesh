@@ -2,6 +2,9 @@
 
 require("./src/client-import");
 
+var autoLoad = require("auto-load");
+autoLoad('./src/global');
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');

@@ -1,5 +1,3 @@
-var clientUtilitiesPath = "../app/src/utilities/";
-
 var global;
 try {
     global = Function('return this')() || (502, eval)('this');
@@ -9,10 +7,16 @@ catch (e) {
 }
 global.global = global;
 
+var clientUtilitiesPath = "../app/src/utilities/";
+
 ////////////////////////////////////////////////////////////////////////////////
 
-// Use the same extensions from client :
 require(clientUtilitiesPath + "extensions");
+
 require(clientUtilitiesPath + "calendar-converter");
+
+require(clientUtilitiesPath + "persian-number");
+
+require(clientUtilitiesPath + "ValidationSystem");
 
 ////////////////////////////////////////////////////////////////////////////////

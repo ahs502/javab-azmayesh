@@ -6,10 +6,7 @@
 
     *   Implement a status code decoder angular service.
     
-    *   Develope validation and messaging in all client-side forms.
     *   Develope validation and messaging in all server-side controllers.
-    
-    *   Add the ability to send answer to patient only by his/her nationalCode.
     
     *   Add the ability to upload some test results without sending or as private posts,
         where are harder to seek than url encoded data headers.
@@ -17,6 +14,11 @@
     *   Add proper support for 'Add to homescreen' functionality of modern browsers.
     
     *   Implement a universal modal.
+    
+    *   Make post sms url dynamically change by config.environment.
+    
+    *   Take server-side encryption key to config file and make that file a little more private.
+    
     
     
     

@@ -1,3 +1,6 @@
+/*global Validator*/
+/*global ValidationSystem*/
+
 var express = require('express');
 var router = express.Router();
 
@@ -83,7 +86,7 @@ router.get('/file/download', function(req, res, next) {
             }
             var filePath = path.join(config.upload_path, String(file.serverName));
             res.set('Content-Type', file.type);
-            res.set('Content-Length', file.size); //TODO: does it required?
+            res.set('Content-Length', file.size); //TODO: is it required?
             //TODO: what about file.name? can we use it here?
             res.sendFile(filePath);
         });
@@ -125,7 +128,38 @@ router.post('/send', function(req, res, next) {
     var timeStamp = req.body.timeStamp;
     var files = req.body.files;
     var notes = req.body.notes;
-    //TODO: Validate input data...
+
+    var personValidator = new Validator(person)
+        .field('nationalCode', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.nationalCode()
+        ])
+        .field('fullName', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.minLength(3)
+        ])
+        .field('mobilePhoneNumber', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.mobilePhoneNumber()
+        ])
+        .field('phoneNumber', [
+            ValidationSystem.validators.notRequired(),
+            ValidationSystem.validators.phoneNumber()
+        ])
+        .field('extraPhoneNumber', [
+            ValidationSystem.validators.notRequired(),
+            ValidationSystem.validators.phoneNumber()
+        ])
+        .field('email', [
+            ValidationSystem.validators.notRequired(),
+            ValidationSystem.validators.email()
+        ]);
+    if (!personValidator.isValid()) {
+        return utils.resEndByCode(res, 80, {
+            errors: personValidator.getErrors()
+        });
+    }
+
     var nationalCode = person.nationalCode;
     var jYMD = new Date(timeStamp).jYMD();
     utils.generateId('post/' + username + '/' + jYMD[0] + '/' + jYMD[1]).then(function(postId) {

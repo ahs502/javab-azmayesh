@@ -24,6 +24,8 @@
     72  : Post does not belong to patient
     73  : Post not found
     
+    80  : Invalid form data
+    
     100 : Invalid access key
     101 : Expired access key
     

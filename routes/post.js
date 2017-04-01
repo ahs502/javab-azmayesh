@@ -16,8 +16,18 @@ router.post('/load/all', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res);
     if (!userInfo) return;
     var username = userInfo.username;
-    var year = req.body.year;
-    var months = [].concat(req.body.months);
+    try {
+        var year = parseInt(req.body.year, 10);
+        var months = [].concat(req.body.months);
+        if (!(year < 2000 && year > 1000)) throw "Invalid year: " + year;
+        if (months.reduce(function(invalid, month) {
+                return invalid || [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].indexOf(month) < 0;
+            }, false)) throw "Invalid months: " + months;
+    }
+    catch (err) {
+        console.error(err);
+        utils.resEndByCode(res, 5);
+    }
     var postCollections = months.map(month => 'post/' + username + '/' + year + '/' + month + '/');
     Promise.all(postCollections.map(postCollectionKey => kfs(postCollectionKey)))
         .then(function(postCollectionKeys) {
