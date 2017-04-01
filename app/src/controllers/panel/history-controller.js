@@ -97,16 +97,7 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
                             yearPostCache[month] = postPacks[$scope.selectedYear + '/' + month] || yearPostCache[month] || [];
                             $scope.posts = $scope.posts.concat(yearPostCache[month]);
                         }
-                    $scope.topPostIndex = 0;
-                    /////////////////////////////////////////////////////////TODO: to be removed...
-                    $scope.posts = $scope.posts.concat($scope.posts);
-                    $scope.posts = $scope.posts.concat($scope.posts);
-                    $scope.posts = $scope.posts.concat($scope.posts);
-                    $scope.posts = $scope.posts.concat($scope.posts);
-                    $scope.posts = $scope.posts.concat($scope.posts);
-                    $scope.posts = $scope.posts.concat($scope.posts);
-                    $scope.posts = $scope.posts.concat($scope.posts);
-                    /////////////////////////////////////////////////////////
+                        // $scope.topPostIndex = 0;
                 })
                 .then(function() {
                     $scope.setLoading(false);

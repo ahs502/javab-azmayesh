@@ -1,3 +1,7 @@
 /*global angular*/
 
-var app = angular.module('JavabAzmayesh', ['ui.router', 'vcRecaptcha', 'virtualRepeat']);
+var app = angular.module('JavabAzmayesh', [
+    'ui.router',
+    'vcRecaptcha', 
+    // 'virtualRepeat',
+]);

@@ -9,7 +9,7 @@
     <meta name="robots" content="index, noarchive">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 
-    <!--<title>جواب آزمایش - سامانه اینترنتی دریافت نتایج آزمایشگاهی</title>-->
+    <title>جواب آزمایش - سامانه اینترنتی دریافت نتایج آزمایشگاهی</title>
 
     <!--<base href="/">-->
     <link rel="shortcut icon" type="image/png" href="/img/icon-64x64.png" />
@@ -140,10 +140,12 @@
     </div>
 
     <!-- Main content -->
-    <div id="ja-main-content" ng-class="{ 'ja-has-header': headerHandlers, 'ja-has-footer': footerHandlers }">
+    <div id="ja-main-content">
+        <div ng-if="headerHandlers" id="ja-main-content-header-placeholder"></div>
         <div ui-view>
             <!-- Main view contents -->
         </div>
+        <div ng-if="footerHandlers" id="ja-main-content-footer-placeholder"></div>
     </div>
 
 </div>
@@ -209,13 +211,11 @@
     <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToLabLogin()">آزمایشگاه ها</a>
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
-
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeOtp()">سوابق من</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
-
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="home-contact-us" data-position="top right" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
-<div class="ui popup ja-align-right">
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin not-small-display" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin not-small-display" id="home-contact-us" data-position="top right" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
+<div class="ui popup ja-align-right not-small-display">
     <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
     <div class="nazanin">
         <bdi>021-66910430</bdi>
@@ -377,12 +377,11 @@
                 <div class="content">
                     <div class="header" ng-bind="post.labName"></div>
                     <div class="meta">
-                        <span class="category">عنوان آزمایش</span>
+                        <span class="category">{{ post.timeStamp | toPersianDate: "dddd - YYYY/MM/DD - h:mm:ss a" }}</span>
                     </div>
                     <div class="description">
-                        <strong><p ng-bind="post.postCode"></p></strong>
-                        <p ng-if="post.filesCount"><strong>{{post.filesCount}}</strong> فایل پیوست</p>
-                        <p ng-bind="post.timeStamp"></p>
+                        <strong><p ng-bind="post.postCode | toPersianNumber"></p></strong>
+                            <p ng-if="post.filesCount"><strong>{{ post.filesCount | toPersianNumber }}</strong> فایل پیوست</p>
                     </div>
                 </div>
                 <!--<div class="extra content">-->
@@ -428,38 +427,40 @@
             <!--<embed ng-if="file.material === '...'" ng-src="{{file.url}}" type="{{file.type}}" width="100%" />-->
 
         </div>
+        
+        <pre ng-if="!loading && (answer && answer.notes)" class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes"></pre>
 
     </div>
 
     <!-- Footer -->
-    <div class="ui bottom fixed huge menu ja-footer">
+    <!--<div class="ui bottom fixed huge menu ja-footer">-->
 
-        <a class="item nazanin" ng-bind="testDate"></a>
+    <!--    <a class="item nazanin" ng-bind="testDate"></a>-->
 
-        <a class="item nazanin" ng-bind="receiptNumber" id="answer-receiptNumber"></a>
-        <div class="ui popup ja-align-right">
-            <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>
-            <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>
-        </div>
+    <!--    <a class="item nazanin" ng-bind="receiptNumber" id="answer-receiptNumber"></a>-->
+    <!--    <div class="ui popup ja-align-right">-->
+    <!--        <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>-->
+    <!--        <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>-->
+    <!--    </div>-->
 
-        <div class="right menu">
+    <!--    <div class="right menu">-->
 
-            <a class="item nazanin ja-hidable-menu-item" id="answer-laboratoryName" data-position="top right" ng-click="menuEvents.goToLaboratory()">
-                <span ng-bind="menuEvents.laboratoryName"></span>
-            </a>
-            <div class="ui popup ja-align-right ja-hidable-menu-item">
-                <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>
-                <div class="nazanin">
-                    <bdi>021-22915247</bdi>
-                    <bdi>تلفن:</bdi>
-                </div>
-                <div class="nazanin">
-                    <bdi>آدرس: تهران، خ آزادی، نبش بهبودی، پلاک 182، واحد 4</bdi>
-                </div>
-            </div>
+    <!--        <a class="item nazanin ja-hidable-menu-item" id="answer-laboratoryName" data-position="top right" ng-click="menuEvents.goToLaboratory()">-->
+    <!--            <span ng-bind="menuEvents.laboratoryName"></span>-->
+    <!--        </a>-->
+    <!--        <div class="ui popup ja-align-right ja-hidable-menu-item">-->
+    <!--            <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>-->
+    <!--            <div class="nazanin">-->
+    <!--                <bdi>021-22915247</bdi>-->
+    <!--                <bdi>تلفن:</bdi>-->
+    <!--            </div>-->
+    <!--            <div class="nazanin">-->
+    <!--                <bdi>آدرس: تهران، خ آزادی، نبش بهبودی، پلاک 182، واحد 4</bdi>-->
+    <!--            </div>-->
+    <!--        </div>-->
 
-        </div>
-    </div>
+    <!--    </div>-->
+    <!--</div>-->
 
 </div>
 
@@ -543,8 +544,9 @@
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabLogin()">ورود مشترکین</a>
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabRegister()">ثبت نام</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabAbout()">درباره ما</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabContact()">تماس با ما</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin not-small-display" ng-click="menuHandlers.goToLabAbout()">درباره ما</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin not-small-display" ng-click="menuHandlers.goToLabContact()">تماس با ما</a>
 
 </script>
 
@@ -784,12 +786,14 @@
 
                     <div ng-if="showGoogleRecaptcha" vc-recaptcha theme="'light'" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
 
+                    <br/>
+
                     <div class="field" ng-class="{'error': vs.error('acceptRules')}">
-                        <div class="ui left pointing red basic label nazanin" ng-if="vs.error('acceptRules')" ng-bind="vs.error('acceptRules')"></div>
                         <div class="ui checkbox">
-                            <input type="checkbox" ng-model="model.acceptRules" ng-change="vs.check('acceptRules')">
-                            <label class="nazanin">قوانین و مقررات را می پذیرم</label>
+                            <input type="checkbox" ng-model="model.acceptRules" ng-change="vs.check('acceptRules')" id="ja-lab-register-acceptRules">
+                            <label class="nazanin" for="ja-lab-register-acceptRules">قوانین و مقررات را می پذیرم</label>
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('acceptRules')" ng-bind="vs.error('acceptRules')"></div>
                     </div>
 
                     <div class="field">
@@ -1006,75 +1010,76 @@
 <script type="text/ng-template" id="panel/history.html">
     <div id="ja-panel-history" class="ui basic segment">
 
-    <div class="ui green segment">
-        <div class="ui four column centered grid container">
+    <div class="ui text menu" id="ja-panel-history-filter-menu">
 
-            <div class="row">
-                <div class="column">
-                    <div class="text nazanin">سال</div>
-                </div>
-                <div class="column">
-                    <div class="text nazanin">ماه شروع</div>
-                </div>
-                <div class="column">
-                    <div class="text nazanin">ماه پایان</div>
+        <div class="right menu">
+
+            <div class="ui dropdown item" id="select-month-to">
+                <img class="ja-dropdown-sign" ng-src="{{ iconJs('down triangle') }}">
+                <span class="text nazanin" ng-bind="selectedMonthToText"></span> &nbsp;
+                <strong><bdi class="nazanin">تا</bdi></strong>
+                <div class="menu">
+                    <div class="item nazanin" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="column">
-                    <div class="ui dropdown" id="select-year">
-                        <div class="text nazanin" ng-bind="selectedYear | toPersianNumber"></div>
-                        <div class="menu">
-                            <div class="item nazanin" ng-repeat="year in allYears" data-value="{{year}}" ng-bind="year | toPersianNumber"></div>
-                        </div>
-                    </div>
+            <div class="ui dropdown item" id="select-month-from">
+                <img class="ja-dropdown-sign" ng-src="{{ iconJs('down triangle') }}">
+                <span class="text nazanin" ng-bind="selectedMonthFromText"></span> &nbsp;
+                <strong><bdi class="nazanin">از</bdi></strong>
+                <div class="menu">
+                    <div class="item nazanin" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
                 </div>
-                <div class="column">
-                    <div class="ui dropdown" id="select-month-from">
-                        <div class="text nazanin" ng-bind="selectedMonthFromText"></div>
-                        <div class="menu">
-                            <div class="item nazanin" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="ui dropdown" id="select-month-to">
-                        <div class="text nazanin" ng-bind="selectedMonthToText"></div>
-                        <div class="menu">
-                            <div class="item nazanin" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
-                        </div>
-                    </div>
+            </div>
+
+            <div class="ui dropdown item" id="select-year">
+                <img class="ja-dropdown-sign" ng-src="{{ iconJs('down triangle') }}">
+                <span class="text nazanin" ng-bind="selectedYear | toPersianNumber"></span> &nbsp;
+                <strong><bdi class="nazanin">سال</bdi></strong>
+                <div class="menu">
+                    <div class="item nazanin" ng-repeat="year in allYears" data-value="{{year}}" ng-bind="year | toPersianNumber"></div>
                 </div>
             </div>
 
         </div>
+
     </div>
 
     <!-- https://github.com/pioug/md-virtual-repeater -->
-    <md-virtual-repeat-container class="ui cards" md-top-index="topPostIndex">
-        <div class="ui link fluid raised blue card" md-virtual-repeat="post in posts" md-item-size="92.15" ng-click="postClicked(post)">
+    <!--<md-virtual-repeat-container class="ui cards" md-top-index="topPostIndex">-->
+    <!--    <div class="ui link fluid raised blue card" md-virtual-repeat="post in posts" md-item-size="92.15" ng-click="postClicked(post)">-->
+    <div class="ui basic segment" id="ja-panel-history-scrolling-container">
 
-            <div class="content">
-                <div class="header">{{ post.nationalCode | toPersianNumber }}</div>
-                <div class="meta">
-                    <span class="category">{{ post.postDate | toPersianDate: "dddd - YYYY/MM/DD - h:mm:ss a" }}</span>
+        <div class="ui cards">
+            <div class="ui link fluid raised blue card" ng-repeat="post in posts | limitTo: 100 track by $index" ng-click="postClicked(post)">
+
+                <div class="content">
+                    <div class="header">{{ post.nationalCode | toPersianNumber }}</div>
+                    <div class="meta">
+                        <span class="category">{{ post.postDate | toPersianDate: "dddd - YYYY/MM/DD - h:mm:ss a" }}</span>
+                    </div>
+                    <div class="description">
+                        <strong><p ng-bind="post.postCode | toPersianNumber"></p></strong>
+                        <p ng-if="post.filesCount"><strong>{{ post.filesCount | toPersianNumber }}</strong> فایل پیوست</p>
+                    </div>
                 </div>
-                <div class="description">
-                    <p>
-                        <strong>{{ post.postCode | toPersianNumber }}</strong>
-                        <span ng-show="post.filesCount">- {{ post.filesCount | toPersianNumber }} فایل</span>
-                    </p>
-                </div>
+                <!--<div class="extra content">-->
+                <!--    <div class="right floated author">-->
+                <!--        <img class="ui avatar image" src="/images/avatar/small/matt.jpg"> Matt-->
+                <!--    </div>-->
+                <!--</div>-->
+
             </div>
-            <!--<div class="extra content">-->
-            <!--    <div class="right floated author">-->
-            <!--        <img class="ui avatar image" src="/images/avatar/small/matt.jpg"> Matt-->
-            <!--    </div>-->
-            <!--</div>-->
-
         </div>
-    </md-virtual-repeat-container>
+
+        <div ng-show="posts.length > 100">
+            <br/>
+            <p class="nazanin ja-rtl ja-align-right">پُست های بیشتری هم وجود دارند... برای مشاهده همه آن ها لطفاً جستجوی خود را محدودتر کنید.</p>
+        </div>
+
+    </div>
+    <!--    </div>-->
+    <!--</md-virtual-repeat-container>-->
 
 </div>
 </script>
@@ -1082,7 +1087,27 @@
 <script type="text/ng-template" id="panel/post.html">
     <div id="ja-panel-post">
 
-    {{post|json}}
+    <div class="ui equal width grid ja-information-grid">
+
+        <div class="row ja-information-row" ng-repeat="tupple in postDataForDisplay">
+            <div class="left aligned column">
+                <p ng-bind="tupple.value | emptyCheck" class="nazanin ja-information-value"></p>
+            </div>
+            <div class="right aligned column">
+                <p ng-bind="tupple.label" class="nazanin ja-information-label"></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                <div class="ui segment">
+                    <!--<strong class="nazanin ja-rtl ja-left-align">توضیحات:</strong>-->
+                    <pre class="nazanin ja-rtl ja-right-align" ng-bind="post.notes || '(توضیحات ندارد)'"></pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 </div>
 </script>
@@ -1371,7 +1396,7 @@
 
         <div class="row ja-information-row" ng-repeat="tupple in userDataForDisplay">
             <div class="left aligned column">
-                <p ng-bind="tupple.value | emptyCheck | toPersianNumber" class="nazanin ja-information-value"></p>
+                <p ng-bind="tupple.value | emptyCheck" class="nazanin ja-information-value"></p>
             </div>
             <div class="right aligned column">
                 <p ng-bind="tupple.label" class="nazanin ja-information-label"></p>

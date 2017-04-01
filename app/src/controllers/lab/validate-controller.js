@@ -21,7 +21,7 @@ app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$sta
         $scope.vs = new ValidationSystem($scope)
             .field('validationCode', [
                 ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.numberCode(6)
+                ValidationSystem.validators.numberCode(4)
             ]);
 
         function confirmRegisteration() {

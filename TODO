@@ -4,9 +4,9 @@
                 Minified app.js and app.css or not (both in gulp and index.html),
                 Full error message in client or not,
 
-    *   Implement a status code decoder angular service.
+    *   Make post sms url dynamically change by config.environment.
     
-    *   Develope validation and messaging in all server-side controllers.
+    *   Implement a status code decoder angular service.
     
     *   Add the ability to upload some test results without sending or as private posts,
         where are harder to seek than url encoded data headers.
@@ -15,14 +15,13 @@
     
     *   Implement a universal modal.
     
-    *   Make post sms url dynamically change by config.environment.
-    
     *   Take server-side encryption key to config file and make that file a little more private.
     
+    *   What if user changes view by menu when the site is still loading some request?
     
+    *   Do not allow to send an answer before all files have been uploaded or errored.
     
-    
-    
+    *   Empower users to do all kind of staff (delete, edit, re-send, ...) to their posts.
     
     
     

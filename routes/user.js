@@ -299,9 +299,10 @@ router.post('/edit/:action', function(req, res, next) {
             newUser.timeStamp = user.timeStamp;
         }
         else if (action === 'password') {
+            var oldPassword = req.body.oldPassword;
             var newPassword = req.body.newPassword;
 
-            var newPasswordValidator = new ValidationSystem()
+            var newPasswordValidator = new Validator()
                 .field('newPassword', newPassword, [
                     ValidationSystem.validators.notEmpty(),
                     ValidationSystem.validators.minLength(4),
@@ -312,6 +313,9 @@ router.post('/edit/:action', function(req, res, next) {
                 });
             }
 
+            if (oldPassword !== user.password) {
+                return utils.resEndByCode(res, 40);
+            }
             newUser = user;
             newUser.password = newPassword;
         }

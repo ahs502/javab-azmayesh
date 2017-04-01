@@ -20,37 +20,39 @@
             <!--<embed ng-if="file.material === '...'" ng-src="{{file.url}}" type="{{file.type}}" width="100%" />-->
 
         </div>
+        
+        <pre ng-if="!loading && (answer && answer.notes)" class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes"></pre>
 
     </div>
 
     <!-- Footer -->
-    <div class="ui bottom fixed huge menu ja-footer">
+    <!--<div class="ui bottom fixed huge menu ja-footer">-->
 
-        <a class="item nazanin" ng-bind="testDate"></a>
+    <!--    <a class="item nazanin" ng-bind="testDate"></a>-->
 
-        <a class="item nazanin" ng-bind="receiptNumber" id="answer-receiptNumber"></a>
-        <div class="ui popup ja-align-right">
-            <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>
-            <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>
-        </div>
+    <!--    <a class="item nazanin" ng-bind="receiptNumber" id="answer-receiptNumber"></a>-->
+    <!--    <div class="ui popup ja-align-right">-->
+    <!--        <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>-->
+    <!--        <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>-->
+    <!--    </div>-->
 
-        <div class="right menu">
+    <!--    <div class="right menu">-->
 
-            <a class="item nazanin ja-hidable-menu-item" id="answer-laboratoryName" data-position="top right" ng-click="menuEvents.goToLaboratory()">
-                <span ng-bind="menuEvents.laboratoryName"></span>
-            </a>
-            <div class="ui popup ja-align-right ja-hidable-menu-item">
-                <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>
-                <div class="nazanin">
-                    <bdi>021-22915247</bdi>
-                    <bdi>تلفن:</bdi>
-                </div>
-                <div class="nazanin">
-                    <bdi>آدرس: تهران، خ آزادی، نبش بهبودی، پلاک 182، واحد 4</bdi>
-                </div>
-            </div>
+    <!--        <a class="item nazanin ja-hidable-menu-item" id="answer-laboratoryName" data-position="top right" ng-click="menuEvents.goToLaboratory()">-->
+    <!--            <span ng-bind="menuEvents.laboratoryName"></span>-->
+    <!--        </a>-->
+    <!--        <div class="ui popup ja-align-right ja-hidable-menu-item">-->
+    <!--            <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>-->
+    <!--            <div class="nazanin">-->
+    <!--                <bdi>021-22915247</bdi>-->
+    <!--                <bdi>تلفن:</bdi>-->
+    <!--            </div>-->
+    <!--            <div class="nazanin">-->
+    <!--                <bdi>آدرس: تهران، خ آزادی، نبش بهبودی، پلاک 182، واحد 4</bdi>-->
+    <!--            </div>-->
+    <!--        </div>-->
 
-        </div>
-    </div>
+    <!--    </div>-->
+    <!--</div>-->
 
 </div>

@@ -1,5 +1,25 @@
 <div id="ja-panel-post">
 
-    {{post|json}}
+    <div class="ui equal width grid ja-information-grid">
+
+        <div class="row ja-information-row" ng-repeat="tupple in postDataForDisplay">
+            <div class="left aligned column">
+                <p ng-bind="tupple.value | emptyCheck" class="nazanin ja-information-value"></p>
+            </div>
+            <div class="right aligned column">
+                <p ng-bind="tupple.label" class="nazanin ja-information-label"></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                <div class="ui segment">
+                    <!--<strong class="nazanin ja-rtl ja-left-align">توضیحات:</strong>-->
+                    <pre class="nazanin ja-rtl ja-right-align" ng-bind="post.notes || '(توضیحات ندارد)'"></pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 </div>

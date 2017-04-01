@@ -8,12 +8,11 @@
                 <div class="content">
                     <div class="header" ng-bind="post.labName"></div>
                     <div class="meta">
-                        <span class="category">عنوان آزمایش</span>
+                        <span class="category">{{ post.timeStamp | toPersianDate: "dddd - YYYY/MM/DD - h:mm:ss a" }}</span>
                     </div>
                     <div class="description">
-                        <strong><p ng-bind="post.postCode"></p></strong>
-                        <p ng-if="post.filesCount"><strong>{{post.filesCount}}</strong> فایل پیوست</p>
-                        <p ng-bind="post.timeStamp"></p>
+                        <strong><p ng-bind="post.postCode | toPersianNumber"></p></strong>
+                            <p ng-if="post.filesCount"><strong>{{ post.filesCount | toPersianNumber }}</strong> فایل پیوست</p>
                     </div>
                 </div>
                 <!--<div class="extra content">-->

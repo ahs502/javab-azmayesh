@@ -1,4 +1,5 @@
 /*global app*/
+/*global toPersianNumber*/
 /*global persianDate*/
 
 app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
@@ -9,19 +10,19 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
 
         $scope.userDataForDisplay = [{
             label: 'نام آزمایشگاه',
-            value: $rootScope.data.labData.labName
+            value: toPersianNumber($rootScope.data.labData.labName)
         }, {
             label: 'تلفن همراه ارتباطی اصلی',
-            value: $rootScope.data.labData.mobilePhoneNumber
+            value: toPersianNumber($rootScope.data.labData.mobilePhoneNumber)
         }, {
             label: 'تلفن تماس دوم',
-            value: $rootScope.data.labData.phoneNumber
+            value: toPersianNumber($rootScope.data.labData.phoneNumber)
         }, {
             label: 'آدرس',
-            value: $rootScope.data.labData.address
+            value: toPersianNumber($rootScope.data.labData.address)
         }, {
             label: 'کد پستی',
-            value: $rootScope.data.labData.postalCode
+            value: toPersianNumber($rootScope.data.labData.postalCode)
         }, {
             label: 'آدرس درگاه اینترنتی',
             value: $rootScope.data.labData.websiteAddress

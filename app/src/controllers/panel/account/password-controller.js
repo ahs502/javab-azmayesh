@@ -49,7 +49,7 @@ app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$stat
             if (!$scope.vs.validate()) return;
 
             $scope.changingPassword = true;
-            userService.editPassword($rootScope.data.labData.username, $scope.oldPassword, $scope.newPassword)
+            userService.editPassword($scope.oldPassword, $scope.newPassword, $scope.vs.dictate)
                 .then(function() {
                     $state.go('panel.account.confirm', {
                         action: 'change password'

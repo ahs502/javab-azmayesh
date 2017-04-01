@@ -39,10 +39,12 @@
     </div>
 
     <!-- Main content -->
-    <div id="ja-main-content" ng-class="{ 'ja-has-header': headerHandlers, 'ja-has-footer': footerHandlers }">
+    <div id="ja-main-content">
+        <div ng-if="headerHandlers" id="ja-main-content-header-placeholder"></div>
         <div ui-view>
             <!-- Main view contents -->
         </div>
+        <div ng-if="footerHandlers" id="ja-main-content-footer-placeholder"></div>
     </div>
 
 </div>
