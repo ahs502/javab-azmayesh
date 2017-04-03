@@ -6,7 +6,8 @@ var src = require("../src"),
     kfs = src.kfs,
     utils = src.utils,
     // access = src.access,
-    sms = src.sms;
+    sms = src.sms,
+    statisics = src.statisics;
 
 // var path = require("path");
 
@@ -103,6 +104,7 @@ router.post('/find/history', function(req, res, next) {
                             },
                             history
                         });
+                        statistics.dailyCount('patientHistory');
                     }, function(err) {
                         console.error(err);
                         utils.resEndByCode(res, 5);
@@ -153,6 +155,7 @@ router.post('/load/answer', function(req, res, next) {
                 notes: post.notes,
                 files
             });
+            statistics.dailyCount('answerLoaded');
         });
     });
 });

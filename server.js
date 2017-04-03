@@ -11,8 +11,20 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var fs = require('fs-extra');
+
+var config = require('./config');
 
 var app = express();
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+
+fs.ensureDir(config.storage_path, function(err) {
+  err && console.error(err);
+});
+fs.ensureDir(config.upload_path, function(err) {
+  err && console.error(err);
+});
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
@@ -33,17 +45,17 @@ app.enable('trust proxy');
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-// static folders
-app.use(express.static(path.join(__dirname, 'app/public')));
-
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
-
 // serving routes
 app.use('/', require('./routes/index'));
 app.use('/user', require('./routes/user'));
 app.use('/answer', require('./routes/answer'));
 app.use('/history', require('./routes/history'));
 app.use('/post', require('./routes/post'));
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+
+// static folders
+app.use(express.static(path.join(__dirname, 'app/public')));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 

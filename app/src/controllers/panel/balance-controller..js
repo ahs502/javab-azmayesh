@@ -8,7 +8,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
         $scope.c2cPayment = c2cPayment;
         $scope.zpPayment = zpPayment;
 
-        $scope.balance = 1250000;
+        $scope.balance = 125000;
         $scope.preparingPayment = false;
 
         $scope.setBackHandler(function() {
@@ -20,7 +20,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
         //$scope.c2cReceiptCode
         //$scope.zpChargeAmount
 
-        $scope.testCount = Math.floor($scope.balance / 10000);
+        $scope.testCount = Math.floor($scope.balance / 1000);
 
         $scope.balanceForDisplay = toPersianNumber($scope.balance);
         $scope.testCountForDisplay = $scope.testCount >= 0 ?

@@ -20,8 +20,12 @@
             <!--<embed ng-if="file.material === '...'" ng-src="{{file.url}}" type="{{file.type}}" width="100%" />-->
 
         </div>
-        
-        <pre ng-if="!loading && (answer && answer.notes)" class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes"></pre>
+
+        <div class="ui segment" ng-if="!loading && answer">
+            <!--<strong class="nazanin ja-rtl ja-left-align">توضیحات:</strong>-->
+            <pre class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes || '(توضیحات ندارد)'"></pre>
+        </div>
+
 
     </div>
 

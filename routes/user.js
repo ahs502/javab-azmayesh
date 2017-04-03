@@ -9,7 +9,8 @@ var src = require("../src"),
     kfs = src.kfs,
     utils = src.utils,
     access = src.access,
-    sms = src.sms;
+    sms = src.sms,
+    statistics = src.statistics;
 
 var https = require('https');
 var querystring = require('querystring');
@@ -186,6 +187,7 @@ router.post('/register/confirm', function(req, res, next) {
                     return utils.resEndByCode(res, 5);
                 }
                 utils.resEndByCode(res, 0);
+                statistics.dailyCount('userRegister');
             });
 
         });
@@ -214,6 +216,7 @@ router.post('/login', function(req, res, next) {
             accessKey,
             userInfo: getUserInfo(user)
         });
+        statistics.dailyCount('userLogin');
     });
 });
 
@@ -395,6 +398,7 @@ router.post('/restorePassword', function(req, res, next) {
         }
         sms.send.passwordRecovery([userKey], user);
         utils.resEndByCode(res, 0);
+        statistics.dailyCount('userRestorePassword');
     });
 });
 

@@ -4,7 +4,7 @@
                 Minified app.js and app.css or not (both in gulp and index.html),
                 Full error message in client or not,
 
-    *   Make post sms url dynamically change by config.environment.
+    *   Make post sms url dynamically change by config.env.
     
     *   Implement a status code decoder angular service.
     
@@ -22,6 +22,8 @@
     *   Do not allow to send an answer before all files have been uploaded or errored.
     
     *   Empower users to do all kind of staff (delete, edit, re-send, ...) to their posts.
+    
+    *   Improve Panel.Home page, so the user can get almost everything by the first look.
     
     
     

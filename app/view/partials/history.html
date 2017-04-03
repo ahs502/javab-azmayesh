@@ -2,6 +2,8 @@
 
     <div class="ui basic segment">
 
+        <br/>
+
         <div class="ui three stackable doubling cards">
 
             <div class="ui link fluid raised blue card" ng-repeat="post in history" ng-click="postClicked(post)">
@@ -12,7 +14,7 @@
                     </div>
                     <div class="description">
                         <strong><p ng-bind="post.postCode | toPersianNumber"></p></strong>
-                            <p ng-if="post.filesCount"><strong>{{ post.filesCount | toPersianNumber }}</strong> فایل پیوست</p>
+                        <p ng-if="post.filesCount"><strong>{{ post.filesCount | toPersianNumber }}</strong> فایل پیوست</p>
                     </div>
                 </div>
                 <!--<div class="extra content">-->

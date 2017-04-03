@@ -9,7 +9,8 @@ var src = require("../src"),
     kfs = src.kfs,
     utils = src.utils,
     access = src.access,
-    sms = src.sms;
+    sms = src.sms
+statistics = src.statistics;
 
 var path = require("path");
 var formidable = require('formidable');
@@ -45,6 +46,7 @@ router.post('/file/upload', function(req, res, next) {
             res.status(200).json({
                 filename: fileId
             }).end();
+            statistics.dailyCount('fileUpload');
         });
     });
 });
@@ -89,6 +91,7 @@ router.get('/file/download', function(req, res, next) {
             res.set('Content-Length', file.size); //TODO: is it required?
             //TODO: what about file.name? can we use it here?
             res.sendFile(filePath);
+            statistics.dailyCount('fileDownload');
         });
     });
 });
@@ -212,6 +215,7 @@ router.post('/send', function(req, res, next) {
                     }
                     sms.send.postAnswer([patientKey, postKey], patient, post);
                     utils.resEndByCode(res, 0);
+                    statistics.dailyCount('sendAnswer');
                 });
             });
         });

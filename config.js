@@ -23,6 +23,8 @@ var config = {
     google_recaptcha_secret_key: /*--------*/ '6LexDAwUAAAAAP7U7z8YEIcI006D8KGajx3WtR31',
     google_recaptcha_public_key: /*--------*/ '6LexDAwUAAAAAPXalUBl6eGUWa3dz7PrXXa-a7EG',
     /*-------------------------------------*/
+    enable_statistics: /*------------------*/ true,
+    /*-------------------------------------*/
 
     client_config: [
         'env',

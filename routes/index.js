@@ -2,6 +2,17 @@ var express = require('express');
 var router = express.Router();
 
 var config = require("../config");
+var src = require("../src"),
+    statistics = src.statistics;
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.get('/', function(req, res, next) {
+    try{
+    statistics.dailyCount('index');
+    }catch(r){console.log(r)}
+    next();
+});
 
 ////////////////////////////////////////////////////////////////////////////////
 

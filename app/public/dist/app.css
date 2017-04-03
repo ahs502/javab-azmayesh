@@ -12,7 +12,7 @@ body {
   padding: 0;
 }
 .nazanin {
-  font-family: BNazanin;
+  font-family: BNazanin !important;
   font-size: 130%;
 }
 .ja-rtl {
@@ -206,7 +206,7 @@ body {
   width: 90%;
 }
 .ui.form .ui.input input.nazanin {
-  font-family: BNazanin;
+  font-family: BNazanin !important;
   font-size: 130%;
   padding: 7px;
   text-rendering: geometricPrecision;
@@ -217,6 +217,10 @@ body {
 .ui.dropdown .ja-dropdown-sign {
   height: 12px;
   width: 18px !important;
+}
+.ui.card > .content > .header:not(.ui).nazanin {
+  font-family: BNazanin !important;
+  font-size: 130%;
 }
 @media (max-width: 430px) {
   #ja-footer .not-small-display {

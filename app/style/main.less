@@ -9,7 +9,7 @@ body {
 }
 
 .nazanin {
-	font-family: BNazanin;
+	font-family: BNazanin !important;
 	font-size: 130%;
 }
 
@@ -255,8 +255,7 @@ body {
 	}
 	&.form {
 		.ui.input input.nazanin {
-			font-family: BNazanin;
-			font-size: 130%;
+			.nazanin();
 			padding: 7px;
 			text-rendering: geometricPrecision;
 		}
@@ -268,6 +267,11 @@ body {
 		.ja-dropdown-sign {
 			height: 12px;
 			width: 18px !important;
+		}
+	}
+	&.card>.content>.header:not(.ui) {
+		&.nazanin {
+			.nazanin();
 		}
 	}
 }
