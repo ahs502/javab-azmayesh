@@ -1,5 +1,9 @@
+var path = require("path");
+var keyFileStorage = require("key-file-storage");
+
 var config = require("../../config");
-var kfs = require("./kfs");
+
+var kfsStatistics = keyFileStorage(path.join(config.storage_path, 'statistics'), 3);
 
 var statistics = {
     dailyCount,
@@ -9,14 +13,14 @@ function dailyCount(subject) {
     if (!config.enable_statistics) return;
 
     var ymd = (new Date()).jYMD();
-    var yKey = 'statistics/' + ymd[0],
-        mKey = 'statistics/=' + ymd[0] + '/' + ymd[1],
-        dKey = 'statistics/=' + ymd[0] + '/=' + ymd[1] + '/' + ymd[2];
+    var yKey =  ymd[0],
+        mKey = '=' + ymd[0] + '/' + ymd[1],
+        dKey = '=' + ymd[0] + '/=' + ymd[1] + '/' + ymd[2];
 
     return Promise.all([
-            kfs(yKey),
-            kfs(mKey),
-            kfs(dKey)
+            kfsStatistics(yKey),
+            kfsStatistics(mKey),
+            kfsStatistics(dKey)
         ])
         .then(function(data) {
             var y = data[0] || {},
@@ -28,9 +32,9 @@ function dailyCount(subject) {
             d[subject] = (d[subject] || 0) + 1;
 
             return Promise.all([
-                kfs(yKey, y),
-                kfs(mKey, m),
-                kfs(dKey, d)
+                kfsStatistics(yKey, y),
+                kfsStatistics(mKey, m),
+                kfsStatistics(dKey, d)
             ]);
         });
 }
