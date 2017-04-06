@@ -1,11 +1,8 @@
 
     *   Implement environment setting in config file: Development, Test, Production.
-                Load Google reCAPTCHA or not,
                 Minified app.js and app.css or not (both in gulp and index.html),
                 Full error message in client or not,
 
-    *   Make post sms url dynamically change by config.env.
-    
     *   Implement a status code decoder angular service.
     
     *   Add the ability to upload some test results without sending or as private posts,
@@ -13,21 +10,21 @@
     
     *   Add proper support for 'Add to homescreen' functionality of modern browsers.
     
-    *   Implement a universal modal.
-    
-    *   Take server-side encryption key to config file and make that file a little more private.
-    
     *   What if user changes view by menu when the site is still loading some request?
     
     *   Do not allow to send an answer before all files have been uploaded or errored.
     
     *   Empower users to do all kind of staff (delete, edit, re-send, ...) to their posts.
     
-    *   Improve Panel.Home page, so the user can get almost everything by the first look.
+    *   Improve Panel.Home page, so the user can see almost everything by the first look.
     
-    *   Make a release management mechanism.
+    *   HTTPS.
     
-    *   HTTPS
+    *   Complete 'About us' and 'Contact us' pages.
+    
+    *   Use 'PurifyCSS' or something to exclude unused CSS from libraries.
+        Do some similar thing with JSes of libraries if possible.
+    
     
     
     

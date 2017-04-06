@@ -1,8 +1,8 @@
 /*global app*/
 /*global $*/
 
-app.controller('MasterController', ['$scope', '$rootScope', '$window',
-    function($scope, $rootScope, $window) {
+app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window',
+    function($scope, $rootScope, $q, $window) {
 
         $scope.setBackHandler = setBackHandler;
         $scope.setMenuHandlers = setMenuHandlers;
@@ -10,6 +10,8 @@ app.controller('MasterController', ['$scope', '$rootScope', '$window',
         $scope.setFooterHandlers = setFooterHandlers;
 
         $scope.toggleMenu = toggleMenu;
+
+        $scope.showMessage = showMessage;
 
         $scope.backHandler = undefined;
         $scope.menuHandlers = undefined;
@@ -39,6 +41,23 @@ app.controller('MasterController', ['$scope', '$rootScope', '$window',
                 .sidebar('setting', 'transition', 'overlay')
                 .sidebar('setting', 'mobileTransition', 'overlay')
                 .sidebar('toggle');
+        }
+
+        function showMessage(title, message, ok) {
+            $scope.modal = {
+                title: title,
+                message: message,
+                ok: ok || 'تأیید'
+            };
+            var defer = $q.defer();
+            $('#ja-informer-modal')
+                .modal({
+                    onHide: function() {
+                        defer.resolve();
+                    }
+                })
+                .modal('show');
+            return defer.promise;
         }
 
     }

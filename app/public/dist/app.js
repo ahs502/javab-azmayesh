@@ -1946,13 +1946,11 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
             $scope.preparingPayment = true;
             $timeout(function() {
                 $scope.preparingPayment = false;
-                $('#ja-c2c-acknowledgement-modal')
-                    .modal({
-                        onHide: function() {
-                            $state.go('panel.home');
-                        }
-                    })
-                    .modal('show');
+                $scope.showMessage('درخواست شما ثبت شد',
+                        'درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد')
+                    .then(function() {
+                        $state.go('panel.home');
+                    });
             }, 400);
         }
 
@@ -2303,14 +2301,12 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             $scope.sendingAnswer = true;
             answerService.send($scope.person, $scope.files, $scope.notes, $scope.vs.dictate)
                 .then(function() {
-                    $('#ja-sent-answer-acknowledgement-modal')
-                        .modal({
-                            onHide: function() {
-                                $state.go('panel.home');
-                            }
-                        })
-                        .modal('show');
                     $scope.sendingAnswer = false;
+                    $scope.showMessage('ازسال موفقیت آمیز نتایج آزمایش',
+                            'نتایج آزمایش ثبت شده و اطلاع رسانی لازم به بیمار صورت خواهد گرفت.')
+                        .then(function() {
+                            $state.go('panel.home');
+                        });
                 }, function(code) {
                     $scope.sendingAnswer = false;
                     alert(code);
@@ -2531,16 +2527,17 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
             userService.editConfirm($rootScope.data.labData.username, $scope.verificationCode)
                 .then(function() {
                     $scope.confirming = false;
-                    $('#ja-confirmed-acknowledgement-modal')
-                        .modal({
-                            onHide: function() {
-                                return $scope.refreshUserData()
-                                    .then(function() {
-                                        $state.go('panel.account.summary');
-                                    });
-                            }
+                    $scope.showMessage('عملیات با موفقیت انجام شد',
+                            $scope.action === 'change password' ?
+                            'رمز عبور شما با موفقیت تغییر کرد' :
+                            $scope.action === 'edit account' ?
+                            'اصلاحات مورد نظر با موفقیت در سامانه ثبت شدند' : '')
+                        .then(function() {
+                            return $scope.refreshUserData()
                         })
-                        .modal('show');
+                        .then(function() {
+                            $state.go('panel.account.summary');
+                        });;
                 }, function(code) {
                     $scope.confirming = false;
                     alert(code);
@@ -3037,8 +3034,8 @@ app.controller('LabController', ['$scope', '$state',
 /*global app*/
 /*global $*/
 
-app.controller('MasterController', ['$scope', '$rootScope', '$window',
-    function($scope, $rootScope, $window) {
+app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window',
+    function($scope, $rootScope, $q, $window) {
 
         $scope.setBackHandler = setBackHandler;
         $scope.setMenuHandlers = setMenuHandlers;
@@ -3046,6 +3043,8 @@ app.controller('MasterController', ['$scope', '$rootScope', '$window',
         $scope.setFooterHandlers = setFooterHandlers;
 
         $scope.toggleMenu = toggleMenu;
+
+        $scope.showMessage = showMessage;
 
         $scope.backHandler = undefined;
         $scope.menuHandlers = undefined;
@@ -3075,6 +3074,23 @@ app.controller('MasterController', ['$scope', '$rootScope', '$window',
                 .sidebar('setting', 'transition', 'overlay')
                 .sidebar('setting', 'mobileTransition', 'overlay')
                 .sidebar('toggle');
+        }
+
+        function showMessage(title, message, ok) {
+            $scope.modal = {
+                title: title,
+                message: message,
+                ok: ok || 'تأیید'
+            };
+            var defer = $q.defer();
+            $('#ja-informer-modal')
+                .modal({
+                    onHide: function() {
+                        defer.resolve();
+                    }
+                })
+                .modal('show');
+            return defer.promise;
         }
 
     }

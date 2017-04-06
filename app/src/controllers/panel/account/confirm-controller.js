@@ -37,16 +37,17 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
             userService.editConfirm($rootScope.data.labData.username, $scope.verificationCode)
                 .then(function() {
                     $scope.confirming = false;
-                    $('#ja-confirmed-acknowledgement-modal')
-                        .modal({
-                            onHide: function() {
-                                return $scope.refreshUserData()
-                                    .then(function() {
-                                        $state.go('panel.account.summary');
-                                    });
-                            }
+                    $scope.showMessage('عملیات با موفقیت انجام شد',
+                            $scope.action === 'change password' ?
+                            'رمز عبور شما با موفقیت تغییر کرد' :
+                            $scope.action === 'edit account' ?
+                            'اصلاحات مورد نظر با موفقیت در سامانه ثبت شدند' : '')
+                        .then(function() {
+                            return $scope.refreshUserData()
                         })
-                        .modal('show');
+                        .then(function() {
+                            $state.go('panel.account.summary');
+                        });;
                 }, function(code) {
                     $scope.confirming = false;
                     alert(code);

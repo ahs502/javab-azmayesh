@@ -142,9 +142,26 @@
     <!-- Main content -->
     <div id="ja-main-content">
         <div ng-if="headerHandlers" id="ja-main-content-header-placeholder"></div>
+        
         <div ui-view>
             <!-- Main view contents -->
         </div>
+        
+        <div id="ja-informer-modal" class="ui modal">
+    <div class="header">
+        <span class="nazanin" ng-bind="modal.title"></span>
+    </div>
+    <div class="content">
+        <span class="nazanin"><bdi ng-bind="modal.message"></bdi></span>
+    </div>
+    <div class="actions">
+        <!--<div class="ui cancel button">Cancel</div>-->
+        <button class="ui --basic blue ok button">
+            <span class="nazanin" ng-bind="modal.ok"></span>
+        </button>
+    </div>
+</div>
+        
         <div ng-if="footerHandlers" id="ja-main-content-footer-placeholder"></div>
     </div>
 
@@ -1269,22 +1286,6 @@
         </div>
     </div>
 
-    <!-- sent answer acknowledgement -->
-    <div id="ja-sent-answer-acknowledgement-modal" class="ui modal">
-        <div class="header">
-            <span class="nazanin">ازسال موفقیت آمیز نتایج آزمایش</span>
-        </div>
-        <div class="content">
-            <span class="nazanin"><bdi>نتایج آزمایش ثبت شده و اطلاع رسانی لازم به بیمار صورت خواهد گرفت.</bdi></span>
-        </div>
-        <div class="actions">
-            <!--<div class="ui cancel button">Cancel</div>-->
-            <button class="ui --basic blue ok button">
-                <span class="nazanin">تأیید</span>
-            </button>
-        </div>
-    </div>
-
 </div>
 </script>
 
@@ -1378,22 +1379,6 @@
                 </form>
 
             </div>
-        </div>
-    </div>
-
-    <!-- c2c request acknowledgement -->
-    <div id="ja-c2c-acknowledgement-modal" class="ui modal">
-        <div class="header">
-            <span class="nazanin">درخواست شما ثبت شد</span>
-        </div>
-        <div class="content">
-            <span class="nazanin"><bdi>درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد.</bdi></span>
-        </div>
-        <div class="actions">
-            <!--<div class="ui cancel button">Cancel</div>-->
-            <button class="ui --basic blue ok button">
-                <span class="nazanin">تأیید</span>
-            </button>
         </div>
     </div>
 
@@ -1634,23 +1619,6 @@
                 </form>
 
             </div>
-        </div>
-    </div>
-
-    <!-- confirmed acknowledgement -->
-    <div id="ja-confirmed-acknowledgement-modal" class="ui modal">
-        <div class="header">
-            <span class="nazanin">عملیات با موفقیت انجام شد</span>
-        </div>
-        <div class="content">
-            <span ng-if="action === 'change password'" class="nazanin"><bdi>رمز عبور شما با موفقیت تغییر کرد.</bdi></span>
-            <span ng-if="action === 'edit account'" class="nazanin"><bdi>اصلاحات مورد نظر با موفقیت در سامانه ثبت شدند.</bdi></span>
-        </div>
-        <div class="actions">
-            <!--<div class="ui cancel button">Cancel</div>-->
-            <button class="ui --basic blue ok button">
-                <span class="nazanin">تأیید</span>
-            </button>
         </div>
     </div>
 

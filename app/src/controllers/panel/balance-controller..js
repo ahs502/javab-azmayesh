@@ -42,13 +42,11 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
             $scope.preparingPayment = true;
             $timeout(function() {
                 $scope.preparingPayment = false;
-                $('#ja-c2c-acknowledgement-modal')
-                    .modal({
-                        onHide: function() {
-                            $state.go('panel.home');
-                        }
-                    })
-                    .modal('show');
+                $scope.showMessage('درخواست شما ثبت شد',
+                        'درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد')
+                    .then(function() {
+                        $state.go('panel.home');
+                    });
             }, 400);
         }
 

@@ -115,14 +115,12 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             $scope.sendingAnswer = true;
             answerService.send($scope.person, $scope.files, $scope.notes, $scope.vs.dictate)
                 .then(function() {
-                    $('#ja-sent-answer-acknowledgement-modal')
-                        .modal({
-                            onHide: function() {
-                                $state.go('panel.home');
-                            }
-                        })
-                        .modal('show');
                     $scope.sendingAnswer = false;
+                    $scope.showMessage('ازسال موفقیت آمیز نتایج آزمایش',
+                            'نتایج آزمایش ثبت شده و اطلاع رسانی لازم به بیمار صورت خواهد گرفت.')
+                        .then(function() {
+                            $state.go('panel.home');
+                        });
                 }, function(code) {
                     $scope.sendingAnswer = false;
                     alert(code);
