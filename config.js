@@ -45,8 +45,8 @@ var config = {
     var config = {};
     /* COMMENT END */
     /* ENVIRONMENT SPECIFIC CONFIG */
-    // for (var key in config)
-    //     mainConfig[key] = config[key];
+    for (var key in config)
+        mainConfig[key] = config[key];
 })(config);
 
 ////////////////////////////////////////////////////////////////////////////////
