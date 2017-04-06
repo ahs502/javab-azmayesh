@@ -5,25 +5,29 @@ var path = require("path");
 var config = {
 
     /*-------------------------------------*/
-    env: /*--------------------------------*/ ['dev', 'test', 'demo', 'prod'][0],
+    env: /*--------------------------------*/ ["dev", "test", "demo", "prod"][0],
     /*-------------------------------------*/
-    storage_path: /*-----------------------*/ path.join(__dirname, '_data'),
-    upload_path: /*------------------------*/ path.join(__dirname, '_file'),
+    port: /*-------------------------------*/ 50302,
+    domain: /*-----------------------------*/ "dev.javabazmayesh.ir",
+    protocol: /*---------------------------*/ ["http", "https"][0],
     /*-------------------------------------*/
-    confirmation_expires_after: /*---------*/ 10, // Hours
-    user_access_key_expires_after: /*------*/ 24, // Hours
+    storage_path: /*-----------------------*/ path.join(__dirname, "_data"),
+    upload_path: /*------------------------*/ path.join(__dirname, "_file"),
     /*-------------------------------------*/
-    cryptr_key: /*-------------------------*/ '0123456789InTheNameOfGod9876543210',
+    confirmation_expires_after: /*---------*/ 1, // Hours
+    user_access_key_expires_after: /*------*/ 1, // Hours
     /*-------------------------------------*/
-    nik_sms_username: /*-------------------*/ '09337770720',
-    nik_sms_password: /*-------------------*/ 'nspassword',
-    nik_sms_main_number: /*----------------*/ '50004545454545',
+    cryptr_key: /*-------------------------*/ "- dev 1234567890 cryptr key -",
     /*-------------------------------------*/
-    google_recaptcha: /*-------------------*/ true,
-    google_recaptcha_secret_key: /*--------*/ '6LexDAwUAAAAAP7U7z8YEIcI006D8KGajx3WtR31',
-    google_recaptcha_public_key: /*--------*/ '6LexDAwUAAAAAPXalUBl6eGUWa3dz7PrXXa-a7EG',
+    nik_sms_username: /*-------------------*/ "09337770720",
+    nik_sms_password: /*-------------------*/ "nspassword",
+    nik_sms_main_number: /*----------------*/ "50004545454545",
     /*-------------------------------------*/
-    enable_statistics: /*------------------*/ true,
+    google_recaptcha: /*-------------------*/ false,
+    google_recaptcha_secret_key: /*--------*/ "",
+    google_recaptcha_public_key: /*--------*/ "",
+    /*-------------------------------------*/
+    enable_statistics: /*------------------*/ false,
     /*-------------------------------------*/
 
     client_config: [
@@ -33,6 +37,10 @@ var config = {
     ]
 
 };
+
+////////////////////////////////////////////////////////////////////////////////
+
+/* APPLY ENVIRONMENT SPECIFIC CONFIGURATION HERE */
 
 ////////////////////////////////////////////////////////////////////////////////
 

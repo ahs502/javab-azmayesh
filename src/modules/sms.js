@@ -59,7 +59,7 @@ function postAnswer(relatedKeys, patient, post) {
         "نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس است.\n" +
         "شماره آزمایش: " + post.postCode + "\n" /*+ post.labName*/ +
         "می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:\n" +
-        'http://test.javabazmayesh.ir/#/answer?p=' + patient.nationalCode + '&n=' + post.postCode;
+        config.protocol + '://' + config.domain + '/#/answer?p=' + patient.nationalCode + '&n=' + post.postCode;
     return sendSms('postans', numbers, message, {
         relatedKeys,
         patient,

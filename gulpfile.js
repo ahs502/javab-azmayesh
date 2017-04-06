@@ -25,7 +25,9 @@ var bs, bsRaw, browserSync = require("browser-sync");
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-var port = 50302;
+var config = require("./config");
+
+var port = config.port;
 
 var javascripts_app = [
     './app/src/libraries/**/*.js',
