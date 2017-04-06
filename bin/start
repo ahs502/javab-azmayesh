@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-require('./start-http');
+var config = require('../config');
+
+require('./start-' + config.protocol);

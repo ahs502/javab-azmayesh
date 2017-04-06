@@ -40,7 +40,14 @@ var config = {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/* APPLY ENVIRONMENT SPECIFIC CONFIGURATION HERE */
+(function(mainConfig) {
+    /* COMMENT START */
+    var config = {};
+    /* COMMENT END */
+    /* ENVIRONMENT SPECIFIC CONFIG */
+    // for (var key in config)
+    //     mainConfig[key] = config[key];
+})(config);
 
 ////////////////////////////////////////////////////////////////////////////////
 
