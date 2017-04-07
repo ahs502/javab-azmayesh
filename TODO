@@ -34,6 +34,12 @@
     
     
     
+    *   Run this command to renew certificates:
+            # certbot renew --dry-run
+        And, this one to generate new certificates:
+            # certbot certonly
+        See this for more information: https://certbot.eff.org or https://certbot.eff.org/#ubuntuxenial-nginx
+    
     *   Make some documentation for developers of this project in 'doc' folder, containing these data:
     
         // $scope.postDate = persianDate(new Date()).format('L');

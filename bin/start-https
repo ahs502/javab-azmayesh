@@ -14,7 +14,7 @@ var app = require('../server');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(config.port || process.env.PORT || '443');
+var port = normalizePort(process.env.PORT || config.port || '443');
 app.set('port', port);
 
 /**
@@ -22,8 +22,8 @@ app.set('port', port);
  */
 
 var server = https.createServer({
-  key: fs.readFileSync('/etc/letsencrypt/live/javabazmayesh.ir/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/javabazmayesh.ir/fullchain.pem')
+  key: fs.readFileSync(config.private_key_path),
+  cert: fs.readFileSync(config.certificate_path)
 }, app);
 
 /**

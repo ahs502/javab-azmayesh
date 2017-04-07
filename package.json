@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/start-http",
+    "start": "node ./bin/start",
     "http": "node ./bin/start-http",
     "https": "node ./bin/start-https",
     "test": "echo NO TEST YET."
