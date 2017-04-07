@@ -3,6 +3,10 @@
                 Minified app.js and app.css or not (both in gulp and index.html),
                 Full error message in client or not,
 
+    *   Limit users and patients actions (specially those leading to SMSes) per day.
+    
+    *   SMS redirector.
+
     *   Implement a status code decoder angular service.
     
     *   Add the ability to upload some test results without sending or as private posts,
@@ -34,3 +38,5 @@
     
         // $scope.postDate = persianDate(new Date()).format('L');
         // $scope.postCode = toPersianNumber(6140);
+
+

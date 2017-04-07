@@ -4,9 +4,8 @@
  * Module dependencies.
  */
 
-
 var fs = require('fs');
-var http = require('http');
+var https = require('https');
 var debug = require('debug')('javab-azmayesh:server');
 var config = require('../config');
 var app = require('../server');
@@ -19,12 +18,12 @@ var port = normalizePort(config.port || process.env.PORT || '443');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create HTTPS server.
  */
 
 var server = https.createServer({
-  key: fs.readFileSync('/root/ssl-keys/server.key'),
-  cert: fs.readFileSync('/root/ssl-keys/server.crt')
+  key: fs.readFileSync('/etc/letsencrypt/live/javabazmayesh.ir/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/javabazmayesh.ir/fullchain.pem')
 }, app);
 
 /**
@@ -56,7 +55,7 @@ function normalizePort(val) {
 }
 
 /**
- * Event listener for HTTP server "error" event.
+ * Event listener for HTTPS server "error" event.
  */
 
 function onError(error) {
@@ -84,7 +83,7 @@ function onError(error) {
 }
 
 /**
- * Event listener for HTTP server "listening" event.
+ * Event listener for HTTPS server "listening" event.
  */
 
 function onListening() {
