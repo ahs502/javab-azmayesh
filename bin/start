@@ -2,4 +2,5 @@
 
 var config = require('../config');
 
-require('./start-' + config.protocol);
+// require('./start-' + config.protocol);
+require('./start-http'); // Right now, Nginx handles HTTPS.
