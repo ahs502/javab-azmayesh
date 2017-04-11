@@ -7,7 +7,7 @@ var src = require("../src"),
     utils = src.utils,
     // access = src.access,
     sms = src.sms,
-    statisics = src.statisics;
+    statistics = src.statistics;
 
 // var path = require("path");
 
@@ -16,41 +16,45 @@ var src = require("../src"),
 router.post('/generate/otp', function(req, res, next) {
     var nationalCode = req.body.nationalCode;
     var mobilePhoneNumber = String(req.body.mobilePhoneNumber).toPhoneNumber();
-    var patientKey = 'patient/' + nationalCode;
-    kfs(patientKey, function(err, patient) {
-        if (err) {
-            console.error(err);
-            return utils.resEndByCode(res, 5);
-        }
-        if (!patient) {
-            return utils.resEndByCode(res, 51);
-        }
-        if (patient.numbers.indexOf(mobilePhoneNumber) < 0) {
-            return utils.resEndByCode(res, 60);
-        }
-        var otp = utils.generateRandomCode(6);
-        var requestCode = utils.generateRandomCode(10);
-        utils.generateId('otp').then(otpId => {
-            var otpKey = 'otp/' + otpId;
-            var otpData = {
-                nationalCode,
-                mobilePhoneNumber,
-                otp,
-                requestCode,
-                used: false
-            };
-            kfs(otpKey, otpData, function(err) {
-                if (err) {
-                    console.error(err);
-                    return utils.resEndByCode(res, 5);
-                }
-                sms.send.otpGenerated([otpKey, patientKey], otpData, patient);
-                utils.resEndByCode(res, 0, {
-                    otpId,
-                    requestCode
+    sms.allowanceCheck(mobilePhoneNumber, 'otp').then(function() {
+        var patientKey = 'patient/' + nationalCode;
+        kfs(patientKey, function(err, patient) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            if (!patient) {
+                return utils.resEndByCode(res, 51);
+            }
+            if (patient.numbers.indexOf(mobilePhoneNumber) < 0) {
+                return utils.resEndByCode(res, 60);
+            }
+            var otp = utils.generateRandomCode(6);
+            var requestCode = utils.generateRandomCode(10);
+            utils.generateId('otp').then(otpId => {
+                var otpKey = 'otp/' + otpId;
+                var otpData = {
+                    nationalCode,
+                    mobilePhoneNumber,
+                    otp,
+                    requestCode,
+                    used: false
+                };
+                kfs(otpKey, otpData, function(err) {
+                    if (err) {
+                        console.error(err);
+                        return utils.resEndByCode(res, 5);
+                    }
+                    sms.send.otpGenerated([otpKey, patientKey], otpData, patient);
+                    utils.resEndByCode(res, 0, {
+                        otpId,
+                        requestCode
+                    });
                 });
             });
         });
+    }, function() {
+        utils.resEndByCode(res, 120);
     });
 });
 

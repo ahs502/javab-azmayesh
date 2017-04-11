@@ -856,6 +856,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
 
 /*global app*/
 /*global $*/
+/*global localStorage*/
 
 app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService',
     function($rootScope, $state, $stateParams, $window, userService) {
@@ -866,11 +867,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService',
         $('#ja-sidebar-menu').show();
 
         if ($window.location.hash.indexOf('#/answer') !== 0) {
-            $state.go('home.find');
-            // $state.go('panel.account.summary');
-            // $state.go('panel.home');
-            // $state.go('lab.login');
-            // $state.go('lab.register');
+            $state.go(localStorage.startState || 'home.find');
         }
 
         $rootScope.$state = $state;
@@ -949,7 +946,7 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 50, 80, 100, 101
+        // May reject by code : 1, 2, 5, 50, 80, 100, 101, 120
         function send(person, files, notes, invalidPersonHandler) {
             return utils.httpPromiseHandler($http.post('/answer/send', {
                 timeStamp: Date.now(),
@@ -1001,7 +998,7 @@ app.service('HistoryService', ['$http', 'Utils',
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 5, 51, 60
+        // May reject by code : 1, 2, 5, 51, 60, 120
         // Resolves to an object containing: otpId, requestCode
         function generateOtp(nationalCode, mobilePhoneNumber) {
             return utils.httpPromiseHandler($http.post('/history/generate/otp', {
@@ -1185,7 +1182,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }));
         }
 
-        // May reject by code : 1, 2, 3, 5, 50, 51, 80, 100, 101
+        // May reject by code : 1, 2, 3, 5, 50, 51, 80, 100, 101, 120
         function editAccount(newAccount, invalidNewAccountHandler) {
             return utils.httpPromiseHandler($http.post('/user/edit/account', {
                 newAccount: {
@@ -1202,7 +1199,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             });
         }
 
-        // May reject by code : 1, 2, 5, 50, 51, 80, 100, 101
+        // May reject by code : 1, 2, 5, 50, 51, 80, 100, 101, 120
         function editPassword(oldPassword, newPassword, invalidNewPasswordHandler) {
             return utils.httpPromiseHandler($http.post('/user/edit/password', {
                 oldPassword: oldPassword,
@@ -1280,7 +1277,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }
         }
 
-        // May reject by code : 1, 2, 5, 51, 60
+        // May reject by code : 1, 2, 5, 51, 60, 120
         function restorePassword(username, mobilePhoneNumber) {
             return utils.httpPromiseHandler($http.post('/user/restorePassword', {
                 username: username,
@@ -1420,6 +1417,7 @@ app.controller('CommonContactController', ['$scope', '$state', '$stateParams',
 
 /*global app*/
 /*global ValidationSystem*/
+/*global localStorage*/
 
 app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeout',
     function($rootScope, $scope, $state, $timeout) {
@@ -1427,6 +1425,8 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
         $scope.seeAnswer = seeAnswer;
 
         $scope.findingAnswer = false; // No need to!
+
+        localStorage.startState = "home.find";
 
         $scope.setBackHandler(false);
 
@@ -1639,6 +1639,7 @@ app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeo
 
 /*global app*/
 /*global ValidationSystem*/
+/*global localStorage*/
 
 app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserService',
     function($rootScope, $scope, $state, userService) {
@@ -1646,6 +1647,8 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
         $scope.login = login;
 
         $scope.loggingIn = false;
+
+        localStorage.startState = "lab.login";
 
         $scope.setBackHandler(false);
 

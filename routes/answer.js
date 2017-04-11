@@ -9,8 +9,8 @@ var src = require("../src"),
     kfs = src.kfs,
     utils = src.utils,
     access = src.access,
-    sms = src.sms
-statistics = src.statistics;
+    sms = src.sms,
+    statistics = src.statistics;
 
 var path = require("path");
 var formidable = require('formidable');
@@ -165,59 +165,63 @@ router.post('/send', function(req, res, next) {
 
     var nationalCode = person.nationalCode;
     var jYMD = new Date(timeStamp).jYMD();
-    utils.generateId('post/' + username + '/' + jYMD[0] + '/' + jYMD[1]).then(function(postId) {
-        var patientKey = 'patient/' + nationalCode;
-        kfs(patientKey, function(err, patient) {
-            if (err) {
-                console.error(err);
-                return utils.resEndByCode(res, 5);
-            }
-            patient = patient || {};
+    var patientKey = 'patient/' + nationalCode;
+    kfs(patientKey, function(err, patient) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        patient = patient || {};
+        patient.numbers = patient.numbers || [];
+        [person.extraPhoneNumber, person.phoneNumber, person.mobilePhoneNumber].forEach(function(num) {
+            if (typeof num !== 'string') return;
+            num = num.toPhoneNumber();
+            if (num === '') return;
+            var index = patient.numbers.indexOf(num);
+            index >= 0 && patient.numbers.splice(index, 1);
+            patient.numbers = [num].concat(patient.numbers);
+        });
+        sms.allowanceCheck(patient.numbers, 'sendans').then(function() {
             patient.nationalCode = nationalCode;
             patient.fullName = person.fullName;
             patient.fullNames = patient.fullNames || [];
             if (patient.fullNames.indexOf(patient.fullName) >= 0)
                 patient.fullNames.splice(patient.fullNames.indexOf(patient.fullName), 1);
             patient.fullNames = [patient.fullName].concat(patient.fullNames);
-            patient.numbers = patient.numbers || [];
-            [person.extraPhoneNumber, person.phoneNumber, person.mobilePhoneNumber].forEach(function(num) {
-                if (typeof num !== 'string') return;
-                num = num.toPhoneNumber();
-                if (num === '') return;
-                var index = patient.numbers.indexOf(num);
-                index >= 0 && patient.numbers.splice(index, 1);
-                patient.numbers = [num].concat(patient.numbers);
-            });
             patient.email = person.email;
             patient.posts = patient.posts || {};
             var postCode = utils.generateRandomCode(4, Object.keys(patient.posts));
-            var postKey = 'post/' + username + '/' + jYMD[0] + '/' + jYMD[1] + '/' + postId;
-            patient.posts[postCode] = postKey;
-            kfs(patientKey, patient, function(err) {
-                if (err) {
-                    console.error(err);
-                    return utils.resEndByCode(res, 5);
-                }
-                var post = {
-                    postKey: postKey,
-                    username: username,
-                    labName: labName,
-                    nationalCode: nationalCode,
-                    files: files,
-                    notes: notes,
-                    timeStamp: timeStamp,
-                    postCode: postCode
-                };
-                kfs(postKey, post, function(err) {
+            utils.generateId('post/' + username + '/' + jYMD[0] + '/' + jYMD[1]).then(function(postId) {
+                var postKey = 'post/' + username + '/' + jYMD[0] + '/' + jYMD[1] + '/' + postId;
+                patient.posts[postCode] = postKey;
+                kfs(patientKey, patient, function(err) {
                     if (err) {
                         console.error(err);
                         return utils.resEndByCode(res, 5);
                     }
-                    sms.send.postAnswer([patientKey, postKey], patient, post);
-                    utils.resEndByCode(res, 0);
-                    statistics.dailyCount('sendAnswer');
+                    var post = {
+                        postKey: postKey,
+                        username: username,
+                        labName: labName,
+                        nationalCode: nationalCode,
+                        files: files,
+                        notes: notes,
+                        timeStamp: timeStamp,
+                        postCode: postCode
+                    };
+                    kfs(postKey, post, function(err) {
+                        if (err) {
+                            console.error(err);
+                            return utils.resEndByCode(res, 5);
+                        }
+                        sms.send.postAnswer([patientKey, postKey], patient, post);
+                        utils.resEndByCode(res, 0);
+                        statistics.dailyCount('sendAnswer');
+                    });
                 });
             });
+        }, function() {
+            utils.resEndByCode(res, 120);
         });
     });
 });

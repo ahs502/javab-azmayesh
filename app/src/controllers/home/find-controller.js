@@ -1,5 +1,6 @@
 /*global app*/
 /*global ValidationSystem*/
+/*global localStorage*/
 
 app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeout',
     function($rootScope, $scope, $state, $timeout) {
@@ -7,6 +8,8 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
         $scope.seeAnswer = seeAnswer;
 
         $scope.findingAnswer = false; // No need to!
+
+        localStorage.startState = "home.find";
 
         $scope.setBackHandler(false);
 

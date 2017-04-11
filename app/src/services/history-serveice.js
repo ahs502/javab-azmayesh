@@ -9,7 +9,7 @@ app.service('HistoryService', ['$http', 'Utils',
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 5, 51, 60
+        // May reject by code : 1, 2, 5, 51, 60, 120
         // Resolves to an object containing: otpId, requestCode
         function generateOtp(nationalCode, mobilePhoneNumber) {
             return utils.httpPromiseHandler($http.post('/history/generate/otp', {

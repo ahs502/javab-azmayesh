@@ -1,5 +1,6 @@
 /*global app*/
 /*global $*/
+/*global localStorage*/
 
 app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService',
     function($rootScope, $state, $stateParams, $window, userService) {
@@ -10,11 +11,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService',
         $('#ja-sidebar-menu').show();
 
         if ($window.location.hash.indexOf('#/answer') !== 0) {
-            $state.go('home.find');
-            // $state.go('panel.account.summary');
-            // $state.go('panel.home');
-            // $state.go('lab.login');
-            // $state.go('lab.register');
+            $state.go(localStorage.startState || 'home.find');
         }
 
         $rootScope.$state = $state;

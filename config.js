@@ -31,6 +31,7 @@ var config = {
     google_recaptcha_public_key: /*--------*/ "",
     /*-------------------------------------*/
     enable_statistics: /*------------------*/ false,
+    enable_sms_limits: /*------------------*/ false, // See: ./src/modules/sms.js >> smsLimits
     /*-------------------------------------*/
 
     client_config: [

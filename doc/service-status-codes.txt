@@ -29,4 +29,8 @@
     100 : Invalid access key
     101 : Expired access key
     
+    120 : Exceeded SMS count number
+    
+    
+    
 

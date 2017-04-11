@@ -322,20 +322,24 @@ router.post('/edit/:action', function(req, res, next) {
             newUser = user;
             newUser.password = newPassword;
         }
-        var validationCode = utils.generateRandomCode(4);
-        var userConfirmingKey = 'user/confirming/' + username;
-        var userConfirmingData = {
-            user: newUser,
-            validationCode,
-            timeStamp: Date.now()
-        };
-        kfs(userConfirmingKey, userConfirmingData, function(err) {
-            if (err) {
-                console.error(err);
-                return utils.resEndByCode(res, 5);
-            }
-            sms.send.validationCodeForUpdatingAccount([userConfirmingKey], newUser, validationCode);
-            utils.resEndByCode(res, 0);
+        sms.allowanceCheck(newUser.mobilePhoneNumber, 'vericodeusrupd').then(function() {
+            var validationCode = utils.generateRandomCode(4);
+            var userConfirmingKey = 'user/confirming/' + username;
+            var userConfirmingData = {
+                user: newUser,
+                validationCode,
+                timeStamp: Date.now()
+            };
+            kfs(userConfirmingKey, userConfirmingData, function(err) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                sms.send.validationCodeForUpdatingAccount([userConfirmingKey], newUser, validationCode);
+                utils.resEndByCode(res, 0);
+            });
+        }, function() {
+            utils.resEndByCode(res, 120);
         });
     });
 });
@@ -384,21 +388,25 @@ router.post('/edit/confirm', function(req, res, next) {
 router.post('/restorePassword', function(req, res, next) {
     var username = req.body.username;
     var mobilePhoneNumber = String(req.body.mobilePhoneNumber).toPhoneNumber();
-    var userKey = '/user/' + username;
-    kfs(userKey, function(err, user) {
-        if (err) {
-            console.error(err);
-            return utils.resEndByCode(res, 5);
-        }
-        if (!user) {
-            return utils.resEndByCode(res, 51);
-        }
-        if (mobilePhoneNumber != user.mobilePhoneNumber) {
-            return utils.resEndByCode(res, 60);
-        }
-        sms.send.passwordRecovery([userKey], user);
-        utils.resEndByCode(res, 0);
-        statistics.dailyCount('userRestorePassword');
+    sms.allowanceCheck(mobilePhoneNumber, 'passrecovery').then(function() {
+        var userKey = '/user/' + username;
+        kfs(userKey, function(err, user) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            if (!user) {
+                return utils.resEndByCode(res, 51);
+            }
+            if (mobilePhoneNumber != user.mobilePhoneNumber) {
+                return utils.resEndByCode(res, 60);
+            }
+            sms.send.passwordRecovery([userKey], user);
+            utils.resEndByCode(res, 0);
+            statistics.dailyCount('userRestorePassword');
+        });
+    }, function() {
+        utils.resEndByCode(res, 120);
     });
 });
 

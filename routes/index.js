@@ -8,9 +8,12 @@ var src = require("../src"),
 ////////////////////////////////////////////////////////////////////////////////
 
 router.get('/', function(req, res, next) {
-    try{
-    statistics.dailyCount('index');
-    }catch(r){console.log(r)}
+    try {
+        statistics.dailyCount('index');
+    }
+    catch (r) {
+        console.error(r)
+    }
     next();
 });
 

@@ -22,23 +22,20 @@
     
     *   Improve Panel.Home page, so the user can see almost everything by the first look.
     
-    *   HTTPS.
-    
     *   Complete 'About us' and 'Contact us' pages.
     
     *   Use 'PurifyCSS' or something to exclude unused CSS from libraries.
         Do some similar thing with JSes of libraries if possible.
     
+    *   Do something about site administration.
+    
+    *   Improve security, start by checking the site on: https://www.htbridge.com/websec/
+    
+    *   In all forms, make some fields like website, email, ... left-aligned and left-to-right.
     
     
     
     
-    
-    *   Run this command to renew certificates:
-            # certbot renew --dry-run
-        And, this one to generate new certificates:
-            # certbot certonly
-        See this for more information: https://certbot.eff.org or https://certbot.eff.org/#ubuntuxenial-nginx
     
     *   Make some documentation for developers of this project in 'doc' folder, containing these data:
     

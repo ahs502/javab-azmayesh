@@ -1,5 +1,6 @@
 /*global app*/
 /*global ValidationSystem*/
+/*global localStorage*/
 
 app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserService',
     function($rootScope, $scope, $state, userService) {
@@ -7,6 +8,8 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
         $scope.login = login;
 
         $scope.loggingIn = false;
+
+        localStorage.startState = "lab.login";
 
         $scope.setBackHandler(false);
 

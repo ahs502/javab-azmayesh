@@ -7,6 +7,7 @@ var nikSms = require("./nik-sms");
 ////////////////////////////////////////////////////////////////////////////////
 
 module.exports = {
+    allowanceCheck,
     send: {
         validationCodeForRegisteration,
         validationCodeForUpdatingAccount,
@@ -15,6 +16,48 @@ module.exports = {
         otpGenerated,
     }
 };
+
+////////////////////////////////////////////////////////////////////////////////
+
+// SMS limit on a mobile phon number for a SMS type, maximum (n) messages per (p) hours:
+//     "type": n // p = 24 hours
+//  or "type": [n, p]
+var smsLimits = {
+        "sendans": 3,
+        "otp": [5, 3],
+        "vericodeusrupd": 5,
+        "passrecovery": [1, 72],
+    },
+    maxCount = 0;
+for (let type in smsLimits) {
+    if (typeof smsLimits[type] === 'number') smsLimits[type] = [smsLimits[type], 24];
+    maxCount = maxCount > smsLimits[type][0] ? maxCount : smsLimits[type][0];
+}
+
+function allowanceCheck(numbers, type) {
+    if (!config.enable_sms_limits) {
+        return Promise.resolve();
+    }
+    var mobilePhoneNumber = !Array.isArray(numbers) ? numbers :
+        numbers.find(number => number.isMobileNumber());
+    var key = 'sms-counts/' + mobilePhoneNumber;
+    return kfs(key)
+        .then(function(stat) {
+            stat = stat || {};
+            stat[type] = stat[type] || [];
+            let now = Date.now(),
+                count = (smsLimits[type] || [])[0] || (maxCount + 100),
+                index = stat[type].length - count,
+                then = stat[type][index],
+                period = ((smsLimits[type] || [])[1] || 24) * 3600000,
+                allowed = !then || then < now - period;
+            if (allowed) stat[type] = stat[type].concat(now).slice(-maxCount - 1);
+            else return Promise.reject();
+            kfs(key, stat);
+        }, function() {
+            new kfs(key);
+        });
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -88,7 +131,7 @@ function sendSms(type, numbers, message, data) {
         data.message = message;
         var smsKey = 'sms/' + smsId.slice(0, -2) + '/' + smsId.slice(-2);
         return kfs(smsKey, data).then(function() {
-            var number = numbers.filter(number => number.isMobileNumber())[0];
+            var number = numbers.find(number => number.isMobileNumber());
             return nikSms.sendSms(config.nik_sms_main_number, number, message, smsId).then(function(result) {
                 //TODO: Implement message re-sending and restriction mechanism.
             });
