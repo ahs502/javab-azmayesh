@@ -1,10 +1,7 @@
 
-    *   Implement environment setting in config file: Development, Test, Production.
+    *   Base on the environment selected:
                 Minified app.js and app.css or not (both in gulp and index.html),
-                Full error message in client or not,
 
-    *   Limit users and patients actions (specially those leading to SMSes) per day.
-    
     *   SMS redirector.
 
     *   Implement a status code decoder angular service.
@@ -32,6 +29,15 @@
     *   Improve security, start by checking the site on: https://www.htbridge.com/websec/
     
     *   In all forms, make some fields like website, email, ... left-aligned and left-to-right.
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

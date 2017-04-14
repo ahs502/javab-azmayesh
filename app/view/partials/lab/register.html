@@ -29,7 +29,7 @@
                     <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
                         <label class="nazanin">تلفن همراه ارتباطی</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="model.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" placeholder="09xxxxxxxxx">
+                            <input type="tel" ng-model="model.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
                     </div>
@@ -37,7 +37,7 @@
                     <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
                         <label class="nazanin">تلفن ثابت</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="model.phoneNumber" ng-change="vs.check('phoneNumber')" placeholder="تلفن ثابت">
+                            <input type="tel" ng-model="model.phoneNumber" ng-change="vs.check('phoneNumber')" ng-class="{'ja-align-left': phoneNumber}" placeholder="تلفن ثابت">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('phoneNumber')" ng-bind="vs.error('phoneNumber')"></div>
                     </div>
@@ -53,7 +53,7 @@
                     <div class="field" ng-class="{'error': vs.error('postalCode')}">
                         <label class="nazanin">کد پستی</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="model.postalCode" ng-change="vs.check('postalCode')" placeholder="کد پستی 10 رقمی">
+                            <input type="tel" ng-model="model.postalCode" ng-change="vs.check('postalCode')" ng-class="{'ja-align-left': postalCode}" placeholder="کد پستی 10 رقمی">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('postalCode')" ng-bind="vs.error('postalCode')"></div>
                     </div>
@@ -61,7 +61,7 @@
                     <div class="field" ng-class="{'error': vs.error('websiteAddress')}">
                         <label class="nazanin">آدرس وبسایت</label>
                         <div class="ui input">
-                            <input type="url" ng-model="model.websiteAddress" ng-change="vs.check('websiteAddress')" placeholder="you.ir">
+                            <input type="text" ng-model="model.websiteAddress" ng-change="vs.check('websiteAddress')" class="ja-align-left" placeholder="you.ir">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('websiteAddress')" ng-bind="vs.error('websiteAddress')"></div>
                     </div>
@@ -73,7 +73,7 @@
                     <div class="field" ng-class="{'error': vs.error('username')}">
                         <label class="nazanin">نام کاربری</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.username" ng-change="vs.check('username')" placeholder="username">
+                            <input type="text" ng-model="model.username" ng-change="vs.check('username')" class="ja-align-left" placeholder="username">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>
@@ -81,7 +81,7 @@
                     <div class="field" ng-class="{'error': vs.error('password')}">
                         <label class="nazanin">کلمه عبور</label>
                         <div class="ui input">
-                            <input type="password" ng-model="model.password" ng-change="vs.check('password', 'passwordAgain')">
+                            <input type="password" ng-model="model.password" ng-change="vs.check('password', 'passwordAgain')" class="ja-align-left">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('password')" ng-bind="vs.error('password')"></div>
                     </div>
@@ -89,7 +89,7 @@
                     <div class="field" ng-class="{'error': vs.error('passwordAgain')}">
                         <label class="nazanin">تکرار کلمه عبور</label>
                         <div class="ui input">
-                            <input type="password" ng-model="model.passwordAgain" ng-change="vs.check('password', 'passwordAgain')">
+                            <input type="password" ng-model="model.passwordAgain" ng-change="vs.check('password', 'passwordAgain')" class="ja-align-left">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('passwordAgain')" ng-bind="vs.error('passwordAgain')"></div>
                     </div>
@@ -103,6 +103,7 @@
                             <input type="checkbox" ng-model="model.acceptRules" ng-change="vs.check('acceptRules')" id="ja-lab-register-acceptRules">
                             <label class="nazanin" for="ja-lab-register-acceptRules">قوانین و مقررات را می پذیرم</label>
                         </div>
+                        <br />
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('acceptRules')" ng-bind="vs.error('acceptRules')"></div>
                     </div>
 

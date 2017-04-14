@@ -198,7 +198,7 @@
     function urlValidator(message) {
         message = message || 'آدرس وب سایت صحیح نمی باشد';
         return function(value) {
-            return /^((http|https):\/\/)?[a-zA-Z0-9-_\.]+\.[a-zA-Z0-9]+/.test(value) ? null : message;
+            return /^((http|https):\/\/)?[a-zA-Z0-9-_\.]+\.[a-zA-Z0-9]+$/.test(value) ? null : message;
         };
     }
 

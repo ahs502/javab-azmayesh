@@ -13,8 +13,8 @@
     <!--</div>-->
 
     <div class="ui centered grid">
-            <div class="center aligned row">
-        <div class="fourteen wide small eight wide tablet six wide computer column">
+        <div class="center aligned row">
+            <div class="fourteen wide small eight wide tablet six wide computer column">
 
                 <form class="ui {{ editingAccount ? 'loading' : '' }} form">
 
@@ -29,7 +29,7 @@
                     <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
                         <label class="nazanin">تلفن همراه ارتباطی</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="user.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" placeholder="f=09xxxxxxxxx">
+                            <input type="tel" ng-model="user.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="f=09xxxxxxxxx">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
                     </div>
@@ -37,7 +37,7 @@
                     <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
                         <label class="nazanin">تلفن ثابت</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="user.phoneNumber" ng-change="vs.check('phoneNumber')" placeholder="تلفن ثابت">
+                            <input type="tel" ng-model="user.phoneNumber" ng-change="vs.check('phoneNumber')" ng-class="{'ja-align-left': phoneNumber}" placeholder="تلفن ثابت">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('phoneNumber')" ng-bind="vs.error('phoneNumber')"></div>
                     </div>
@@ -53,7 +53,7 @@
                     <div class="field" ng-class="{'error': vs.error('postalCode')}">
                         <label class="nazanin">کد پستی</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="user.postalCode" ng-change="vs.check('postalCode')" placeholder="کد پستی 10 رقمی">
+                            <input type="tel" ng-model="user.postalCode" ng-change="vs.check('postalCode')" ng-class="{'ja-align-left': postalCode}" placeholder="کد پستی 10 رقمی">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('postalCode')" ng-bind="vs.error('postalCode')"></div>
                     </div>
@@ -61,7 +61,7 @@
                     <div class="field" ng-class="{'error': vs.error('websiteAddress')}">
                         <label class="nazanin">آدرس وبسایت</label>
                         <div class="ui input">
-                            <input type="url" ng-model="user.websiteAddress" ng-change="vs.check('websiteAddress')" placeholder="you.ir">
+                            <input type="text" ng-model="user.websiteAddress" ng-change="vs.check('websiteAddress')" class="ja-align-left" placeholder="you.ir">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('websiteAddress')" ng-bind="vs.error('websiteAddress')"></div>
                     </div>
