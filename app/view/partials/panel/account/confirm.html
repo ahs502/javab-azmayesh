@@ -21,7 +21,7 @@
                     <div class="field" ng-class="{'error': vs.error('verificationCode')}">
                         <!--<label class="nazanin">کد اعتبار سنجی</label>-->
                         <div class="ui input">
-                            <input type="tel" ng-model="verificationCode" ng-change="vs.check('verificationCode')" ng-class="{'ja-align-left': verificationCode}" placeholder="کد اعتبار سنجی">
+                            <input type="tel" ng-model="verificationCode" ng-change="vs.check('verificationCode')" ng-class="{'ja-align-left': verificationCode, 'nazanin': !verificationCode}" placeholder="کد اعتبار سنجی">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('verificationCode')" ng-bind="vs.error('verificationCode')"></div>
                     </div>

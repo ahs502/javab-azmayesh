@@ -20,7 +20,7 @@
                     <div class="field" ng-class="{'error': vs.error('nationalCode')}">
                         <label class="nazanin">کد ملی</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="nationalCode" ng-change="vs.check('nationalCode')" ng-class="{'ja-align-left': nationalCode}" placeholder="کد ملی">
+                            <input type="tel" ng-model="nationalCode" ng-change="vs.check('nationalCode')" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('nationalCode')" ng-bind="vs.error('nationalCode')"></div>
                     </div>

@@ -9,7 +9,7 @@
                     <div class="field" ng-class="{'error': vs.error('nationalCode')}">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
-                            <input type="tel" ng-model="nationalCode" ng-change="vs.check('nationalCode')" ng-class="{'ja-align-left': nationalCode}" placeholder="کد ملی">
+                            <input type="tel" ng-model="nationalCode" ng-change="vs.check('nationalCode')" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('nationalCode')" ng-bind="vs.error('nationalCode')"></div>
                     </div>
@@ -17,7 +17,7 @@
                     <div class="field" ng-class="{'error': vs.error('postCode')}">
                         <!--<label class="nazanin">شماره آزمایش</label>-->
                         <div class="ui input">
-                            <input type="tel" ng-model="postCode" ng-change="vs.check('postCode')" ng-class="{'ja-align-left': postCode}" placeholder="شماره آزمایش">
+                            <input type="tel" ng-model="postCode" ng-change="vs.check('postCode')" ng-class="{'ja-align-left': postCode, 'nazanin': !postCode}" placeholder="شماره آزمایش">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('postCode')" ng-bind="vs.error('postCode')"></div>
                     </div>

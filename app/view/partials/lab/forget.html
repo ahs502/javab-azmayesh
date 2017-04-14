@@ -21,7 +21,7 @@
                     <div class="field" ng-class="{'error': vs.error('username')}">
                         <label class="nazanin">نام کاربری</label>
                         <div class="ui input">
-                            <input type="text" ng-model="username" ng-change="vs.check('username')" ng-class="{'ja-align-left': username}" placeholder="نام کاربری">
+                            <input type="text" ng-model="username" ng-change="vs.check('username')" ng-class="{'ja-align-left': username, 'nazanin': !username}" placeholder="نام کاربری">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>

@@ -37,7 +37,7 @@
                     <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
                         <label class="nazanin">تلفن ثابت</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="user.phoneNumber" ng-change="vs.check('phoneNumber')" ng-class="{'ja-align-left': user.phoneNumber}" placeholder="تلفن ثابت">
+                            <input type="tel" ng-model="user.phoneNumber" ng-change="vs.check('phoneNumber')" ng-class="{'ja-align-left': user.phoneNumber, 'nazanin': !user.phoneNumber}" placeholder="تلفن ثابت">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('phoneNumber')" ng-bind="vs.error('phoneNumber')"></div>
                     </div>
@@ -53,7 +53,7 @@
                     <div class="field" ng-class="{'error': vs.error('postalCode')}">
                         <label class="nazanin">کد پستی</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="user.postalCode" ng-change="vs.check('postalCode')" ng-class="{'ja-align-left': user.postalCode}" placeholder="کد پستی 10 رقمی">
+                            <input type="tel" ng-model="user.postalCode" ng-change="vs.check('postalCode')" ng-class="{'ja-align-left': user.postalCode, 'nazanin': !user.postalCode}" placeholder="کد پستی 10 رقمی">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('postalCode')" ng-bind="vs.error('postalCode')"></div>
                     </div>
