@@ -18,7 +18,7 @@
 
                 <form class="ui {{ sendingOtp ? 'loading' : '' }} form">
                     <div class="field" ng-class="{'error': vs.error('nationalCode')}">
-                        <label class="nazanin">کد ملی</label>
+                        <label class="nazanin ja-required">کد ملی</label>
                         <div class="ui input">
                             <input type="tel" ng-model="nationalCode" ng-change="vs.check('nationalCode')" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
                         </div>
@@ -26,7 +26,7 @@
                     </div>
                     
                     <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
-                        <label class="nazanin">شماره تلفن همراه</label>
+                        <label class="nazanin ja-required">شماره تلفن همراه</label>
                         <div class="ui input">
                             <input type="tel" ng-model="mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
                         </div>

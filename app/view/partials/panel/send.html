@@ -19,7 +19,7 @@
                 <form class="ui {{ sendingAnswer ? 'loading' : '' }} form">
 
                     <div class="field" ng-class="{'error': vs.error('nationalCode')}">
-                        <label class="nazanin">کد ملی بیمار</label>
+                        <label class="nazanin ja-required">کد ملی بیمار</label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.nationalCode" ng-change="vs.check('nationalCode'); loadPatientInfo()" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
                         </div>
@@ -27,7 +27,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('fullName')}">
-                        <label class="nazanin">نام و نام خانوادگی بیمار</label>
+                        <label class="nazanin ja-required">نام و نام خانوادگی بیمار</label>
                         <div class="ui input">
                             <input class="nazanin ja-rtl" type="text" ng-model="person.fullName" ng-change="vs.check('fullName')" placeholder="نام و نام خانوادگی">
                         </div>
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
-                        <label class="nazanin">شماره تلفن همراه</label>
+                        <label class="nazanin ja-required">شماره تلفن همراه</label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
                         </div>
@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
-                        <label class="nazanin"><bdi>شماره تلفن دوم (اختیاری)</bdi></label>
+                        <label class="nazanin ja-optional">شماره تلفن دوم</label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.phoneNumber" ng-change="vs.check('phoneNumber')" ng-class="{'ja-align-left': phoneNumber, 'nazanin': !phoneNumber}" placeholder="تلفن همراه یا ثابت">
                         </div>
@@ -51,7 +51,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('extraPhoneNumber')}">
-                        <label class="nazanin"><bdi>شماره تلفن سوم (اختیاری)</bdi></label>
+                        <label class="nazanin ja-optional">شماره تلفن سوم </label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.extraPhoneNumber" ng-change="vs.check('extraPhoneNumber')" ng-class="{'ja-align-left': extraPhoneNumber, 'nazanin': !extraPhoneNumber}" placeholder="تلفن همراه یا ثابت">
                         </div>
@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('email')}">
-                        <label class="nazanin"><bdi>آدرس پست الکترونیک (اختیاری)</bdi></label>
+                        <label class="nazanin ja-optional">آدرس پست الکترونیک </label>
                         <div class="ui input">
                             <input type="email" ng-model="person.email" ng-change="vs.check('email')" class="ja-align-left" placeholder="your@email.com">
                         </div>
@@ -117,7 +117,7 @@
                     <div class="ui divider"></div>
 
                     <div class="field">
-                        <label class="nazanin"><bdi>توضیحات</bdi></label>
+                        <label class="nazanin ja-optional">توضیحات</label>
                         <div class="ui input">
                             <textarea class="nazanin ja-rtl" ng-model="notes" rows=6 maxlength=10000 placeholder="توضیحات درباره نتایج"></textarea>
                         </div>

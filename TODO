@@ -1,34 +1,32 @@
 
-    *   Base on the environment selected:
-                Minified app.js and app.css or not (both in gulp and index.html),
-
     *   SMS redirector.
+    
+    *   Complete 'About us' and 'Contact us' pages.
+    
+    *   User balance management: see, charge, ...
 
     *   Implement a status code decoder angular service.
     
-    *   Add the ability to upload some test results without sending or as private posts,
-        where are harder to seek than url encoded data headers.
-    
-    *   Add proper support for 'Add to homescreen' functionality of modern browsers.
-    
-    *   What if user changes view by menu when the site is still loading some request?
+    *   Improve Panel.Home page, so the user can see almost everything by the first look.
     
     *   Do not allow to send an answer before all files have been uploaded or errored.
     
     *   Empower users to do all kind of staff (delete, edit, re-send, ...) to their posts.
     
-    *   Improve Panel.Home page, so the user can see almost everything by the first look.
+    *   Do something about site administration.
     
-    *   Complete 'About us' and 'Contact us' pages.
+    *   What if user changes view by menu when the site is still loading some request?
+    
+    *   Add proper support for 'Add to homescreen' functionality of modern browsers.
+    
+    *   Add the ability to upload some test results without sending or as private posts,
+        where are harder to seek than url encoded data headers.
     
     *   Use 'PurifyCSS' or something to exclude unused CSS from libraries.
         Do some similar thing with JSes of libraries if possible.
     
-    *   Do something about site administration.
-    
     *   Improve security, start by checking the site on: https://www.htbridge.com/websec/
     
-    *   In all forms, make some fields like website, email, ... left-aligned and left-to-right.
     
     
     
@@ -40,12 +38,12 @@
     
     
     
-    
-    
-    
+    *   Base on the environment selected:
+            Minified app.js and app.css or not (both in gulp and index.html),
+
     *   Make some documentation for developers of this project in 'doc' folder, containing these data:
     
-        // $scope.postDate = persianDate(new Date()).format('L');
-        // $scope.postCode = toPersianNumber(6140);
+            // $scope.postDate = persianDate(new Date()).format('L');
+            // $scope.postCode = toPersianNumber(6140);
 
 

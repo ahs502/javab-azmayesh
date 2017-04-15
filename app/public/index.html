@@ -308,7 +308,7 @@
 
                 <form class="ui {{ sendingOtp ? 'loading' : '' }} form">
                     <div class="field" ng-class="{'error': vs.error('nationalCode')}">
-                        <label class="nazanin">کد ملی</label>
+                        <label class="nazanin ja-required">کد ملی</label>
                         <div class="ui input">
                             <input type="tel" ng-model="nationalCode" ng-change="vs.check('nationalCode')" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
                         </div>
@@ -316,7 +316,7 @@
                     </div>
                     
                     <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
-                        <label class="nazanin">شماره تلفن همراه</label>
+                        <label class="nazanin ja-required">شماره تلفن همراه</label>
                         <div class="ui input">
                             <input type="tel" ng-model="mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
                         </div>
@@ -583,7 +583,7 @@
                 <form class="ui {{ loggingIn ? 'loading' : '' }} form">
                     
                     <div class="field" ng-class="{'error': vs.error('username')}">
-                        <label class="nazanin">نام کاربری</label>
+                        <label class="nazanin ja-required">نام کاربری</label>
                         <div class="ui input">
                             <input type="text" ng-model="username" ng-change="vs.check('username')" ng-class="{'ja-align-left': username, 'nazanin': !username}" placeholder="نام کاربری">
                         </div>
@@ -591,7 +591,7 @@
                     </div>
                     
                     <div class="field" ng-class="{'error': vs.error('password')}">
-                        <label class="nazanin">کلمه عبور</label>
+                        <label class="nazanin ja-required">کلمه عبور</label>
                         <div class="ui input">
                             <input type="password" ng-model="password" ng-change="vs.check('password')" ng-class="{'ja-align-left': password, 'nazanin': !password}" placeholder="کلمه عبور">
                         </div>
@@ -646,7 +646,7 @@
                 <form class="ui {{ restoringPassword ? 'loading' : '' }} form">
                     
                     <div class="field" ng-class="{'error': vs.error('username')}">
-                        <label class="nazanin">نام کاربری</label>
+                        <label class="nazanin ja-required">نام کاربری</label>
                         <div class="ui input">
                             <input type="text" ng-model="username" ng-change="vs.check('username')" ng-class="{'ja-align-left': username, 'nazanin': !username}" placeholder="نام کاربری">
                         </div>
@@ -654,7 +654,7 @@
                     </div>
                     
                     <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
-                        <label class="nazanin">شماره تلفن همراه</label>
+                        <label class="nazanin ja-required">شماره تلفن همراه</label>
                         <div class="ui input">
                             <input type="tel" ng-model="mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
                         </div>
@@ -732,7 +732,7 @@
                 <form class="ui {{ sendingRegisterationForm ? 'loading' : '' }} form" ng-submit="sendRegisterationForm()">
 
                     <div class="field" ng-class="{'error': vs.error('labName')}">
-                        <label class="nazanin">نام کامل آزمایشگاه</label>
+                        <label class="nazanin ja-required">نام کامل آزمایشگاه</label>
                         <div class="ui input">
                             <input class="nazanin ja-rtl" type="text" ng-model="model.labName" ng-change="vs.check('labName')" placeholder="نام کامل آزمایشگاه">
                         </div>
@@ -740,7 +740,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
-                        <label class="nazanin">تلفن همراه ارتباطی</label>
+                        <label class="nazanin ja-required">تلفن همراه ارتباطی</label>
                         <div class="ui input">
                             <input type="tel" ng-model="model.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
                         </div>
@@ -748,7 +748,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
-                        <label class="nazanin">تلفن ثابت</label>
+                        <label class="nazanin ja-required">تلفن ثابت</label>
                         <div class="ui input">
                             <input type="tel" ng-model="model.phoneNumber" ng-change="vs.check('phoneNumber')" ng-class="{'ja-align-left': model.phoneNumber, 'nazanin': !model.phoneNumber}" placeholder="تلفن ثابت">
                         </div>
@@ -756,7 +756,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('address')}">
-                        <label class="nazanin">آدرس</label>
+                        <label class="nazanin ja-required">آدرس</label>
                         <div class="ui input">
                             <input class="nazanin ja-rtl" type="text" ng-model="model.address" ng-change="vs.check('address')" placeholder="آدرس کامل آزمایشگاه">
                         </div>
@@ -764,7 +764,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('postalCode')}">
-                        <label class="nazanin">کد پستی</label>
+                        <label class="nazanin ja-required">کد پستی</label>
                         <div class="ui input">
                             <input type="tel" ng-model="model.postalCode" ng-change="vs.check('postalCode')" ng-class="{'ja-align-left': model.postalCode, 'nazanin': !model.postalCode}" placeholder="کد پستی 10 رقمی">
                         </div>
@@ -772,7 +772,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('websiteAddress')}">
-                        <label class="nazanin">آدرس وبسایت</label>
+                        <label class="nazanin ja-optional">آدرس وبسایت</label>
                         <div class="ui input">
                             <input type="text" ng-model="model.websiteAddress" ng-change="vs.check('websiteAddress')" class="ja-align-left" placeholder="you.ir">
                         </div>
@@ -784,7 +784,7 @@
                     </p>
 
                     <div class="field" ng-class="{'error': vs.error('username')}">
-                        <label class="nazanin">نام کاربری</label>
+                        <label class="nazanin ja-required">نام کاربری</label>
                         <div class="ui input">
                             <input type="text" ng-model="model.username" ng-change="vs.check('username')" class="ja-align-left" placeholder="username">
                         </div>
@@ -792,7 +792,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('password')}">
-                        <label class="nazanin">کلمه عبور</label>
+                        <label class="nazanin ja-required">کلمه عبور</label>
                         <div class="ui input">
                             <input type="password" ng-model="model.password" ng-change="vs.check('password', 'passwordAgain')" class="ja-align-left">
                         </div>
@@ -800,7 +800,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('passwordAgain')}">
-                        <label class="nazanin">تکرار کلمه عبور</label>
+                        <label class="nazanin ja-required">تکرار کلمه عبور</label>
                         <div class="ui input">
                             <input type="password" ng-model="model.passwordAgain" ng-change="vs.check('password', 'passwordAgain')" class="ja-align-left">
                         </div>
@@ -814,7 +814,7 @@
                     <div class="field" ng-class="{'error': vs.error('acceptRules')}">
                         <div class="ui checkbox">
                             <input type="checkbox" ng-model="model.acceptRules" ng-change="vs.check('acceptRules')" id="ja-lab-register-acceptRules">
-                            <label class="nazanin" for="ja-lab-register-acceptRules">قوانین و مقررات را می پذیرم</label>
+                            <label class="nazanin" for="ja-lab-register-acceptRules"><span class="ja-required"></span>قوانین و مقررات را می پذیرم</label>
                         </div>
                         <br />
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('acceptRules')" ng-bind="vs.error('acceptRules')"></div>
@@ -1171,7 +1171,7 @@
                 <form class="ui {{ sendingAnswer ? 'loading' : '' }} form">
 
                     <div class="field" ng-class="{'error': vs.error('nationalCode')}">
-                        <label class="nazanin">کد ملی بیمار</label>
+                        <label class="nazanin ja-required">کد ملی بیمار</label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.nationalCode" ng-change="vs.check('nationalCode'); loadPatientInfo()" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
                         </div>
@@ -1179,7 +1179,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('fullName')}">
-                        <label class="nazanin">نام و نام خانوادگی بیمار</label>
+                        <label class="nazanin ja-required">نام و نام خانوادگی بیمار</label>
                         <div class="ui input">
                             <input class="nazanin ja-rtl" type="text" ng-model="person.fullName" ng-change="vs.check('fullName')" placeholder="نام و نام خانوادگی">
                         </div>
@@ -1187,7 +1187,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
-                        <label class="nazanin">شماره تلفن همراه</label>
+                        <label class="nazanin ja-required">شماره تلفن همراه</label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
                         </div>
@@ -1195,7 +1195,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
-                        <label class="nazanin"><bdi>شماره تلفن دوم (اختیاری)</bdi></label>
+                        <label class="nazanin ja-optional">شماره تلفن دوم</label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.phoneNumber" ng-change="vs.check('phoneNumber')" ng-class="{'ja-align-left': phoneNumber, 'nazanin': !phoneNumber}" placeholder="تلفن همراه یا ثابت">
                         </div>
@@ -1203,7 +1203,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('extraPhoneNumber')}">
-                        <label class="nazanin"><bdi>شماره تلفن سوم (اختیاری)</bdi></label>
+                        <label class="nazanin ja-optional">شماره تلفن سوم </label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.extraPhoneNumber" ng-change="vs.check('extraPhoneNumber')" ng-class="{'ja-align-left': extraPhoneNumber, 'nazanin': !extraPhoneNumber}" placeholder="تلفن همراه یا ثابت">
                         </div>
@@ -1211,7 +1211,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('email')}">
-                        <label class="nazanin"><bdi>آدرس پست الکترونیک (اختیاری)</bdi></label>
+                        <label class="nazanin ja-optional">آدرس پست الکترونیک </label>
                         <div class="ui input">
                             <input type="email" ng-model="person.email" ng-change="vs.check('email')" class="ja-align-left" placeholder="your@email.com">
                         </div>
@@ -1269,7 +1269,7 @@
                     <div class="ui divider"></div>
 
                     <div class="field">
-                        <label class="nazanin"><bdi>توضیحات</bdi></label>
+                        <label class="nazanin ja-optional">توضیحات</label>
                         <div class="ui input">
                             <textarea class="nazanin ja-rtl" ng-model="notes" rows=6 maxlength=10000 placeholder="توضیحات درباره نتایج"></textarea>
                         </div>
@@ -1459,7 +1459,7 @@
                 <form class="ui {{ editingAccount ? 'loading' : '' }} form">
 
                     <div class="field" ng-class="{'error': vs.error('labName')}">
-                        <label class="nazanin">نام کامل آزمایشگاه</label>
+                        <label class="nazanin ja-required">نام کامل آزمایشگاه</label>
                         <div class="ui input">
                             <input class="nazanin ja-rtl" type="text" ng-model="user.labName" ng-change="vs.check('labName')" placeholder="نام کامل آزمایشگاه">
                         </div>
@@ -1467,7 +1467,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
-                        <label class="nazanin">تلفن همراه ارتباطی</label>
+                        <label class="nazanin ja-required">تلفن همراه ارتباطی</label>
                         <div class="ui input">
                             <input type="tel" ng-model="user.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="f=09xxxxxxxxx">
                         </div>
@@ -1475,7 +1475,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
-                        <label class="nazanin">تلفن ثابت</label>
+                        <label class="nazanin ja-required">تلفن ثابت</label>
                         <div class="ui input">
                             <input type="tel" ng-model="user.phoneNumber" ng-change="vs.check('phoneNumber')" ng-class="{'ja-align-left': user.phoneNumber, 'nazanin': !user.phoneNumber}" placeholder="تلفن ثابت">
                         </div>
@@ -1483,7 +1483,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('address')}">
-                        <label class="nazanin">آدرس</label>
+                        <label class="nazanin ja-required">آدرس</label>
                         <div class="ui input">
                             <input class="nazanin ja-rtl" type="text" ng-model="user.address" ng-change="vs.check('address')" placeholder="آدرس کامل آزمایشگاه">
                         </div>
@@ -1491,7 +1491,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('postalCode')}">
-                        <label class="nazanin">کد پستی</label>
+                        <label class="nazanin ja-required">کد پستی</label>
                         <div class="ui input">
                             <input type="tel" ng-model="user.postalCode" ng-change="vs.check('postalCode')" ng-class="{'ja-align-left': user.postalCode, 'nazanin': !user.postalCode}" placeholder="کد پستی 10 رقمی">
                         </div>
@@ -1499,7 +1499,7 @@
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('websiteAddress')}">
-                        <label class="nazanin">آدرس وبسایت</label>
+                        <label class="nazanin ja-optional">آدرس وبسایت</label>
                         <div class="ui input">
                             <input type="text" ng-model="user.websiteAddress" ng-change="vs.check('websiteAddress')" class="ja-align-left" placeholder="you.ir">
                         </div>
@@ -1543,7 +1543,7 @@
                 <form class="ui {{ changingPassword ? 'loading' : '' }} form">
                     
                     <div class="field" ng-class="{'error': vs.error('oldPassword')}">
-                        <label class="nazanin">کلمه عبور قدیمی</label>
+                        <label class="nazanin ja-required">کلمه عبور قدیمی</label>
                         <div class="ui input">
                             <input type="password" ng-model="oldPassword" ng-change="vs.check('oldPassword')" ng-class="{'ja-align-left': oldPassword, 'nazanin': !oldPassword}" placeholder="کلمه عبور قدیمی">
                         </div>
@@ -1551,7 +1551,7 @@
                     </div>
                     
                     <div class="field" ng-class="{'error': vs.error('newPassword')}">
-                        <label class="nazanin">کلمه عبور جدید</label>
+                        <label class="nazanin ja-required">کلمه عبور جدید</label>
                         <div class="ui input">
                             <input type="password" ng-model="newPassword" ng-change="vs.check('newPassword')" ng-class="{'ja-align-left': newPassword, 'nazanin': !newPassword}" placeholder="کلمه عبور جدید">
                         </div>
@@ -1559,7 +1559,7 @@
                     </div>
                     
                     <div class="field" ng-class="{'error': vs.error('newPasswordAgain')}">
-                        <label class="nazanin">تکرار کلمه عبور جدید</label>
+                        <label class="nazanin ja-required">تکرار کلمه عبور جدید</label>
                         <div class="ui input">
                             <input type="password" ng-model="newPasswordAgain" ng-change="vs.check('newPasswordAgain')" ng-class="{'ja-align-left': newPasswordAgain, 'nazanin': !newPasswordAgain}" placeholder="تکرار کلمه عبور جدید">
                         </div>

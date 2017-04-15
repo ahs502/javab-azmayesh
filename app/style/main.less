@@ -259,6 +259,26 @@ body {
 			padding: 7px;
 			text-rendering: geometricPrecision;
 		}
+		.field {
+			label {
+				font-size: 110%;
+			}
+			.ja-required {
+				&::before {
+					content: "∗ ";
+					color: red;
+					font-size: 80%;
+				}
+			}
+			.ja-optional {
+				&::after {
+					.nazanin();
+					content: " اختیاری";
+					color: #b4b4b4;
+					font-size: 80%;
+				}
+			}
+		}
 		textarea.nazanin {
 			font-size: 120%;
 		}

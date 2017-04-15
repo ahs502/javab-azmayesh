@@ -211,6 +211,21 @@ body {
   padding: 7px;
   text-rendering: geometricPrecision;
 }
+.ui.form .field label {
+  font-size: 110%;
+}
+.ui.form .field .ja-required::before {
+  content: "∗ ";
+  color: red;
+  font-size: 80%;
+}
+.ui.form .field .ja-optional::after {
+  font-family: BNazanin !important;
+  font-size: 130%;
+  content: " اختیاری";
+  color: #b4b4b4;
+  font-size: 80%;
+}
 .ui.form textarea.nazanin {
   font-size: 120%;
 }
