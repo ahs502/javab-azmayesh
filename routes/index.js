@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
         statistics.dailyCount('index');
     }
     catch (r) {
-        console.error(r)
+        console.error(r);
     }
     next();
 });

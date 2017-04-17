@@ -209,9 +209,9 @@ global.global = global;
     }
 
     function usernameValidator(message) {
-        message = message || 'نام کاربری فقط باید شامل حروف کوپک لاتین، ارقام، نقطه و خط زیر _ باشد';
+        message = message || 'نام کاربری فقط باید شامل حروف لاتین، ارقام، نقطه و خط زیر _ باشد';
         return function(value) {
-            return /^[a-z_][a-z_0-9]+$/.test(value) ? null : message;
+            return /^[a-zA-Z_][a-zA-Z_0-9]+$/.test(value) ? null : message;
         };
     }
 

@@ -29,7 +29,7 @@
                     <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
                         <label class="nazanin ja-required">تلفن همراه ارتباطی</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="user.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="f=09xxxxxxxxx">
+                            <input type="tel" ng-model="user.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
                     </div>

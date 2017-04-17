@@ -72,6 +72,7 @@ router.post('/register', function(req, res, next) {
         });
     }
 
+    user.username = user.username.toLowerCase();
     user.mobilePhoneNumber = String(user.mobilePhoneNumber).toPhoneNumber();
     user.phoneNumber = String(user.phoneNumber).toPhoneNumber();
 
@@ -160,7 +161,7 @@ router.post('/register', function(req, res, next) {
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/register/confirm', function(req, res, next) {
-    var username = req.body.username;
+    var username = String(req.body.username || '').toLowerCase();
     var validationCode = req.body.validationCode;
     utils.generateId('user').then(function(userId) {
         kfs('/user/confirming/' + username, function(err, data) {
@@ -197,7 +198,7 @@ router.post('/register/confirm', function(req, res, next) {
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/login', function(req, res, next) {
-    var username = req.body.username;
+    var username = String(req.body.username || '').toLowerCase();
     var password = req.body.password;
     kfs('user/' + username, function(err, user) {
         if (err) {
@@ -297,7 +298,7 @@ router.post('/edit/:action', function(req, res, next) {
 
             newUser.mobilePhoneNumber = String(newUser.mobilePhoneNumber).toPhoneNumber();
             newUser.phoneNumber = String(newUser.phoneNumber).toPhoneNumber();
-            newUser.username = user.username;
+            newUser.username = user.username.toLowerCase();
             newUser.password = user.password;
             newUser.timeStamp = user.timeStamp;
         }
@@ -350,7 +351,7 @@ router.post('/edit/confirm', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res);
     if (!userInfo) return;
     var username = userInfo.username;
-    if (username !== req.body.username) {
+    if (username !== String(req.body.username || '').toLowerCase()) {
         return utils.resEndByCode(res, 50);
     }
     var validationCode = req.body.validationCode;
@@ -386,7 +387,7 @@ router.post('/edit/confirm', function(req, res, next) {
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/restorePassword', function(req, res, next) {
-    var username = req.body.username;
+    var username = String(req.body.username || '').toLowerCase();
     var mobilePhoneNumber = String(req.body.mobilePhoneNumber).toPhoneNumber();
     sms.allowanceCheck(mobilePhoneNumber, 'passrecovery').then(function() {
         var userKey = '/user/' + username;
