@@ -148,6 +148,23 @@ gulp.task('clean', callback => {
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
+gulp.task('clean-dev', callback => {
+    del([
+            './app/public/dist/**/app.*',
+            './app/public/*.html',
+        ])
+        .then(items => {
+            if (items && items.length && items.length > 0) {
+                util.log(' -> ' + 'Deleted files and folders :'.green);
+                items.forEach(item => util.log(item.yellow));
+            }
+            util.log(' => ' + 'Already clean for development !'.green);
+            callback();
+        });
+});
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+
 gulp.task('build-app-js', () => {
     return gulp.src(javascripts_app)
         .pipe(gprint(file => ' -> [' + 'app'.cyan + '] Javascript file: ' + file))
@@ -317,6 +334,11 @@ gulp.task('build', ['clean'], () =>
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
+gulp.task('build-dev', ['clean-dev'], () =>
+    runSequence('build-app', 'build-view'));
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+
 var pId;
 
 gulp.task('start-node', callback => {
@@ -410,13 +432,10 @@ gulp.task('start', ['start-node', 'watch', 'browser-sync'], callback => {
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-gulp.task('start-app', ['build-app', 'start-node', 'watch', 'browser-sync'], callback => {
-    //util.log(" => Type 'gulp help' for more information.".bold);
-    callback(); // Nothing !
-});
+gulp.task('dev', ['build-dev'], () => runSequence('start'));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-gulp.task('default', ['build', 'start']);
+gulp.task('default', ['build'], () => runSequence('start'));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\

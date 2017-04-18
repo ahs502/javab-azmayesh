@@ -230,9 +230,9 @@
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeOtp()">سوابق من</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin not-small-display" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin not-small-display" id="home-contact-us" data-position="top right" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
-<div class="ui popup ja-align-right not-small-display">
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" id="home-contact-us" data-position="top right" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
+<div class="ui popup ja-align-right ja not-small-display">
     <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
     <div class="nazanin">
         <bdi>021-66910430</bdi>
@@ -568,8 +568,8 @@
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabLogin()">ورود مشترکین</a>
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabRegister()">ثبت نام</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin not-small-display" ng-click="menuHandlers.goToLabAbout()">درباره ما</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin not-small-display" ng-click="menuHandlers.goToLabContact()">تماس با ما</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToLabAbout()">درباره ما</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToLabContact()">تماس با ما</a>
 
 </script>
 
@@ -1049,6 +1049,16 @@
 
     <div class="ui text menu" id="ja-panel-history-filter-menu">
 
+        <div class="item ja-not-small-display">
+            <div class="ui input">
+                <input type="tel" ng-model="nationalCode" class="ja-filter" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
+            </div>
+        </div>
+
+        <div class="item ja-not-small-display">
+            <bdi class="nazanin">جستجو:</bdi>
+        </div>
+
         <div class="right menu">
 
             <div class="ui dropdown item" id="select-month-to">
@@ -1082,36 +1092,51 @@
 
     </div>
 
+    <div class="ui text menu ja-small-display" id="ja-panel-history-search-menu">
+
+        <div class="item">
+            <div class="ui input">
+                <input type="tel" ng-model="nationalCode" class="ja-filter" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
+            </div>
+        </div>
+
+        <div class="item">
+            <bdi class="nazanin">جستجو:</bdi>
+        </div>
+
+    </div>
+
     <!-- https://github.com/pioug/md-virtual-repeater -->
     <!--<md-virtual-repeat-container class="ui cards" md-top-index="topPostIndex">-->
     <!--    <div class="ui link fluid raised blue card" md-virtual-repeat="post in posts" md-item-size="92.15" ng-click="postClicked(post)">-->
     <div class="ui basic segment" id="ja-panel-history-scrolling-container">
 
-        <div class="ui cards">
-            <div class="ui link fluid raised blue card" ng-repeat="post in posts | limitTo: 100 track by $index" ng-click="postClicked(post)">
+        <div class="ui centered grid">
+            <div class="fourteen wide small eight wide tablet six wide computer column">
 
-                <div class="content">
-                    <div class="header">{{ post.nationalCode | toPersianNumber }}</div>
-                    <div class="meta">
-                        <span class="category">{{ post.postDate | toPersianDate: "dddd - YYYY/MM/DD - h:mm:ss a" }}</span>
-                    </div>
-                    <div class="description">
-                        <strong><p ng-bind="post.postCode | toPersianNumber"></p></strong>
-                        <p ng-if="post.filesCount"><strong>{{ post.filesCount | toPersianNumber }}</strong> فایل پیوست</p>
-                    </div>
-                </div>
-                <!--<div class="extra content">-->
-                <!--    <div class="right floated author">-->
-                <!--        <img class="ui avatar image" src="/images/avatar/small/matt.jpg"> Matt-->
-                <!--    </div>-->
-                <!--</div>-->
+                <table class="ja-panel-history-table">
+                    <tbody>
+                        <tr ng-repeat="post in posts | filter: { nationalCode: nationalCode } | limitTo: maxCount track by $index" ng-click="postClicked(post)">
+                            <td>{{ post.postCode | toPersianNumber }}</td>
+                            <td>
+                                <span ng-if="post.filesCount">فایل</span>
+                                <bdi><strong>{{ (post.filesCount || null) | emptyCheck | toPersianNumber }}</strong></bdi>
+                            </td>
+                            <td>{{ post.postDate | toPersianDate: "hh:mm" }}</td>
+                            <td>{{ post.postDate | toPersianDate: "dddd" }}</td>
+                            <td>{{ post.postDate | toPersianDate: "YYYY/MM/DD" }}</td>
+                            <td><strong>{{ post.nationalCode | toPersianNumber }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
 
             </div>
         </div>
 
-        <div ng-show="posts.length > 100">
+        <div ng-show="posts.length > maxCount">
             <br/>
-            <p class="nazanin ja-rtl ja-align-right">پُست های بیشتری هم وجود دارند... برای مشاهده همه آن ها لطفاً جستجوی خود را محدودتر کنید.</p>
+            <p class="nazanin ja-rtl ja-align-right">پُست های بیشتری هم وجود دارند...</p>
+            <p class="nazanin ja-rtl ja-align-right">برای مشاهده همه آن ها لطفاً جستجوی خود را محدودتر کنید.</p>
         </div>
 
     </div>
@@ -1197,7 +1222,7 @@
                     <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
                         <label class="nazanin ja-optional">شماره تلفن دوم</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="person.phoneNumber" ng-change="vs.check('phoneNumber')" ng-class="{'ja-align-left': phoneNumber, 'nazanin': !phoneNumber}" placeholder="تلفن همراه یا ثابت">
+                            <input type="tel" ng-model="person.phoneNumber" ng-change="vs.check('phoneNumber')" ng-class="{'ja-align-left': person.phoneNumber, 'nazanin': !person.phoneNumber}" placeholder="تلفن همراه یا ثابت">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('phoneNumber')" ng-bind="vs.error('phoneNumber')"></div>
                     </div>
@@ -1205,7 +1230,7 @@
                     <div class="field" ng-class="{'error': vs.error('extraPhoneNumber')}">
                         <label class="nazanin ja-optional">شماره تلفن سوم </label>
                         <div class="ui input">
-                            <input type="tel" ng-model="person.extraPhoneNumber" ng-change="vs.check('extraPhoneNumber')" ng-class="{'ja-align-left': extraPhoneNumber, 'nazanin': !extraPhoneNumber}" placeholder="تلفن همراه یا ثابت">
+                            <input type="tel" ng-model="person.extraPhoneNumber" ng-change="vs.check('extraPhoneNumber')" ng-class="{'ja-align-left': person.extraPhoneNumber, 'nazanin': !person.extraPhoneNumber}" placeholder="تلفن همراه یا ثابت">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('extraPhoneNumber')" ng-bind="vs.error('extraPhoneNumber')"></div>
                     </div>

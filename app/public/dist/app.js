@@ -1988,6 +1988,8 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
             currentYear = jYMD[0],
             currentMonth = jYMD[1];
 
+        $scope.maxCount = 300;
+
         $scope.allYears = Array.range(currentYear, userYear);
         $scope.persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
 
