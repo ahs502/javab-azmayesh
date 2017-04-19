@@ -225,7 +225,7 @@ body {
   cursor: pointer;
 }
 #ja-panel #ja-panel-history table.ja-panel-history-table tbody tr:hover td {
-  background-color: #f3f3f3;
+  background-color: #f0f0f0;
 }
 #ja-panel #ja-panel-history table.ja-panel-history-table tbody tr td {
   font-family: BNazanin !important;

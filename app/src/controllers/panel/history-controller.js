@@ -12,7 +12,7 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
             currentYear = jYMD[0],
             currentMonth = jYMD[1];
 
-        $scope.maxCount = 300;
+        $scope.maxCount = 500;
 
         $scope.allYears = Array.range(currentYear, userYear);
         $scope.persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
@@ -50,6 +50,9 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
                 value = Number(value);
                 $scope.selectedMonthFrom = value;
                 $scope.selectedMonthFromText = $scope.persianMonths[value - 1];
+                var selectedMonthTo = $scope.selectedMonthTo > $scope.selectedMonthFrom ? $scope.selectedMonthTo : $scope.selectedMonthFrom;
+                if (selectedMonthTo != $scope.selectedMonthTo)
+                    $('#select-month-to').dropdown('set selected', $scope.selectedMonthTo = selectedMonthTo);
                 loadPosts();
                 // });
             }
@@ -61,6 +64,9 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
                 value = Number(value);
                 $scope.selectedMonthTo = value;
                 $scope.selectedMonthToText = $scope.persianMonths[value - 1];
+                var selectedMonthFrom = $scope.selectedMonthFrom < $scope.selectedMonthTo ? $scope.selectedMonthFrom : $scope.selectedMonthTo;
+                if (selectedMonthFrom != $scope.selectedMonthFrom)
+                    $('#select-month-from').dropdown('set selected', $scope.selectedMonthFrom = selectedMonthFrom);
                 loadPosts();
                 // });
             }
