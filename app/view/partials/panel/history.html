@@ -4,7 +4,7 @@
 
         <div class="item ja-not-small-display">
             <div class="ui input">
-                <input type="tel" ng-model="nationalCode" class="ja-filter" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
+                <input type="tel" ng-model="nationalCode" class="ja-filter" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی" title="کد ملی">
             </div>
         </div>
 
@@ -19,7 +19,7 @@
                 <span class="text nazanin" ng-bind="selectedMonthToText"></span> &nbsp;
                 <strong><bdi class="nazanin">تا</bdi></strong>
                 <div class="menu">
-                    <div class="item nazanin" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
+                    <div class="item nazanin ja-align-right" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
                 </div>
             </div>
 
@@ -28,7 +28,7 @@
                 <span class="text nazanin" ng-bind="selectedMonthFromText"></span> &nbsp;
                 <strong><bdi class="nazanin">از</bdi></strong>
                 <div class="menu">
-                    <div class="item nazanin" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
+                    <div class="item nazanin ja-align-right" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
                 </div>
             </div>
 
@@ -37,7 +37,7 @@
                 <span class="text nazanin" ng-bind="selectedYear | toPersianNumber"></span> &nbsp;
                 <strong><bdi class="nazanin">سال</bdi></strong>
                 <div class="menu">
-                    <div class="item nazanin" ng-repeat="year in allYears" data-value="{{year}}" ng-bind="year | toPersianNumber"></div>
+                    <div class="item nazanin ja-align-left" ng-repeat="year in allYears" data-value="{{year}}" ng-bind="year | toPersianNumber"></div>
                 </div>
             </div>
 
@@ -49,7 +49,7 @@
 
         <div class="item">
             <div class="ui input">
-                <input type="tel" ng-model="nationalCode" class="ja-filter" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
+                <input type="tel" ng-model="nationalCode" class="ja-filter" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی" title="کد ملی">
             </div>
         </div>
 

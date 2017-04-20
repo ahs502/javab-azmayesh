@@ -287,6 +287,9 @@ body {
   #ja-panel #ja-panel-history #ja-panel-history-filter-menu {
     top: 80px;
   }
+  #ja-panel #ja-panel-history #ja-panel-history-scrolling-container {
+    margin-top: 60px;
+  }
 }
 @media (min-width: 530px) {
   .ja-more-than-530 {

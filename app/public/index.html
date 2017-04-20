@@ -254,7 +254,7 @@
                     <div class="field" ng-class="{'error': vs.error('nationalCode')}">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
-                            <input type="tel" ng-model="nationalCode" ng-change="vs.check('nationalCode')" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
+                            <input type="tel" ng-model="nationalCode" ng-change="vs.check('nationalCode')" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی" title="کد ملی">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('nationalCode')" ng-bind="vs.error('nationalCode')"></div>
                     </div>
@@ -262,7 +262,7 @@
                     <div class="field" ng-class="{'error': vs.error('postCode')}">
                         <!--<label class="nazanin">شماره آزمایش</label>-->
                         <div class="ui input">
-                            <input type="tel" ng-model="postCode" ng-change="vs.check('postCode')" ng-class="{'ja-align-left': postCode, 'nazanin': !postCode}" placeholder="شماره آزمایش">
+                            <input type="tel" ng-model="postCode" ng-change="vs.check('postCode')" ng-class="{'ja-align-left': postCode, 'nazanin': !postCode}" placeholder="شماره آزمایش" title="شماره آزمایش">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('postCode')" ng-bind="vs.error('postCode')"></div>
                     </div>
@@ -390,27 +390,38 @@
 
         <br/>
 
-        <div class="ui three stackable doubling cards">
+        <!--<div class="ui three stackable doubling cards ja-align-right">-->
+        <div class="ui centered grid">
+            <div class="twelve wide small eight wide tablet six wide computer column">
+                <div class="center aligned row ltr">
 
-            <div class="ui link fluid raised blue card" ng-repeat="post in history" ng-click="postClicked(post)">
-                <div class="content">
-                    <div class="header" ng-bind="post.labName"></div>
-                    <div class="meta">
-                        <span class="category">{{ post.timeStamp | toPersianDate: "dddd - YYYY/MM/DD - h:mm:ss a" }}</span>
+                    <div class="ui link fluid raised blue card" ng-repeat="post in history | orderBy: '-timeStamp' track by $index" ng-click="postClicked(post)">
+                        <div class="content">
+                            <div class="header nazanin" ng-bind="post.labName"></div>
+                            <div class="meta">
+                                <span class="category nazanin">{{ post.timeStamp | toPersianDate: "روز dddd YYYY/MM/DD ساعت hh:mm" }}</span>
+                            </div>
+                            <div class="description">
+                                <p>
+                                    <strong class="nazanin" ng-bind="post.postCode | toPersianNumber"></strong>
+                                </p>
+                                <p class="nazanin" ng-if="post.filesCount">
+                                    <bdi>فایل پیوست</bdi>
+                                    <strong>{{ post.filesCount | toPersianNumber }}</strong>
+                                </p>
+                            </div>
+                        </div>
+                        <!--<div class="extra content">-->
+                        <!--    <div class="right floated author">-->
+                        <!--        <img class="ui avatar image" src="/images/avatar/small/matt.jpg"> Matt-->
+                        <!--    </div>-->
+                        <!--</div>-->
                     </div>
-                    <div class="description">
-                        <strong><p ng-bind="post.postCode | toPersianNumber"></p></strong>
-                        <p ng-if="post.filesCount"><strong>{{ post.filesCount | toPersianNumber }}</strong> فایل پیوست</p>
-                    </div>
+
                 </div>
-                <!--<div class="extra content">-->
-                <!--    <div class="right floated author">-->
-                <!--        <img class="ui avatar image" src="/images/avatar/small/matt.jpg"> Matt-->
-                <!--    </div>-->
-                <!--</div>-->
             </div>
-
         </div>
+        <!--</div>-->
 
     </div>
 
@@ -428,9 +439,9 @@
 
     <div class="ui basic segment">
 
-        <p ng-show="loading">Loading, please wait...</p>
+        <p class="nazanin ja-rtl ja-align-right" ng-show="loading">در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...</p>
 
-        <p ng-show="!loading && !(answer && answer.files && answer.files.length)">No files have been uploaded for this post.</p>
+        <p class="nazanin ja-rtl ja-align-right" ng-show="!loading && !(answer && answer.files && answer.files.length)">برای این آزمایش فایلی آپلود نشده است.</p>
 
         <div ng-if="!loading && (answer && answer.files && answer.files.length)" ng-repeat="file in answer.files">
 
@@ -1051,7 +1062,7 @@
 
         <div class="item ja-not-small-display">
             <div class="ui input">
-                <input type="tel" ng-model="nationalCode" class="ja-filter" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
+                <input type="tel" ng-model="nationalCode" class="ja-filter" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی" title="کد ملی">
             </div>
         </div>
 
@@ -1066,7 +1077,7 @@
                 <span class="text nazanin" ng-bind="selectedMonthToText"></span> &nbsp;
                 <strong><bdi class="nazanin">تا</bdi></strong>
                 <div class="menu">
-                    <div class="item nazanin" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
+                    <div class="item nazanin ja-align-right" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
                 </div>
             </div>
 
@@ -1075,7 +1086,7 @@
                 <span class="text nazanin" ng-bind="selectedMonthFromText"></span> &nbsp;
                 <strong><bdi class="nazanin">از</bdi></strong>
                 <div class="menu">
-                    <div class="item nazanin" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
+                    <div class="item nazanin ja-align-right" ng-repeat="month in persianMonths" data-value="{{ $index + 1 }}" ng-bind="month"></div>
                 </div>
             </div>
 
@@ -1084,7 +1095,7 @@
                 <span class="text nazanin" ng-bind="selectedYear | toPersianNumber"></span> &nbsp;
                 <strong><bdi class="nazanin">سال</bdi></strong>
                 <div class="menu">
-                    <div class="item nazanin" ng-repeat="year in allYears" data-value="{{year}}" ng-bind="year | toPersianNumber"></div>
+                    <div class="item nazanin ja-align-left" ng-repeat="year in allYears" data-value="{{year}}" ng-bind="year | toPersianNumber"></div>
                 </div>
             </div>
 
@@ -1096,7 +1107,7 @@
 
         <div class="item">
             <div class="ui input">
-                <input type="tel" ng-model="nationalCode" class="ja-filter" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی">
+                <input type="tel" ng-model="nationalCode" class="ja-filter" ng-class="{'ja-align-left': nationalCode, 'nazanin': !nationalCode}" placeholder="کد ملی" title="کد ملی">
             </div>
         </div>
 
