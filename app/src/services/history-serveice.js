@@ -42,7 +42,7 @@ app.service('HistoryService', ['$http', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 71, 72, 73
+        // May reject by code : 1, 2, 5, 71, 72, 73, 74
         // Resolves to patient's answer content
         function loadAnswer(nationalCode, postCode) {
             return utils.httpPromiseHandler($http.post('/history/load/answer', {
@@ -52,11 +52,17 @@ app.service('HistoryService', ['$http', 'Utils',
                 .then(function(body) {
                     return {
                         patientName: body.patientName,
-                        labName: body.labName,
-                        labUsername: body.labUsername,
                         postDate: new Date(body.timeStamp),
                         notes: body.notes,
-                        files: body.files
+                        files: body.files,
+                        lab: {
+                            name: body.lab.name,
+                            mobilePhoneNumber: body.lab.mobilePhoneNumber,
+                            phoneNumber: body.lab.phoneNumber,
+                            address: body.lab.address,
+                            postalCode: body.lab.postalCode,
+                            websiteAddress: body.lab.websiteAddress
+                        }
                     };
                 });
         }

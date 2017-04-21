@@ -436,11 +436,68 @@
 
 <script type="text/ng-template" id="answer.html">
     <div id="ja-answer">
+    
+    <div ui-view></div>
+    
+</div>
+
+</script>
+
+<script type="text/ng-template" id="answer/menu.html">
+    <a class="item nazanin ja-align-right" ng-click="menuHandlers.saveFile(); toggleMenu()">ذخیره فایل</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.shareFile(); toggleMenu()">به اشتراک گذاری</a>
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.printFile(); toggleMenu()">چاپ نتایج</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLaboratory(); toggleMenu()">
+    <span ng-bind="menuHandlers.labGetter().name || ' '"></span>
+</a>
+
+</script>
+
+<script type="text/ng-template" id="answer/header.html">
+    <a class="ja-item ja-text ja-left nazanin" ng-bind="headerHandlers.paitentNameGetter()"></a>
+
+<!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.saveFile()">ذخیره فایل ها</a>-->
+<!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.shareFile()">به اشتراک گذاری</a>-->
+<!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.printFile()">چاپ نتایج</a>-->
+
+</script>
+
+<script type="text/ng-template" id="answer/footer.html">
+    <a class="ja-item ja-text ja-left nazanin" ng-bind="footerHandlers.postDateGetter()"></a>
+
+<a class="ja-item ja-text ja-left nazanin" ng-bind="footerHandlers.postCodeGetter()"></a>
+<!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.postCodeGetter()" id="answer-test-number"></a>-->
+<!--<div class="ui popup ja-align-right">-->
+<!--    <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>-->
+<!--    <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>-->
+<!--</div>-->
+
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLaboratory()">
+    <span ng-bind="menuHandlers.labGetter().name || ' '"></span>
+</a>
+<!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="answer-laboratory-name" data-position="top right" ng-click="menuHandlers.goToLaboratory()">-->
+<!--    <span ng-bind="menuHandlers.labNameGetter()"></span>-->
+<!--</a>-->
+<!--<div class="ui popup ja-align-right">-->
+<!--    <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>-->
+<!--    <div class="nazanin">-->
+<!--        <bdi>021-22915247</bdi>-->
+<!--        <bdi>تلفن:</bdi>-->
+<!--    </div>-->
+<!--    <div class="nazanin">-->
+<!--        <bdi>آدرس: تهران، خ آزادی، نبش بهبودی، پلاک 182، واحد 4</bdi>-->
+<!--    </div>-->
+<!--</div>-->
+</script>
+
+<script type="text/ng-template" id="answer/post.html">
+    <div id="ja-answer-post">
 
     <div class="ui basic segment">
 
         <p class="nazanin ja-rtl ja-align-right" ng-show="loading">در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...</p>
-
         <p class="nazanin ja-rtl ja-align-right" ng-show="!loading && !(answer && answer.files && answer.files.length)">برای این آزمایش فایلی آپلود نشده است.</p>
 
         <div ng-if="!loading && (answer && answer.files && answer.files.length)" ng-repeat="file in answer.files">
@@ -463,84 +520,47 @@
             <pre class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes || '(توضیحات ندارد)'"></pre>
         </div>
 
-
     </div>
-
-    <!-- Footer -->
-    <!--<div class="ui bottom fixed huge menu ja-footer">-->
-
-    <!--    <a class="item nazanin" ng-bind="testDate"></a>-->
-
-    <!--    <a class="item nazanin" ng-bind="receiptNumber" id="answer-receiptNumber"></a>-->
-    <!--    <div class="ui popup ja-align-right">-->
-    <!--        <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>-->
-    <!--        <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>-->
-    <!--    </div>-->
-
-    <!--    <div class="right menu">-->
-
-    <!--        <a class="item nazanin ja-hidable-menu-item" id="answer-laboratoryName" data-position="top right" ng-click="menuEvents.goToLaboratory()">-->
-    <!--            <span ng-bind="menuEvents.laboratoryName"></span>-->
-    <!--        </a>-->
-    <!--        <div class="ui popup ja-align-right ja-hidable-menu-item">-->
-    <!--            <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>-->
-    <!--            <div class="nazanin">-->
-    <!--                <bdi>021-22915247</bdi>-->
-    <!--                <bdi>تلفن:</bdi>-->
-    <!--            </div>-->
-    <!--            <div class="nazanin">-->
-    <!--                <bdi>آدرس: تهران، خ آزادی، نبش بهبودی، پلاک 182، واحد 4</bdi>-->
-    <!--            </div>-->
-    <!--        </div>-->
-
-    <!--    </div>-->
-    <!--</div>-->
 
 </div>
-
 </script>
 
-<script type="text/ng-template" id="answer/menu.html">
-    <a class="item nazanin ja-align-right" ng-click="menuHandlers.saveFile(); toggleMenu()">ذخیره فایل</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.shareFile(); toggleMenu()">به اشتراک گذاری</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.printFile(); toggleMenu()">چاپ نتایج</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLaboratory(); toggleMenu()">
-    <span ng-bind="menuHandlers.labNameGetter()"></span>
-</a>
+<script type="text/ng-template" id="answer/laboratory.html">
+    <div id="ja-answer-laboratory">
 
-</script>
+    <br />
 
-<script type="text/ng-template" id="answer/header.html">
-    <a class="ja-item ja-text ja-left nazanin" ng-bind="headerHandlers.paitentNameGetter()"></a>
+    <div class="ui equal width grid ja-information-grid">
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-bind="menuHandlers.saveFile()">ذخیره فایل</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-bind="menuHandlers.shareFile()">به اشتراک گذاری</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-bind="menuHandlers.printFile()">چاپ نتایج</a>
+        <div class="row ja-information-row" ng-repeat="tupple in labDataForDisplay">
+            <div class="left aligned column">
+                <p ng-bind="tupple.value | emptyCheck" class="nazanin ja-information-value"></p>
+            </div>
+            <div class="right aligned column">
+                <p ng-bind="tupple.label" class="nazanin ja-information-label"></p>
+            </div>
+        </div>
 
-</script>
-
-<script type="text/ng-template" id="answer/footer.html">
-    <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.postDateGetter()"></a>
-
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.postCodeGetter()" id="answer-test-number"></a>
-<div class="ui popup ja-align-right">
-    <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>
-    <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>
-</div>
-
-
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="answer-laboratory-name" data-position="top right" ng-click="menuHandlers.goToLaboratory()">
-    <span ng-bind="menuHandlers.labNameGetter()"></span>
-</a>
-<div class="ui popup ja-align-right">
-    <div class="header"><span class="nazanin">آزمایشگاه دکتر ساوجی</span></div>
-    <div class="nazanin">
-        <bdi>021-22915247</bdi>
-        <bdi>تلفن:</bdi>
     </div>
-    <div class="nazanin">
-        <bdi>آدرس: تهران، خ آزادی، نبش بهبودی، پلاک 182، واحد 4</bdi>
+
+    <div class="ui centered grid" ng-if="answer && answer.lab && answer.lab.websiteAddress">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui form">
+
+                    <div class="field">
+                        <button class="fluid ui blue button" ng-click="menuHandlers.goToLaboratoryWebsite()">
+                            <span class="nazanin">باز کردن وبسایت آزمایشگاه</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
     </div>
+
 </div>
 </script>
 
@@ -1665,35 +1685,46 @@
 
 
     <script>
-        function loadJsCssFile(filename, filetype) {
-            if (!filetype) {
-                if (filename.slice(-3) == '.js') filetype = 'js';
-                if (filename.slice(-4) == '.css') filetype = 'css';
-                if (!filetype) throw "loadJsCssFile: File type is unknown.";
+        function loadJsFile(filename, callback) {
+            if (loadJsFile.loadedFiles.indexOf(filename) >= 0)
+                return typeof callback === 'function' && setTimeout(callback);
+            loadJsFile.loadedFiles.push(filename);
+            var element = document.createElement('script');
+            element.setAttribute("type", "text/javascript");
+            element.setAttribute("src", filename);
+            if (typeof callback === 'function') {
+                var calledBack = false;
+                element.onload = element.onreadystatechange = function() {
+                    if (calledBack) return;
+                    calledBack = true;
+                    callback();
+                };
             }
-            var fileref;
-            if (filetype == "js") {
-                fileref = document.createElement('script');
-                fileref.setAttribute("type", "text/javascript");
-                fileref.setAttribute("src", filename);
-                document.getElementsByTagName("body")[0].appendChild(fileref);
-            }
-            else if (filetype == "css") {
-                fileref = document.createElement("link");
-                fileref.setAttribute("rel", "stylesheet");
-                fileref.setAttribute("type", "text/css");
-                fileref.setAttribute("href", filename);
-                document.getElementsByTagName("head")[0].appendChild(fileref);
-            }
+            document.getElementsByTagName("body")[0].appendChild(element);
         }
+        loadJsFile.loadedFiles = [];
+
+        function loadCssFile(filename, callback) {
+            if (loadCssFile.loadedFiles.indexOf(filename) >= 0)
+                return typeof callback === 'function' && setTimeout(callback);
+            loadCssFile.loadedFiles.push(filename);
+            var element = document.createElement("link");
+            element.setAttribute("rel", "stylesheet");
+            element.setAttribute("type", "text/css");
+            element.setAttribute("href", filename);
+            if (typeof callback === 'function')
+                element.onload = callback;
+            document.getElementsByTagName("head")[0].appendChild(element);
+        }
+        loadCssFile.loadedFiles = [];
 
         // Load CSS files dynamically
-        loadJsCssFile('/dist/lib.min.css');
-        loadJsCssFile('/dist/app.css');
+        loadCssFile('/dist/lib.min.css');
+        loadCssFile('/dist/app.css');
 
         // Do NOT load JS files dynamically
-        // loadJsCssFile('/dist/lib.min.js');
-        // loadJsCssFile('/dist/app.min.js');
+        // loadJsFile('/dist/lib.min.js');
+        // loadJsFile('/dist/app.min.js');
     </script>
 
     <!-- JS files will NOT be loaded dynamically -->

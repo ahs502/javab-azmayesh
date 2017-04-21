@@ -145,21 +145,39 @@ router.post('/load/answer', function(req, res, next) {
             if (!post) {
                 return utils.resEndByCode(res, 73);
             }
-            var files = (post.files || []).map(file => {
-                return {
-                    serverName: file.serverName,
-                    type: file.type
-                };
+            var userKey = 'user/' + post.username;
+            kfs(userKey, function(err, user) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                if (!user) {
+                    return utils.resEndByCode(res, 74);
+                }
+                var files = (post.files || []).map(file => {
+                    return {
+                        serverName: file.serverName,
+                        name: file.name,
+                        size: file.size,
+                        type: file.type
+                    };
+                });
+                utils.resEndByCode(res, 0, {
+                    patientName: patient.fullName,
+                    timeStamp: post.timeStamp,
+                    notes: post.notes,
+                    files,
+                    lab: {
+                        name: user.labName,
+                        mobilePhoneNumber: user.mobilePhoneNumber,
+                        phoneNumber: user.phoneNumber,
+                        address: user.address,
+                        postalCode: user.postalCode,
+                        websiteAddress: user.websiteAddress
+                    }
+                });
+                statistics.dailyCount('answerLoaded');
             });
-            utils.resEndByCode(res, 0, {
-                patientName: patient.fullName,
-                labName: post.labName,
-                labUsername: post.username,
-                timeStamp: post.timeStamp,
-                notes: post.notes,
-                files
-            });
-            statistics.dailyCount('answerLoaded');
         });
     });
 });

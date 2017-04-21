@@ -10,6 +10,7 @@ var wrapper = require("gulp-wrapper");
 var file = require("gulp-file");
 var filter = require("gulp-filter");
 var runSequence = require('run-sequence');
+var merge = require('gulp-merge');
 
 var path = require('path');
 var del = require('del');
@@ -47,6 +48,8 @@ var javascripts_app = [
 var stylesheets_app = [
     './app/style/main.less',
 ];
+
+var dynamic_app = [];
 
 var javascripts_lib = [
     './app/lib/jquery/dist/jquery.min.js',
@@ -95,6 +98,10 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/statistic.min.css',
     './app/lib/semantic/dist/components/divider.min.css',
     //'./app/lib/semantic/dist/components/icon.min.css',
+];
+
+var dynamic_lib = [
+    ['./app/lib/pdfjs-dist/build', 'pdf.min.js'],
 ];
 
 var views_templates = [
@@ -148,9 +155,10 @@ gulp.task('clean', callback => {
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-gulp.task('clean-dev', callback => {
+gulp.task('clean-fast', callback => {
     del([
             './app/public/dist/**/app.*',
+            './app/public/dist/app/**/*',
             './app/public/*.html',
         ])
         .then(items => {
@@ -242,6 +250,17 @@ gulp.task('build-app-css', () => {
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
+gulp.task('copy-app-dynamic', done => {
+    if (!dynamic_app.length) return done();
+    return merge.apply(null, dynamic_app.map(dynamic =>
+            gulp.src(path.join(dynamic[0], dynamic[1]))
+            .pipe(gprint(file => ' -> [' + 'app'.cyan + '] Dynamic file: ' + file))
+            .pipe(gulp.dest('./app/public/dist/app/'))))
+        .on('end', () => util.log(' => [' + 'app'.bold.cyan + '] ' + 'Dynamic file(s) have been copied.'.green));
+});
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+
 gulp.task('build-lib-js', () => {
     return gulp.src(javascripts_lib)
         .pipe(gprint(file => ' -> [' + 'lib'.cyan + '] Javascript file: ' + file))
@@ -284,11 +303,22 @@ gulp.task('build-lib-css', () => {
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-gulp.task('build-app', ['build-app-js', 'build-app-css']);
+gulp.task('copy-lib-dynamic', done => {
+    if (!dynamic_lib.length) return done();
+    return merge.apply(null, dynamic_lib.map(dynamic =>
+            gulp.src(path.join(dynamic[0], dynamic[1]))
+            .pipe(gprint(file => ' -> [' + 'lib'.cyan + '] Dynamic file: ' + file))
+            .pipe(gulp.dest('./app/public/dist/lib/'))))
+        .on('end', () => util.log(' => [' + 'lib'.bold.cyan + '] ' + 'Dynamic file(s) have been copied.'.green));
+});
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-gulp.task('build-lib', ['build-lib-js', 'build-lib-css']);
+gulp.task('build-app', ['build-app-js', 'build-app-css', 'copy-app-dynamic']);
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+
+gulp.task('build-lib', ['build-lib-js', 'build-lib-css', 'copy-lib-dynamic']);
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
@@ -334,7 +364,7 @@ gulp.task('build', ['clean'], () =>
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-gulp.task('build-dev', ['clean-dev'], () =>
+gulp.task('build-fast', ['clean-fast'], () =>
     runSequence('build-app', 'build-view'));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
@@ -432,7 +462,7 @@ gulp.task('start', ['start-node', 'watch', 'browser-sync'], callback => {
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-gulp.task('dev', ['build-dev'], () => runSequence('start'));
+gulp.task('fast', ['build-fast'], () => runSequence('start'));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 

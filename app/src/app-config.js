@@ -96,6 +96,14 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                         templateUrl: 'answer/footer.html',
                     },
                 }
+            })
+            .state('answer.post', {
+                url: '/post',
+                templateUrl: 'answer/post.html'
+            })
+            .state('answer.laboratory', {
+                url: '/laboratory',
+                templateUrl: 'answer/laboratory.html'
             });
 
         $stateProvider

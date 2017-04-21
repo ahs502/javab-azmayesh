@@ -695,6 +695,14 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                         templateUrl: 'answer/footer.html',
                     },
                 }
+            })
+            .state('answer.post', {
+                url: '/post',
+                templateUrl: 'answer/post.html'
+            })
+            .state('answer.laboratory', {
+                url: '/laboratory',
+                templateUrl: 'answer/laboratory.html'
             });
 
         $stateProvider
@@ -1031,7 +1039,7 @@ app.service('HistoryService', ['$http', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 71, 72, 73
+        // May reject by code : 1, 2, 5, 71, 72, 73, 74
         // Resolves to patient's answer content
         function loadAnswer(nationalCode, postCode) {
             return utils.httpPromiseHandler($http.post('/history/load/answer', {
@@ -1041,11 +1049,17 @@ app.service('HistoryService', ['$http', 'Utils',
                 .then(function(body) {
                     return {
                         patientName: body.patientName,
-                        labName: body.labName,
-                        labUsername: body.labUsername,
                         postDate: new Date(body.timeStamp),
                         notes: body.notes,
-                        files: body.files
+                        files: body.files,
+                        lab: {
+                            name: body.lab.name,
+                            mobilePhoneNumber: body.lab.mobilePhoneNumber,
+                            phoneNumber: body.lab.phoneNumber,
+                            address: body.lab.address,
+                            postalCode: body.lab.postalCode,
+                            websiteAddress: body.lab.websiteAddress
+                        }
                     };
                 });
         }
@@ -2794,9 +2808,26 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
 /*global $*/
 /*global persianDate*/
 /*global toPersianNumber*/
+/*global loadJsFile*/
 
-app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$stateParams', 'HistoryService',
-    function($rootScope, $scope, $state, $stateParams, historyService) {
+app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$state', '$stateParams', 'HistoryService',
+    function($rootScope, $scope, $timeout, $state, $stateParams, historyService) {
+
+
+
+        $scope.zxc = function() {
+            $scope.lding = true;
+            console.log(window.PDFJS);
+            loadJsFile('/dist/lib/pdf.min.js', function() {
+                $timeout(function() {
+                    $scope.lding = false;
+                    console.log(window.PDFJS);
+                });
+            });
+            console.log('button pressed');
+        };
+
+
 
         $scope.nationalCode = $stateParams.p;
         $scope.postCode = $stateParams.n;
@@ -2805,15 +2836,19 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$statePar
             previousStateData = $stateParams.previousStateData;
 
         $scope.setBackHandler(function() {
-            if (previousState === 'history') {
-                $rootScope.data.patientInfo = previousStateData.patientInfo;
-                $rootScope.data.history = previousStateData.history;
-                $state.go(previousState, {
-                    nationalCode: $scope.nationalCode
-                });
-            }
+            if ($state.is('answer.laboratory'))
+                $state.go('answer.post');
             else {
-                $state.go(previousState || 'home.find');
+                if (previousState === 'history') {
+                    $rootScope.data.patientInfo = previousStateData.patientInfo;
+                    $rootScope.data.history = previousStateData.history;
+                    $state.go(previousState, {
+                        nationalCode: $scope.nationalCode
+                    });
+                }
+                else {
+                    $state.go(previousState || 'home.find');
+                }
             }
         });
 
@@ -2828,10 +2863,18 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$statePar
                 // print file ...
             },
             goToLaboratory: function() {
-                //$state.go('...');
+                $state.go('answer.laboratory');
             },
-            labNameGetter: function() {
-                return $scope.answer ? $scope.answer.labName : ' ';
+            goToLaboratoryWebsite: function() {
+                var url = $scope.answer && $scope.answer.lab && $scope.answer.lab.websiteAddress;
+                if (url) {
+                    if (url.indexOf('http://') !== 0 || url.indexOf('https://') !== 0)
+                        url = 'http://' + url;
+                    window.open(url, '_blank').focus();
+                }
+            },
+            labGetter: function() {
+                return ($scope.answer && $scope.answer.lab) || {};
             },
         });
 
@@ -2850,15 +2893,17 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$statePar
             }
         });
 
-        $('#answer-test-number').popup({
-            inline: true,
-            transition: 'scale'
-        });
+        // $('#answer-test-number').popup({
+        //     inline: true,
+        //     transition: 'scale'
+        // });
 
-        $('#answer-laboratory-name').popup({
-            inline: true,
-            transition: 'scale'
-        });
+        // $('#answer-laboratory-name').popup({
+        //     inline: true,
+        //     transition: 'scale'
+        // });
+
+        $state.go('answer.post');
 
         $scope.loading = true;
         historyService.loadAnswer($scope.nationalCode, $scope.postCode)
@@ -2875,6 +2920,26 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$state', '$statePar
                 //TODO: Handle errors...
                 $scope.loading = false;
                 alert(code);
+            })
+            .then(function() {
+                $scope.answer = $scope.answer || {};
+                $scope.answer.lab = $scope.answer.lab || {};
+                $scope.labDataForDisplay = [{
+                    label: 'نام آزمایشگاه',
+                    value: toPersianNumber($scope.answer.lab.name)
+                }, {
+                    label: 'تلفن تماس',
+                    value: !$scope.answer.lab ? '' : toPersianNumber($scope.answer.lab.mobilePhoneNumber + ' - ' + $scope.answer.lab.phoneNumber)
+                }, {
+                    label: 'آدرس',
+                    value: toPersianNumber($scope.answer.lab.address)
+                }, {
+                    label: 'کد پستی',
+                    value: toPersianNumber($scope.answer.lab.postalCode)
+                }, {
+                    label: 'آدرس درگاه اینترنتی',
+                    value: $scope.answer.lab.websiteAddress
+                }];
             });
 
     }

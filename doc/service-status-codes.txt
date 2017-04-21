@@ -23,6 +23,7 @@
     71  : Patient has no history post
     72  : Post does not belong to patient
     73  : Post not found
+    74  : User (laboratory) not found
     
     80  : Invalid form data
     

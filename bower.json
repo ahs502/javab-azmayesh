@@ -14,6 +14,7 @@
     "angular-ui-router": "^0.3.1",
     "persian-date": "^0.1.8",
     "angular-recaptcha": "^3.0.4",
-    "md-virtual-repeater": "^1.0.2"
+    "md-virtual-repeater": "^1.0.2",
+    "pdfjs-dist": "^1.8.241"
   }
 }

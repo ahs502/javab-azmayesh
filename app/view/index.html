@@ -28,35 +28,46 @@
     <!-- import:./app/view/partials.html -->
 
     <script>
-        function loadJsCssFile(filename, filetype) {
-            if (!filetype) {
-                if (filename.slice(-3) == '.js') filetype = 'js';
-                if (filename.slice(-4) == '.css') filetype = 'css';
-                if (!filetype) throw "loadJsCssFile: File type is unknown.";
+        function loadJsFile(filename, callback) {
+            if (loadJsFile.loadedFiles.indexOf(filename) >= 0)
+                return typeof callback === 'function' && setTimeout(callback);
+            loadJsFile.loadedFiles.push(filename);
+            var element = document.createElement('script');
+            element.setAttribute("type", "text/javascript");
+            element.setAttribute("src", filename);
+            if (typeof callback === 'function') {
+                var calledBack = false;
+                element.onload = element.onreadystatechange = function() {
+                    if (calledBack) return;
+                    calledBack = true;
+                    callback();
+                };
             }
-            var fileref;
-            if (filetype == "js") {
-                fileref = document.createElement('script');
-                fileref.setAttribute("type", "text/javascript");
-                fileref.setAttribute("src", filename);
-                document.getElementsByTagName("body")[0].appendChild(fileref);
-            }
-            else if (filetype == "css") {
-                fileref = document.createElement("link");
-                fileref.setAttribute("rel", "stylesheet");
-                fileref.setAttribute("type", "text/css");
-                fileref.setAttribute("href", filename);
-                document.getElementsByTagName("head")[0].appendChild(fileref);
-            }
+            document.getElementsByTagName("body")[0].appendChild(element);
         }
+        loadJsFile.loadedFiles = [];
+
+        function loadCssFile(filename, callback) {
+            if (loadCssFile.loadedFiles.indexOf(filename) >= 0)
+                return typeof callback === 'function' && setTimeout(callback);
+            loadCssFile.loadedFiles.push(filename);
+            var element = document.createElement("link");
+            element.setAttribute("rel", "stylesheet");
+            element.setAttribute("type", "text/css");
+            element.setAttribute("href", filename);
+            if (typeof callback === 'function')
+                element.onload = callback;
+            document.getElementsByTagName("head")[0].appendChild(element);
+        }
+        loadCssFile.loadedFiles = [];
 
         // Load CSS files dynamically
-        loadJsCssFile('/dist/lib.min.css');
-        loadJsCssFile('/dist/app.css');
+        loadCssFile('/dist/lib.min.css');
+        loadCssFile('/dist/app.css');
 
         // Do NOT load JS files dynamically
-        // loadJsCssFile('/dist/lib.min.js');
-        // loadJsCssFile('/dist/app.min.js');
+        // loadJsFile('/dist/lib.min.js');
+        // loadJsFile('/dist/app.min.js');
     </script>
 
     <!-- JS files will NOT be loaded dynamically -->

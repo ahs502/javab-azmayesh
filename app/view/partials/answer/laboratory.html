@@ -1,0 +1,36 @@
+<div id="ja-answer-laboratory">
+
+    <br />
+
+    <div class="ui equal width grid ja-information-grid">
+
+        <div class="row ja-information-row" ng-repeat="tupple in labDataForDisplay">
+            <div class="left aligned column">
+                <p ng-bind="tupple.value | emptyCheck" class="nazanin ja-information-value"></p>
+            </div>
+            <div class="right aligned column">
+                <p ng-bind="tupple.label" class="nazanin ja-information-label"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ui centered grid" ng-if="answer && answer.lab && answer.lab.websiteAddress">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui form">
+
+                    <div class="field">
+                        <button class="fluid ui blue button" ng-click="menuHandlers.goToLaboratoryWebsite()">
+                            <span class="nazanin">باز کردن وبسایت آزمایشگاه</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>

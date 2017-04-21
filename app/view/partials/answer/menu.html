@@ -1,6 +1,7 @@
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.saveFile(); toggleMenu()">ذخیره فایل</a>
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.shareFile(); toggleMenu()">به اشتراک گذاری</a>
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.printFile(); toggleMenu()">چاپ نتایج</a>
+
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLaboratory(); toggleMenu()">
-    <span ng-bind="menuHandlers.labNameGetter()"></span>
+    <span ng-bind="menuHandlers.labGetter().name || ' '"></span>
 </a>

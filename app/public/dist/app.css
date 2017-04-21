@@ -92,6 +92,21 @@ body {
   top: 0;
   right: 0;
 }
+.ja-information-grid {
+  padding: 14px 10px;
+}
+.ja-information-grid .ja-information-row {
+  padding: 5px 0;
+  border: 1px solid #f0f0f0;
+  border-top: 0;
+}
+.ja-information-grid .ja-information-label {
+  color: #aaa;
+}
+.ja-information-grid .ja-information-value {
+  color: #000;
+  font-size: 140%;
+}
 #ja-main-content {
   margin: 0;
   padding: 0 0 14px 0;
@@ -109,6 +124,21 @@ body {
 .ja-menu-logo {
   margin-top: 8px;
   margin-bottom: 8px;
+}
+#ja-answer #ja-answer-laboratory {
+  padding: 14px 10px;
+}
+#ja-answer #ja-answer-laboratory .ja-information-row {
+  padding: 5px 0;
+  border: 1px solid #f0f0f0;
+  border-top: 0;
+}
+#ja-answer #ja-answer-laboratory .ja-information-label {
+  color: #aaa;
+}
+#ja-answer #ja-answer-laboratory .ja-information-value {
+  color: #000;
+  font-size: 140%;
 }
 #ja-panel {
   padding-top: 13px;
@@ -168,22 +198,22 @@ body {
 #ja-panel #ja-panel-send #input-file {
   display: none;
 }
-#ja-panel #ja-panel-account-summary .ja-information-grid,
-#ja-panel #ja-panel-post .ja-information-grid {
+#ja-panel #ja-panel-account-summary,
+#ja-panel #ja-panel-post {
   padding: 14px 10px;
 }
-#ja-panel #ja-panel-account-summary .ja-information-grid .ja-information-row,
-#ja-panel #ja-panel-post .ja-information-grid .ja-information-row {
+#ja-panel #ja-panel-account-summary .ja-information-row,
+#ja-panel #ja-panel-post .ja-information-row {
   padding: 5px 0;
   border: 1px solid #f0f0f0;
   border-top: 0;
 }
-#ja-panel #ja-panel-account-summary .ja-information-grid .ja-information-label,
-#ja-panel #ja-panel-post .ja-information-grid .ja-information-label {
+#ja-panel #ja-panel-account-summary .ja-information-label,
+#ja-panel #ja-panel-post .ja-information-label {
   color: #aaa;
 }
-#ja-panel #ja-panel-account-summary .ja-information-grid .ja-information-value,
-#ja-panel #ja-panel-post .ja-information-grid .ja-information-value {
+#ja-panel #ja-panel-account-summary .ja-information-value,
+#ja-panel #ja-panel-post .ja-information-value {
   color: #000;
   font-size: 140%;
 }

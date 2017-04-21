@@ -109,16 +109,22 @@ body {
 	right: 0;
 }
 
-// @media screen and (min-width: 1024px) {
-// 	.ja-mobile-size {
-// 		display: none !important;
-// 	}
-// }
-// @media screen and (max-width: 1024px) {
-// 	.ja-desktop-size {
-// 		display: none !important;
-// 	}
-// }
+.ja-information-grid {
+	padding: 14px 10px;
+	.ja-information-row {
+		padding: 5px 0;
+		border: 1px solid #f0f0f0;
+		border-top: 0;
+	}
+	.ja-information-label {
+		color: #aaa;
+	}
+	.ja-information-value {
+		color: #000;
+		font-size: 140%;
+	}
+}
+
 #ja-main-content {
 	margin: 0;
 	padding: 0 0 14px 0;
@@ -138,6 +144,12 @@ body {
 .ja-menu-logo {
 	margin-top: 8px;
 	margin-bottom: 8px;
+}
+
+#ja-answer {
+	#ja-answer-laboratory {
+		.ja-information-grid();
+	}
 }
 
 #ja-panel {
@@ -202,21 +214,7 @@ body {
 	}
 	#ja-panel-account-summary,
 	#ja-panel-post {
-		.ja-information-grid {
-			padding: 14px 10px;
-			.ja-information-row {
-				padding: 5px 0;
-				border: 1px solid #f0f0f0;
-				border-top: 0;
-			}
-			.ja-information-label {
-				color: #aaa;
-			}
-			.ja-information-value {
-				color: #000;
-				font-size: 140%;
-			}
-		}
+		.ja-information-grid();
 	}
 	#ja-panel-history {
 		// md-virtual-repeat-container {
