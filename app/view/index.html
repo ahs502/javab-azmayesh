@@ -28,46 +28,63 @@
     <!-- import:./app/view/partials.html -->
 
     <script>
-        function loadJsFile(filename, callback) {
-            if (loadJsFile.loadedFiles.indexOf(filename) >= 0)
-                return typeof callback === 'function' && setTimeout(callback);
-            loadJsFile.loadedFiles.push(filename);
-            var element = document.createElement('script');
-            element.setAttribute("type", "text/javascript");
-            element.setAttribute("src", filename);
-            if (typeof callback === 'function') {
-                var calledBack = false;
-                element.onload = element.onreadystatechange = function() {
+        var resourceLoader = (function() {
+            var loading = [],
+                loaded = [],
+                callbacks = {};
+
+            return {
+                js: load.bind(null, 'js'),
+                css: load.bind(null, 'css')
+            };
+
+            function load(type, url, callback) {
+                var hasCallback = typeof callback === 'function';
+                if (loaded.indexOf(url) >= 0)
+                    hasCallback && setTimeout(callback);
+                else if (loading.indexOf(url) >= 0)
+                    hasCallback && callbacks[url].push(callback);
+                else {
+                    loading.push(url);
+                    callbacks[url] = [];
+                    hasCallback && callbacks[url].push(callback);
+                    var element, calledBack = false;
+                    if (type === 'js') {
+                        element = document.createElement('script');
+                        element.setAttribute("type", "text/javascript");
+                        element.setAttribute("src", url);
+                        element.onload = element.onreadystatechange = elementCallback;
+                        document.getElementsByTagName("body")[0].appendChild(element);
+                    }
+                    else if (type === 'css') {
+                        element = document.createElement("link");
+                        element.setAttribute("rel", "stylesheet");
+                        element.setAttribute("type", "text/css");
+                        element.setAttribute("href", url);
+                        element.onload = elementCallback;
+                        document.getElementsByTagName("head")[0].appendChild(element);
+                    }
+                }
+
+                function elementCallback() {
                     if (calledBack) return;
                     calledBack = true;
-                    callback();
-                };
+                    loaded.push(url);
+                    callbacks[url].forEach(function(cb) {
+                        cb();
+                    });
+                    delete callbacks[url];
+                }
             }
-            document.getElementsByTagName("body")[0].appendChild(element);
-        }
-        loadJsFile.loadedFiles = [];
-
-        function loadCssFile(filename, callback) {
-            if (loadCssFile.loadedFiles.indexOf(filename) >= 0)
-                return typeof callback === 'function' && setTimeout(callback);
-            loadCssFile.loadedFiles.push(filename);
-            var element = document.createElement("link");
-            element.setAttribute("rel", "stylesheet");
-            element.setAttribute("type", "text/css");
-            element.setAttribute("href", filename);
-            if (typeof callback === 'function')
-                element.onload = callback;
-            document.getElementsByTagName("head")[0].appendChild(element);
-        }
-        loadCssFile.loadedFiles = [];
+        })();
 
         // Load CSS files dynamically
-        loadCssFile('/dist/lib.min.css');
-        loadCssFile('/dist/app.css');
+        resourceLoader.css('/dist/lib.min.css');
+        resourceLoader.css('/dist/app.css');
 
         // Do NOT load JS files dynamically
-        // loadJsFile('/dist/lib.min.js');
-        // loadJsFile('/dist/app.min.js');
+        // resourceLoader.js('/dist/lib.min.js');
+        // resourceLoader.js('/dist/app.min.js');
     </script>
 
     <!-- JS files will NOT be loaded dynamically -->

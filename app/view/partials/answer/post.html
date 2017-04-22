@@ -5,23 +5,30 @@
         <p class="nazanin ja-rtl ja-align-right" ng-show="loading">در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...</p>
         <p class="nazanin ja-rtl ja-align-right" ng-show="!loading && !(answer && answer.files && answer.files.length)">برای این آزمایش فایلی آپلود نشده است.</p>
 
-        <div ng-if="!loading && (answer && answer.files && answer.files.length)" ng-repeat="file in answer.files">
+        <div ng-if="!loading && (answer && answer.files && answer.files.length)" ng-repeat="file in answer.files" ng-switch="file.material">
 
-            <img ng-if="file.material === 'image'" ng-src="{{file.url}}" width="100%">
+            <img ng-switch-when="image" ng-src="{{file.url}}" width="100%">
 
-            <object ng-if="file.material !== 'image'" data="{{file.url}}" type="{{file.type}}" width="100%">
-                <iframe ng-src="{{file.url}}" width="100%" style="border: none;">
-                    No browser support for this file, please download and open the file on your own:
-                    <a href="{{file.url}}">Download</a>
-                </iframe>
-            </object>
+            <pdf ng-switch-when="pdf" ng-src="{{file.urlNoContentType}}" width="100%"></pdf>
 
+            <!-- TODO: do something better instead... -->
+            <div ng-switch-default class="ui teal raised clearing segment ja-preview">
+                <img class="ui small left floated image ja-preview-image" ng-src="{{iconJs.file(file.name)}}">
+                <p class="left floated nazanin ja-preview-filename" ng-bind="file.name"></p>
+            </div>
+
+            <!--<object ng-if="file.material !== 'image'" data="{{file.url}}" type="{{file.type}}" width="100%">-->
+            <!--    <iframe ng-src="{{file.url}}" width="100%" style="border: none;">-->
+            <!--        No browser support for this file, please download and open the file on your own:-->
+            <!--        <a href="{{file.url}}">Download</a>-->
+            <!--    </iframe>-->
+            <!--</object>-->
             <!--<embed ng-if="file.material === '...'" ng-src="{{file.url}}" type="{{file.type}}" width="100%" />-->
 
         </div>
 
+        <p class="nazanin ja-rtl ja-align-right"><strong>توضیحات :</strong></p>
         <div class="ui segment" ng-if="!loading && answer">
-            <!--<strong class="nazanin ja-rtl ja-left-align">توضیحات:</strong>-->
             <pre class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes || '(توضیحات ندارد)'"></pre>
         </div>
 

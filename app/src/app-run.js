@@ -31,6 +31,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService',
                 }
                 else {
                     delete $rootScope.data.postCache;
+                    delete $rootScope.data.historyState;
                     if (userService.current()) {
                         userService.logout();
                     }

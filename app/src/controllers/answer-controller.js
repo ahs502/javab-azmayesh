@@ -1,8 +1,7 @@
 /*global app*/
-/*global $*/
 /*global persianDate*/
 /*global toPersianNumber*/
-/*global loadJsFile*/
+/*global resourceLoader*/
 
 app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$state', '$stateParams', 'HistoryService',
     function($rootScope, $scope, $timeout, $state, $stateParams, historyService) {
@@ -10,15 +9,14 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$state'
 
 
         $scope.zxc = function() {
-            $scope.lding = true;
-            console.log(window.PDFJS);
-            loadJsFile('/dist/lib/pdf.min.js', function() {
-                $timeout(function() {
-                    $scope.lding = false;
-                    console.log(window.PDFJS);
-                });
-            });
-            console.log('button pressed');
+            console.log('zxc', !!window.PDFJS);
+            for (var i = 0; i < 20; i++) {
+                (function(i) {
+                    resourceLoader.js('/dist/lib/pdf.min.js', function() {
+                        console.log(i, !!window.PDFJS);
+                    });
+                })(i);
+            }
         };
 
 
@@ -105,8 +103,11 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$state'
                 answer.files.forEach(function(file) {
                     file.url = '/answer/file/download?p=' + $scope.nationalCode +
                         '&n=' + $scope.postCode + '&f=' + file.serverName;
-                    if (file.type.indexOf('image') >= 0) file.material = 'image';
-                    else if (file.type === 'application/pdf') file.material = 'pdf';
+                    file.urlNoContentType = file.url + '&t=false';
+                    if (file.type.indexOf('image') >= 0)
+                        file.material = 'image';
+                    else if (file.type === 'application/pdf')
+                        file.material = 'pdf';
                 });
                 $scope.answer = answer;
                 $scope.loading = false;

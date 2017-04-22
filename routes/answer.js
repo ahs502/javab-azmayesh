@@ -57,6 +57,7 @@ router.get('/file/download', function(req, res, next) {
     var nationalCode = req.query.p;
     var postCode = req.query.n;
     var serverName = req.query.f;
+    var setContentType = req.query.t !== 'false';
     if (!nationalCode || !postCode || !serverName) {
         return res.status(400).end();
     }
@@ -87,7 +88,7 @@ router.get('/file/download', function(req, res, next) {
                 return res.status(404).end();
             }
             var filePath = path.join(config.upload_path, String(file.serverName));
-            res.set('Content-Type', file.type);
+            setContentType && res.set('Content-Type', file.type);
             res.set('Content-Length', file.size); //TODO: is it required?
             //TODO: what about file.name? can we use it here?
             res.sendFile(filePath);

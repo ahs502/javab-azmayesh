@@ -72,7 +72,7 @@
 
                     <div ng-if="files.length" ng-repeat="file in files">
                         <div class="ui teal raised clearing segment ja-preview">
-                            <img class="ui small left floated image ja-preview-image" ng-src="{{iconJs(file.srcPreview)}}">
+                            <img class="ui small left floated image ja-preview-image" ng-src="{{file.srcPreview}}">
                             <img class="ui small right floated image ja-preview-delete" ng-src="{{iconJs('delete')}}" ng-click="removeFile(file)">
                             <p class="left floated nazanin ja-preview-filename" ng-bind="file.name"></p>
 

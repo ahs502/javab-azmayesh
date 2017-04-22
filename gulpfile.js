@@ -102,6 +102,7 @@ var stylesheets_lib = [
 
 var dynamic_lib = [
     ['./app/lib/pdfjs-dist/build', 'pdf.min.js'],
+    ['./app/lib/pdfjs-dist/build', 'pdf.worker.min.js'],
 ];
 
 var views_templates = [

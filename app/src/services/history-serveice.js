@@ -54,7 +54,14 @@ app.service('HistoryService', ['$http', 'Utils',
                         patientName: body.patientName,
                         postDate: new Date(body.timeStamp),
                         notes: body.notes,
-                        files: body.files,
+                        files: body.files.map(function(file) {
+                            return {
+                                serverName: file.serverName,
+                                name: file.name,
+                                size: file.size,
+                                type: file.type
+                            };
+                        }),
                         lab: {
                             name: body.lab.name,
                             mobilePhoneNumber: body.lab.mobilePhoneNumber,

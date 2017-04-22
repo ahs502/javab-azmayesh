@@ -1,10 +1,12 @@
 /*global app*/
 /*global $*/
 
-app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService', 'PostService',
-    function($scope, $rootScope, $state, $stateParams, $timeout, userService, postService) {
+app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$window', 'UserService', 'PostService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, $window, userService, postService) {
 
         $scope.postClicked = postClicked;
+
+        $scope.maxCount = 500;
 
         var userInfo = userService.current(),
             userYear = userInfo.subscriptionDate.jYMD()[0],
@@ -12,22 +14,38 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
             currentYear = jYMD[0],
             currentMonth = jYMD[1];
 
-        $scope.maxCount = 500;
-
         $scope.allYears = Array.range(currentYear, userYear);
         $scope.persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
 
-        $scope.selectedYear = $scope.allYears[0];
+        var historyState = $rootScope.data.historyState = $rootScope.data.historyState || {};
+        $scope.nationalCode = historyState.nationalCode;
 
-        $scope.selectedMonthFrom = 1;
-        $scope.selectedMonthFromText = $scope.persianMonths[0];
-
-        $scope.selectedMonthTo = 1;
-        $scope.selectedMonthToText = $scope.persianMonths[0];
+        $scope.selectedYear = historyState.selectedYear || $scope.allYears[0];
+        $scope.selectedMonthFrom = historyState.selectedMonthFrom || currentMonth;
+        $scope.selectedMonthFromText = $scope.persianMonths[$scope.selectedMonthFrom - 1];
+        $scope.selectedMonthTo = historyState.selectedMonthTo || currentMonth;
+        $scope.selectedMonthToText = $scope.persianMonths[$scope.selectedMonthTo - 1];
 
         var postCache = $rootScope.data.postCache = $rootScope.data.postCache || [];
         $scope.posts = [];
-        loadPosts( /*!!postCache[currentYear]*/ );
+        loadPosts(true).then(function() {
+            $timeout(function() {
+                $window.scrollTo($window.scrollX, historyState.scrollY);
+            });
+        });
+
+        $scope.$watch('nationalCode', function() {
+            historyState.nationalCode = $scope.nationalCode;
+        });
+
+        $window.addEventListener('scroll', windowScrollHandler);
+        $scope.$on('$destroy', function() {
+            $window.removeEventListener('scroll', windowScrollHandler);
+        });
+
+        function windowScrollHandler(event) {
+            historyState.scrollY = $window.scrollY;
+        }
 
         $scope.setBackHandler(function() {
             $state.go('panel.home');
@@ -38,7 +56,7 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
         $('#select-year').dropdown({
             onChange: function(value, text) {
                 // $timeout(function() {
-                $scope.selectedYear = value;
+                $scope.selectedYear = historyState.selectedYear = value;
                 loadPosts();
                 // });
             }
@@ -48,11 +66,11 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
             onChange: function(value, text) {
                 // $timeout(function() {
                 value = Number(value);
-                $scope.selectedMonthFrom = value;
+                $scope.selectedMonthFrom = historyState.selectedMonthFrom = value;
                 $scope.selectedMonthFromText = $scope.persianMonths[value - 1];
                 var selectedMonthTo = $scope.selectedMonthTo > $scope.selectedMonthFrom ? $scope.selectedMonthTo : $scope.selectedMonthFrom;
                 if (selectedMonthTo != $scope.selectedMonthTo)
-                    $('#select-month-to').dropdown('set selected', $scope.selectedMonthTo = selectedMonthTo);
+                    $('#select-month-to').dropdown('set selected', $scope.selectedMonthTo = historyState.selectedMonthTo = selectedMonthTo);
                 loadPosts();
                 // });
             }
@@ -62,11 +80,11 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
             onChange: function(value, text) {
                 // $timeout(function() {
                 value = Number(value);
-                $scope.selectedMonthTo = value;
+                $scope.selectedMonthTo = historyState.selectedMonthTo = value;
                 $scope.selectedMonthToText = $scope.persianMonths[value - 1];
                 var selectedMonthFrom = $scope.selectedMonthFrom < $scope.selectedMonthTo ? $scope.selectedMonthFrom : $scope.selectedMonthTo;
                 if (selectedMonthFrom != $scope.selectedMonthFrom)
-                    $('#select-month-from').dropdown('set selected', $scope.selectedMonthFrom = selectedMonthFrom);
+                    $('#select-month-from').dropdown('set selected', $scope.selectedMonthFrom = historyState.selectedMonthFrom = selectedMonthFrom);
                 loadPosts();
                 // });
             }

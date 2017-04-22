@@ -1,6 +1,7 @@
 /*global app*/
 /*global $*/
 /*global ValidationSystem*/
+/*global iconJs*/
 
 app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http', 'AnswerService',
     function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http, answerService) {
@@ -176,13 +177,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             files.forEach(function(file) {
                 file.id = fileId++;
 
-                file.srcPreview = 'free file';
-                if (isOneOfThese(file.name, ['doc', 'docx']))
-                    file.srcPreview = 'doc file';
-                if (isOneOfThese(file.name, ['xls', 'xlsx']))
-                    file.srcPreview = 'xls file';
-                if (isOneOfThese(file.name, ['pdf']))
-                    file.srcPreview = 'pdf file';
+                file.srcPreview = iconJs.file(file.name);
 
                 if (file.type.match('image.*')) {
                     var reader = new FileReader();
@@ -201,13 +196,6 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             // show all files
             $scope.files = $scope.files.concat(files);
             $scope.$$phase || $scope.$apply();
-
-            function isOneOfThese(filename, arrayOfTypes) {
-                for (var i = 0; i < arrayOfTypes.length; i++)
-                    if (filename.slice(-1 - arrayOfTypes[i].length) === '.' + arrayOfTypes[i])
-                        return true;
-                return false;
-            }
         }
 
         function uploadFile(file) {
