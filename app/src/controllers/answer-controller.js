@@ -1,25 +1,10 @@
 /*global app*/
+/*global angular*/
 /*global persianDate*/
 /*global toPersianNumber*/
-/*global resourceLoader*/
 
-app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$state', '$stateParams', 'HistoryService',
-    function($rootScope, $scope, $timeout, $state, $stateParams, historyService) {
-
-
-
-        $scope.zxc = function() {
-            console.log('zxc', !!window.PDFJS);
-            for (var i = 0; i < 20; i++) {
-                (function(i) {
-                    resourceLoader.js('/dist/lib/pdf.min.js', function() {
-                        console.log(i, !!window.PDFJS);
-                    });
-                })(i);
-            }
-        };
-
-
+app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$state', '$stateParams', 'HistoryService',
+    function($rootScope, $scope, $timeout, $window, $state, $stateParams, historyService) {
 
         $scope.nationalCode = $stateParams.p;
         $scope.postCode = $stateParams.n;
@@ -103,7 +88,7 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$state'
                 answer.files.forEach(function(file) {
                     file.url = '/answer/file/download?p=' + $scope.nationalCode +
                         '&n=' + $scope.postCode + '&f=' + file.serverName;
-                    file.urlNoContentType = file.url + '&t=false';
+                    file.urlWithoutContentType = file.url + '&t=false';
                     if (file.type.indexOf('image') >= 0)
                         file.material = 'image';
                     else if (file.type === 'application/pdf')

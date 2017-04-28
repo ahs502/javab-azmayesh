@@ -4,6 +4,10 @@
 app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window',
     function($scope, $rootScope, $q, $window) {
 
+        // $scope.log = function() {
+        //     console.log.apply(console, Array.prototype.slice.call(arguments));
+        // };
+
         $scope.setBackHandler = setBackHandler;
         $scope.setMenuHandlers = setMenuHandlers;
         $scope.setHeaderHandlers = setHeaderHandlers;

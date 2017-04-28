@@ -2839,27 +2839,12 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
 */
 
 /*global app*/
+/*global angular*/
 /*global persianDate*/
 /*global toPersianNumber*/
-/*global resourceLoader*/
 
-app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$state', '$stateParams', 'HistoryService',
-    function($rootScope, $scope, $timeout, $state, $stateParams, historyService) {
-
-
-
-        $scope.zxc = function() {
-            console.log('zxc', !!window.PDFJS);
-            for (var i = 0; i < 20; i++) {
-                (function(i) {
-                    resourceLoader.js('/dist/lib/pdf.min.js', function() {
-                        console.log(i, !!window.PDFJS);
-                    });
-                })(i);
-            }
-        };
-
-
+app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$state', '$stateParams', 'HistoryService',
+    function($rootScope, $scope, $timeout, $window, $state, $stateParams, historyService) {
 
         $scope.nationalCode = $stateParams.p;
         $scope.postCode = $stateParams.n;
@@ -2943,7 +2928,7 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$state'
                 answer.files.forEach(function(file) {
                     file.url = '/answer/file/download?p=' + $scope.nationalCode +
                         '&n=' + $scope.postCode + '&f=' + file.serverName;
-                    file.urlNoContentType = file.url + '&t=false';
+                    file.urlWithoutContentType = file.url + '&t=false';
                     if (file.type.indexOf('image') >= 0)
                         file.material = 'image';
                     else if (file.type === 'application/pdf')
@@ -3148,6 +3133,10 @@ app.controller('LabController', ['$scope', '$state',
 app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window',
     function($scope, $rootScope, $q, $window) {
 
+        // $scope.log = function() {
+        //     console.log.apply(console, Array.prototype.slice.call(arguments));
+        // };
+
         $scope.setBackHandler = setBackHandler;
         $scope.setMenuHandlers = setMenuHandlers;
         $scope.setHeaderHandlers = setHeaderHandlers;
@@ -3311,7 +3300,7 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 /*global resourceLoader*/
 /*global PDFJS*/
 
-app.directive('pdf', ['$timeout', function($timeout) {
+app.directive('pdf', ['$timeout', '$window', function($timeout, $window) {
     return {
         restrict: 'E',
         replace: true,
@@ -3326,8 +3315,7 @@ app.directive('pdf', ['$timeout', function($timeout) {
             '    <p class="nazanin ja-rtl ja-align-right" ng-show="loading">',
             '        در حال بارگذاری...',
             '    </p>',
-            '    <div ng-hide="loading" class="pdf-canvas-container">',
-            '    </div>',
+            '    <div ng-hide="loading" class="pdf-canvas-container"></div>',
             '</div>',
         ].join(''),
 
@@ -3335,34 +3323,20 @@ app.directive('pdf', ['$timeout', function($timeout) {
             if (!scope.src) return;
 
             var container = angular.element(instanceElement[0].querySelector('.pdf-canvas-container'));
-            container.css('width', scope.width || '100&');
-            var desiredWidth = Number(container.css('width').slice(0, -2));
+            container.css('width', scope.width || '100%');
+            var allPages = null,
+                desiredWidth;
 
             scope.loading = true;
             resourceLoader.js('/dist/lib/pdf.min.js', function() {
                 scope.loading = !!PDFJS;
                 PDFJS && PDFJS.getDocument(scope.src).then(function(pdf) {
-                    var pageCount = pdf.numPages;
-                    return Promise.all(Array.range(1, pageCount).map(function(pageNumber) {
-                        return pdf.getPage(pageNumber).then(function(page) {
-                            var viewport = page.getViewport(1);
-                            viewport = page.getViewport(desiredWidth / viewport.width);
-                            var canvas = document.createElement('canvas');
-                            var context = canvas.getContext('2d');
-                            canvas.height = viewport.height;
-                            canvas.width = viewport.width;
-                            var renderContext = {
-                                canvasContext: context,
-                                viewport: viewport
-                            };
-                            page.render(renderContext);
-                            return canvas;
-                        });
-                    })).then(function(canvasArray) {
-                        canvasArray = canvasArray || [];
-                        for (var i = 0; i < canvasArray.length; i++)
-                            container.append(canvasArray[i]);
-                    });
+                    return Promise.all(Array.range(1, pdf.numPages).map(function(pageNumber) {
+                        return pdf.getPage(pageNumber);
+                    }));
+                }).then(function(pages) {
+                    allPages = pages;
+                    renderPages();
                 }).catch(function(err) {
                     console.error(err);
                 }).then(function() {
@@ -3372,6 +3346,43 @@ app.directive('pdf', ['$timeout', function($timeout) {
                 });
 
             });
+
+            $window.addEventListener('resize', resizeEventHandler);
+            scope.$on('$destroy', function() {
+                $window.removeEventListener('resize', resizeEventHandler);
+            });
+
+            function resizeEventHandler(event) {
+                if (desiredWidth != calculateDesiredWidth()) renderPages();
+            }
+
+            function renderPages() {
+                if (!allPages) return;
+                container.empty();
+                desiredWidth = calculateDesiredWidth();
+                var canvasArray = allPages.map(function(page) {
+                    var viewport = page.getViewport(1);
+                    viewport = page.getViewport(desiredWidth / viewport.width);
+                    var canvas = document.createElement('canvas');
+                    var context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    var renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    page.render(renderContext);
+                    return canvas;
+                });
+                for (var i = 0; i < canvasArray.length; i++) {
+                    container.append(canvasArray[i]);
+                }
+            }
+
+            function calculateDesiredWidth() {
+                return instanceElement[0].offsetWidth || instanceElement[0].clientWidth;
+            }
+
         },
     };
 }]);

@@ -504,7 +504,7 @@
 
             <img ng-switch-when="image" ng-src="{{file.url}}" width="100%">
 
-            <pdf ng-switch-when="pdf" ng-src="{{file.urlNoContentType}}" width="100%"></pdf>
+            <pdf ng-switch-when="pdf" ng-src="{{file.urlWithoutContentType}}" width="100%"></pdf>
 
             <!-- TODO: do something better instead... -->
             <div ng-switch-default class="ui teal raised clearing segment ja-preview">
@@ -522,8 +522,8 @@
 
         </div>
 
-        <p class="nazanin ja-rtl ja-align-right"><strong>توضیحات :</strong></p>
-        <div class="ui segment" ng-if="!loading && answer">
+        <p ng-if="!loading && answer" class="nazanin ja-rtl ja-align-right"><strong>توضیحات :</strong></p>
+        <div ng-if="!loading && answer" class="ui segment" ng-if="!loading && answer">
             <pre class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes || '(توضیحات ندارد)'"></pre>
         </div>
 

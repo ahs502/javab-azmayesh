@@ -1,5 +1,4 @@
 
-1.  
 
 
 
@@ -17,6 +16,8 @@
     *   Improve Panel.Home page, so the user can see almost everything by the first look.
     
     *   Do not allow to send an answer before all files have been uploaded or errored.
+    
+    *   Automatically re-render pdf files in answer after page resize.
     
     *   Empower users to do all kind of staff (delete, edit, re-send, ...) to their posts.
     
