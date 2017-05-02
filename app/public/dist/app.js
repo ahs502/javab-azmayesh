@@ -723,6 +723,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
             .state('answer.laboratory', {
                 url: '/laboratory',
                 templateUrl: 'answer/laboratory.html'
+            })
+            .state('answer.download', {
+                url: '/download',
+                templateUrl: 'answer/download.html'
             });
 
         $stateProvider
@@ -2839,7 +2843,6 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
 */
 
 /*global app*/
-/*global angular*/
 /*global persianDate*/
 /*global toPersianNumber*/
 
@@ -2853,7 +2856,7 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
             previousStateData = $stateParams.previousStateData;
 
         $scope.setBackHandler(function() {
-            if ($state.is('answer.laboratory'))
+            if (!$state.is('answer.post'))
                 $state.go('answer.post');
             else {
                 if (previousState === 'history') {
@@ -2871,7 +2874,7 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
 
         $scope.setMenuHandlers({
             saveFile: function() {
-                // save file ...
+                $state.go('answer.download');
             },
             shareFile: function() {
                 // share file ...
@@ -2928,11 +2931,9 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                 answer.files.forEach(function(file) {
                     file.url = '/answer/file/download?p=' + $scope.nationalCode +
                         '&n=' + $scope.postCode + '&f=' + file.serverName;
-                    file.urlWithoutContentType = file.url + '&t=false';
-                    if (file.type.indexOf('image') >= 0)
-                        file.material = 'image';
-                    else if (file.type === 'application/pdf')
-                        file.material = 'pdf';
+                    file.urlWithoutContentType = file.url + '&t=false'; // To prevent default downloader applications to interfere.
+                    if (file.type.indexOf('image') >= 0) file.material = 'image';
+                    else if (file.type === 'application/pdf') file.material = 'pdf';
                 });
                 $scope.answer = answer;
                 $scope.loading = false;
@@ -3313,7 +3314,7 @@ app.directive('pdf', ['$timeout', '$window', function($timeout, $window) {
         template: [
             '<div>',
             '    <p class="nazanin ja-rtl ja-align-right" ng-show="loading">',
-            '        در حال بارگذاری...',
+            '        در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...',
             '    </p>',
             '    <div ng-hide="loading" class="pdf-canvas-container"></div>',
             '</div>',

@@ -8,7 +8,11 @@
 <!--</div>-->
 
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLaboratory()">
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('answer.post')" ng-click="$state.go('answer.post')">
+    <span>نتایج آزمایش</span>
+</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-show="$state.is('answer.post')" ng-click="menuHandlers.goToLaboratory()">
     <span ng-bind="menuHandlers.labGetter().name || ' '"></span>
 </a>
 <!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="answer-laboratory-name" data-position="top right" ng-click="menuHandlers.goToLaboratory()">-->

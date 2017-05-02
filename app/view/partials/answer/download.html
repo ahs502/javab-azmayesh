@@ -1,0 +1,20 @@
+<div id="ja-answer-download">
+
+    <div class="ui basic segment">
+        
+        <p class="nazanin ja-rtl ja-align-right">
+            برای دانلود فایل مورد نظر، لطفاً روی آن کلیک کنید:
+        </p>
+        
+        <div ng-if="!loading && (answer && answer.files && answer.files.length)">
+
+            <a class="ja-link" ng-repeat="file in answer.files" ng-href="{{file.url}}" target="_blank">
+                <img class="ja-link-image" ng-src="{{iconJs.file(file.name)}}">
+                <p class="nazanin ja-link-filename" ng-bind="file.name"></p>
+            </a>
+
+        </div>
+        
+    </div>
+
+</div>

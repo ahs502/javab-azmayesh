@@ -1,8 +1,4 @@
 
-
-
-
-
     *   SMS redirector.
     
     *   Presist search parameters and scrolling position in panel.history list.
@@ -15,13 +11,18 @@
     
     *   Improve Panel.Home page, so the user can see almost everything by the first look.
     
-    *   Do not allow to send an answer before all files have been uploaded or errored.
+    *   Add icons everywhere!
+        Make icon-js loads its icons asynchroneusly.
+        
+    *   Add zoom ability to answer images and PDFs.
     
-    *   Automatically re-render pdf files in answer after page resize.
+    *   Do not allow to send an answer before all files have been uploaded or errored.
     
     *   Empower users to do all kind of staff (delete, edit, re-send, ...) to their posts.
     
     *   Do something about site administration.
+    
+    *   Restrict lab users in any environment other than live to send SMS to any arbitrary patient.
     
     *   What if user changes view by menu when the site is still loading some request?
     
@@ -34,6 +35,8 @@
         Do some similar thing with JSes of libraries if possible.
     
     *   Improve security, start by checking the site on: https://www.htbridge.com/websec/
+    
+    *   Think about going to GitLab from GitHub.
     
     
     
@@ -53,5 +56,37 @@
     
             // $scope.postDate = persianDate(new Date()).format('L');
             // $scope.postCode = toPersianNumber(6140);
+
+
+
+
+============================================================================================================
+
+>> Administrator Panel:
+
+---- SMS
+-------- Send a dummy SMS
+-------- List all destination phone numbers
+-------- NikSMS left balance
+-------- Not delivered SMSs
+---- Laboratory
+-------- See all labs
+-------- Search
+-------- Block/Unblock
+-------- Edit
+-------- Remove
+-------- Recharge balance
+---- Patient
+-------- Search
+-------- Edit
+-------- Remove
+---- Admin
+-------- Website statistics
+
+
+
+
+
+
 
 

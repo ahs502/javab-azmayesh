@@ -474,7 +474,11 @@
 <!--</div>-->
 
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLaboratory()">
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('answer.post')" ng-click="$state.go('answer.post')">
+    <span>نتایج آزمایش</span>
+</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-show="$state.is('answer.post')" ng-click="menuHandlers.goToLaboratory()">
     <span ng-bind="menuHandlers.labGetter().name || ' '"></span>
 </a>
 <!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="answer-laboratory-name" data-position="top right" ng-click="menuHandlers.goToLaboratory()">-->
@@ -506,10 +510,9 @@
 
             <pdf ng-switch-when="pdf" ng-src="{{file.urlWithoutContentType}}" width="100%"></pdf>
 
-            <!-- TODO: do something better instead... -->
-            <div ng-switch-default class="ui teal raised clearing segment ja-preview">
-                <img class="ui small left floated image ja-preview-image" ng-src="{{iconJs.file(file.name)}}">
-                <p class="left floated nazanin ja-preview-filename" ng-bind="file.name"></p>
+            <div ng-switch-default class="ja-preview">
+                <img class="ja-preview-image" ng-src="{{iconJs.file(file.name)}}">
+                <p class="nazanin ja-preview-filename" ng-bind="file.name"></p>
             </div>
 
             <!--<object ng-if="file.material !== 'image'" data="{{file.url}}" type="{{file.type}}" width="100%">-->
@@ -566,6 +569,29 @@
 
             </div>
         </div>
+    </div>
+
+</div>
+</script>
+
+<script type="text/ng-template" id="answer/download.html">
+    <div id="ja-answer-download">
+
+    <div class="ui basic segment">
+        
+        <p class="nazanin ja-rtl ja-align-right">
+            برای دانلود فایل مورد نظر، لطفاً روی آن کلیک کنید:
+        </p>
+        
+        <div ng-if="!loading && (answer && answer.files && answer.files.length)">
+
+            <a class="ja-link" ng-repeat="file in answer.files" ng-href="{{file.url}}" target="_blank">
+                <img class="ja-link-image" ng-src="{{iconJs.file(file.name)}}">
+                <p class="nazanin ja-link-filename" ng-bind="file.name"></p>
+            </a>
+
+        </div>
+        
     </div>
 
 </div>

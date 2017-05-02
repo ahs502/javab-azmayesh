@@ -16,7 +16,7 @@ app.directive('pdf', ['$timeout', '$window', function($timeout, $window) {
         template: [
             '<div>',
             '    <p class="nazanin ja-rtl ja-align-right" ng-show="loading">',
-            '        در حال بارگذاری...',
+            '        در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...',
             '    </p>',
             '    <div ng-hide="loading" class="pdf-canvas-container"></div>',
             '</div>',

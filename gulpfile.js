@@ -101,8 +101,8 @@ var stylesheets_lib = [
 ];
 
 var dynamic_lib = [
-    ['./app/lib/pdfjs-dist/build', 'pdf.min.js'],
-    ['./app/lib/pdfjs-dist/build', 'pdf.worker.min.js'],
+    './app/lib/pdfjs-dist/build/pdf.min.js',
+    './app/lib/pdfjs-dist/build/pdf.worker.min.js',
 ];
 
 var views_templates = [
@@ -254,7 +254,7 @@ gulp.task('build-app-css', () => {
 gulp.task('copy-app-dynamic', done => {
     if (!dynamic_app.length) return done();
     return merge.apply(null, dynamic_app.map(dynamic =>
-            gulp.src(path.join(dynamic[0], dynamic[1]))
+            gulp.src(dynamic)
             .pipe(gprint(file => ' -> [' + 'app'.cyan + '] Dynamic file: ' + file))
             .pipe(gulp.dest('./app/public/dist/app/'))))
         .on('end', () => util.log(' => [' + 'app'.bold.cyan + '] ' + 'Dynamic file(s) have been copied.'.green));
@@ -307,7 +307,7 @@ gulp.task('build-lib-css', () => {
 gulp.task('copy-lib-dynamic', done => {
     if (!dynamic_lib.length) return done();
     return merge.apply(null, dynamic_lib.map(dynamic =>
-            gulp.src(path.join(dynamic[0], dynamic[1]))
+            gulp.src(dynamic)
             .pipe(gprint(file => ' -> [' + 'lib'.cyan + '] Dynamic file: ' + file))
             .pipe(gulp.dest('./app/public/dist/lib/'))))
         .on('end', () => util.log(' => [' + 'lib'.bold.cyan + '] ' + 'Dynamic file(s) have been copied.'.green));

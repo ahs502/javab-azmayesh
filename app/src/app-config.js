@@ -104,6 +104,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
             .state('answer.laboratory', {
                 url: '/laboratory',
                 templateUrl: 'answer/laboratory.html'
+            })
+            .state('answer.download', {
+                url: '/download',
+                templateUrl: 'answer/download.html'
             });
 
         $stateProvider

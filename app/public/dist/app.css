@@ -125,6 +125,18 @@ body {
   margin-top: 8px;
   margin-bottom: 8px;
 }
+#ja-answer #ja-answer-post .ja-preview {
+  background-color: #f4f3f6;
+  margin: 0 0 10px 0;
+  padding: 10px;
+  padding-bottom: 3px;
+}
+#ja-answer #ja-answer-post .ja-preview .ja-preview-image {
+  height: 55px;
+}
+#ja-answer #ja-answer-post .ja-preview .ja-preview-filename {
+  display: inline-block;
+}
 #ja-answer #ja-answer-laboratory {
   padding: 14px 10px;
 }
@@ -139,6 +151,27 @@ body {
 #ja-answer #ja-answer-laboratory .ja-information-value {
   color: #000;
   font-size: 140%;
+}
+#ja-answer #ja-answer-download .ja-link {
+  border: solid 1px #fff;
+  border-radius: 6px;
+  border-style: outset;
+  background-color: #f4f3f6;
+  margin: 0 0 10px 0;
+  padding: 10px;
+  padding-bottom: 1px;
+  cursor: pointer;
+  display: block;
+}
+#ja-answer #ja-answer-download .ja-link:hover {
+  background-color: #f0f0f0;
+  margin: -2px 0 12px 0;
+}
+#ja-answer #ja-answer-download .ja-link .ja-link-image {
+  height: 55px;
+}
+#ja-answer #ja-answer-download .ja-link .ja-link-filename {
+  display: inline-block;
 }
 #ja-panel {
   padding-top: 13px;
