@@ -1,11 +1,13 @@
-<a class="ja-item ja-text ja-left nazanin" ng-bind="footerHandlers.postDateGetter()"></a>
-
-<a class="ja-item ja-text ja-left nazanin" ng-bind="footerHandlers.postCodeGetter()"></a>
+<a class="ja-item ja-text ja-left" title="شماره آزمایش">
+    <strong class="nazanin" ng-bind="footerHandlers.postCodeGetter()"></strong>
+</a>
 <!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.postCodeGetter()" id="answer-test-number"></a>-->
 <!--<div class="ui popup ja-align-right">-->
 <!--    <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>-->
 <!--    <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>-->
 <!--</div>-->
+
+<a class="ja-item ja-text ja-left nazanin ja-more-than-480" ng-bind="footerHandlers.postDateGetter()" title="تاریخ ارسال نتایج"></a>
 
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('answer.post')" ng-click="$state.go('answer.post')">

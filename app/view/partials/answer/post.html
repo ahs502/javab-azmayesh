@@ -2,8 +2,12 @@
 
     <div class="ui basic segment">
 
-        <p class="nazanin ja-rtl ja-align-right" ng-show="loading">در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...</p>
-        <p class="nazanin ja-rtl ja-align-right" ng-show="!loading && !(answer && answer.files && answer.files.length)">برای این آزمایش فایلی آپلود نشده است.</p>
+        <p class="nazanin ja-rtl ja-align-right" ng-show="loading">
+            در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...
+        </p>
+        <p class="nazanin ja-rtl ja-align-right" ng-show="!loading && !(answer && answer.files && answer.files.length)">
+            برای این آزمایش فایلی آپلود نشده است.
+        </p>
 
         <div ng-if="!loading && (answer && answer.files && answer.files.length)" ng-repeat="file in answer.files" ng-switch="file.material">
 
@@ -25,6 +29,8 @@
             <!--<embed ng-if="file.material === '...'" ng-src="{{file.url}}" type="{{file.type}}" width="100%" />-->
 
         </div>
+
+        <br />
 
         <p ng-if="!loading && answer" class="nazanin ja-rtl ja-align-right"><strong>توضیحات :</strong></p>
         <div ng-if="!loading && answer" class="ui segment" ng-if="!loading && answer">

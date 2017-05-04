@@ -58,6 +58,8 @@ var javascripts_lib = [
     // './app/lib/md-virtual-repeater/virtual-repeater.js',
     './app/lib/angular-recaptcha/release/angular-recaptcha.min.js',
     './app/lib/persian-date/dist/0.1.8/persian-date-0.1.8.min.js',
+    './app/lib/clipboard/dist/clipboard.min.js',
+    './app/lib/simple-query-string/src/simplequerystring.min.js',
     //'./app/lib/semantic/dist/semantic.min.js',
     './app/lib/semantic/dist/components/site.min.js',
     './app/lib/semantic/dist/components/form.min.js',

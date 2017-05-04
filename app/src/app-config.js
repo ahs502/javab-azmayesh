@@ -1,7 +1,7 @@
 /*global app*/
 
-app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
-    function($stateProvider, $urlRouterProvider, $locationProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$compileProvider',
+    function($stateProvider, $urlRouterProvider, $locationProvider,$compileProvider) {
 
         $stateProvider
             .state('home', {
@@ -101,13 +101,17 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 url: '/post',
                 templateUrl: 'answer/post.html'
             })
-            .state('answer.laboratory', {
-                url: '/laboratory',
-                templateUrl: 'answer/laboratory.html'
-            })
             .state('answer.download', {
                 url: '/download',
                 templateUrl: 'answer/download.html'
+            })
+            .state('answer.share', {
+                url: '/share',
+                templateUrl: 'answer/share.html'
+            })
+            .state('answer.laboratory', {
+                url: '/laboratory',
+                templateUrl: 'answer/laboratory.html'
             });
 
         $stateProvider
@@ -253,6 +257,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
         $urlRouterProvider.otherwise('/home/find');
 
         // $locationProvider.html5Mode(true);
+        
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|sms|tg):/);
 
     }
 ]);

@@ -142,11 +142,11 @@
     <!-- Main content -->
     <div id="ja-main-content">
         <div ng-if="headerHandlers" id="ja-main-content-header-placeholder"></div>
-        
+
         <div ui-view>
             <!-- Main view contents -->
         </div>
-        
+
         <div id="ja-informer-modal" class="ui modal">
     <div class="header">
         <span class="nazanin" ng-bind="modal.title"></span>
@@ -161,7 +161,7 @@
         </button>
     </div>
 </div>
-        
+
         <div ng-if="footerHandlers" id="ja-main-content-footer-placeholder"></div>
     </div>
 
@@ -444,34 +444,54 @@
 </script>
 
 <script type="text/ng-template" id="answer/menu.html">
-    <a class="item nazanin ja-align-right" ng-click="menuHandlers.saveFile(); toggleMenu()">ذخیره فایل</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.shareFile(); toggleMenu()">به اشتراک گذاری</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.printFile(); toggleMenu()">چاپ نتایج</a>
+    <a class="item nazanin ja-align-right" ng-click="menuHandlers.viewFile(); toggleMenu()">
+    مشاهده آنلاین
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.saveFile(); toggleMenu()">
+    ذخیره فایل
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('download')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.shareFile(); toggleMenu()">
+    به اشتراک گذاری
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('share')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.printFile(); toggleMenu()">
+    چاپ نتایج
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('print')}}">
+</a>
 
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLaboratory(); toggleMenu()">
     <span ng-bind="menuHandlers.labGetter().name || ' '"></span>
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
 </a>
 
 </script>
 
 <script type="text/ng-template" id="answer/header.html">
-    <a class="ja-item ja-text ja-left nazanin" ng-bind="headerHandlers.paitentNameGetter()"></a>
+    <a class="ja-item ja-text ja-left nazanin" ng-bind="headerHandlers.paitentNameGetter()" title="نام بیمار"></a>
 
-<!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.saveFile()">ذخیره فایل ها</a>-->
-<!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.shareFile()">به اشتراک گذاری</a>-->
-<!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.printFile()">چاپ نتایج</a>-->
+<img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.post') }" ng-src="{{iconJs('reader')}}" ng-click="menuHandlers.viewFile()" alt="مشاهده آنلاین" title="مشاهده آنلاین">
+<img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.download') }" ng-src="{{iconJs('download')}}" ng-click="menuHandlers.saveFile()" alt="ذخیره فایل ها" title="ذخیره فایل ها">
+<img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.share') }" ng-src="{{iconJs('share')}}" ng-click="menuHandlers.shareFile()" alt="به اشتراک گذاری" title="به اشتراک گذاری">
+<img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.print') }" ng-src="{{iconJs('print')}}" ng-click="menuHandlers.printFile()" alt="چاپ نتایج" title="چاپ نتایج">
 
 </script>
 
 <script type="text/ng-template" id="answer/footer.html">
-    <a class="ja-item ja-text ja-left nazanin" ng-bind="footerHandlers.postDateGetter()"></a>
-
-<a class="ja-item ja-text ja-left nazanin" ng-bind="footerHandlers.postCodeGetter()"></a>
+    <a class="ja-item ja-text ja-left" title="شماره آزمایش">
+    <strong class="nazanin" ng-bind="footerHandlers.postCodeGetter()"></strong>
+</a>
 <!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.postCodeGetter()" id="answer-test-number"></a>-->
 <!--<div class="ui popup ja-align-right">-->
 <!--    <div class="header"><span class="nazanin">شماره رسید آزمایش</span></div>-->
 <!--    <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>-->
 <!--</div>-->
+
+<a class="ja-item ja-text ja-left nazanin ja-more-than-480" ng-bind="footerHandlers.postDateGetter()" title="تاریخ ارسال نتایج"></a>
 
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('answer.post')" ng-click="$state.go('answer.post')">
@@ -501,8 +521,12 @@
 
     <div class="ui basic segment">
 
-        <p class="nazanin ja-rtl ja-align-right" ng-show="loading">در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...</p>
-        <p class="nazanin ja-rtl ja-align-right" ng-show="!loading && !(answer && answer.files && answer.files.length)">برای این آزمایش فایلی آپلود نشده است.</p>
+        <p class="nazanin ja-rtl ja-align-right" ng-show="loading">
+            در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...
+        </p>
+        <p class="nazanin ja-rtl ja-align-right" ng-show="!loading && !(answer && answer.files && answer.files.length)">
+            برای این آزمایش فایلی آپلود نشده است.
+        </p>
 
         <div ng-if="!loading && (answer && answer.files && answer.files.length)" ng-repeat="file in answer.files" ng-switch="file.material">
 
@@ -525,11 +549,112 @@
 
         </div>
 
+        <br />
+
         <p ng-if="!loading && answer" class="nazanin ja-rtl ja-align-right"><strong>توضیحات :</strong></p>
         <div ng-if="!loading && answer" class="ui segment" ng-if="!loading && answer">
             <pre class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes || '(توضیحات ندارد)'"></pre>
         </div>
 
+    </div>
+
+</div>
+</script>
+
+<script type="text/ng-template" id="answer/download.html">
+    <div id="ja-answer-download">
+
+    <div class="ui basic segment">
+
+        <p ng-show="!loading && (answer && answer.files && answer.files.length)" class="nazanin ja-rtl ja-align-right">
+            برای دانلود فایل مورد نظر، لطفاً روی آن کلیک کنید:
+        </p>
+        <p ng-hide="!loading && (answer && answer.files && answer.files.length)" class="nazanin ja-rtl ja-align-right">
+            برای این آزمایش فایلی آپلود نشده است.
+        </p>
+
+        <div ng-if="!loading && (answer && answer.files && answer.files.length)">
+
+            <a class="ja-link" ng-repeat="file in answer.files" ng-href="{{file.url}}" target="_blank">
+                <img ng-if="file.material === 'image'" class="ja-link-image" ng-src="{{file.url}}">
+                <img ng-if="file.material !== 'image'" class="ja-link-image" ng-src="{{iconJs.file(file.name)}}">
+                <p class="nazanin ja-link-filename" ng-bind="file.name"></p>
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+</script>
+
+<script type="text/ng-template" id="answer/share.html">
+    <div id="ja-answer-share">
+
+    <div class="ui basic segment">
+
+        <p class="ja-rtl ja-align-right nazanin">
+            می توانید آدرس اینترنتی زیر را به اشتراک بگذارید:
+        </p>
+
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <div class="ui fluid input">
+                    <input type="text" class="ja-align-left" ng-value="sharedUrl" readonly>
+                    <button id="ja-shared-url-copy" class="ui teal button nazanin" data-clipboard-text="{{sharedUrl}}" ng-click="copySharedUrl()">
+                        کپی کن
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <br />
+
+    <div class="ui horizontal divider">
+        <span class="nazanin">موبایل</span>
+    </div>
+
+    <div class="ui basic segment">
+
+        <p class="ja-rtl ja-align-right nazanin">
+            روی دستگاه موبایل می توانید از دکمه های زیر استفاده کنید:
+        </p>
+
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <a class="--circular ui teal button ja-share-button" ng-href="{{sharingViaTelegram}}">
+                    <img class="ja-share-icon" ng-src="{{iconJs('telegram white')}}">
+                    <p class="nazanin">
+                        تلگرام
+                    </p>
+                </a>
+
+                <a class="--circular ui red button ja-share-button" ng-href="{{sharingViaEmail}}">
+                    <img class="ja-share-icon" ng-src="{{iconJs('email white')}}">
+                    <p class="nazanin">
+                        پست الکترونیکی
+                    </p>
+                </a>
+
+                <a class="--circular ui green button ja-share-button" ng-href="{{sharingViaSms}}">
+                    <img class="ja-share-icon" ng-src="{{iconJs('sms white')}}">
+                    <p class="nazanin">
+                        پیام کوتاه
+                    </p>
+                </a>
+
+            </div>
+        </div>
     </div>
 
 </div>
@@ -569,29 +694,6 @@
 
             </div>
         </div>
-    </div>
-
-</div>
-</script>
-
-<script type="text/ng-template" id="answer/download.html">
-    <div id="ja-answer-download">
-
-    <div class="ui basic segment">
-        
-        <p class="nazanin ja-rtl ja-align-right">
-            برای دانلود فایل مورد نظر، لطفاً روی آن کلیک کنید:
-        </p>
-        
-        <div ng-if="!loading && (answer && answer.files && answer.files.length)">
-
-            <a class="ja-link" ng-repeat="file in answer.files" ng-href="{{file.url}}" target="_blank">
-                <img class="ja-link-image" ng-src="{{iconJs.file(file.name)}}">
-                <p class="nazanin ja-link-filename" ng-bind="file.name"></p>
-            </a>
-
-        </div>
-        
     </div>
 
 </div>

@@ -1,15 +1,22 @@
 /*global app*/
 /*global persianDate*/
 /*global toPersianNumber*/
+/*global Clipboard*/
+/*global simpleQueryString*/
 
-app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$state', '$stateParams', 'HistoryService',
-    function($rootScope, $scope, $timeout, $window, $state, $stateParams, historyService) {
+app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService',
+    function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService) {
 
         $scope.nationalCode = $stateParams.p;
         $scope.postCode = $stateParams.n;
 
+        var clipboard, url = $location.absUrl();
+        url = url.slice(0, url.indexOf('#') + 2) + 'answer' + url.slice(url.indexOf('?'));
+
         var previousState = $stateParams.previousState,
             previousStateData = $stateParams.previousStateData;
+
+        $scope.copySharedUrl = copySharedUrl;
 
         $scope.setBackHandler(function() {
             if (!$state.is('answer.post'))
@@ -29,11 +36,27 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
         });
 
         $scope.setMenuHandlers({
+            viewFile: function() {
+                $state.go('answer.post');
+            },
             saveFile: function() {
                 $state.go('answer.download');
             },
             shareFile: function() {
-                // share file ...
+                clipboard = undefined;
+                $scope.sharedUrl = url;
+                $scope.sharingViaSms = 'sms:;?&' + simpleQueryString.stringify({
+                    body: 'سلام!\n' + $scope.answer.patientName + ' می خواهد نتایج آزمایش خود را با شما به اشتراک بگذارد:\n\n' + url
+                });
+                $scope.sharingViaEmail = 'mailto:?&' + simpleQueryString.stringify({
+                    body: 'سلام!\n' + $scope.answer.patientName + ' می خواهد نتایج آزمایش خود را با شما به اشتراک بگذارد:\n\n' + url,
+                    subject: 'نتایج آزمایش ' + $scope.answer.patientName
+                });
+                $scope.sharingViaTelegram = 'https://telegram.me/share/url?' + simpleQueryString.stringify({
+                    text: 'سلام!\n' + $scope.answer.patientName + ' می خواهد نتایج آزمایش خود را با شما به اشتراک بگذارد.',
+                    url: url
+                });
+                $state.go('answer.share');
             },
             printFile: function() {
                 // print file ...
@@ -118,6 +141,19 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                     value: $scope.answer.lab.websiteAddress
                 }];
             });
+
+        function copySharedUrl() {
+            if (!clipboard) {
+                clipboard = new Clipboard('#ja-shared-url-copy');
+                clipboard.on('success', function(e) {
+                    console.info('Success', e.action, e.text);
+                    e.clearSelection();
+                });
+                clipboard.on('error', function(e) {
+                    console.info('Error', e.action, e.text);
+                });
+            }
+        }
 
     }
 ]);

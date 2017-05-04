@@ -13,7 +13,7 @@
         this.field = field; // Define a new field => this (so you could chain them)
         this.error = error; // Get/Set error message for a field => field's error message
         this.clear = clear; // Clear some or all error messages => nothing!
-        this.see = see; // Checks some or all fields validity status without setting/removing any error messages => summary of those fields validity
+        this.see = see; // Checks some or all fields validity status without updating (setting/removing) any error messages => summary of those fields validity
         this.check = check; // Checks some or all fields validity status and tries to remove their error messages if possible => summary of those fields validity
         this.validate = validate; // Checks some or all fields validity status and updates their error messages => summary of those fields validity
         this.status = status; // Summarize some of all fields validity status without checking or updating their error messages => summary of those fields validity
@@ -70,11 +70,12 @@
         }
 
         function status() {
-            var allFieldNames = Object.keys(fields);
-            for (var i = 0; i < allFieldNames.length; i++) {
-                if (fields[allFieldNames[i]].error) return false;
-            }
-            return true;
+            var valid = true;
+            fieldNames(arguments).forEach(function(fieldName) {
+                var fieldData = fields[fieldName];
+                if (fieldData.error) valid = false;
+            });
+            return valid;
         }
 
         function dictate(errors) {

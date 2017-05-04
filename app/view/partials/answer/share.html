@@ -1,0 +1,69 @@
+<div id="ja-answer-share">
+
+    <div class="ui basic segment">
+
+        <p class="ja-rtl ja-align-right nazanin">
+            می توانید آدرس اینترنتی زیر را به اشتراک بگذارید:
+        </p>
+
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <div class="ui fluid input">
+                    <input type="text" class="ja-align-left" ng-value="sharedUrl" readonly>
+                    <button id="ja-shared-url-copy" class="ui teal button nazanin" data-clipboard-text="{{sharedUrl}}" ng-click="copySharedUrl()">
+                        کپی کن
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <br />
+
+    <div class="ui horizontal divider">
+        <span class="nazanin">موبایل</span>
+    </div>
+
+    <div class="ui basic segment">
+
+        <p class="ja-rtl ja-align-right nazanin">
+            روی دستگاه موبایل می توانید از دکمه های زیر استفاده کنید:
+        </p>
+
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <a class="--circular ui teal button ja-share-button" ng-href="{{sharingViaTelegram}}">
+                    <img class="ja-share-icon" ng-src="{{iconJs('telegram white')}}">
+                    <p class="nazanin">
+                        تلگرام
+                    </p>
+                </a>
+
+                <a class="--circular ui red button ja-share-button" ng-href="{{sharingViaEmail}}">
+                    <img class="ja-share-icon" ng-src="{{iconJs('email white')}}">
+                    <p class="nazanin">
+                        پست الکترونیکی
+                    </p>
+                </a>
+
+                <a class="--circular ui green button ja-share-button" ng-href="{{sharingViaSms}}">
+                    <img class="ja-share-icon" ng-src="{{iconJs('sms white')}}">
+                    <p class="nazanin">
+                        پیام کوتاه
+                    </p>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+</div>

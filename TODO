@@ -16,6 +16,8 @@
         
     *   Add zoom ability to answer images and PDFs.
     
+    *   'gulp build' does not work fine.
+    
     *   Do not allow to send an answer before all files have been uploaded or errored.
     
     *   Empower users to do all kind of staff (delete, edit, re-send, ...) to their posts.
