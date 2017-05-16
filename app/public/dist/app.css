@@ -141,6 +141,10 @@ body {
 #ja-answer #ja-answer-post .ja-preview .ja-preview-filename {
   display: inline-block;
 }
+#ja-answer #ja-answer-post .ja-print-header-info {
+  display: inline-block;
+  width: 40%;
+}
 #ja-answer #ja-answer-download .ja-link {
   border: solid 1px #fff;
   border-radius: 6px;
@@ -352,6 +356,17 @@ body {
   display: inline;
   height: 26px;
   margin-left: 12px;
+}
+.ja-print {
+  display: none;
+}
+@media print {
+  .ja-print {
+    display: block;
+  }
+  .ja-screen {
+    display: none;
+  }
 }
 @media (max-width: 430px) {
   .ja-less-than-430 {

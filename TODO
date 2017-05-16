@@ -1,7 +1,17 @@
 
-    *   SMS redirector.
+    *   Next round:
+        1-  In answer page:
+            *** 1.1-    Store pdf and pages in a model inside file data
+            *** 1.2-    Print layout for answer
+            1.3-    Zoom up to 2x, look for 'touch' event based solutions
+        2-  Set icons everywhere
+        3-  Load IconJs asynchronously
+        4-  Define js & css dependencies for each state whithin its state configuration and
+            try to load them asynchronously during state transition event handlers in app.run method.
     
-    *   Presist search parameters and scrolling position in panel.history list.
+    ============================================================================
+
+    *   SMS redirector.
     
     *   Complete 'About us' and 'Contact us' pages.
     
@@ -37,8 +47,6 @@
         Do some similar thing with JSes of libraries if possible.
     
     *   Improve security, start by checking the site on: https://www.htbridge.com/websec/
-    
-    *   Think about going to GitLab from GitHub.
     
     
     

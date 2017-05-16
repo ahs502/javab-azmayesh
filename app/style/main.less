@@ -167,6 +167,10 @@ body {
 				display: inline-block;
 			}
 		}
+		.ja-print-header-info {
+			display: inline-block;
+			width: 40%;
+		}
 	}
 	#ja-answer-download {
 		.ja-link {
@@ -336,7 +340,7 @@ body {
 
 ////////////////////////////////////////////////////////////////////////////
 .ui {
-	&.modal> .content {
+	&.modal>.content {
 		width: 90%;
 	}
 	&.form {
@@ -405,6 +409,20 @@ body {
 			// font-family: BNazanin !important;
 			// font-size: 130%;
 		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+.ja-print {
+	display: none;
+}
+
+@media print {
+	.ja-print {
+		display: block;
+	}
+	.ja-screen {
+		display: none;
 	}
 }
 

@@ -105,7 +105,7 @@
 
 <div id="ja-initial-loader"><bdi>لطفا کمی صبر کنید...</bdi></div>
 
-<div id="ja-sidebar-menu" class="ui --thin right sidebar --inverted vertical menu">
+<div id="ja-sidebar-menu" class="ui --thin right sidebar --inverted vertical menu ja-screen">
     <div class="item">
         <img class="ui centered small image ja-menu-logo" src="/img/logo.png" alt="جواب آزمایش" />
     </div>
@@ -117,11 +117,11 @@
     <!-- Main site contents -->
 
     <!-- Back arrow and menu bars icon (when no header, outside of it) -->
-    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="backHandler()"></img>
-    <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-clickable ja-right" ng-src="{{iconJs('menu bars')}}" alt="Menu" ng-click="toggleMenu()"></img>
+    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left ja-screen" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="backHandler()"></img>
+    <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-clickable ja-right ja-screen" ng-src="{{iconJs('menu bars')}}" alt="Menu" ng-click="toggleMenu()"></img>
 
     <!-- Header -->
-    <div ng-if="headerHandlers" id="ja-header" class="ui fixed top sticky segment">
+    <div ng-if="headerHandlers" id="ja-header" class="ui fixed top sticky segment ja-screen">
 
         <!-- Back arrow and menu bars icon (when header, inside of it) -->
         <img ng-if="backHandler" class="ja-item ja-icon ja-hoverable ja-clickable ja-left" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="backHandler()"></img>
@@ -133,7 +133,7 @@
     </div>
 
     <!-- Footer -->
-    <div ng-if="footerHandlers" id="ja-footer" class="ui fixed bottom sticky segment">
+    <div ng-if="footerHandlers" id="ja-footer" class="ui fixed bottom sticky segment ja-screen">
         <div ui-view="footer">
             <!-- Footer contents -->
         </div>
@@ -141,7 +141,7 @@
 
     <!-- Main content -->
     <div id="ja-main-content">
-        <div ng-if="headerHandlers" id="ja-main-content-header-placeholder"></div>
+        <div ng-if="headerHandlers" id="ja-main-content-header-placeholder" class=" ja-screen"></div>
 
         <div ui-view>
             <!-- Main view contents -->
@@ -162,7 +162,7 @@
     </div>
 </div>
 
-        <div ng-if="footerHandlers" id="ja-main-content-footer-placeholder"></div>
+        <div ng-if="footerHandlers" id="ja-main-content-footer-placeholder" class=" ja-screen"></div>
     </div>
 
 </div>
@@ -519,7 +519,7 @@
 <script type="text/ng-template" id="answer/post.html">
     <div id="ja-answer-post">
 
-    <div class="ui basic segment">
+    <div class="ui basic segment ja-screen">
 
         <p class="nazanin ja-rtl ja-align-right" ng-show="loading">
             در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...
@@ -528,15 +528,25 @@
             برای این آزمایش فایلی آپلود نشده است.
         </p>
 
-        <div ng-if="!loading && (answer && answer.files && answer.files.length)" ng-repeat="file in answer.files" ng-switch="file.material">
+        <div ng-if="!loading && (answer && answer.files && answer.files.length)" ng-repeat="file in answer.files">
 
-            <img ng-switch-when="image" ng-src="{{file.url}}" width="100%">
+            <div ng-if="file.material === 'image'">
+                <img ng-src="{{file.url}}" width="100%">
+            </div>
 
-            <pdf ng-switch-when="pdf" ng-src="{{file.urlWithoutContentType}}" width="100%"></pdf>
+            <div ng-if="file.material === 'pdf' && !file.error">
+                <pdf ng-src="{{file.urlWithoutContentType}}" ng-model="file.model" width="100%" hide-rendering="false" event-handler="pdfFileEventHandlerMaker(file)">
+                    <p class="nazanin ja-rtl ja-align-right">
+                        در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...
+                    </p>
+                </pdf>
+            </div>
 
-            <div ng-switch-default class="ja-preview">
-                <img class="ja-preview-image" ng-src="{{iconJs.file(file.name)}}">
-                <p class="nazanin ja-preview-filename" ng-bind="file.name"></p>
+            <div ng-if="!file.material || (file.material === 'pdf' && file.error)">
+                <div class="ja-preview">
+                    <img class="ja-preview-image" ng-src="{{iconJs.file(file.name)}}">
+                    <p class="nazanin ja-preview-filename" ng-bind="file.name"></p>
+                </div>
             </div>
 
             <!--<object ng-if="file.material !== 'image'" data="{{file.url}}" type="{{file.type}}" width="100%">-->
@@ -552,13 +562,75 @@
         <br />
 
         <p ng-if="!loading && answer" class="nazanin ja-rtl ja-align-right"><strong>توضیحات :</strong></p>
-        <div ng-if="!loading && answer" class="ui segment" ng-if="!loading && answer">
+        <div ng-if="!loading && answer" class="ui segment">
+            <pre class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes || '(توضیحات ندارد)'"></pre>
+        </div>
+
+    </div>
+
+    <div class="ja-print" ng-if="!loading && answer">
+
+        <div class="ui segment nazanin ja-rtl ja-align-right">
+
+            <div class="ja-print-header-info">
+                نام:&nbsp;
+                <strong ng-bind="answer.patientName"></strong>
+            </div>
+            <div class="ja-print-header-info">
+                تاریخ ارسال نتایج:&nbsp;
+                <strong ng-bind="footerHandlers.postDateGetter()"></strong>
+            </div>
+            <div class="ja-print-header-info">
+                شماره آزمایش:&nbsp;
+                <strong ng-bind="footerHandlers.postCodeGetter()"></strong>
+            </div>
+            <div class="ja-print-header-info">
+                نام آزمایشگاه:&nbsp;
+                <strong ng-bind="answer.lab.name"></strong>
+            </div>
+            <div class="ja-print-header-info">
+                تلفن تماس آزمایشگاه:&nbsp;
+                <strong ng-bind="answer.lab.phoneNumber | toPersianNumber"></strong>
+            </div>
+            <div class="ja-print-header-info">
+                کُد پستی آزمایشگاه:&nbsp;
+                <strong ng-bind="answer.lab.postalCode | toPersianNumber"></strong>
+            </div>
+
+            <div>
+                آدرس آزمایشگاه:&nbsp;
+                <em ng-bind="answer.lab.address | toPersianNumber"></em>
+            </div>
+
+        </div>
+
+        <p class="nazanin ja-rtl ja-align-right" ng-show="!(answer.files && answer.files.length)">
+            برای این آزمایش فایلی آپلود نشده است.
+        </p>
+
+        <div ng-if="answer.files && answer.files.length" ng-repeat="file in answer.files">
+
+            <div ng-if="file.material === 'image'">
+                <img ng-src="{{file.url}}" width="100%">
+            </div>
+
+            <div ng-if="file.material === 'pdf' && !file.error && file.dataUrls && file.dataUrls.length">
+                <img ng-repeat="dataUrl in file.dataUrls" ng-src="{{dataUrl}}" width="100%">
+            </div>
+
+        </div>
+
+        <br />
+
+        <p class="nazanin ja-rtl ja-align-right"><strong>توضیحات :</strong></p>
+        <div class="ui segment">
             <pre class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes || '(توضیحات ندارد)'"></pre>
         </div>
 
     </div>
 
 </div>
+
 </script>
 
 <script type="text/ng-template" id="answer/download.html">

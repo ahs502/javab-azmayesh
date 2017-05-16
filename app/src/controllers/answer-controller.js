@@ -7,6 +7,8 @@
 app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService',
     function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService) {
 
+        $scope.pdfFileEventHandlerMaker = pdfFileEventHandlerMaker;
+
         $scope.nationalCode = $stateParams.p;
         $scope.postCode = $stateParams.n;
 
@@ -59,7 +61,12 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                 $state.go('answer.share');
             },
             printFile: function() {
-                // print file ...
+                if (!$state.is('answer.post')) {
+                    $state.go('answer.post');
+                }
+                $timeout(function() {
+                    $window.print();
+                }, 1000);
             },
             goToLaboratory: function() {
                 $state.go('answer.laboratory');
@@ -153,6 +160,26 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                     console.info('Error', e.action, e.text);
                 });
             }
+        }
+
+        function pdfFileEventHandlerMaker(file) {
+            return function(event) {
+                switch (event.event) {
+                    case 'error':
+                        file.error = event.error;
+                        break;
+                    case 'render start':
+                        delete file.error;
+                        break;
+                    case 'render finish':
+                        $timeout(function() {
+                            file.dataUrls = file.model.canvasArray.map(function(canvas) {
+                                return canvas.toDataURL('image/png', 1.0);
+                            });
+                        });
+                        break;
+                }
+            };
         }
 
     }
