@@ -7,18 +7,19 @@
 app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService',
     function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService) {
 
-        $scope.pdfFileEventHandlerMaker = pdfFileEventHandlerMaker;
+        var printLayoutWidth = 2400;
 
         $scope.nationalCode = $stateParams.p;
         $scope.postCode = $stateParams.n;
+
+        $scope.pdfFileEventHandlerMaker = pdfFileEventHandlerMaker;
+        $scope.copySharedUrl = copySharedUrl;
 
         var clipboard, url = $location.absUrl();
         url = url.slice(0, url.indexOf('#') + 2) + 'answer' + url.slice(url.indexOf('?'));
 
         var previousState = $stateParams.previousState,
             previousStateData = $stateParams.previousStateData;
-
-        $scope.copySharedUrl = copySharedUrl;
 
         $scope.setBackHandler(function() {
             if (!$state.is('answer.post'))
@@ -61,12 +62,42 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                 $state.go('answer.share');
             },
             printFile: function() {
-                if (!$state.is('answer.post')) {
-                    $state.go('answer.post');
-                }
-                $timeout(function() {
+                $scope.printing = true;
+                Promise.all([
+                    new Promise(function(resolve, reject) {
+                        $timeout(resolve, 1000);
+                    }),
+                    new Promise(function(resolve, reject) {
+                        var pdfFiles = $scope.answer.files.filter(function(file) {
+                            return file.material === 'pdf';
+                        });
+                        if (pdfFiles.length) {
+                            checkIfAllPdfFilesLoaded(function() {
+                                Promise.all(pdfFiles.map(function(pdfFile) {
+                                    return Promise.all(pdfFile.model.pages.map(function(page) {
+                                        return page.createDataURL(printLayoutWidth);
+                                    })).then(function(dataUrls) {
+                                        pdfFile.dataUrls = dataUrls;
+                                    });
+                                })).then(resolve, reject);
+                            });
+                        }
+                        else {
+                            resolve();
+                        }
+                    })
+                ]).then(function() {
                     $window.print();
-                }, 1000);
+                }, function(reason) {
+                    console.log("Coulldn't print:", reason);
+                }).then(function() {
+                    $timeout(function() {
+                        $scope.printing = false;
+                    });
+                });
+            },
+            getPrintingStatus: function() {
+                return $scope.printing;
             },
             goToLaboratory: function() {
                 $state.go('answer.laboratory');
@@ -171,15 +202,39 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                     case 'render start':
                         delete file.error;
                         break;
-                    case 'render finish':
-                        $timeout(function() {
-                            file.dataUrls = file.model.canvasArray.map(function(canvas) {
-                                return canvas.toDataURL('image/png', 1.0);
-                            });
-                        });
-                        break;
+                        // case 'render finish':
+                        //     Promise.all(file.model.pages.map(function(page) {
+                        //         return page.createDataURL(2400);
+                        //     })).then(function(dataUrls) {
+                        //         $timeout(function() {
+                        //             file.dataUrls = dataUrls;
+                        //             alert('done')
+                        //         });
+                        //     });
+                        //     break;
                 }
+                file.loaded = ['loaded pages', 'render start', 'render finish', 'error'].indexOf(file.model.state) >= 0;
+                checkIfAllPdfFilesLoaded();
             };
+        }
+
+        var allPdfFilesLoadedEventHandlers = [],
+            allPdfFilesLoaded = false;
+
+        function checkIfAllPdfFilesLoaded(eventHandler) {
+            if (typeof eventHandler === 'function' && allPdfFilesLoadedEventHandlers.indexOf(eventHandler) < 0) {
+                allPdfFilesLoaded && eventHandler();
+                allPdfFilesLoaded || allPdfFilesLoadedEventHandlers.push(eventHandler);
+            }
+            if (!allPdfFilesLoaded && $scope.answer) {
+                allPdfFilesLoaded = $scope.answer.files.reduce(function(result, file, index) {
+                    if (file.material !== 'pdf') return result;
+                    return result && file.loaded;
+                }, true);
+                allPdfFilesLoaded && allPdfFilesLoadedEventHandlers.forEach(function(eventHandler) {
+                    eventHandler();
+                });
+            }
         }
 
     }

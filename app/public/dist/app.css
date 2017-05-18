@@ -129,6 +129,10 @@ body {
   margin-top: 8px;
   margin-bottom: 8px;
 }
+#ja-answer #ja-answer-print .ja-print-header-info {
+  display: inline-block;
+  width: 40%;
+}
 #ja-answer #ja-answer-post .ja-preview {
   background-color: #fafafa;
   margin: 0 0 10px 0;
@@ -140,10 +144,6 @@ body {
 }
 #ja-answer #ja-answer-post .ja-preview .ja-preview-filename {
   display: inline-block;
-}
-#ja-answer #ja-answer-post .ja-print-header-info {
-  display: inline-block;
-  width: 40%;
 }
 #ja-answer #ja-answer-download .ja-link {
   border: solid 1px #fff;

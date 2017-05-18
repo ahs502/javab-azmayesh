@@ -3,4 +3,5 @@
 <img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.post') }" ng-src="{{iconJs('reader')}}" ng-click="menuHandlers.viewFile()" alt="مشاهده آنلاین" title="مشاهده آنلاین">
 <img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.download') }" ng-src="{{iconJs('download')}}" ng-click="menuHandlers.saveFile()" alt="ذخیره فایل ها" title="ذخیره فایل ها">
 <img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.share') }" ng-src="{{iconJs('share')}}" ng-click="menuHandlers.shareFile()" alt="به اشتراک گذاری" title="به اشتراک گذاری">
-<img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.print') }" ng-src="{{iconJs('print')}}" ng-click="menuHandlers.printFile()" alt="چاپ نتایج" title="چاپ نتایج">
+
+<img ng-if="!menuHandlers.getPrintingStatus()" class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.print') }" ng-src="{{iconJs('print')}}" ng-click="menuHandlers.printFile()" alt="چاپ نتایج" title="چاپ نتایج">

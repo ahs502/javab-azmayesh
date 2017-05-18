@@ -13,7 +13,7 @@
     <img class="ja-menu-item-icon" ng-src="{{iconJs('share')}}">
 </a>
 
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.printFile(); toggleMenu()">
+<a class="item nazanin ja-align-right" ng-if="!menuHandlers.getPrintingStatus()" ng-click="menuHandlers.printFile(); toggleMenu()">
     چاپ نتایج
     <img class="ja-menu-item-icon" ng-src="{{iconJs('print')}}">
 </a>

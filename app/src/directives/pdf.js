@@ -3,6 +3,8 @@
 /*global resourceLoader*/
 /*global PDFJS*/
 
+// States are: 'init', 'loading pdf', 'loaded pdf', 'loading pages',
+//             'loaded pages', 'render start', 'render finish', 'error'
 app.directive('pdf', ['$timeout', '$window', function($timeout, $window) {
     return {
         restrict: 'E',
@@ -43,8 +45,16 @@ app.directive('pdf', ['$timeout', '$window', function($timeout, $window) {
             container.css('width', scope.width || '100%');
 
             var hideRendering = scope.hideRendering === 'true',
-                eventHandler = scope.eventHandler();
-            if (typeof eventHandler !== 'function') eventHandler = function() {};
+                state = 'init',
+                eventHandler = function(event) {
+                    event.state = state;
+                    state = event.event;
+                    scope.model && (scope.model.state = state);
+                    var stateEventHandler = scope.eventHandler();
+                    if (typeof stateEventHandler === 'function') {
+                        stateEventHandler(event);
+                    }
+                };
 
             scope.loading = true;
             var promise;
@@ -60,11 +70,11 @@ app.directive('pdf', ['$timeout', '$window', function($timeout, $window) {
                                 event: 'loading pdf'
                             });
                             PDFJS.getDocument(scope.src).then(function(pdf) {
+                                scope.model && (scope.model.pdf = pdf);
                                 eventHandler({
                                     event: 'loaded pdf',
                                     pdf: pdf
                                 });
-                                scope.model && (scope.model.pdf = pdf);
                                 resolve(pdf);
                             }, function(reason) {
                                 reject('Could not resolve pdf.');
@@ -90,11 +100,39 @@ app.directive('pdf', ['$timeout', '$window', function($timeout, $window) {
                     return Promise.all(Array.range(1, pdf.numPages).map(function(pageNumber) {
                         return pdf.getPage(pageNumber);
                     })).then(function(pages) {
+                        pages.forEach(function(page) {
+                            page.createCanvas = function(width) {
+                                var viewport = page.getViewport(1);
+                                viewport = page.getViewport(width / viewport.width);
+                                var canvas = document.createElement('canvas');
+                                var context = canvas.getContext('2d');
+                                canvas.height = viewport.height;
+                                canvas.width = viewport.width;
+                                var renderContext = {
+                                    canvasContext: context,
+                                    viewport: viewport
+                                };
+                                return {
+                                    canvas: canvas,
+                                    promise: page.render(renderContext)
+                                };
+                            };
+                            page.createDataURL = function(width, mimeType, quality) {
+                                var result = page.createCanvas(width);
+                                return new Promise(function(resolve, reject) {
+                                    result.promise.then(function() {
+                                        resolve(result.canvas.toDataURL(mimeType, quality));
+                                    }, function(error) {
+                                        reject(error);
+                                    });
+                                });
+                            };
+                        });
+                        scope.model && (scope.model.pages = pages);
                         eventHandler({
                             event: 'loaded pages',
                             pages: pages
                         });
-                        scope.model && (scope.model.pages = pages);
                         return pages;
                     }, function(reason) {
                         return Promise.reject('Could not resolve pages.');
@@ -138,21 +176,11 @@ app.directive('pdf', ['$timeout', '$window', function($timeout, $window) {
                     event: 'render start',
                     desiredWidth: desiredWidth
                 });
-                scope.model.canvasArray = [];
                 return Promise.all(scope.model.pages.map(function(page) {
-                    var viewport = page.getViewport(1);
-                    viewport = page.getViewport(desiredWidth / viewport.width);
-                    var canvas = document.createElement('canvas');
-                    var context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-                    var renderContext = {
-                        canvasContext: context,
-                        viewport: viewport
-                    };
-                    scope.model.canvasArray.push(canvas);
-                    container.append(canvas);
-                    return page.render(renderContext);
+                    var result = page.createCanvas(desiredWidth);
+                    page.canvas = result.canvas;
+                    container.append(result.canvas);
+                    return result.promise;
                 })).then(function() {
                     if (hideRendering) {
                         $timeout(function() {

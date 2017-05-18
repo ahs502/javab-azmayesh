@@ -1,6 +1,6 @@
 <div id="ja-answer-post">
 
-    <div class="ui basic segment ja-screen">
+    <div class="ui basic segment">
 
         <p class="nazanin ja-rtl ja-align-right" ng-show="loading">
             در حال بارگذاری اطلاعات، لطفاً کمی صبر کنید...
@@ -44,67 +44,6 @@
 
         <p ng-if="!loading && answer" class="nazanin ja-rtl ja-align-right"><strong>توضیحات :</strong></p>
         <div ng-if="!loading && answer" class="ui segment">
-            <pre class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes || '(توضیحات ندارد)'"></pre>
-        </div>
-
-    </div>
-
-    <div class="ja-print" ng-if="!loading && answer">
-
-        <div class="ui segment nazanin ja-rtl ja-align-right">
-
-            <div class="ja-print-header-info">
-                نام:&nbsp;
-                <strong ng-bind="answer.patientName"></strong>
-            </div>
-            <div class="ja-print-header-info">
-                تاریخ ارسال نتایج:&nbsp;
-                <strong ng-bind="footerHandlers.postDateGetter()"></strong>
-            </div>
-            <div class="ja-print-header-info">
-                شماره آزمایش:&nbsp;
-                <strong ng-bind="footerHandlers.postCodeGetter()"></strong>
-            </div>
-            <div class="ja-print-header-info">
-                نام آزمایشگاه:&nbsp;
-                <strong ng-bind="answer.lab.name"></strong>
-            </div>
-            <div class="ja-print-header-info">
-                تلفن تماس آزمایشگاه:&nbsp;
-                <strong ng-bind="answer.lab.phoneNumber | toPersianNumber"></strong>
-            </div>
-            <div class="ja-print-header-info">
-                کُد پستی آزمایشگاه:&nbsp;
-                <strong ng-bind="answer.lab.postalCode | toPersianNumber"></strong>
-            </div>
-
-            <div>
-                آدرس آزمایشگاه:&nbsp;
-                <em ng-bind="answer.lab.address | toPersianNumber"></em>
-            </div>
-
-        </div>
-
-        <p class="nazanin ja-rtl ja-align-right" ng-show="!(answer.files && answer.files.length)">
-            برای این آزمایش فایلی آپلود نشده است.
-        </p>
-
-        <div ng-if="answer.files && answer.files.length" ng-repeat="file in answer.files">
-
-            <div ng-if="file.material === 'image'">
-                <img ng-src="{{file.url}}" width="100%">
-            </div>
-
-            <div ng-if="file.material === 'pdf' && !file.error && file.dataUrls && file.dataUrls.length">
-                <img ng-repeat="dataUrl in file.dataUrls" ng-src="{{dataUrl}}" width="100%">
-            </div>
-
-        </div>
-
-        <br />
-
-        <p class="nazanin ja-rtl ja-align-right"><strong>توضیحات :</strong></p>
-        <div class="ui segment">
             <pre class="nazanin ja-rtl ja-right-align" ng-bind="answer.notes || '(توضیحات ندارد)'"></pre>
         </div>
 
