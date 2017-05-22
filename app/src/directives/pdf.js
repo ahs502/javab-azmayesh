@@ -101,13 +101,16 @@ app.directive('pdf', ['$timeout', '$window', function($timeout, $window) {
                         return pdf.getPage(pageNumber);
                     })).then(function(pages) {
                         pages.forEach(function(page) {
-                            page.createCanvas = function(width) {
+                            page.createCanvas = function(width, pointPerPixel) {
+                                pointPerPixel = pointPerPixel || 1;
                                 var viewport = page.getViewport(1);
-                                viewport = page.getViewport(width / viewport.width);
+                                viewport = page.getViewport(pointPerPixel * width / viewport.width);
                                 var canvas = document.createElement('canvas');
                                 var context = canvas.getContext('2d');
-                                canvas.height = viewport.height;
                                 canvas.width = viewport.width;
+                                canvas.height = viewport.height;
+                                canvas.style.width = width + 'px';
+                                canvas.style.height = (width * viewport.height / viewport.width) + 'px';
                                 var renderContext = {
                                     canvasContext: context,
                                     viewport: viewport
@@ -177,7 +180,7 @@ app.directive('pdf', ['$timeout', '$window', function($timeout, $window) {
                     desiredWidth: desiredWidth
                 });
                 return Promise.all(scope.model.pages.map(function(page) {
-                    var result = page.createCanvas(desiredWidth);
+                    var result = page.createCanvas(desiredWidth, 2);
                     page.canvas = result.canvas;
                     container.append(result.canvas);
                     return result.promise;

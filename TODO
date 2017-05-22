@@ -11,6 +11,10 @@
     
     ============================================================================
 
+    *   Debug: Sometimes PDFs does not appear in print layout.
+    
+    *   Let the patient download توضیحات as an text file in answer.download page.
+
     *   SMS redirector.
     
     *   Complete 'About us' and 'Contact us' pages.

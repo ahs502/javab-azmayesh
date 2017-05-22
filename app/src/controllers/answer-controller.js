@@ -3,6 +3,7 @@
 /*global toPersianNumber*/
 /*global Clipboard*/
 /*global simpleQueryString*/
+/*global d3*/
 
 app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService',
     function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService) {
@@ -202,16 +203,6 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                     case 'render start':
                         delete file.error;
                         break;
-                        // case 'render finish':
-                        //     Promise.all(file.model.pages.map(function(page) {
-                        //         return page.createDataURL(2400);
-                        //     })).then(function(dataUrls) {
-                        //         $timeout(function() {
-                        //             file.dataUrls = dataUrls;
-                        //             alert('done')
-                        //         });
-                        //     });
-                        //     break;
                 }
                 file.loaded = ['loaded pages', 'render start', 'render finish', 'error'].indexOf(file.model.state) >= 0;
                 checkIfAllPdfFilesLoaded();

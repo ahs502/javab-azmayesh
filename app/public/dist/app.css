@@ -129,6 +129,9 @@ body {
   margin-top: 8px;
   margin-bottom: 8px;
 }
+#ja-answer .ja-multiline-pre {
+  white-space: pre-wrap;
+}
 #ja-answer #ja-answer-print .ja-print-header-info {
   display: inline-block;
   width: 40%;
