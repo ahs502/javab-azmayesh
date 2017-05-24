@@ -1,7 +1,30 @@
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToMainPage(); toggleMenu()">صفحه اصلی</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToSendResults(); toggleMenu()">ارسال نتایج</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToResultsHistory(); toggleMenu()">سوابق نتایج ثبت شده</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToChargeAccount(); toggleMenu()">تأمین اعتبار</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToUserAccount(); toggleMenu()">مشخصات کاربری آزمایشگاه</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.logout(); toggleMenu()">خروج از سامانه</a>
-            
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToMainPage(); toggleMenu()">
+    صفحه اصلی
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('home')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToSendResults(); toggleMenu()">
+    ارسال نتایج
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('post')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToResultsHistory(); toggleMenu()">
+    سوابق نتایج ثبت شده
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('folder')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToChargeAccount(); toggleMenu()">
+    تأمین اعتبار
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('money')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToUserAccount(); toggleMenu()">
+    مشخصات کاربری آزمایشگاه
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('user')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.logout(); toggleMenu()">
+    خروج از سامانه
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('logout')}}">
+</a>
+

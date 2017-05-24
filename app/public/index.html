@@ -216,12 +216,31 @@
 </script>
 
 <script type="text/ng-template" id="home/menu.html">
-    <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeFind(); toggleMenu()">جواب آزمایش</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeOtp(); toggleMenu()">سوابق من</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabLogin(); toggleMenu()">آزمایشگاه ها</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeAbout(); toggleMenu()">درباره ما</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeContact(); toggleMenu()">تماس با ما</a>
-            
+    <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeFind(); toggleMenu()">
+    جواب آزمایش
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeOtp(); toggleMenu()">
+    سوابق من
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('folder')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabLogin(); toggleMenu()">
+    آزمایشگاه ها
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeAbout(); toggleMenu()">
+    درباره ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('about us')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeContact(); toggleMenu()">
+    تماس با ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('contact us')}}">
+</a>
+
 </script>
 
 <script type="text/ng-template" id="home/footer.html">
@@ -804,12 +823,32 @@
 </script>
 
 <script type="text/ng-template" id="lab/menu.html">
-    <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabLogin(); toggleMenu()">ورود مشترکین</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabRegister(); toggleMenu()">ثبت نام</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeFind(); toggleMenu()">جواب آزمایش</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabAbout(); toggleMenu()">درباره ما</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabContact(); toggleMenu()">تماس با ما</a>
-            
+    <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabLogin(); toggleMenu()">
+    ورود مشترکین
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('login')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabRegister(); toggleMenu()">
+    ثبت نام
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('register')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeFind(); toggleMenu()">
+    جواب آزمایش
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabAbout(); toggleMenu()">
+    درباره ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('about us')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabContact(); toggleMenu()">
+    تماس با ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('contact us')}}">
+</a>
+
+
 </script>
 
 <script type="text/ng-template" id="lab/footer.html">
@@ -1181,13 +1220,37 @@
 </script>
 
 <script type="text/ng-template" id="panel/menu.html">
-    <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToMainPage(); toggleMenu()">صفحه اصلی</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToSendResults(); toggleMenu()">ارسال نتایج</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToResultsHistory(); toggleMenu()">سوابق نتایج ثبت شده</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToChargeAccount(); toggleMenu()">تأمین اعتبار</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToUserAccount(); toggleMenu()">مشخصات کاربری آزمایشگاه</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.logout(); toggleMenu()">خروج از سامانه</a>
-            
+    <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToMainPage(); toggleMenu()">
+    صفحه اصلی
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('home')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToSendResults(); toggleMenu()">
+    ارسال نتایج
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('post')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToResultsHistory(); toggleMenu()">
+    سوابق نتایج ثبت شده
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('folder')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToChargeAccount(); toggleMenu()">
+    تأمین اعتبار
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('money')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToUserAccount(); toggleMenu()">
+    مشخصات کاربری آزمایشگاه
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('user')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.logout(); toggleMenu()">
+    خروج از سامانه
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('logout')}}">
+</a>
+
+
 </script>
 
 <script type="text/ng-template" id="panel/header.html">

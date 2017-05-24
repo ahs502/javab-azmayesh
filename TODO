@@ -1,15 +1,14 @@
 
     *   Next round:
-        1-  In answer page:
-            *** 1.1-    Store pdf and pages in a model inside file data
-            *** 1.2-    Print layout for answer
-            1.3-    Zoom up to 2x, look for 'touch' event based solutions
-        2-  Set icons everywhere
         3-  Load IconJs asynchronously
         4-  Define js & css dependencies for each state whithin its state configuration and
             try to load them asynchronously during state transition event handlers in app.run method.
     
     ============================================================================
+
+    *   Try to reduce the number of involved d3 module files in app/src/libraries folder.
+
+    *   The max zoom factor is set to 2.0, shouldn't we make this larger and more dynamic?
 
     *   Debug: Sometimes PDFs does not appear in print layout.
     
@@ -28,8 +27,6 @@
     *   Add icons everywhere!
         Make icon-js loads its icons asynchroneusly.
         
-    *   Add zoom ability to answer images and PDFs.
-    
     *   'gulp build' does not work fine.
     
     *   Do not allow to send an answer before all files have been uploaded or errored.

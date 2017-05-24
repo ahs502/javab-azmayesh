@@ -1,6 +1,25 @@
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabLogin(); toggleMenu()">ورود مشترکین</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabRegister(); toggleMenu()">ثبت نام</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeFind(); toggleMenu()">جواب آزمایش</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabAbout(); toggleMenu()">درباره ما</a>
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabContact(); toggleMenu()">تماس با ما</a>
-            
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabLogin(); toggleMenu()">
+    ورود مشترکین
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('login')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabRegister(); toggleMenu()">
+    ثبت نام
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('register')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeFind(); toggleMenu()">
+    جواب آزمایش
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabAbout(); toggleMenu()">
+    درباره ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('about us')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabContact(); toggleMenu()">
+    تماس با ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('contact us')}}">
+</a>
+
