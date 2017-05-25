@@ -18,13 +18,22 @@
 
     <!-- CSS files will be loaded dynamically -->
     <!--<link rel="stylesheet" type="text/css" href="/dist/lib.min.css">-->
-    <!--<link rel="stylesheet" type="text/css" href="/dist/app.min.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="/dist/app__APP_SOURCES_MINIFIED_INDICATOR__.css">-->
 </head>
 
 <body>
 
     <style>
     /* DO NOT INCLUDE THIS FILE IN GULP TASK FOR 'app.css' AND 'app.min.css' */
+
+#ja-initial-loader-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+}
 
 #ja-initial-loader {
     color: #252e5b;
@@ -103,7 +112,10 @@
 
 </style>
 
-<div id="ja-initial-loader"><bdi>لطفا کمی صبر کنید...</bdi></div>
+<div id="ja-initial-loader-background"></div>
+<div id="ja-initial-loader">
+    <bdi>لطفا کمی صبر کنید...</bdi>
+</div>
 
 <div id="ja-sidebar-menu" class="ui --thin right sidebar --inverted vertical menu ja-screen">
     <div class="item">
@@ -172,6 +184,94 @@
     document.getElementById('ja-main-site-content').style.display = 'none';
 </script>
 
+
+    <script>
+    var resourceLoader = (function() {
+        var loading = [],
+            loaded = [],
+            callbacks = {};
+
+        resourceLoader.js = load.bind(null, 'js');
+        resourceLoader.css = load.bind(null, 'css');
+
+        return resourceLoader;
+
+        function resourceLoader(url, callback) {
+            if (typeof url === 'string') {
+                if (url.slice(-4) === '.css')
+                    return resourceLoader.css(url, callback);
+                return resourceLoader.js(url, callback);
+            }
+            else if (url && Array.isArray(url)) {
+                var numberOfLoadedUrls = 0;
+                url.forEach(function(u) {
+                    resourceLoader(u, function() {
+                        numberOfLoadedUrls++;
+                        if (numberOfLoadedUrls === url.length && typeof callback === 'function') callback();
+                    });
+                });
+            }
+        }
+
+        function load(type, url, callback) {
+            var hasCallback = typeof callback === 'function';
+            if (loaded.indexOf(url) >= 0)
+                hasCallback && setTimeout(callback);
+            else if (loading.indexOf(url) >= 0)
+                hasCallback && callbacks[url].push(callback);
+            else {
+                loading.push(url);
+                callbacks[url] = [];
+                hasCallback && callbacks[url].push(callback);
+                var element, calledBack = false;
+                if (type === 'js') {
+                    element = document.createElement('script');
+                    element.setAttribute("type", "text/javascript");
+                    element.setAttribute("src", url);
+                    element.onload = element.onreadystatechange = elementCallback;
+                    document.getElementsByTagName("body")[0].appendChild(element);
+                }
+                else if (type === 'css') {
+                    element = document.createElement("link");
+                    element.setAttribute("rel", "stylesheet");
+                    element.setAttribute("type", "text/css");
+                    element.setAttribute("href", url);
+                    element.onload = elementCallback;
+                    document.getElementsByTagName("head")[0].appendChild(element);
+                }
+            }
+
+            function elementCallback() {
+                if (calledBack) return;
+                calledBack = true;
+                loaded.push(url);
+                callbacks[url].forEach(function(cb) {
+                    cb();
+                });
+                delete callbacks[url];
+            }
+        }
+    })();
+    resourceLoader;
+</script>
+
+
+    <script>
+        /*global resourceLoader*/
+
+        // Load CSS files dynamically
+        resourceLoader('/dist/lib.min.css');
+        resourceLoader('/dist/app__APP_SOURCES_MINIFIED_INDICATOR__.css');
+
+        // Do NOT load JS files dynamically
+        // resourceLoader('/dist/lib.min.js');
+        // resourceLoader('/dist/app__APP_SOURCES_MINIFIED_INDICATOR__.js');
+    </script>
+
+    <!-- JS files will NOT be loaded dynamically -->
+    <script type="text/javascript" src="/dist/lib.min.js"></script>
+    <script type="text/javascript" src="/dist/app__APP_SOURCES_MINIFIED_INDICATOR__.js"></script>
+    <script type="text/javascript" src="/config"></script>
 
     <script type="text/ng-template" id="common/about.html">
     <div id="ja-common-about">
@@ -250,14 +350,7 @@
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeOtp()">سوابق من</a>
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" id="home-contact-us" data-position="top right" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
-<div class="ui popup ja-align-right ja not-small-display">
-    <div class="header"><span class="nazanin">اطلاعات تماس</span></div>
-    <div class="nazanin">
-        <bdi>021-66910430</bdi>
-        <bdi>تلفن:</bdi>
-    </div>
-</div>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
 
 </script>
 
@@ -1965,71 +2058,6 @@
 
 </script>
 
-
-    <script>
-        var resourceLoader = (function() {
-            var loading = [],
-                loaded = [],
-                callbacks = {};
-
-            return {
-                js: load.bind(null, 'js'),
-                css: load.bind(null, 'css')
-            };
-
-            function load(type, url, callback) {
-                var hasCallback = typeof callback === 'function';
-                if (loaded.indexOf(url) >= 0)
-                    hasCallback && setTimeout(callback);
-                else if (loading.indexOf(url) >= 0)
-                    hasCallback && callbacks[url].push(callback);
-                else {
-                    loading.push(url);
-                    callbacks[url] = [];
-                    hasCallback && callbacks[url].push(callback);
-                    var element, calledBack = false;
-                    if (type === 'js') {
-                        element = document.createElement('script');
-                        element.setAttribute("type", "text/javascript");
-                        element.setAttribute("src", url);
-                        element.onload = element.onreadystatechange = elementCallback;
-                        document.getElementsByTagName("body")[0].appendChild(element);
-                    }
-                    else if (type === 'css') {
-                        element = document.createElement("link");
-                        element.setAttribute("rel", "stylesheet");
-                        element.setAttribute("type", "text/css");
-                        element.setAttribute("href", url);
-                        element.onload = elementCallback;
-                        document.getElementsByTagName("head")[0].appendChild(element);
-                    }
-                }
-
-                function elementCallback() {
-                    if (calledBack) return;
-                    calledBack = true;
-                    loaded.push(url);
-                    callbacks[url].forEach(function(cb) {
-                        cb();
-                    });
-                    delete callbacks[url];
-                }
-            }
-        })();
-
-        // Load CSS files dynamically
-        resourceLoader.css('/dist/lib.min.css');
-        resourceLoader.css('/dist/app.css');
-
-        // Do NOT load JS files dynamically
-        // resourceLoader.js('/dist/lib.min.js');
-        // resourceLoader.js('/dist/app.min.js');
-    </script>
-
-    <!-- JS files will NOT be loaded dynamically -->
-    <script type="text/javascript" src="/dist/lib.min.js"></script>
-    <script type="text/javascript" src="/dist/app.js"></script>
-    <script type="text/javascript" src="/config"></script>
 
 </body>
 

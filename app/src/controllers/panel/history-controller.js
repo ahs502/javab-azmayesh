@@ -1,5 +1,5 @@
 /*global app*/
-/*global $*/
+/*global angular*/
 
 app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$window', 'UserService', 'PostService',
     function($scope, $rootScope, $state, $stateParams, $timeout, $window, userService, postService) {
@@ -53,7 +53,7 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
 
         $scope.setPageTitle('سوابق نتایج ثبت شده');
 
-        $('#select-year').dropdown({
+        angular.element('#select-year').dropdown({
             onChange: function(value, text) {
                 // $timeout(function() {
                 $scope.selectedYear = historyState.selectedYear = value;
@@ -62,7 +62,7 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
             }
         });
 
-        $('#select-month-from').dropdown({
+        angular.element('#select-month-from').dropdown({
             onChange: function(value, text) {
                 // $timeout(function() {
                 value = Number(value);
@@ -70,13 +70,13 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
                 $scope.selectedMonthFromText = $scope.persianMonths[value - 1];
                 var selectedMonthTo = $scope.selectedMonthTo > $scope.selectedMonthFrom ? $scope.selectedMonthTo : $scope.selectedMonthFrom;
                 if (selectedMonthTo != $scope.selectedMonthTo)
-                    $('#select-month-to').dropdown('set selected', $scope.selectedMonthTo = historyState.selectedMonthTo = selectedMonthTo);
+                    angular.element('#select-month-to').dropdown('set selected', $scope.selectedMonthTo = historyState.selectedMonthTo = selectedMonthTo);
                 loadPosts();
                 // });
             }
         });
 
-        $('#select-month-to').dropdown({
+        angular.element('#select-month-to').dropdown({
             onChange: function(value, text) {
                 // $timeout(function() {
                 value = Number(value);
@@ -84,7 +84,7 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
                 $scope.selectedMonthToText = $scope.persianMonths[value - 1];
                 var selectedMonthFrom = $scope.selectedMonthFrom < $scope.selectedMonthTo ? $scope.selectedMonthFrom : $scope.selectedMonthTo;
                 if (selectedMonthFrom != $scope.selectedMonthFrom)
-                    $('#select-month-from').dropdown('set selected', $scope.selectedMonthFrom = historyState.selectedMonthFrom = selectedMonthFrom);
+                    angular.element('#select-month-from').dropdown('set selected', $scope.selectedMonthFrom = historyState.selectedMonthFrom = selectedMonthFrom);
                 loadPosts();
                 // });
             }

@@ -38,40 +38,35 @@ var javascripts_app = [
     './app/src/app.js',
     './app/src/app-config.js',
     './app/src/app-run.js',
+    './app/src/factories/**/*.js',
     './app/src/services/**/*.js',
     './app/src/controllers/**/*.js',
     './app/src/directives/**/*.js',
     './app/src/filters/**/*.js',
-    './app/src/**/*.js',
 ];
 
 var stylesheets_app = [
     './app/style/main.less',
 ];
 
-var dynamic_app = [];
-
 var javascripts_lib = [
     './app/lib/jquery/dist/jquery.min.js',
-    './app/lib/angular/angular.js',
+    './app/lib/angular/angular.min.js',
     './app/lib/angular-ui-router/release/angular-ui-router.min.js',
-    // './app/lib/md-virtual-repeater/virtual-repeater.js',
     './app/lib/angular-recaptcha/release/angular-recaptcha.min.js',
     './app/lib/persian-date/dist/0.1.8/persian-date-0.1.8.min.js',
     './app/lib/clipboard/dist/clipboard.min.js',
     './app/lib/simple-query-string/src/simplequerystring.min.js',
+    
     //'./app/lib/semantic/dist/semantic.min.js',
     './app/lib/semantic/dist/components/site.min.js',
     './app/lib/semantic/dist/components/form.min.js',
-    './app/lib/semantic/dist/components/checkbox.min.js',
-    './app/lib/semantic/dist/components/dimmer.min.js',
     './app/lib/semantic/dist/components/modal.min.js',
-    './app/lib/semantic/dist/components/progress.min.js',
-    './app/lib/semantic/dist/components/transition.min.js',
-    './app/lib/semantic/dist/components/popup.min.js',
     './app/lib/semantic/dist/components/sidebar.min.js',
     './app/lib/semantic/dist/components/sticky.min.js',
-    './app/lib/semantic/dist/components/dropdown.min.js',
+    
+    './app/lib/semantic/dist/components/dimmer.min.js',
+    './app/lib/semantic/dist/components/transition.min.js',
 ];
 
 var stylesheets_lib = [
@@ -80,41 +75,45 @@ var stylesheets_lib = [
     './app/lib/semantic/dist/components/grid.rtl.min.css',
     './app/lib/semantic/dist/components/form.rtl.min.css',
     './app/lib/semantic/dist/components/input.rtl.min.css',
-    './app/lib/semantic/dist/components/card.rtl.min.css',
-    './app/lib/semantic/dist/components/segment.rtl.min.css',
-    './app/lib/semantic/dist/components/container.rtl.min.css',
-    './app/lib/semantic/dist/components/checkbox.rtl.min.css',
-    './app/lib/semantic/dist/components/dimmer.rtl.min.css',
     './app/lib/semantic/dist/components/modal.rtl.min.css',
-    './app/lib/semantic/dist/components/loader.rtl.min.css',
-    './app/lib/semantic/dist/components/progress.rtl.min.css',
-    './app/lib/semantic/dist/components/dropdown.rtl.min.css',
     './app/lib/semantic/dist/components/label.rtl.min.css',
-    './app/lib/semantic/dist/components/image.min.css',
     './app/lib/semantic/dist/components/menu.min.css',
     './app/lib/semantic/dist/components/button.min.css',
-    './app/lib/semantic/dist/components/transition.min.css',
-    './app/lib/semantic/dist/components/popup.min.css',
     './app/lib/semantic/dist/components/sidebar.min.css',
     './app/lib/semantic/dist/components/sticky.min.css',
-    './app/lib/semantic/dist/components/statistic.min.css',
+    './app/lib/semantic/dist/components/segment.rtl.min.css',
+    './app/lib/semantic/dist/components/image.min.css',
     './app/lib/semantic/dist/components/divider.min.css',
-    //'./app/lib/semantic/dist/components/icon.min.css',
+    
+    './app/lib/semantic/dist/components/dimmer.rtl.min.css',
+    './app/lib/semantic/dist/components/transition.min.css',
 ];
 
-var dynamic_lib = [
+var dynamics = [
+    './app/src/dynamics/**/*.js',
+
     './app/lib/pdfjs-dist/build/pdf.min.js',
     './app/lib/pdfjs-dist/build/pdf.worker.min.js',
+
+    './app/lib/semantic/dist/components/checkbox.min.js',
+    './app/lib/semantic/dist/components/checkbox.rtl.min.css',
+    './app/lib/semantic/dist/components/card.rtl.min.css',
+    './app/lib/semantic/dist/components/loader.rtl.min.css',
+    './app/lib/semantic/dist/components/dropdown.min.js',
+    './app/lib/semantic/dist/components/dropdown.rtl.min.css',
+    './app/lib/semantic/dist/components/progress.min.js',
+    './app/lib/semantic/dist/components/progress.rtl.min.css',
+    './app/lib/semantic/dist/components/container.rtl.min.css',
+    './app/lib/semantic/dist/components/statistic.min.css',
 ];
 
+// Each Item, Just One File (Do not use * widechar or else) :
 var views_templates = [
-    // Each Item, Just One File (Do not use * widechar or else) :
     './app/view/index.html',
 ];
 
+// See: https://www.browsersync.io/docs/options/
 var browserSyncOptions = {
-    // See: https://www.browsersync.io/docs/options/
-
     proxy: {
         target: "localhost:" + port,
         ws: true
@@ -160,8 +159,8 @@ gulp.task('clean', callback => {
 
 gulp.task('clean-fast', callback => {
     del([
-            './app/public/dist/**/app.*',
-            './app/public/dist/app/**/*',
+            './app/public/dist/**/*',
+            '!./app/public/dist/lib.*',
             './app/public/*.html',
         ])
         .then(items => {
@@ -253,17 +252,6 @@ gulp.task('build-app-css', () => {
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-gulp.task('copy-app-dynamic', done => {
-    if (!dynamic_app.length) return done();
-    return merge.apply(null, dynamic_app.map(dynamic =>
-            gulp.src(dynamic)
-            .pipe(gprint(file => ' -> [' + 'app'.cyan + '] Dynamic file: ' + file))
-            .pipe(gulp.dest('./app/public/dist/app/'))))
-        .on('end', () => util.log(' => [' + 'app'.bold.cyan + '] ' + 'Dynamic file(s) have been copied.'.green));
-});
-
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
-
 gulp.task('build-lib-js', () => {
     return gulp.src(javascripts_lib)
         .pipe(gprint(file => ' -> [' + 'lib'.cyan + '] Javascript file: ' + file))
@@ -306,22 +294,22 @@ gulp.task('build-lib-css', () => {
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-gulp.task('copy-lib-dynamic', done => {
-    if (!dynamic_lib.length) return done();
-    return merge.apply(null, dynamic_lib.map(dynamic =>
+gulp.task('copy-dynamics', done => {
+    if (!dynamics.length) return done();
+    return merge.apply(null, dynamics.map(dynamic =>
             gulp.src(dynamic)
-            .pipe(gprint(file => ' -> [' + 'lib'.cyan + '] Dynamic file: ' + file))
-            .pipe(gulp.dest('./app/public/dist/lib/'))))
-        .on('end', () => util.log(' => [' + 'lib'.bold.cyan + '] ' + 'Dynamic file(s) have been copied.'.green));
+            .pipe(gprint(file => ' -> [' + 'dyn'.cyan + '] Dynamic file: ' + file))
+            .pipe(gulp.dest('./app/public/dist/'))))
+        .on('end', () => util.log(' => [' + 'dyn'.bold.cyan + '] ' + 'Dynamic file(s) have been copied.'.green));
 });
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-gulp.task('build-app', ['build-app-js', 'build-app-css', 'copy-app-dynamic']);
+gulp.task('build-app', ['build-app-js', 'build-app-css']);
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-gulp.task('build-lib', ['build-lib-js', 'build-lib-css', 'copy-lib-dynamic']);
+gulp.task('build-lib', ['build-lib-js', 'build-lib-css']);
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
@@ -363,12 +351,12 @@ gulp.task('build-view', callback => {
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
 gulp.task('build', ['clean'], () =>
-    runSequence('build-lib', 'build-app', 'build-view'));
+    runSequence('build-lib', 'build-app', 'build-view', 'copy-dynamics'));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
 gulp.task('build-fast', ['clean-fast'], () =>
-    runSequence('build-app', 'build-view'));
+    runSequence('build-app', 'build-view', 'copy-dynamics'));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
@@ -422,6 +410,8 @@ gulp.task('restart-node', callback => {
 
 gulp.task('watch', callback => {
 
+    gulp.watch('./app/src/dynamics/**/*.js', ['copy-dynamics']);
+
     gulp.watch('./app/src/**/*.js', ['build-app-js']);
     gulp.watch('./app/style/**/*.css', ['build-app-css']);
     gulp.watch('./app/style/**/*.less', ['build-app-css']);
@@ -444,7 +434,7 @@ gulp.task('browser-sync', callback => {
         gulp.watch('./app/view/**/*.*').on("change", bs.reload);
 
         gulp.watch([
-                './app/public/img/**/*.*',
+                './app/public/**/*.*',
             ])
             .on("change", bs.reload);
 

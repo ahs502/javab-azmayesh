@@ -1,5 +1,4 @@
 /*global app*/
-/*global $*/
 /*global toPersianNumber*/
 
 app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',

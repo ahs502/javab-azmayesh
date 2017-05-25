@@ -1,5 +1,4 @@
 /*global app*/
-/*global $*/
 /*global ValidationSystem*/
 
 app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
@@ -43,11 +42,11 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
                             $scope.action === 'edit account' ?
                             'اصلاحات مورد نظر با موفقیت در سامانه ثبت شدند' : '')
                         .then(function() {
-                            return $scope.refreshUserData()
+                            return $scope.refreshUserData();
                         })
                         .then(function() {
                             $state.go('panel.account.summary');
-                        });;
+                        });
                 }, function(code) {
                     $scope.confirming = false;
                     alert(code);

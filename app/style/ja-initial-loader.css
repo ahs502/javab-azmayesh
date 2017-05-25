@@ -1,5 +1,14 @@
 /* DO NOT INCLUDE THIS FILE IN GULP TASK FOR 'app.css' AND 'app.min.css' */
 
+#ja-initial-loader-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+}
+
 #ja-initial-loader {
     color: #252e5b;
     font-size: 90px;

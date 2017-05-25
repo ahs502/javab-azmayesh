@@ -33,6 +33,8 @@ var config = {
     enable_statistics: /*------------------*/ false,
     enable_sms_limits: /*------------------*/ false, // See: ./src/modules/sms.js >> smsLimits
     /*-------------------------------------*/
+    minified_app_sources: /*---------------*/ false,
+    /*-------------------------------------*/
 
     client_config: [
         'env',

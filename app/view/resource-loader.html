@@ -1,0 +1,69 @@
+<script>
+    var resourceLoader = (function() {
+        var loading = [],
+            loaded = [],
+            callbacks = {};
+
+        resourceLoader.js = load.bind(null, 'js');
+        resourceLoader.css = load.bind(null, 'css');
+
+        return resourceLoader;
+
+        function resourceLoader(url, callback) {
+            if (typeof url === 'string') {
+                if (url.slice(-4) === '.css')
+                    return resourceLoader.css(url, callback);
+                return resourceLoader.js(url, callback);
+            }
+            else if (url && Array.isArray(url)) {
+                var numberOfLoadedUrls = 0;
+                url.forEach(function(u) {
+                    resourceLoader(u, function() {
+                        numberOfLoadedUrls++;
+                        if (numberOfLoadedUrls === url.length && typeof callback === 'function') callback();
+                    });
+                });
+            }
+        }
+
+        function load(type, url, callback) {
+            var hasCallback = typeof callback === 'function';
+            if (loaded.indexOf(url) >= 0)
+                hasCallback && setTimeout(callback);
+            else if (loading.indexOf(url) >= 0)
+                hasCallback && callbacks[url].push(callback);
+            else {
+                loading.push(url);
+                callbacks[url] = [];
+                hasCallback && callbacks[url].push(callback);
+                var element, calledBack = false;
+                if (type === 'js') {
+                    element = document.createElement('script');
+                    element.setAttribute("type", "text/javascript");
+                    element.setAttribute("src", url);
+                    element.onload = element.onreadystatechange = elementCallback;
+                    document.getElementsByTagName("body")[0].appendChild(element);
+                }
+                else if (type === 'css') {
+                    element = document.createElement("link");
+                    element.setAttribute("rel", "stylesheet");
+                    element.setAttribute("type", "text/css");
+                    element.setAttribute("href", url);
+                    element.onload = elementCallback;
+                    document.getElementsByTagName("head")[0].appendChild(element);
+                }
+            }
+
+            function elementCallback() {
+                if (calledBack) return;
+                calledBack = true;
+                loaded.push(url);
+                callbacks[url].forEach(function(cb) {
+                    cb();
+                });
+                delete callbacks[url];
+            }
+        }
+    })();
+    resourceLoader;
+</script>

@@ -1,7 +1,7 @@
 /*global app*/
 
-app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$compileProvider',
-    function($stateProvider, $urlRouterProvider, $locationProvider,$compileProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compileProvider',
+    function($stateProvider, $urlRouterProvider, $locationProvider, $compileProvider) {
 
         $stateProvider
             .state('home', {
@@ -46,7 +46,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$compil
                     previousState: null
                 },
                 templateUrl: 'common/about.html',
-                controller: 'CommonAboutController'
+                controller: 'CommonAboutController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                    ]
+                }
             })
             .state('home.contact', {
                 url: '/contact',
@@ -54,7 +59,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$compil
                     previousState: null
                 },
                 templateUrl: 'common/contact.html',
-                controller: 'CommonContactController'
+                controller: 'CommonContactController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                    ]
+                }
             });
 
         $stateProvider
@@ -71,6 +81,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$compil
                     header: {
                         templateUrl: 'history/header.html'
                     }
+                },
+                data: {
+                    dependencies: [
+                        'card.rtl.min.css',
+                    ]
                 }
             });
 
@@ -142,7 +157,13 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$compil
                     username: null
                 },
                 templateUrl: 'lab/register.html',
-                controller: 'LabRegisterController'
+                controller: 'LabRegisterController',
+                data: {
+                    dependencies: [
+                        'checkbox.min.js',
+                        'checkbox.rtl.min.css',
+                    ]
+                }
             })
             .state('lab.validate', {
                 url: '/validate',
@@ -171,7 +192,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$compil
                     previousState: null
                 },
                 templateUrl: 'common/about.html',
-                controller: 'CommonAboutController'
+                controller: 'CommonAboutController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                    ]
+                }
             })
             .state('lab.contact', {
                 url: '/contact',
@@ -179,7 +205,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$compil
                     previousState: null
                 },
                 templateUrl: 'common/contact.html',
-                controller: 'CommonContactController'
+                controller: 'CommonContactController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                    ]
+                }
             });
 
         $stateProvider
@@ -197,17 +228,33 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$compil
                         templateUrl: 'panel/header.html'
                     },
                 },
-                abstract: true
+                abstract: true,
+                data: {
+                    dependencies: [
+                        'loader.rtl.min.css',
+                    ]
+                }
             })
             .state('panel.home', {
                 url: '/home',
                 templateUrl: 'panel/home.html',
-                controller: 'PanelHomeController'
+                controller: 'PanelHomeController',
+                data: {
+                    dependencies: [
+                        'card.rtl.min.css',
+                    ]
+                }
             })
             .state('panel.history', {
                 url: '/history',
                 templateUrl: 'panel/history.html',
-                controller: 'PanelHistoryController'
+                controller: 'PanelHistoryController',
+                data: {
+                    dependencies: [
+                        'dropdown.min.js',
+                        'dropdown.rtl.min.css',
+                    ]
+                }
             })
             .state('panel.post', {
                 url: '/post',
@@ -217,12 +264,23 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$compil
             .state('panel.send', {
                 url: '/send',
                 templateUrl: 'panel/send.html',
-                controller: 'PanelSendController'
+                controller: 'PanelSendController',
+                data: {
+                    dependencies: [
+                        'progress.min.js',
+                        'progress.rtl.min.css',
+                    ]
+                }
             })
             .state('panel.balance', {
                 url: '/balance',
                 templateUrl: 'panel/balance.html',
-                controller: 'PanelBalanceController'
+                controller: 'PanelBalanceController',
+                data: {
+                    dependencies: [
+                        'statistic.min.css',
+                    ]
+                }
             })
             .state('panel.account', {
                 url: '/account',
@@ -257,7 +315,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$compil
         $urlRouterProvider.otherwise('/home/find');
 
         // $locationProvider.html5Mode(true);
-        
+
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|sms|tg):/);
 
     }

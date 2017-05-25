@@ -1,14 +1,17 @@
 /*global app*/
-/*global $*/
+/*global angular*/
 /*global localStorage*/
 
-app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService',
-    function($rootScope, $state, $stateParams, $window, userService) {
+app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService', 'DynamicResourceLoader',
+    function($rootScope, $state, $stateParams, $window, userService, dynamicResourceLoader) {
 
         // No need to initial loader anymore
-        $('#ja-initial-loader').hide();
-        $('#ja-main-site-content').show();
-        $('#ja-sidebar-menu').show();
+        angular.element('#ja-initial-loader-background').hide();
+        angular.element('#ja-initial-loader').hide();
+        angular.element('#ja-main-site-content').show();
+        angular.element('#ja-sidebar-menu').show();
+
+        dynamicResourceLoader('icon-js-feeder.js');
 
         if ($window.location.hash.indexOf('#/answer') !== 0) {
             $state.go(localStorage.startState || 'home.find');
@@ -41,6 +44,10 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService',
 
         $rootScope.$on('$stateChangeSuccess',
             function(event, toState, toParams, fromState, fromParams) {
+
+                dynamicResourceLoader(toState.data && toState.data.dependencies, true, function() {
+                    //TODO: $state.reload();
+                });
 
                 $window.scrollTo(0, 0);
 

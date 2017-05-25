@@ -18,79 +18,33 @@
 
     <!-- CSS files will be loaded dynamically -->
     <!--<link rel="stylesheet" type="text/css" href="/dist/lib.min.css">-->
-    <!--<link rel="stylesheet" type="text/css" href="/dist/app.min.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="/dist/app__APP_SOURCES_MINIFIED_INDICATOR__.css">-->
 </head>
 
 <body>
 
     <!-- import:./app/view/layout.html -->
 
-    <!-- import:./app/view/partials.html -->
+    <!-- import:./app/view/resource-loader.html -->
 
     <script>
-        var resourceLoader = (function() {
-            var loading = [],
-                loaded = [],
-                callbacks = {};
-
-            return {
-                js: load.bind(null, 'js'),
-                css: load.bind(null, 'css')
-            };
-
-            function load(type, url, callback) {
-                var hasCallback = typeof callback === 'function';
-                if (loaded.indexOf(url) >= 0)
-                    hasCallback && setTimeout(callback);
-                else if (loading.indexOf(url) >= 0)
-                    hasCallback && callbacks[url].push(callback);
-                else {
-                    loading.push(url);
-                    callbacks[url] = [];
-                    hasCallback && callbacks[url].push(callback);
-                    var element, calledBack = false;
-                    if (type === 'js') {
-                        element = document.createElement('script');
-                        element.setAttribute("type", "text/javascript");
-                        element.setAttribute("src", url);
-                        element.onload = element.onreadystatechange = elementCallback;
-                        document.getElementsByTagName("body")[0].appendChild(element);
-                    }
-                    else if (type === 'css') {
-                        element = document.createElement("link");
-                        element.setAttribute("rel", "stylesheet");
-                        element.setAttribute("type", "text/css");
-                        element.setAttribute("href", url);
-                        element.onload = elementCallback;
-                        document.getElementsByTagName("head")[0].appendChild(element);
-                    }
-                }
-
-                function elementCallback() {
-                    if (calledBack) return;
-                    calledBack = true;
-                    loaded.push(url);
-                    callbacks[url].forEach(function(cb) {
-                        cb();
-                    });
-                    delete callbacks[url];
-                }
-            }
-        })();
+        /*global resourceLoader*/
 
         // Load CSS files dynamically
-        resourceLoader.css('/dist/lib.min.css');
-        resourceLoader.css('/dist/app.css');
+        resourceLoader('/dist/lib.min.css');
+        resourceLoader('/dist/app__APP_SOURCES_MINIFIED_INDICATOR__.css');
 
         // Do NOT load JS files dynamically
-        // resourceLoader.js('/dist/lib.min.js');
-        // resourceLoader.js('/dist/app.min.js');
+        // resourceLoader('/dist/lib.min.js');
+        // resourceLoader('/dist/app__APP_SOURCES_MINIFIED_INDICATOR__.js');
     </script>
 
     <!-- JS files will NOT be loaded dynamically -->
     <script type="text/javascript" src="/dist/lib.min.js"></script>
-    <script type="text/javascript" src="/dist/app.js"></script>
+    <script type="text/javascript" src="/dist/app__APP_SOURCES_MINIFIED_INDICATOR__.js"></script>
     <script type="text/javascript" src="/config"></script>
+
+    <!-- import:./app/view/partials.html -->
 
 </body>
 

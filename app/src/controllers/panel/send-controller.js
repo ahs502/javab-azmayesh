@@ -1,5 +1,5 @@
 /*global app*/
-/*global $*/
+/*global angular*/
 /*global ValidationSystem*/
 /*global iconJs*/
 
@@ -212,7 +212,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             xhr.upload.onprogress = function(e) {
                 if (e.lengthComputable) {
                     file.progress = Math.floor((e.loaded / e.total) * 100);
-                    $('#progress-' + file.id).progress({
+                    angular.element('#progress-' + file.id).progress({
                         percent: file.progress
                     });
                     $scope.$$phase || $scope.$apply();
@@ -241,7 +241,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
             file.status = 'Uploading';
             file.progress = 0;
-            $('#progress-' + file.id).progress({
+            angular.element('#progress-' + file.id).progress({
                 percent: file.progress
             });
             $scope.$$phase || $scope.$apply();

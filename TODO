@@ -1,10 +1,13 @@
 
-    *   Next round:
-        3-  Load IconJs asynchronously
-        4-  Define js & css dependencies for each state whithin its state configuration and
-            try to load them asynchronously during state transition event handlers in app.run method.
+    *   Do something instead of $state.reload() in state management events in app.run() .
     
-    ============================================================================
+    *   Add a 'nothing found' message in panel.history page for when nothing has been found.
+    
+    *   Make 'about us' and 'contact us' pages.
+    
+    ==========================================================================================
+
+    *   DEBUG:  pdf files are being loaded several times during answer.post page initializing.
 
     *   Try to reduce the number of involved d3 module files in app/src/libraries folder.
 

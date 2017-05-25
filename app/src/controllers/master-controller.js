@@ -1,5 +1,5 @@
 /*global app*/
-/*global $*/
+/*global angular*/
 
 app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window',
     function($scope, $rootScope, $q, $window) {
@@ -41,7 +41,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window',
         }
 
         function toggleMenu() {
-            $('#ja-sidebar-menu')
+            angular.element('#ja-sidebar-menu')
                 .sidebar('setting', 'transition', 'overlay')
                 .sidebar('setting', 'mobileTransition', 'overlay')
                 .sidebar('toggle');
@@ -54,7 +54,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window',
                 ok: ok || 'تأیید'
             };
             var defer = $q.defer();
-            $('#ja-informer-modal')
+            angular.element('#ja-informer-modal')
                 .modal({
                     onHide: function() {
                         defer.resolve();

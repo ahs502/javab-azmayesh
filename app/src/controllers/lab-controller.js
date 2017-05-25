@@ -1,5 +1,4 @@
 /*global app*/
-/*global $*/
 
 app.controller('LabController', ['$scope', '$state',
     function($scope, $state) {
