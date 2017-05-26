@@ -1,9 +1,9 @@
 
-    *   Do something instead of $state.reload() in state management events in app.run() .
-    
-    *   Add a 'nothing found' message in panel.history page for when nothing has been found.
-    
     *   Make 'about us' and 'contact us' pages.
+    
+    *   Implement panel.balance page.
+    
+    *   Mahan's work.
     
     ==========================================================================================
 

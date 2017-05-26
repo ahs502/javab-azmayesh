@@ -45,9 +45,10 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService', 'Dyna
         $rootScope.$on('$stateChangeSuccess',
             function(event, toState, toParams, fromState, fromParams) {
 
-                dynamicResourceLoader(toState.data && toState.data.dependencies, true, function() {
-                    //TODO: $state.reload();
-                });
+                var numberOfToBeLoadedResources =
+                    dynamicResourceLoader(toState.data && toState.data.dependencies, true, function() {
+                        numberOfToBeLoadedResources && $state.reload();
+                    });
 
                 $window.scrollTo(0, 0);
 

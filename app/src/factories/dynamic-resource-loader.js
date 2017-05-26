@@ -32,8 +32,8 @@ app.factory('DynamicResourceLoader', ['$timeout',
                 });
             }
 
-            if (!hasUrls) return wrappedCallback();
-            resourceLoader(urls, wrappedCallback);
+            if (!hasUrls) return (wrappedCallback(), 0);
+            return resourceLoader(urls, wrappedCallback);
         }
 
     }

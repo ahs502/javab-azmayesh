@@ -203,19 +203,23 @@
                 return resourceLoader.js(url, callback);
             }
             else if (url && Array.isArray(url)) {
-                var numberOfLoadedUrls = 0;
+                var numberOfDoneLoadingUrls = 0,
+                    numberOfToBeLoadedUrls = 0;
                 url.forEach(function(u) {
-                    resourceLoader(u, function() {
-                        numberOfLoadedUrls++;
-                        if (numberOfLoadedUrls === url.length && typeof callback === 'function') callback();
+                    numberOfToBeLoadedUrls += resourceLoader(u, function() {
+                        numberOfDoneLoadingUrls++;
+                        if (numberOfDoneLoadingUrls === url.length && typeof callback === 'function') callback();
                     });
                 });
+                return numberOfToBeLoadedUrls;
             }
+            return 0;
         }
 
         function load(type, url, callback) {
-            var hasCallback = typeof callback === 'function';
-            if (loaded.indexOf(url) >= 0)
+            var hasCallback = typeof callback === 'function',
+                hasUrl = loaded.indexOf(url) >= 0;
+            if (hasUrl)
                 hasCallback && setTimeout(callback);
             else if (loading.indexOf(url) >= 0)
                 hasCallback && callbacks[url].push(callback);
@@ -240,6 +244,7 @@
                     document.getElementsByTagName("head")[0].appendChild(element);
                 }
             }
+            return hasUrl ? 0 : 1;
 
             function elementCallback() {
                 if (calledBack) return;
@@ -1522,7 +1527,7 @@
 
                 <table class="ja-panel-history-table">
                     <tbody>
-                        <tr ng-repeat="post in posts | filter: { nationalCode: nationalCode } | limitTo: maxCount track by $index" ng-click="postClicked(post)">
+                        <tr ng-repeat="post in posts | filter: { nationalCode: nationalCode } | limitTo: maxCount as filteredPosts track by $index" ng-click="postClicked(post)">
                             <td>{{ post.postCode | toPersianNumber }}</td>
                             <td>
                                 <span ng-if="post.filesCount">فایل</span>
@@ -1543,6 +1548,10 @@
             <br/>
             <p class="nazanin ja-rtl ja-align-right">پُست های بیشتری هم وجود دارند...</p>
             <p class="nazanin ja-rtl ja-align-right">برای مشاهده همه آن ها لطفاً جستجوی خود را محدودتر کنید.</p>
+        </div>
+
+        <div ng-hide="filteredPosts.length">
+            <p class="nazanin ja-rtl ja-align-right">موردی یافت نشد.</p>
         </div>
 
     </div>
