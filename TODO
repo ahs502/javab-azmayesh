@@ -1,11 +1,13 @@
 
-    *   Make 'about us' and 'contact us' pages.
+    *   Make 'about us' page.
     
     *   Implement panel.balance page.
     
     *   Mahan's work.
     
     ==========================================================================================
+
+    *   Place some graphics to the site.
 
     *   DEBUG:  pdf files are being loaded several times during answer.post page initializing.
 
@@ -17,8 +19,6 @@
     
     *   Let the patient download توضیحات as an text file in answer.download page.
 
-    *   SMS redirector.
-    
     *   Complete 'About us' and 'Contact us' pages.
     
     *   User balance management: see, charge, ...
@@ -80,12 +80,13 @@
 
 ---- SMS
 -------- Send a dummy SMS
--------- List all destination phone numbers
+-------- List all used phone numbers
 -------- NikSMS left balance
 -------- Not delivered SMSs
 ---- Laboratory
 -------- See all labs
 -------- Search
+-------- New sign up requests
 -------- Block/Unblock
 -------- Edit
 -------- Remove
@@ -96,6 +97,7 @@
 -------- Remove
 ---- Admin
 -------- Website statistics
+-------- Feedbacks from 'Contact Us'
 
 
 

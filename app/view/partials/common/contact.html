@@ -1,7 +1,107 @@
 <div id="ja-common-contact">
 
     <div class="ui justified text container">
-        contact us
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">نام شرکت</span>
+        </div>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            شرکت
+            <strong>
+                آرتا ایده پرداز آرتین
+                <small>
+                    (سهامی خاص)
+                </small>
+            </strong>
+        </p>
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">تلفن تماس</span>
+        </div>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            ثابت:
+            <bdi><strong ng-bind="'021-66910430' | toPersianNumber"></strong></bdi>
+            <small>
+                (سه شنبه و چهار شنبه، بین ساعت
+                <bdi><strong ng-bind="'11:00' | toPersianNumber"></strong></bdi> تا
+                <bdi><strong ng-bind="'14:00' | toPersianNumber"></strong></bdi>)
+            </small>
+        </p>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            همراه:
+            <bdi><strong ng-bind="'09126550720' | toPersianNumber"></strong></bdi>
+            <small>
+                (از شنبه تا چهارشنبه، بین ساعت
+                <bdi><strong ng-bind="'11:00' | toPersianNumber"></strong></bdi> تا
+                <bdi><strong ng-bind="'14:00' | toPersianNumber"></strong></bdi>)
+            </small>
+        </p>
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">آدرس شرکت</span>
+        </div>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            آدرس:&nbsp;
+            <em>
+                تهران، خیابان آزادی، خیابان شهید زارع، خیابان شهید کلهر، پلاک 104، واحد 1
+            </em>
+        </p>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            کد پُستی:
+            <bdi><strong ng-bind="'13117-55811' | toPersianNumber"></strong></bdi>
+        </p>
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">پُست الکترونیکی</span>
+        </div>
+
+        <p class="nazanin ja-ltr ja-align-left">
+            <bdi><strong>ahs502@gmail.com</strong></bdi>
+        </p>
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">ارسال نظرات، پیشنهادات و انتقادات</span>
+        </div>
+
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ sendingFeedback ? 'loading' : '' }} form">
+
+                    <div class="field" ng-class="{'error': vs.error('email')}">
+                        <label class="nazanin ja-required">آدرس پست الکترونیک </label>
+                        <div class="ui input">
+                            <input type="email" ng-model="email" ng-change="vs.check('email')" class="ja-align-left" placeholder="your@email.com">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('email')" ng-bind="vs.error('email')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('message')}">
+                        <label class="nazanin ja-required">متن پیغام</label>
+                        <div class="ui input">
+                            <textarea class="nazanin ja-rtl" ng-model="message" ng-change="vs.check('message')" rows=6 maxlength=10000 placeholder=""></textarea>
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('message')" ng-bind="vs.error('message')"></div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="sendFeedback()">
+                            <span class="nazanin">ارسال</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
     </div>
 
 </div>

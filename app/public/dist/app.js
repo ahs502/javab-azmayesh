@@ -1389,6 +1389,38 @@ app.service('HistoryService', ['$http', 'Utils',
 
 
 /*
+	AHS502 : Start of 'master-service.js'
+*/
+
+/*global app*/
+
+app.service('MasterService', ['$q', '$http', '$window', 'Utils',
+    function($q, $http, $window, utils) {
+
+        this.sendFeedback = sendFeedback;
+
+        /////////////////////////////////////////////////////
+
+        // May reject by code : 1, 2, 80
+        function sendFeedback(email, message, invalidModelHandler) {
+            return utils.httpPromiseHandler($http.post('/master/send/feedback', {
+                email:email,
+                message:message
+            }), function(data) {
+                if (invalidModelHandler)
+                    invalidModelHandler(data.errors || {});
+            });
+        }
+
+    }
+]);
+
+/*
+	AHS502 : End of 'master-service.js'
+*/
+
+
+/*
 	AHS502 : Start of 'post-serveice.js'
 */
 
@@ -1675,15 +1707,50 @@ app.controller('CommonAboutController', ['$scope', '$state', '$stateParams',
 */
 
 /*global app*/
+/*global ValidationSystem*/
 
-app.controller('CommonContactController', ['$scope', '$state', '$stateParams',
-    function($scope, $state, $stateParams) {
+app.controller('CommonContactController', ['$scope', '$state', '$stateParams', 'MasterService',
+    function($scope, $state, $stateParams, masterService) {
+
+        $scope.sendFeedback = sendFeedback;
+
+        $scope.sendingFeedback = false;
 
         $scope.previousState = $stateParams.previousState;
 
         $scope.setBackHandler(function() {
             $state.go($scope.previousState);
         });
+
+        //$scope.email
+        //$scope.message
+
+        $scope.vs = new ValidationSystem($scope)
+            .field('email', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.email()
+            ])
+            .field('message', [
+                ValidationSystem.validators.notEmpty()
+            ]);
+
+        function sendFeedback() {
+            if (!$scope.vs.validate()) return;
+
+            $scope.sendingFeedback = true;
+            masterService.sendFeedback($scope.email, $scope.message, $scope.vs.dictate)
+                .then(function() {
+                    $scope.sendingFeedback = false;
+                    $scope.showMessage('ارسال موفقیت آمیز پیام',
+                            'از همکاری شما صمیمانه متشکریم.\nپیام شما با موفقیت در سامانه ثبت گردید.\nاین پیام در اسرع وقت مورد بررسی قرار خواهد گرفت.')
+                        .then(function() {
+                            delete $scope.message;
+                        });
+                }, function(code) {
+                    $scope.sendingFeedback = false;
+                    alert(code);
+                });
+        }
 
     }
 ]);
@@ -2613,7 +2680,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             answerService.send($scope.person, $scope.files, $scope.notes, $scope.vs.dictate)
                 .then(function() {
                     $scope.sendingAnswer = false;
-                    $scope.showMessage('ازسال موفقیت آمیز نتایج آزمایش',
+                    $scope.showMessage('ارسال موفقیت آمیز نتایج آزمایش',
                             'نتایج آزمایش ثبت شده و اطلاع رسانی لازم به بیمار صورت خواهد گرفت.')
                         .then(function() {
                             $state.go('panel.home');

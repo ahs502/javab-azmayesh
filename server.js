@@ -47,6 +47,7 @@ app.enable('trust proxy');
 // serving routes
 app.use('/', require('./routes/index'));
 app.use('/user', require('./routes/user'));
+app.use('/master', require('./routes/master'));
 app.use('/answer', require('./routes/answer'));
 app.use('/history', require('./routes/history'));
 app.use('/post', require('./routes/post'));
