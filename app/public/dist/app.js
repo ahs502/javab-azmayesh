@@ -1263,7 +1263,7 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 50, 80, 100, 101, 120
+        // May reject by code : 1, 2, 5, 50, 80, 100, 101, 120, 130
         function send(person, files, notes, invalidPersonHandler) {
             return utils.httpPromiseHandler($http.post('/answer/send', {
                 timeStamp: Date.now(),
@@ -1297,6 +1297,38 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
 
 /*
 	AHS502 : End of 'answer-service.js'
+*/
+
+
+/*
+	AHS502 : Start of 'balance-service.js'
+*/
+
+/*global app*/
+
+app.service('BalanceService', ['$q', '$http', '$window', 'Utils',
+    function($q, $http, $window, utils) {
+
+        this.submitC2cReceiptCode = submitC2cReceiptCode;
+
+        /////////////////////////////////////////////////////
+
+        // May reject by code : 1, 2, 5, 80, 100, 101
+        function submitC2cReceiptCode(c2cReceiptCode, invalidModelHandler) {
+            return utils.httpPromiseHandler($http.post('/balance/submit/c2cReceiptCode', {
+                c2cReceiptCode: c2cReceiptCode
+            }), function(data) {
+                if (invalidModelHandler)
+                    invalidModelHandler(data.errors || {});
+            });
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'balance-service.js'
 */
 
 
@@ -2256,14 +2288,15 @@ app.controller('PanelAccountController', ['$scope', '$rootScope', '$state', '$st
 
 /*global app*/
 /*global toPersianNumber*/
+/*global ValidationSystem*/
 
-app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'Config', 'BalanceService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, config, balanceService) {
 
         $scope.c2cPayment = c2cPayment;
         $scope.zpPayment = zpPayment;
 
-        $scope.balance = 125000;
+        $scope.balance = $rootScope.data.labData.balance || 0;
         $scope.preparingPayment = false;
 
         $scope.setBackHandler(function() {
@@ -2275,10 +2308,21 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
         //$scope.c2cReceiptCode
         //$scope.zpChargeAmount
 
-        $scope.testCount = Math.floor($scope.balance / 1000);
+        $scope.vs = new ValidationSystem($scope)
+            .field('c2cReceiptCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(4),
+                ValidationSystem.validators.integer()
+            ])
+            .field('zpChargeAmount', [
+                //ValidationSystem.validators.notEmpty(),
+                //ValidationSystem.validators.minLength(3)
+            ]);
+
+        $scope.testCount = Math.floor($scope.balance / config.post_price);
 
         $scope.balanceForDisplay = toPersianNumber($scope.balance);
-        $scope.testCountForDisplay = $scope.testCount >= 0 ?
+        $scope.testCountForDisplay = $scope.testCount > 0 ?
             toPersianNumber($scope.testCount) : '–';
 
         if ($scope.testCount >= 200)
@@ -2293,16 +2337,21 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
             $scope.balanceColor = 'red';
 
         function c2cPayment() {
-            //TODO: check for validity
+            if (!$scope.vs.validate('c2cReceiptCode')) return;
+
             $scope.preparingPayment = true;
-            $timeout(function() {
-                $scope.preparingPayment = false;
-                $scope.showMessage('درخواست شما ثبت شد',
-                        'درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد')
-                    .then(function() {
-                        $state.go('panel.home');
-                    });
-            }, 400);
+            balanceService.submitC2cReceiptCode($scope.c2cReceiptCode, $scope.vs.dictate)
+                .then(function() {
+                    $scope.preparingPayment = false;
+                    $scope.showMessage('درخواست شما ثبت شد',
+                            'درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد')
+                        .then(function() {
+                            $state.go('panel.home');
+                        });
+                }, function(code) {
+                    $scope.preparingPayment = false;
+                    alert(code);
+                });
         }
 
         function zpPayment() {
@@ -2678,6 +2727,9 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
             $scope.sendingAnswer = true;
             answerService.send($scope.person, $scope.files, $scope.notes, $scope.vs.dictate)
+                .then(function() {
+                    return $scope.refreshUserData();
+                })
                 .then(function() {
                     $scope.sendingAnswer = false;
                     $scope.showMessage('ارسال موفقیت آمیز نتایج آزمایش',
@@ -3195,7 +3247,7 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                 clipboard = undefined;
                 $scope.sharedUrl = url;
                 $scope.sharingViaSms = 'sms:;?&' + simpleQueryString.stringify({
-                    body: 'سلام!\n' + $scope.answer.patientName + ' می خواهد نتایج آزمایش خود را با شما به اشتراک بگذارد:\n\n' + url
+                    body: 'سلام!\n' + 'نتایج آزمایش ' + $scope.answer.patientNam + 'در لینک زیر:\n\n' + url
                 });
                 $scope.sharingViaEmail = 'mailto:?&' + simpleQueryString.stringify({
                     body: 'سلام!\n' + $scope.answer.patientName + ' می خواهد نتایج آزمایش خود را با شما به اشتراک بگذارد:\n\n' + url,

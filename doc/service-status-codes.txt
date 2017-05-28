@@ -32,6 +32,9 @@
     
     120 : Exceeded SMS count number
     
+    130 : User out of charge
+    
+    
     
     
 

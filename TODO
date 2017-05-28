@@ -1,15 +1,13 @@
 
-    *   Make 'about us' page.
-    
     *   Implement panel.balance page.
     
-    *   Mahan's work.
+    *   Fill 'about us' page.
     
-    ==========================================================================================
-
     *   Place some graphics to the site.
 
-    *   DEBUG:  pdf files are being loaded several times during answer.post page initializing.
+    *   Do something about site administration.
+    
+    *   DEBUG: pdf files are being loaded several times during answer.post page initializing.
 
     *   Try to reduce the number of involved d3 module files in app/src/libraries folder.
 
@@ -19,24 +17,15 @@
     
     *   Let the patient download توضیحات as an text file in answer.download page.
 
-    *   Complete 'About us' and 'Contact us' pages.
-    
-    *   User balance management: see, charge, ...
-
     *   Implement a status code decoder angular service.
     
     *   Improve Panel.Home page, so the user can see almost everything by the first look.
     
-    *   Add icons everywhere!
-        Make icon-js loads its icons asynchroneusly.
-        
-    *   'gulp build' does not work fine.
+    *   DEBUG: 'gulp build' does not work fine.
     
     *   Do not allow to send an answer before all files have been uploaded or errored.
     
     *   Empower users to do all kind of staff (delete, edit, re-send, ...) to their posts.
-    
-    *   Do something about site administration.
     
     *   Restrict lab users in any environment other than live to send SMS to any arbitrary patient.
     
@@ -88,9 +77,10 @@
 -------- Search
 -------- New sign up requests
 -------- Block/Unblock
+-------- Restrict/Unrestrict
 -------- Edit
 -------- Remove
--------- Recharge balance
+-------- Charge balance
 ---- Patient
 -------- Search
 -------- Edit
@@ -98,6 +88,7 @@
 ---- Admin
 -------- Website statistics
 -------- Feedbacks from 'Contact Us'
+-------- C2C receipts & user charge
 
 
 

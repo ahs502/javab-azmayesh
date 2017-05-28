@@ -1,13 +1,14 @@
 /*global app*/
 /*global toPersianNumber*/
+/*global ValidationSystem*/
 
-app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout',
-    function($scope, $rootScope, $state, $stateParams, $timeout) {
+app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'Config', 'BalanceService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, config, balanceService) {
 
         $scope.c2cPayment = c2cPayment;
         $scope.zpPayment = zpPayment;
 
-        $scope.balance = 125000;
+        $scope.balance = $rootScope.data.labData.balance || 0;
         $scope.preparingPayment = false;
 
         $scope.setBackHandler(function() {
@@ -19,10 +20,21 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
         //$scope.c2cReceiptCode
         //$scope.zpChargeAmount
 
-        $scope.testCount = Math.floor($scope.balance / 1000);
+        $scope.vs = new ValidationSystem($scope)
+            .field('c2cReceiptCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(4),
+                ValidationSystem.validators.integer()
+            ])
+            .field('zpChargeAmount', [
+                //ValidationSystem.validators.notEmpty(),
+                //ValidationSystem.validators.minLength(3)
+            ]);
+
+        $scope.testCount = Math.floor($scope.balance / config.post_price);
 
         $scope.balanceForDisplay = toPersianNumber($scope.balance);
-        $scope.testCountForDisplay = $scope.testCount >= 0 ?
+        $scope.testCountForDisplay = $scope.testCount > 0 ?
             toPersianNumber($scope.testCount) : '–';
 
         if ($scope.testCount >= 200)
@@ -37,16 +49,21 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
             $scope.balanceColor = 'red';
 
         function c2cPayment() {
-            //TODO: check for validity
+            if (!$scope.vs.validate('c2cReceiptCode')) return;
+
             $scope.preparingPayment = true;
-            $timeout(function() {
-                $scope.preparingPayment = false;
-                $scope.showMessage('درخواست شما ثبت شد',
-                        'درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد')
-                    .then(function() {
-                        $state.go('panel.home');
-                    });
-            }, 400);
+            balanceService.submitC2cReceiptCode($scope.c2cReceiptCode, $scope.vs.dictate)
+                .then(function() {
+                    $scope.preparingPayment = false;
+                    $scope.showMessage('درخواست شما ثبت شد',
+                            'درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد')
+                        .then(function() {
+                            $state.go('panel.home');
+                        });
+                }, function(code) {
+                    $scope.preparingPayment = false;
+                    alert(code);
+                });
         }
 
         function zpPayment() {

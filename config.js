@@ -35,11 +35,14 @@ var config = {
     /*-------------------------------------*/
     minified_app_sources: /*---------------*/ false,
     /*-------------------------------------*/
+    post_price: /*-------------------------*/ 1000, // Tomans
+    /*-------------------------------------*/
 
     client_config: [
         'env',
         'google_recaptcha',
         'google_recaptcha_public_key',
+        'post_price',
     ]
 
 };

@@ -1852,7 +1852,7 @@
 
                 <div class="ui left floated {{balanceColor}} tiny statistic">
                     <div class="label">
-                        <span class="nazanin">معادل</span>
+                        <span class="nazanin">معادل ارسال</span>
                     </div>
                     <div class="value">
                         <span class="nazanin" ng-bind="testCountForDisplay"></span>
@@ -1887,12 +1887,14 @@
                         <bdi>به نام: <strong>حسام الدین امین شکروی</strong></bdi>
                     </p>
 
-                    <div class="field">
+                    <div class="field" ng-class="{'error': vs.error('c2cReceiptCode')}">
                         <label class="nazanin">کد پیگیری پرداخت</label>
                         <div class="ui input">
-                            <input type="text" ng-model="c2cReceiptCode" placeholder="123456">
+                            <input type="text" ng-model="c2cReceiptCode" ng-change="vs.check('c2cReceiptCode'); loadPatientInfo()" class="ja-align-left" placeholder="123456">
                         </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('c2cReceiptCode')" ng-bind="vs.error('c2cReceiptCode')"></div>
                     </div>
+                    
                     <div class="field">
                         <button class="fluid ui --basic blue button" ng-click="c2cPayment()">
                             <span class="nazanin">ثبت تراکنش</span>
@@ -1913,11 +1915,13 @@
                             <input type="text" ng-model="zpChargeAmount" placeholder="مبلغ شارژ به تومان">
                         </div>
                     </div>
+                    
                     <div class="field">
                         <button class="disabled fluid ui --basic blue button" ng-click="zpPayment()">
                             <span class="nazanin">ورود به درگاه پرداخت</span>
                         </button>
                     </div>
+                    
                 </form>
 
             </div>

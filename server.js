@@ -51,6 +51,7 @@ app.use('/master', require('./routes/master'));
 app.use('/answer', require('./routes/answer'));
 app.use('/history', require('./routes/history'));
 app.use('/post', require('./routes/post'));
+app.use('/balance', require('./routes/balance'));
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 

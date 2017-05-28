@@ -116,6 +116,9 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             $scope.sendingAnswer = true;
             answerService.send($scope.person, $scope.files, $scope.notes, $scope.vs.dictate)
                 .then(function() {
+                    return $scope.refreshUserData();
+                })
+                .then(function() {
                     $scope.sendingAnswer = false;
                     $scope.showMessage('ارسال موفقیت آمیز نتایج آزمایش',
                             'نتایج آزمایش ثبت شده و اطلاع رسانی لازم به بیمار صورت خواهد گرفت.')

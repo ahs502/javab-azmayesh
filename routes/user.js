@@ -179,6 +179,7 @@ router.post('/register/confirm', function(req, res, next) {
                 return utils.resEndByCode(res, 32);
             }
             data.user.id = userId;
+            data.user.balance = 0;
             data.user.timeStamp = Date.now();
 
             //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
@@ -300,6 +301,7 @@ router.post('/edit/:action', function(req, res, next) {
             newUser.phoneNumber = String(newUser.phoneNumber).toPhoneNumber();
             newUser.username = user.username.toLowerCase();
             newUser.password = user.password;
+            newUser.balance = user.balance;
             newUser.timeStamp = user.timeStamp;
         }
         else if (action === 'password') {
@@ -422,6 +424,7 @@ function getUserInfo(user) {
         address: user.address,
         postalCode: user.postalCode,
         websiteAddress: user.websiteAddress,
+        balance: user.balance,
         timeStamp: user.timeStamp,
     };
 }
