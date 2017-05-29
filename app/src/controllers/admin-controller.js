@@ -21,6 +21,15 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
             goToMainPage: function() {
                 $state.go('admin.home');
             },
+            goToLaboratoryPage: function() {
+                $state.go('admin.laboratory');
+            },
+            goToPetientPage: function() {
+                $state.go('admin.petient');
+            },
+            goToSmsPage: function() {
+                $state.go('admin.sms');
+            },
             logout: function() {
                 setLoading(true);
                 return userService.logout().then(function() {
@@ -29,6 +38,8 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
                 });
             }
         });
+
+        $scope.setBackHandler($scope.menuHandlers.logout);
 
         var headerHandlers = {
             pageTitle: ''

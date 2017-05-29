@@ -332,7 +332,28 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('admin.home', {
                 url: '/home',
                 templateUrl: 'admin/home.html',
-                controller: 'AdminHomeController'
+                controller: 'AdminHomeController',
+                data: {
+                    dependencies: [
+                        'dygraph.min.js',
+                        'dygraph.min.css'
+                    ]
+                }
+            })
+            .state('admin.laboratory', {
+                url: '/laboratory',
+                templateUrl: 'admin/laboratory.html',
+                controller: 'AdminLaboratoryController'
+            })
+            .state('admin.petient', {
+                url: '/petient',
+                templateUrl: 'admin/petient.html',
+                controller: 'AdminPetientController'
+            })
+            .state('admin.sms', {
+                url: '/sms',
+                templateUrl: 'admin/sms.html',
+                controller: 'AdminSmsController'
             });
 
         $urlRouterProvider.otherwise('/home/find');

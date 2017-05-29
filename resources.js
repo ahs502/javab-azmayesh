@@ -74,6 +74,9 @@ module.exports = {
 
         "./app/lib/pdfjs-dist/build/pdf.min.js",
         "./app/lib/pdfjs-dist/build/pdf.worker.min.js",
+        
+        "./app/lib/dygraphs/dist/dygraph.min.js",
+        "./app/lib/dygraphs/dist/dygraph.min.css",
 
         "./app/lib/semantic/dist/components/checkbox.min.js",
         "./app/lib/semantic/dist/components/checkbox.rtl.min.css",

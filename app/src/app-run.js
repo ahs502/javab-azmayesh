@@ -2,8 +2,8 @@
 /*global angular*/
 /*global localStorage*/
 
-app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService', 'DynamicResourceLoader',
-    function($rootScope, $state, $stateParams, $window, userService, dynamicResourceLoader) {
+app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'UserService', 'DynamicResourceLoader',
+    function($rootScope, $state, $stateParams, $window, $timeout, userService, dynamicResourceLoader) {
 
         // No need to initial loader anymore
         angular.element('#ja-initial-loader-background').hide();
@@ -11,7 +11,9 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService', 'Dyna
         angular.element('#ja-main-site-content').show();
         angular.element('#ja-sidebar-menu').show();
 
-        dynamicResourceLoader('icon-js-feeder.js');
+        dynamicResourceLoader('icon-js-feeder.js', function() {
+            $timeout();
+        });
 
         if ($window.location.hash.indexOf('#/answer') !== 0) {
             $state.go(localStorage.startState || 'home.find');
@@ -35,7 +37,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService', 'Dyna
                 else {
                     delete $rootScope.data.postCache;
                     delete $rootScope.data.historyState;
-                    
+
                     if (toState.name.indexOf('admin.') === 0) {
                         if (!userService.current()) {
                             event.preventDefault();

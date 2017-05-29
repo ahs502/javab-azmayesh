@@ -3,6 +3,21 @@
     <img class="ja-menu-item-icon" ng-src="{{iconJs('home')}}">
 </a>
 
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLaboratoryPage(); toggleMenu()">
+    آزمایشگاه ها
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToPetientPage(); toggleMenu()">
+    بیمارها
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('patient')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToSmsPage(); toggleMenu()">
+    پیامک ها
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('sms')}}">
+</a>
+
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.logout(); toggleMenu()">
     خروج از سامانه
     <img class="ja-menu-item-icon" ng-src="{{iconJs('logout')}}">

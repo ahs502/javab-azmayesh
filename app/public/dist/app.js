@@ -1065,7 +1065,28 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('admin.home', {
                 url: '/home',
                 templateUrl: 'admin/home.html',
-                controller: 'AdminHomeController'
+                controller: 'AdminHomeController',
+                data: {
+                    dependencies: [
+                        'dygraph.min.js',
+                        'dygraph.min.css'
+                    ]
+                }
+            })
+            .state('admin.laboratory', {
+                url: '/laboratory',
+                templateUrl: 'admin/laboratory.html',
+                controller: 'AdminLaboratoryController'
+            })
+            .state('admin.petient', {
+                url: '/petient',
+                templateUrl: 'admin/petient.html',
+                controller: 'AdminPetientController'
+            })
+            .state('admin.sms', {
+                url: '/sms',
+                templateUrl: 'admin/sms.html',
+                controller: 'AdminSmsController'
             });
 
         $urlRouterProvider.otherwise('/home/find');
@@ -1091,8 +1112,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
 /*global angular*/
 /*global localStorage*/
 
-app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService', 'DynamicResourceLoader',
-    function($rootScope, $state, $stateParams, $window, userService, dynamicResourceLoader) {
+app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'UserService', 'DynamicResourceLoader',
+    function($rootScope, $state, $stateParams, $window, $timeout, userService, dynamicResourceLoader) {
 
         // No need to initial loader anymore
         angular.element('#ja-initial-loader-background').hide();
@@ -1100,7 +1121,9 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService', 'Dyna
         angular.element('#ja-main-site-content').show();
         angular.element('#ja-sidebar-menu').show();
 
-        dynamicResourceLoader('icon-js-feeder.js');
+        dynamicResourceLoader('icon-js-feeder.js', function() {
+            $timeout();
+        });
 
         if ($window.location.hash.indexOf('#/answer') !== 0) {
             $state.go(localStorage.startState || 'home.find');
@@ -1124,7 +1147,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService', 'Dyna
                 else {
                     delete $rootScope.data.postCache;
                     delete $rootScope.data.historyState;
-                    
+
                     if (toState.name.indexOf('admin.') === 0) {
                         if (!userService.current()) {
                             event.preventDefault();
@@ -1751,8 +1774,6 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
 app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$stateParams', 'UserService',
     function($scope, $rootScope, $state, $stateParams, userService) {
 
-        $scope.setBackHandler($scope.menuHandlers.logout);
-
         var userInfo = userService.current();
 
         $scope.setPageTitle((userInfo && userInfo.fullName) || ' ');
@@ -1763,6 +1784,66 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
 
 /*
 	AHS502 : End of 'admin/home-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'admin/laboratory-controller.js'
+*/
+
+/*global app*/
+
+app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state', '$stateParams', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, userService) {
+
+        $scope.setPageTitle('آزمایشگاه ها');
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'admin/laboratory-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'admin/patient-controller.js'
+*/
+
+/*global app*/
+
+app.controller('AdminPetientController', ['$scope', '$rootScope', '$state', '$stateParams', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, userService) {
+
+        $scope.setPageTitle('بیمارها');
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'admin/patient-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'admin/sms-controller.js'
+*/
+
+/*global app*/
+
+app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$stateParams', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, userService) {
+
+        $scope.setPageTitle('پیامک ها');
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'admin/sms-controller.js'
 */
 
 
@@ -3280,6 +3361,15 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
             goToMainPage: function() {
                 $state.go('admin.home');
             },
+            goToLaboratoryPage: function() {
+                $state.go('admin.laboratory');
+            },
+            goToPetientPage: function() {
+                $state.go('admin.petient');
+            },
+            goToSmsPage: function() {
+                $state.go('admin.sms');
+            },
             logout: function() {
                 setLoading(true);
                 return userService.logout().then(function() {
@@ -3288,6 +3378,8 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
                 });
             }
         });
+
+        $scope.setBackHandler($scope.menuHandlers.logout);
 
         var headerHandlers = {
             pageTitle: ''
