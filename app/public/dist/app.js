@@ -1045,6 +1045,29 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 controller: 'PanelAccountConfirmController'
             });
 
+        $stateProvider
+            .state('admin', {
+                url: '/admin',
+                views: {
+                    '': {
+                        templateUrl: 'admin.html',
+                        controller: 'AdminController',
+                    },
+                    menu: {
+                        templateUrl: 'admin/menu.html'
+                    },
+                    header: {
+                        templateUrl: 'admin/header.html'
+                    },
+                },
+                abstract: true
+            })
+            .state('admin.home', {
+                url: '/home',
+                templateUrl: 'admin/home.html',
+                controller: 'AdminHomeController'
+            });
+
         $urlRouterProvider.otherwise('/home/find');
 
         // $locationProvider.html5Mode(true);
@@ -1101,8 +1124,17 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', 'UserService', 'Dyna
                 else {
                     delete $rootScope.data.postCache;
                     delete $rootScope.data.historyState;
-                    if (userService.current()) {
-                        userService.logout();
+                    
+                    if (toState.name.indexOf('admin.') === 0) {
+                        if (!userService.current()) {
+                            event.preventDefault();
+                            $state.go('lab.login');
+                        }
+                    }
+                    else {
+                        if (userService.current()) {
+                            userService.logout();
+                        }
                     }
                 }
 
@@ -1248,7 +1280,7 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 5, 50, 71, 100, 101
+        // May reject by code : 1, 2, 5, 50, 52, 71, 100, 101
         // Resolves to patient personal information
         function patientInfo(nationalCode) {
             return utils.httpPromiseHandler($http.post('/answer/patient/info', {
@@ -1263,7 +1295,7 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 50, 80, 100, 101, 120, 130
+        // May reject by code : 1, 2, 5, 50, 52, 80, 100, 101, 120, 130
         function send(person, files, notes, invalidPersonHandler) {
             return utils.httpPromiseHandler($http.post('/answer/send', {
                 timeStamp: Date.now(),
@@ -1313,7 +1345,7 @@ app.service('BalanceService', ['$q', '$http', '$window', 'Utils',
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 5, 80, 100, 101
+        // May reject by code : 1, 2, 5, 50, 52, 80, 100, 101
         function submitC2cReceiptCode(c2cReceiptCode, invalidModelHandler) {
             return utils.httpPromiseHandler($http.post('/balance/submit/c2cReceiptCode', {
                 c2cReceiptCode: c2cReceiptCode
@@ -1466,7 +1498,7 @@ app.service('PostService', ['$q', '$http', 'Utils',
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 5, 50, 100, 101
+        // May reject by code : 1, 2, 5, 50, 52, 100, 101
         // Resolves to user's posts: { '1396/1': [{...post-data...}, ...], ... }
         function getPosts(year, months) {
             return utils.httpPromiseHandler($http.post('/post/load/all', {
@@ -1495,7 +1527,7 @@ app.service('PostService', ['$q', '$http', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 50, 71, 72, 73, 100, 101
+        // May reject by code : 1, 2, 5, 50, 52, 71, 72, 73, 100, 101
         // Resolves to the answer data
         function getOnePost(nationalCode, postCode) {
             return utils.httpPromiseHandler($http.post('/post/load/one', {
@@ -1576,7 +1608,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }));
         }
 
-        // May reject by code : 1, 2, 3, 5, 50, 51, 80, 100, 101, 120
+        // May reject by code : 1, 2, 3, 5, 50, 51, 52, 80, 100, 101, 120
         function editAccount(newAccount, invalidNewAccountHandler) {
             return utils.httpPromiseHandler($http.post('/user/edit/account', {
                 newAccount: {
@@ -1593,7 +1625,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             });
         }
 
-        // May reject by code : 1, 2, 5, 50, 51, 80, 100, 101, 120
+        // May reject by code : 1, 2, 5, 50, 51, 52, 80, 100, 101, 120
         function editPassword(oldPassword, newPassword, invalidNewPasswordHandler) {
             return utils.httpPromiseHandler($http.post('/user/edit/password', {
                 oldPassword: oldPassword,
@@ -1604,7 +1636,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             });
         }
 
-        // May reject by code : 1, 2, 5, 30, 31, 32, 50, 100, 101
+        // May reject by code : 1, 2, 5, 30, 31, 32, 50, 52, 100, 101
         // Resolves to current user new info
         function editConfirm(username, validationCode) {
             return utils.httpPromiseHandler($http.post('/user/edit/confirm', {
@@ -1707,6 +1739,30 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
 
 /*
 	AHS502 : End of 'user-service.js'
+*/
+
+
+/*
+	AHS502 : Start of 'admin/home-controller.js'
+*/
+
+/*global app*/
+
+app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$stateParams', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, userService) {
+
+        $scope.setBackHandler($scope.menuHandlers.logout);
+
+        var userInfo = userService.current();
+
+        $scope.setPageTitle((userInfo && userInfo.fullName) || ' ');
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'admin/home-controller.js'
 */
 
 
@@ -2054,8 +2110,14 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
             $scope.loggingIn = true;
             return userService.login($scope.username, $scope.password)
                 .then(function(userInfo) {
-                    $rootScope.data.labData = userInfo;
-                    $state.go('panel.home');
+                    if (userInfo.userType === 'laboratory') {
+                        $rootScope.data.labData = userInfo;
+                        $state.go('panel.home');
+                    }
+                    else if (userInfo.userType === 'administrator') {
+                        $rootScope.data.adminData = userInfo;
+                        $state.go('admin.home');
+                    }
                 }, function(code) {
                     //TODO: Handle errors...
                     $scope.loggingIn = false;
@@ -3188,6 +3250,83 @@ app.controller('PanelAccountSummaryController', ['$scope', '$rootScope', '$state
 
 /*
 	AHS502 : End of 'panel/account/summary-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'admin-controller.js'
+*/
+
+/*global app*/
+
+app.controller('AdminController', ['$scope', '$rootScope', '$state', '$stateParams',
+    '$timeout', '$interval', 'UserService',
+    function($scope, $rootScope, $state, $stateParams,
+        $timeout, $interval, userService) {
+
+        $scope.setLoading = setLoading;
+        $scope.setPageTitle = setPageTitle;
+        $scope.refreshUserData = refreshUserDataProvider(false);
+
+        $scope.loading = $scope.loadingMessage = false;
+
+        // Refresh user info every 1 minute
+        var refreshUserDataPromise = $interval(refreshUserDataProvider(true), 60000);
+        $scope.$on('$distroy', function() {
+            $interval.cancel(refreshUserDataPromise);
+        });
+
+        $scope.setMenuHandlers({
+            goToMainPage: function() {
+                $state.go('admin.home');
+            },
+            logout: function() {
+                setLoading(true);
+                return userService.logout().then(function() {
+                    setLoading(false);
+                    $state.go('lab.login');
+                });
+            }
+        });
+
+        var headerHandlers = {
+            pageTitle: ''
+        };
+
+        $scope.setHeaderHandlers(headerHandlers);
+
+        $scope.setFooterHandlers(false);
+
+        function setLoading(loading) {
+            $timeout(function() {
+                $scope.loading = loading;
+                $scope.loadingMessage = false;
+                loading && $timeout(function() {
+                    $scope.loadingMessage = true;
+                }, 1500);
+            });
+        }
+
+        function setPageTitle(title) {
+            headerHandlers.pageTitle = title;
+        }
+
+        function refreshUserDataProvider(silent) {
+            return function() {
+                silent || $scope.setLoading(true);
+                return userService.refresh().then(function(userInfo) {
+                    $rootScope.data.adminData = userInfo;
+                    silent || $scope.setLoading(false);
+                });
+            };
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'admin-controller.js'
 */
 
 

@@ -180,6 +180,7 @@ router.post('/register/confirm', function(req, res, next) {
             }
             data.user.id = userId;
             data.user.balance = 0;
+            data.user.userType = "laboratory";
             data.user.timeStamp = Date.now();
 
             //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
@@ -245,7 +246,7 @@ router.post('/refresh', function(req, res, next) {
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/edit/:action', function(req, res, next) {
-    var userInfo = access.decodeUserInfo(req, res);
+    var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;
     var username = userInfo.username;
     var action = req.params.action;
@@ -302,6 +303,7 @@ router.post('/edit/:action', function(req, res, next) {
             newUser.username = user.username.toLowerCase();
             newUser.password = user.password;
             newUser.balance = user.balance;
+            newUser.userType = user.userType;
             newUser.timeStamp = user.timeStamp;
         }
         else if (action === 'password') {
@@ -350,7 +352,7 @@ router.post('/edit/:action', function(req, res, next) {
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/edit/confirm', function(req, res, next) {
-    var userInfo = access.decodeUserInfo(req, res);
+    var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;
     var username = userInfo.username;
     if (username !== String(req.body.username || '').toLowerCase()) {
@@ -416,15 +418,28 @@ router.post('/restorePassword', function(req, res, next) {
 ////////////////////////////////////////////////////////////////////////////////
 
 function getUserInfo(user) {
-    return {
-        username: user.username,
-        labName: user.labName,
-        mobilePhoneNumber: user.mobilePhoneNumber,
-        phoneNumber: user.phoneNumber,
-        address: user.address,
-        postalCode: user.postalCode,
-        websiteAddress: user.websiteAddress,
-        balance: user.balance,
-        timeStamp: user.timeStamp,
-    };
+    if (user.userType === 'laboratory') {
+        return {
+            userType: user.userType,
+            username: user.username,
+            labName: user.labName,
+            mobilePhoneNumber: user.mobilePhoneNumber,
+            phoneNumber: user.phoneNumber,
+            address: user.address,
+            postalCode: user.postalCode,
+            websiteAddress: user.websiteAddress,
+            balance: user.balance,
+            timeStamp: user.timeStamp,
+        };
+    }
+    else if (user.userType === 'administrator') {
+        return {
+            userType: user.userType,
+            username: user.username,
+            fullName: user.fullName,
+            phoneNumber: user.phoneNumber,
+            accessLevel: user.accessLevel,
+        };
+    }
+    return {};
 }

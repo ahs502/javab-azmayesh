@@ -8,7 +8,7 @@ app.service('PostService', ['$q', '$http', 'Utils',
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 5, 50, 100, 101
+        // May reject by code : 1, 2, 5, 50, 52, 100, 101
         // Resolves to user's posts: { '1396/1': [{...post-data...}, ...], ... }
         function getPosts(year, months) {
             return utils.httpPromiseHandler($http.post('/post/load/all', {
@@ -37,7 +37,7 @@ app.service('PostService', ['$q', '$http', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 50, 71, 72, 73, 100, 101
+        // May reject by code : 1, 2, 5, 50, 52, 71, 72, 73, 100, 101
         // Resolves to the answer data
         function getOnePost(nationalCode, postCode) {
             return utils.httpPromiseHandler($http.post('/post/load/one', {

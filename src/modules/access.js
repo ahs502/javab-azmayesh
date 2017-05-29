@@ -28,7 +28,9 @@ function generateUserAccessKey(user, remoteIp) {
         expiresAt: Date.now() + config.user_access_key_expires_after * 60 * 60 * 1000,
         userInfo: {
             username: user.username,
-            labName: user.labName,
+            userType: user.userType,
+            labName: user.labName, // for laboratory type users only
+            fullName: user.fullName, // for administrator type users only
             //...
         },
         remoteIp
@@ -59,7 +61,7 @@ function decodeUserRequest(req) {
     return decodeUserAccessKey(accessKey, remoteIp);
 }
 
-function decodeUserInfo(req, res) {
+function decodeUserInfo(req, res, expectedUserType) {
     var accessData = decodeUserRequest(req);
     if (accessData.invalid) {
         utils.resEndByCode(res, 100);
@@ -72,6 +74,10 @@ function decodeUserInfo(req, res) {
     var userInfo = accessData.userInfo;
     if (!userInfo) {
         utils.resEndByCode(res, 50);
+        return null;
+    }
+    if (expectedUserType && userInfo.userType !== expectedUserType) {
+        utils.resEndByCode(res, 52);
         return null;
     }
     return userInfo;

@@ -100,7 +100,7 @@ router.get('/file/download', function(req, res, next) {
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/patient/info', function(req, res, next) {
-    var userInfo = access.decodeUserInfo(req, res);
+    var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;
     // var username = userInfo.username;
     var nationalCode = req.body.nationalCode;
@@ -124,7 +124,7 @@ router.post('/patient/info', function(req, res, next) {
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/send', function(req, res, next) {
-    var userInfo = access.decodeUserInfo(req, res);
+    var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;
     var username = userInfo.username;
     var labName = userInfo.labName;

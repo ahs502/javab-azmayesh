@@ -8,7 +8,7 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 5, 50, 71, 100, 101
+        // May reject by code : 1, 2, 5, 50, 52, 71, 100, 101
         // Resolves to patient personal information
         function patientInfo(nationalCode) {
             return utils.httpPromiseHandler($http.post('/answer/patient/info', {
@@ -23,7 +23,7 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 50, 80, 100, 101, 120, 130
+        // May reject by code : 1, 2, 5, 50, 52, 80, 100, 101, 120, 130
         function send(person, files, notes, invalidPersonHandler) {
             return utils.httpPromiseHandler($http.post('/answer/send', {
                 timeStamp: Date.now(),

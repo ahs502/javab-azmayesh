@@ -33,8 +33,14 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
             $scope.loggingIn = true;
             return userService.login($scope.username, $scope.password)
                 .then(function(userInfo) {
-                    $rootScope.data.labData = userInfo;
-                    $state.go('panel.home');
+                    if (userInfo.userType === 'laboratory') {
+                        $rootScope.data.labData = userInfo;
+                        $state.go('panel.home');
+                    }
+                    else if (userInfo.userType === 'administrator') {
+                        $rootScope.data.adminData = userInfo;
+                        $state.go('admin.home');
+                    }
                 }, function(code) {
                     //TODO: Handle errors...
                     $scope.loggingIn = false;

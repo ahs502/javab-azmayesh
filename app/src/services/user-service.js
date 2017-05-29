@@ -46,7 +46,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }));
         }
 
-        // May reject by code : 1, 2, 3, 5, 50, 51, 80, 100, 101, 120
+        // May reject by code : 1, 2, 3, 5, 50, 51, 52, 80, 100, 101, 120
         function editAccount(newAccount, invalidNewAccountHandler) {
             return utils.httpPromiseHandler($http.post('/user/edit/account', {
                 newAccount: {
@@ -63,7 +63,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             });
         }
 
-        // May reject by code : 1, 2, 5, 50, 51, 80, 100, 101, 120
+        // May reject by code : 1, 2, 5, 50, 51, 52, 80, 100, 101, 120
         function editPassword(oldPassword, newPassword, invalidNewPasswordHandler) {
             return utils.httpPromiseHandler($http.post('/user/edit/password', {
                 oldPassword: oldPassword,
@@ -74,7 +74,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             });
         }
 
-        // May reject by code : 1, 2, 5, 30, 31, 32, 50, 100, 101
+        // May reject by code : 1, 2, 5, 30, 31, 32, 50, 52, 100, 101
         // Resolves to current user new info
         function editConfirm(username, validationCode) {
             return utils.httpPromiseHandler($http.post('/user/edit/confirm', {

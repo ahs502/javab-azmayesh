@@ -312,6 +312,29 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 controller: 'PanelAccountConfirmController'
             });
 
+        $stateProvider
+            .state('admin', {
+                url: '/admin',
+                views: {
+                    '': {
+                        templateUrl: 'admin.html',
+                        controller: 'AdminController',
+                    },
+                    menu: {
+                        templateUrl: 'admin/menu.html'
+                    },
+                    header: {
+                        templateUrl: 'admin/header.html'
+                    },
+                },
+                abstract: true
+            })
+            .state('admin.home', {
+                url: '/home',
+                templateUrl: 'admin/home.html',
+                controller: 'AdminHomeController'
+            });
+
         $urlRouterProvider.otherwise('/home/find');
 
         // $locationProvider.html5Mode(true);

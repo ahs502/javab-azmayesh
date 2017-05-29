@@ -13,7 +13,7 @@ var src = require("../src"),
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/load/all', function(req, res, next) {
-    var userInfo = access.decodeUserInfo(req, res);
+    var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;
     var username = userInfo.username;
     try {
@@ -70,7 +70,7 @@ router.post('/load/all', function(req, res, next) {
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/load/one', function(req, res, next) {
-    var userInfo = access.decodeUserInfo(req, res);
+    var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;
     // var username = userInfo.username;
     var nationalCode = req.body.nationalCode;

@@ -15,7 +15,7 @@ var src = require("../src"),
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/submit/c2cReceiptCode', function(req, res, next) {
-    var userInfo = access.decodeUserInfo(req, res);
+    var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;
     var username = userInfo.username;
     var labName = userInfo.labName;

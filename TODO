@@ -1,14 +1,22 @@
 
-    *   Implement panel.balance page.
+    *   Do something about site administration.
+    
+    *   Implement a status code decoder angular service.
     
     *   Fill 'about us' page.
     
+    *   Improve Panel.Home page, so the user can see almost everything by the first look.
+    
+    *   Restrict lab users in any environment other than live to send SMS to any arbitrary patient.
+    
+================================================================================
+
     *   Place some graphics to the site.
 
-    *   Do something about site administration.
-    
     *   DEBUG: pdf files are being loaded several times during answer.post page initializing.
 
+    *   Do not allow to send an answer before all files have been uploaded or errored.
+    
     *   Try to reduce the number of involved d3 module files in app/src/libraries folder.
 
     *   The max zoom factor is set to 2.0, shouldn't we make this larger and more dynamic?
@@ -17,17 +25,9 @@
     
     *   Let the patient download توضیحات as an text file in answer.download page.
 
-    *   Implement a status code decoder angular service.
-    
-    *   Improve Panel.Home page, so the user can see almost everything by the first look.
-    
     *   DEBUG: 'gulp build' does not work fine.
     
-    *   Do not allow to send an answer before all files have been uploaded or errored.
-    
     *   Empower users to do all kind of staff (delete, edit, re-send, ...) to their posts.
-    
-    *   Restrict lab users in any environment other than live to send SMS to any arbitrary patient.
     
     *   What if user changes view by menu when the site is still loading some request?
     

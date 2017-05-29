@@ -315,22 +315,20 @@
         <p class="nazanin ja-rtl ja-align-right">
             ثابت:
             <bdi><strong ng-bind="'021-66910430' | toPersianNumber"></strong></bdi>
-            <small>
-                (سه شنبه و چهار شنبه، بین ساعت
-                <bdi><strong ng-bind="'11:00' | toPersianNumber"></strong></bdi> تا
-                <bdi><strong ng-bind="'14:00' | toPersianNumber"></strong></bdi>)
-            </small>
         </p>
 
         <p class="nazanin ja-rtl ja-align-right">
             همراه:
-            <bdi><strong ng-bind="'09126550720' | toPersianNumber"></strong></bdi>
-            <small>
-                (از شنبه تا چهارشنبه، بین ساعت
-                <bdi><strong ng-bind="'11:00' | toPersianNumber"></strong></bdi> تا
-                <bdi><strong ng-bind="'14:00' | toPersianNumber"></strong></bdi>)
-            </small>
+            <bdi><strong ng-bind="'09330330975' | toPersianNumber"></strong></bdi>
         </p>
+
+        <!--<p class="nazanin ja-rtl ja-align-right">-->
+        <!--    <small>-->
+        <!--        (سه شنبه و چهار شنبه، بین ساعت-->
+        <!--        <bdi><strong ng-bind="'11:00' | toPersianNumber"></strong></bdi> تا-->
+        <!--        <bdi><strong ng-bind="'14:00' | toPersianNumber"></strong></bdi>)-->
+        <!--    </small>-->
+        <!--</p>-->
 
         <div class="ui horizontal divider">
             <span class="nazanin">آدرس شرکت</span>
@@ -1088,12 +1086,12 @@
                     
                     <div class="field">
                         <div class="two ui buttons">
-                            <button class="fluid ui green button" ng-click="$state.go('lab.register')">
-                                <span class="nazanin">ثبت نام</span>
-                            </button>
-                            <div class="or nazanin" data-text="یا"></div>
                             <button class="fluid ui blue button" type="submit" ng-click="login()">
                                 <span class="nazanin">ورود</span>
+                            </button>
+                            <div class="or nazanin" data-text="یا"></div>
+                            <button class="fluid ui green button" ng-click="$state.go('lab.register')">
+                                <span class="nazanin">ثبت نام</span>
                             </button>
                         </div>
                     </div>
@@ -2170,6 +2168,44 @@
 
 </div>
 
+</script>
+
+<script type="text/ng-template" id="admin.html">
+    <div id="ja-admin">
+    
+    <!-- Main container -->
+    <div ui-view></div>
+    
+</div>
+</script>
+
+<script type="text/ng-template" id="admin/menu.html">
+    <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToMainPage(); toggleMenu()">
+    صفحه اصلی
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('home')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.logout(); toggleMenu()">
+    خروج از سامانه
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('logout')}}">
+</a>
+
+
+</script>
+
+<script type="text/ng-template" id="admin/header.html">
+    <span class="ja-item ja-text ja-right nazanin" ng-bind="headerHandlers.pageTitle"></span>
+
+</script>
+
+<script type="text/ng-template" id="admin/home.html">
+    <div id="ja-admin-home">
+    
+    admin home !
+    <br />
+    {{data.adminData}}
+    
+</div>
 </script>
 
 
