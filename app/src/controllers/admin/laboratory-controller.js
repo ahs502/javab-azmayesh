@@ -5,5 +5,7 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state', '
 
         $scope.setPageTitle('آزمایشگاه ها');
 
+        $scope.defineSubmenus(null);
+
     }
 ]);

@@ -327,7 +327,13 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                         templateUrl: 'admin/header.html'
                     },
                 },
-                abstract: true
+                abstract: true,
+                data: {
+                    dependencies: [
+                        'dropdown.min.js',
+                        'dropdown.rtl.min.css',
+                    ]
+                }
             })
             .state('admin.home', {
                 url: '/home',

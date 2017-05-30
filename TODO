@@ -73,17 +73,17 @@
 -------- C2C receipts & user charge
 ---- Laboratory
 -------- See all labs
--------- Search
--------- New sign up requests
--------- Block/Unblock
--------- Restrict/Unrestrict
--------- Edit
--------- Remove
--------- Charge balance
+------------ Search
+------------ New sign up requests
+------------ Block/Unblock
+------------ Restrict/Unrestrict
+------------ Edit
+------------ Remove
+------------ Charge balance
 ---- Patient
 -------- Search
--------- Edit
--------- Remove
+------------ Edit
+------------ Remove
 ---- SMS
 -------- Send a dummy SMS
 -------- List all used phone numbers

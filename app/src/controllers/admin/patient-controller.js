@@ -5,5 +5,7 @@ app.controller('AdminPetientController', ['$scope', '$rootScope', '$state', '$st
 
         $scope.setPageTitle('بیمارها');
 
+        $scope.defineSubmenus(null);
+
     }
 ]);

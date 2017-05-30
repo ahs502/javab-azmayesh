@@ -2172,11 +2172,39 @@
 
 <script type="text/ng-template" id="admin.html">
     <div id="ja-admin">
-    
+
+    <div ng-show="adminSubmenus && adminSubmenus.length">
+
+        <div class="ui centered grid">
+            <div class="fourteen wide small eight wide tablet six wide computer column">
+                <div class="center aligned row">
+
+                    <br />
+
+                    <div class="ui --fluid --selection dropdown" id="ja-admin-submenu-selector">
+                        <img class="ja-dropdown-sign" ng-src="{{ iconJs('down triangle') }}">
+                        <span class="text nazanin" ng-bind="adminSubmenus[selectedAdminSubmenu]"></span> &nbsp;
+                        <strong><bdi class="nazanin">انتخاب</bdi></strong>
+                        <div class="menu">
+                            <div class="item nazanin ja-rtl ja-align-right" ng-repeat="submenu in adminSubmenus" data-value="{{ $index }}" ng-bind="submenu"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="ui --horizontal divider">
+            <!--<span class="nazanin">{{ adminSubmenus[selectedAdminSubmenu] }}</span>-->
+        </div>
+
+    </div>
+
     <!-- Main container -->
     <div ui-view></div>
-    
+
 </div>
+
 </script>
 
 <script type="text/ng-template" id="admin/menu.html">
@@ -2216,7 +2244,7 @@
 <script type="text/ng-template" id="admin/home.html">
     <div id="ja-admin-home">
     
-    home
+    home {{submenu}}
     
 </div>
 </script>
@@ -2240,7 +2268,7 @@
 <script type="text/ng-template" id="admin/sms.html">
     <div id="ja-admin-sms">
     
-    sms
+    sms {{submenu}}
     
 </div>
 </script>
