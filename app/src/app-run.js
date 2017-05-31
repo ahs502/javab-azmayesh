@@ -28,6 +28,25 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'UserSer
             function(event, toState, toParams, fromState, fromParams, options) {
                 //NOTE: Use  event.preventDefault()  if it's needed.
 
+                var dependencies = toState.name.split('.').map(function(namePart, index, nameParts) {
+                    var state = $state.get(nameParts.slice(0, index + 1).join('.'));
+                    return state.data && state.data.dependencies;
+                }).filter(function(dependencies) {
+                    return !!dependencies;
+                }).reduce(function(allDependencies, dependencies) {
+                    return allDependencies.concat(dependencies);
+                }, []);
+
+                var numberOfToBeLoadedResources =
+                    dynamicResourceLoader(dependencies, true, function() {
+                        numberOfToBeLoadedResources && $state.go(toState);
+                    });
+
+                if (numberOfToBeLoadedResources) {
+                    event.preventDefault();
+                    return;
+                }
+
                 if (toState.name.indexOf('panel.') === 0) {
                     if (!userService.current()) {
                         event.preventDefault();
@@ -55,20 +74,6 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'UserSer
 
         $rootScope.$on('$stateChangeSuccess',
             function(event, toState, toParams, fromState, fromParams) {
-
-                var dependencies = toState.name.split('.').map(function(namePart, index, nameParts) {
-                    var state = $state.get(nameParts.slice(0, index + 1).join('.'));
-                    return state.data && state.data.dependencies;
-                }).filter(function(dependencies) {
-                    return !!dependencies;
-                }).reduce(function(allDependencies, dependencies) {
-                    return allDependencies.concat(dependencies);
-                }, []);
-
-                var numberOfToBeLoadedResources =
-                    dynamicResourceLoader(dependencies, true, function() {
-                        numberOfToBeLoadedResources && $state.reload();
-                    });
 
                 $window.scrollTo(0, 0);
 

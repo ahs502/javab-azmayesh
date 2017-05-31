@@ -10,16 +10,7 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
         $scope.setPageTitle = setPageTitle;
         $scope.refreshUserData = refreshUserDataProvider(false);
 
-        $scope.defineSubmenus = defineSubmenus;
-        $scope.setSubmenu = setSubmenu;
-        $scope.setSubmenuHandler = setSubmenuHandler;
-
         $scope.loading = $scope.loadingMessage = false;
-
-        $scope.adminSubmenus = null;
-        $scope.selectedAdminSubmenu = 0;
-        var adminSubmenuChangeHandler;
-        var adminSubmenuSelector = $('#ja-admin-submenu-selector');
 
         // Refresh user info every 1 minute
         var refreshUserDataPromise = $interval(refreshUserDataProvider(true), 60000);
@@ -34,8 +25,8 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
             goToLaboratoryPage: function() {
                 $state.go('admin.laboratory');
             },
-            goToPetientPage: function() {
-                $state.go('admin.petient');
+            goToPatientPage: function() {
+                $state.go('admin.patient');
             },
             goToSmsPage: function() {
                 $state.go('admin.sms');
@@ -81,36 +72,6 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
                     silent || $scope.setLoading(false);
                 });
             };
-        }
-
-        function defineSubmenus(submenus) {
-            if (typeof adminSubmenuSelector.dropdown === 'function') {
-                $scope.adminSubmenus = submenus;
-                $timeout(function() {
-                    submenus && adminSubmenuSelector.dropdown({
-                        onChange: function(value, text) {
-                            $timeout(function() {
-                                $scope.selectedAdminSubmenu = value;
-                                if (typeof adminSubmenuChangeHandler === 'function')
-                                    adminSubmenuChangeHandler(value, text);
-                            });
-                        }
-                    });
-                    submenus && adminSubmenuSelector.dropdown('set selected', $scope.selectedAdminSubmenu = 0);
-                });
-            }
-        }
-
-        function setSubmenu(submenu) {
-            if (typeof adminSubmenuSelector.dropdown === 'function') {
-                $timeout(function() {
-                    adminSubmenuSelector.dropdown('set selected', $scope.selectedAdminSubmenu = submenu);
-                });
-            }
-        }
-
-        function setSubmenuHandler(handler) {
-            adminSubmenuChangeHandler = handler;
         }
 
     }

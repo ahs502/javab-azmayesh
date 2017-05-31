@@ -1084,10 +1084,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 templateUrl: 'admin/laboratory.html',
                 controller: 'AdminLaboratoryController'
             })
-            .state('admin.petient', {
-                url: '/petient',
-                templateUrl: 'admin/petient.html',
-                controller: 'AdminPetientController'
+            .state('admin.patient', {
+                url: '/patient',
+                templateUrl: 'admin/patient.html',
+                controller: 'AdminPatientController'
             })
             .state('admin.sms', {
                 url: '/sms',
@@ -1144,6 +1144,25 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'UserSer
             function(event, toState, toParams, fromState, fromParams, options) {
                 //NOTE: Use  event.preventDefault()  if it's needed.
 
+                var dependencies = toState.name.split('.').map(function(namePart, index, nameParts) {
+                    var state = $state.get(nameParts.slice(0, index + 1).join('.'));
+                    return state.data && state.data.dependencies;
+                }).filter(function(dependencies) {
+                    return !!dependencies;
+                }).reduce(function(allDependencies, dependencies) {
+                    return allDependencies.concat(dependencies);
+                }, []);
+
+                var numberOfToBeLoadedResources =
+                    dynamicResourceLoader(dependencies, true, function() {
+                        numberOfToBeLoadedResources && $state.go(toState);
+                    });
+
+                if (numberOfToBeLoadedResources) {
+                    event.preventDefault();
+                    return;
+                }
+
                 if (toState.name.indexOf('panel.') === 0) {
                     if (!userService.current()) {
                         event.preventDefault();
@@ -1171,20 +1190,6 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'UserSer
 
         $rootScope.$on('$stateChangeSuccess',
             function(event, toState, toParams, fromState, fromParams) {
-
-                var dependencies = toState.name.split('.').map(function(namePart, index, nameParts) {
-                    var state = $state.get(nameParts.slice(0, index + 1).join('.'));
-                    return state.data && state.data.dependencies;
-                }).filter(function(dependencies) {
-                    return !!dependencies;
-                }).reduce(function(allDependencies, dependencies) {
-                    return allDependencies.concat(dependencies);
-                }, []);
-
-                var numberOfToBeLoadedResources =
-                    dynamicResourceLoader(dependencies, true, function() {
-                        numberOfToBeLoadedResources && $state.reload();
-                    });
 
                 $window.scrollTo(0, 0);
 
@@ -1301,6 +1306,56 @@ app.factory('Utils', ['$q', '$http', '$window',
 
 /*
 	AHS502 : End of 'utils.js'
+*/
+
+
+/*
+	AHS502 : Start of 'admin-service.js'
+*/
+
+/*global app*/
+
+app.service('AdminService', ['$q', '$http', '$window', 'Utils',
+    function($q, $http, $window, utils) {
+
+        // All services may reject by code : 1, 2, 5, 50, 52, 100, 101
+
+        this.getAllLaboratories = getAllLaboratories;
+        this.editLaboratory = editLaboratory;
+        this.sendDummySms = sendDummySms;
+
+        /////////////////////////////////////////////////////
+
+        function getAllLaboratories() {
+            return utils.httpPromiseHandler($http.post('/admin/getAllLaboratories', {}))
+                .then(function(body) {
+                    return (body.laboratories || []).map(function(lab) {
+                        lab.timeStamp = new Date(lab.timeStamp);
+                        return lab;
+                    });
+                });
+        }
+
+        function editLaboratory(labUsername, labData) {
+            return utils.httpPromiseHandler($http.post('/admin/editLaboratory', {
+                labUsername: labUsername,
+                labData: labData
+            }));
+        }
+
+        function sendDummySms(phoneNumber, message) {
+            return utils.httpPromiseHandler($http.post('/admin/sendDummySms', {
+                phoneNumber: String(phoneNumber),
+                message: message
+            }));
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'admin-service.js'
 */
 
 
@@ -1785,23 +1840,37 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
 */
 
 /*global app*/
+/*global $*/
 
-app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
-    function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
+app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$stateParams',
+    '$timeout', 'UserService', 'AdminService',
+    function($scope, $rootScope, $state, $stateParams,
+        $timeout, userService, adminService) {
 
         var userInfo = userService.current();
 
         $scope.setPageTitle((userInfo && userInfo.fullName) || ' ');
 
-        $scope.defineSubmenus([
-            'آمار و نمودارهای وبسایت',
+        $scope.submenus = [
+            'صفحه اصلی',
             'بازخوردهای صفحه تماس با ما',
             'رسیدهای ثبت شده پرداخت کارت به کارت',
-        ]);
-        $scope.setSubmenu($scope.submenu = 0);
-        $scope.setSubmenuHandler(function(value, text) {
-            $scope.submenu = value;
+            'درخواست های عضویت جدید',
+            'پیامک های ارسال نشده',
+            'آمار و نمودارهای وبسایت',
+        ];
+        $scope.selectedSubmenu = 0;
+        $scope.selectedSubmenuText = $scope.submenus[0];
+        var submenuSelector = $('#ja-admin-home-submenu-selector');
+        submenuSelector.dropdown({
+            onChange: function(value, text) {
+                $timeout(function() {
+                    $scope.selectedSubmenu = value;
+                    $scope.selectedSubmenuText = text;
+                });
+            }
         });
+        submenuSelector.dropdown('set selected', 0);
 
     }
 ]);
@@ -1818,12 +1887,22 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
 
 /*global app*/
 
-app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state', '$stateParams', 'UserService',
-    function($scope, $rootScope, $state, $stateParams, userService) {
+app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
+    '$stateParams', 'UserService', 'AdminService',
+    function($scope, $rootScope, $state,
+        $stateParams, userService, adminService) {
 
         $scope.setPageTitle('آزمایشگاه ها');
 
-        $scope.defineSubmenus(null);
+        $scope.laboratories = [];
+        $scope.setLoading(true);
+        adminService.getAllLaboratories().then(function(laboratories) {
+            $scope.laboratories = laboratories;
+            $scope.setLoading(false);
+        }, function(code) {
+            alert(code);
+            $scope.setLoading(false);
+        });
 
     }
 ]);
@@ -1840,12 +1919,12 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state', '
 
 /*global app*/
 
-app.controller('AdminPetientController', ['$scope', '$rootScope', '$state', '$stateParams', 'UserService',
-    function($scope, $rootScope, $state, $stateParams, userService) {
+app.controller('AdminPatientController', ['$scope', '$rootScope', '$state',
+    '$stateParams', 'UserService', 'AdminService',
+    function($scope, $rootScope, $state,
+        $stateParams, userService, adminService) {
 
         $scope.setPageTitle('بیمارها');
-
-        $scope.defineSubmenus(null);
 
     }
 ]);
@@ -1861,22 +1940,51 @@ app.controller('AdminPetientController', ['$scope', '$rootScope', '$state', '$st
 */
 
 /*global app*/
+/*global $*/
 
-app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$stateParams', 'UserService',
-    function($scope, $rootScope, $state, $stateParams, userService) {
+app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeout',
+    '$stateParams', 'UserService', 'AdminService',
+    function($scope, $rootScope, $state, $timeout,
+        $stateParams, userService, adminService) {
 
         $scope.setPageTitle('پیامک ها');
 
-        $scope.defineSubmenus([
+        $scope.submenus = [
             'ارسال پیامک آزمایشی',
             'فهرست تمام شماره تلفن های استفاده شده',
             'شارژ باقیمانده نیک اِس اِم اِس',
-            'پیامک های ارسال نشده',
-        ]);
-        $scope.setSubmenu($scope.submenu = 0);
-        $scope.setSubmenuHandler(function(value, text) {
-            $scope.submenu = value;
+        ];
+        $scope.selectedSubmenu = 0;
+        $scope.selectedSubmenuText = $scope.submenus[0];
+        var submenuSelector = $('#ja-admin-sms-submenu-selector');
+        submenuSelector.dropdown({
+            onChange: function(value, text) {
+                $timeout(function() {
+                    $scope.selectedSubmenu = value;
+                    $scope.selectedSubmenuText = text;
+                });
+            }
         });
+        submenuSelector.dropdown('set selected', 0);
+
+        $scope.waiting = false;
+
+        //$scope.phoneNumber
+        //$scope.message
+
+        $scope.sendDummySms = sendDummySms;
+        $scope.message = 'سامانه اینترنتی جواب آزمایش\nJavabAzmayesh.ir';
+
+        function sendDummySms() {
+            $scope.waiting = true;
+            adminService.sendDummySms($scope.phoneNumber, $scope.message)
+                .then(function() {
+                    $scope.waiting = false;
+                }, function(code) {
+                    alert(code);
+                    $scope.waiting = false;
+                });
+        }
 
     }
 ]);
@@ -3390,16 +3498,7 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
         $scope.setPageTitle = setPageTitle;
         $scope.refreshUserData = refreshUserDataProvider(false);
 
-        $scope.defineSubmenus = defineSubmenus;
-        $scope.setSubmenu = setSubmenu;
-        $scope.setSubmenuHandler = setSubmenuHandler;
-
         $scope.loading = $scope.loadingMessage = false;
-
-        $scope.adminSubmenus = null;
-        $scope.selectedAdminSubmenu = 0;
-        var adminSubmenuChangeHandler;
-        var adminSubmenuSelector = $('#ja-admin-submenu-selector');
 
         // Refresh user info every 1 minute
         var refreshUserDataPromise = $interval(refreshUserDataProvider(true), 60000);
@@ -3414,8 +3513,8 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
             goToLaboratoryPage: function() {
                 $state.go('admin.laboratory');
             },
-            goToPetientPage: function() {
-                $state.go('admin.petient');
+            goToPatientPage: function() {
+                $state.go('admin.patient');
             },
             goToSmsPage: function() {
                 $state.go('admin.sms');
@@ -3461,36 +3560,6 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
                     silent || $scope.setLoading(false);
                 });
             };
-        }
-
-        function defineSubmenus(submenus) {
-            if (typeof adminSubmenuSelector.dropdown === 'function') {
-                $scope.adminSubmenus = submenus;
-                $timeout(function() {
-                    submenus && adminSubmenuSelector.dropdown({
-                        onChange: function(value, text) {
-                            $timeout(function() {
-                                $scope.selectedAdminSubmenu = value;
-                                if (typeof adminSubmenuChangeHandler === 'function')
-                                    adminSubmenuChangeHandler(value, text);
-                            });
-                        }
-                    });
-                    submenus && adminSubmenuSelector.dropdown('set selected', $scope.selectedAdminSubmenu = 0);
-                });
-            }
-        }
-
-        function setSubmenu(submenu) {
-            if (typeof adminSubmenuSelector.dropdown === 'function') {
-                $timeout(function() {
-                    adminSubmenuSelector.dropdown('set selected', $scope.selectedAdminSubmenu = submenu);
-                });
-            }
-        }
-
-        function setSubmenuHandler(handler) {
-            adminSubmenuChangeHandler = handler;
         }
 
     }

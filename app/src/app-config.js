@@ -351,10 +351,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 templateUrl: 'admin/laboratory.html',
                 controller: 'AdminLaboratoryController'
             })
-            .state('admin.petient', {
-                url: '/petient',
-                templateUrl: 'admin/petient.html',
-                controller: 'AdminPetientController'
+            .state('admin.patient', {
+                url: '/patient',
+                templateUrl: 'admin/patient.html',
+                controller: 'AdminPatientController'
             })
             .state('admin.sms', {
                 url: '/sms',

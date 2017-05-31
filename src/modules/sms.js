@@ -14,7 +14,8 @@ module.exports = {
         passwordRecovery,
         postAnswer,
         otpGenerated,
-    }
+    },
+    simplySendSms
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,4 +138,8 @@ function sendSms(type, numbers, message, data) {
             });
         });
     });
+}
+
+function simplySendSms(phoneNumber, message) {
+    return nikSms.sendSms(config.nik_sms_main_number, phoneNumber, message);
 }

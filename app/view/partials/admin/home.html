@@ -1,5 +1,56 @@
 <div id="ja-admin-home">
-    
-    home {{submenu}}
-    
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <br />
+
+                <div class="ui --fluid --selection dropdown" id="ja-admin-home-submenu-selector">
+                    <img class="ja-dropdown-sign" ng-src="{{ iconJs('down triangle') }}">
+                    <span class="text nazanin" ng-bind="submenus[selectedSubmenu]"></span> &nbsp;
+                    <strong><bdi class="nazanin">انتخاب کنید:</bdi></strong>
+                    <div class="menu">
+                        <div class="item nazanin ja-rtl ja-align-right" ng-repeat="submenu in submenus" data-value="{{ $index }}" ng-bind="submenu"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui --horizontal divider">
+        <!--<span class="nazanin">{{ adminSubmenus[selectedAdminSubmenu] }}</span>-->
+    </div>
+
+    <div ng-show="selectedSubmenu == 0">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
+    <div ng-show="selectedSubmenu == 1">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
+    <div ng-show="selectedSubmenu == 2">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
+    <div ng-show="selectedSubmenu == 3">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
+    <div ng-show="selectedSubmenu == 4">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
+    <div ng-show="selectedSubmenu == 5">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
 </div>

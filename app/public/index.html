@@ -2173,33 +2173,6 @@
 <script type="text/ng-template" id="admin.html">
     <div id="ja-admin">
 
-    <div ng-show="adminSubmenus && adminSubmenus.length">
-
-        <div class="ui centered grid">
-            <div class="fourteen wide small eight wide tablet six wide computer column">
-                <div class="center aligned row">
-
-                    <br />
-
-                    <div class="ui --fluid --selection dropdown" id="ja-admin-submenu-selector">
-                        <img class="ja-dropdown-sign" ng-src="{{ iconJs('down triangle') }}">
-                        <span class="text nazanin" ng-bind="adminSubmenus[selectedAdminSubmenu]"></span> &nbsp;
-                        <strong><bdi class="nazanin">انتخاب</bdi></strong>
-                        <div class="menu">
-                            <div class="item nazanin ja-rtl ja-align-right" ng-repeat="submenu in adminSubmenus" data-value="{{ $index }}" ng-bind="submenu"></div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="ui --horizontal divider">
-            <!--<span class="nazanin">{{ adminSubmenus[selectedAdminSubmenu] }}</span>-->
-        </div>
-
-    </div>
-
     <!-- Main container -->
     <div ui-view></div>
 
@@ -2218,7 +2191,7 @@
     <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
 </a>
 
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToPetientPage(); toggleMenu()">
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToPatientPage(); toggleMenu()">
     بیمارها
     <img class="ja-menu-item-icon" ng-src="{{iconJs('patient')}}">
 </a>
@@ -2243,34 +2216,188 @@
 
 <script type="text/ng-template" id="admin/home.html">
     <div id="ja-admin-home">
-    
-    home {{submenu}}
-    
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <br />
+
+                <div class="ui --fluid --selection dropdown" id="ja-admin-home-submenu-selector">
+                    <img class="ja-dropdown-sign" ng-src="{{ iconJs('down triangle') }}">
+                    <span class="text nazanin" ng-bind="submenus[selectedSubmenu]"></span> &nbsp;
+                    <strong><bdi class="nazanin">انتخاب کنید:</bdi></strong>
+                    <div class="menu">
+                        <div class="item nazanin ja-rtl ja-align-right" ng-repeat="submenu in submenus" data-value="{{ $index }}" ng-bind="submenu"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui --horizontal divider">
+        <!--<span class="nazanin">{{ adminSubmenus[selectedAdminSubmenu] }}</span>-->
+    </div>
+
+    <div ng-show="selectedSubmenu == 0">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
+    <div ng-show="selectedSubmenu == 1">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
+    <div ng-show="selectedSubmenu == 2">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
+    <div ng-show="selectedSubmenu == 3">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
+    <div ng-show="selectedSubmenu == 4">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
+    <div ng-show="selectedSubmenu == 5">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
 </div>
+
 </script>
 
 <script type="text/ng-template" id="admin/laboratory.html">
     <div id="ja-admin-laboratory">
     
-    laboratory
-    
+    <br />
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui form">
+
+                    <div class="field">
+                        <!--<label class="nazanin ja-optional">جستجو</label>-->
+                        <div class="ui input">
+                            <input type="text" ng-model="searchKeyword" class="ja-rtl ja-align-center" placeholder="Search">
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <table id="ja-admin-laboratory-table">
+        <thead>
+            <tr>
+                <th class="ja-rtl ja-align-right">آدرس</th>
+                <th class="ja-rtl ja-align-center">نام آزمایشگاه</th>
+                <th class="ja-rtl ja-align-left">نام کاربری</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="lab in laboratories | filter: searchKeyword | limitTo: 1000">
+                <td class="ja-rtl ja-align-right">{{lab.address}}</td>
+                <td class="ja-rtl ja-align-center">{{lab.labName}}</td>
+                <td class="ja-ltr ja-align-left">{{lab.username}}</td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>
+
 </script>
 
-<script type="text/ng-template" id="admin/petient.html">
-    <div id="ja-admin-petient">
+<script type="text/ng-template" id="admin/patient.html">
+    <div id="ja-admin-patient">
     
-    petient
+    patient
     
 </div>
 </script>
 
 <script type="text/ng-template" id="admin/sms.html">
     <div id="ja-admin-sms">
-    
-    sms {{submenu}}
-    
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <br />
+
+                <div class="ui --fluid --selection dropdown" id="ja-admin-sms-submenu-selector">
+                    <img class="ja-dropdown-sign" ng-src="{{ iconJs('down triangle') }}">
+                    <span class="text nazanin" ng-bind="submenus[selectedSubmenu]"></span> &nbsp;
+                    <strong><bdi class="nazanin">انتخاب کنید:</bdi></strong>
+                    <div class="menu">
+                        <div class="item nazanin ja-rtl ja-align-right" ng-repeat="submenu in submenus" data-value="{{ $index }}" ng-bind="submenu"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui --horizontal divider">
+        <!--<span class="nazanin">{{ adminSubmenus[selectedAdminSubmenu] }}</span>-->
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <!-- Submenu: 0 -->
+                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 0">
+
+                    <div class="field">
+                        <label class="nazanin ja-required">به شماره تلفن</label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="phoneNumber" class="ja-ltr ja-align-left">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="nazanin ja-required">متن پیامک</label>
+                        <div class="ui input">
+                            <textarea ng-model="message" rows=6 maxlength=10000 class="nazanin ja-rtl ja-align-right"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="sendDummySms()">
+                            <span class="nazanin">ارسال پیامک</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="selectedSubmenu == 1">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
+    <div ng-show="selectedSubmenu == 2">
+        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
+        Page not implemented.
+    </div>
+
 </div>
+
 </script>
 
 

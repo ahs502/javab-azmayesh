@@ -1,11 +1,11 @@
 /*global app*/
 
-app.controller('AdminPetientController', ['$scope', '$rootScope', '$state', '$stateParams', 'UserService',
-    function($scope, $rootScope, $state, $stateParams, userService) {
+app.controller('AdminPatientController', ['$scope', '$rootScope', '$state',
+    '$stateParams', 'UserService', 'AdminService',
+    function($scope, $rootScope, $state,
+        $stateParams, userService, adminService) {
 
         $scope.setPageTitle('بیمارها');
-
-        $scope.defineSubmenus(null);
 
     }
 ]);

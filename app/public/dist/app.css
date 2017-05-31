@@ -315,6 +315,25 @@ body {
   text-align: center !important;
   padding: 10px 0;
 }
+#ja-admin #ja-admin-laboratory table#ja-admin-laboratory-table {
+  width: 100%;
+  min-width: 600px;
+  margin: 10px;
+  padding-right: 10px;
+}
+#ja-admin #ja-admin-laboratory table#ja-admin-laboratory-table thead tr th {
+  padding: 10px 0;
+  font-family: BNazanin !important;
+  font-size: 130%;
+}
+#ja-admin #ja-admin-laboratory table#ja-admin-laboratory-table tbody tr {
+  cursor: pointer;
+}
+#ja-admin #ja-admin-laboratory table#ja-admin-laboratory-table tbody tr td {
+  padding: 10px 0;
+  font-family: BNazanin !important;
+  font-size: 130%;
+}
 .ui.modal > .content {
   width: 90%;
 }

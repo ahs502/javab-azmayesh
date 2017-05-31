@@ -1,13 +1,13 @@
 
     *   Do something about site administration.
     
-    *   Implement a status code decoder angular service.
-    
     *   Fill 'about us' page.
     
-    *   Improve Panel.Home page, so the user can see almost everything by the first look.
-    
     *   Restrict lab users in any environment other than live to send SMS to any arbitrary patient.
+    
+    *   Implement a status code decoder angular service.
+    
+    *   Improve Panel.Home page, so the user can see almost everything by the first look.
     
 ================================================================================
 
@@ -41,7 +41,8 @@
     
     *   Improve security, start by checking the site on: https://www.htbridge.com/websec/
     
-    
+    *   Place non-confirming users' data into a separated folder to solve performance issue of admin.laboratory page.
+
     
     
     
@@ -67,28 +68,28 @@
 
 >> Administrator Panel:
 
----- Home
--------- Website statistics
+>--- Home
+-------- Main page
 -------- Feedbacks from 'Contact Us'
 -------- C2C receipts & user charge
----- Laboratory
--------- See all labs
------------- Search
------------- New sign up requests
------------- Block/Unblock
------------- Restrict/Unrestrict
+-------- New laboratory sign up requests
+-------- Not delivered SMSs
+-------- Website statistics
+>--- Laboratory
+>------- See & search all labs
+:----------- Block/Unblock
+:----------- Restrict/Unrestrict
 ------------ Edit
 ------------ Remove
 ------------ Charge balance
----- Patient
+>--- Patient
 -------- Search
 ------------ Edit
 ------------ Remove
----- SMS
--------- Send a dummy SMS
+>--- SMS
+>------- Send a dummy SMS
 -------- List all used phone numbers
 -------- NikSMS left balance
--------- Not delivered SMSs
 
 
 
