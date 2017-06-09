@@ -1,6 +1,12 @@
 <div id="ja-admin">
 
+    <div id="ja-admin-loading" ng-if="loading">
+        <div class="ui active centered inline text loader">
+            <bdi ng-if="loadingMessage" class="nazanin">لطفاً صبر کنید...</bdi>
+        </div>
+    </div>
+
     <!-- Main container -->
-    <div ui-view></div>
+    <div ng-hide="loading" ui-view></div>
 
 </div>

@@ -1063,6 +1063,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 abstract: true,
                 data: {
                     dependencies: [
+                        'loader.rtl.min.css',
                         'dropdown.min.js',
                         'dropdown.rtl.min.css',
                     ]
@@ -1118,8 +1119,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
 /*global angular*/
 /*global localStorage*/
 
-app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'UserService', 'DynamicResourceLoader',
-    function($rootScope, $state, $stateParams, $window, $timeout, userService, dynamicResourceLoader) {
+app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config', 'UserService', 'DynamicResourceLoader',
+    function($rootScope, $state, $stateParams, $window, $timeout, config, userService, dynamicResourceLoader) {
 
         // No need to initial loader anymore
         angular.element('#ja-initial-loader-background').hide();
@@ -1139,6 +1140,9 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'UserSer
         $rootScope.$stateParams = $stateParams;
 
         $rootScope.data = {};
+
+        var titleElement = angular.element("head title");
+        titleElement.html((config.env === 'live' ? '' : config.env + ' - ') + titleElement.html());
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams, options) {
@@ -1853,10 +1857,10 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
 
         $scope.submenus = [
             'صفحه اصلی',
-            'بازخوردهای صفحه تماس با ما',
-            'رسیدهای ثبت شده پرداخت کارت به کارت',
-            'درخواست های عضویت جدید',
             'پیامک های ارسال نشده',
+            'درخواست های عضویت جدید',
+            'رسیدهای ثبت شده پرداخت کارت به کارت',
+            'بازخوردهای صفحه تماس با ما',
             'آمار و نمودارهای وبسایت',
         ];
         $scope.selectedSubmenu = 0;
@@ -1886,6 +1890,8 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
 */
 
 /*global app*/
+/*global angular*/
+/*global $*/
 
 app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
     '$stateParams', 'UserService', 'AdminService',
@@ -1894,7 +1900,12 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
 
         $scope.setPageTitle('آزمایشگاه ها');
 
+        $scope.selectLab = selectLab;
+        $scope.chargeLab = chargeLab;
+
         $scope.laboratories = [];
+        $scope.selectedLab = null;
+
         $scope.setLoading(true);
         adminService.getAllLaboratories().then(function(laboratories) {
             $scope.laboratories = laboratories;
@@ -1903,6 +1914,36 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
             alert(code);
             $scope.setLoading(false);
         });
+
+        function selectLab(lab) {
+            $scope.selectedLab = lab;
+            var editingLab = angular.copy(lab);
+            $scope.editingLab = editingLab;
+            $('#ja-admin-laboratory-edit-modal')
+                .modal({
+                    closable: false,
+                    onApprove: function() {
+                        $scope.setLoading(true);
+                        adminService.editLaboratory(lab.username, editingLab).then(function() {
+                            $scope.laboratories[$scope.laboratories.indexOf(lab)] = editingLab;
+                        }, function(code) {
+                            alert(code);
+                        }).then(function() {
+                            $scope.selectedLab = editingLab;
+                            $scope.setLoading(false);
+                        });
+                    },
+                    onDeny: function() {
+                        // nothing to do !
+                    }
+                })
+                .modal('show');
+        }
+
+        function chargeLab() {
+            $scope.editingLab.balance = Number($scope.editingLab.balance) + Number($scope.charge);
+            $scope.charge = '';
+        }
 
     }
 ]);
@@ -3966,8 +4007,8 @@ app.controller('LabController', ['$scope', '$state',
 /*global app*/
 /*global angular*/
 
-app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window',
-    function($scope, $rootScope, $q, $window) {
+app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$timeout',
+    function($scope, $rootScope, $q, $window, $timeout) {
 
         // $scope.log = function() {
         //     console.log.apply(console, Array.prototype.slice.call(arguments));

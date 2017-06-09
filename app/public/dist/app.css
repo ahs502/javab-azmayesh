@@ -315,21 +315,30 @@ body {
   text-align: center !important;
   padding: 10px 0;
 }
-#ja-admin #ja-admin-laboratory table#ja-admin-laboratory-table {
+#ja-admin {
+  padding-top: 13px;
+}
+#ja-admin #ja-admin-loading {
+  margin-top: 73px;
+}
+#ja-admin #ja-admin-laboratory table.ja-admin-laboratory-table {
   width: 100%;
   min-width: 600px;
   margin: 10px;
   padding-right: 10px;
 }
-#ja-admin #ja-admin-laboratory table#ja-admin-laboratory-table thead tr th {
+#ja-admin #ja-admin-laboratory table.ja-admin-laboratory-table thead tr th {
   padding: 10px 0;
   font-family: BNazanin !important;
   font-size: 130%;
 }
-#ja-admin #ja-admin-laboratory table#ja-admin-laboratory-table tbody tr {
+#ja-admin #ja-admin-laboratory table.ja-admin-laboratory-table tbody tr {
   cursor: pointer;
 }
-#ja-admin #ja-admin-laboratory table#ja-admin-laboratory-table tbody tr td {
+#ja-admin #ja-admin-laboratory table.ja-admin-laboratory-table tbody tr.selected {
+  background-color: #ddd;
+}
+#ja-admin #ja-admin-laboratory table.ja-admin-laboratory-table tbody tr td {
   padding: 10px 0;
   font-family: BNazanin !important;
   font-size: 130%;

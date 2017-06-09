@@ -69,27 +69,27 @@
 >> Administrator Panel:
 
 >--- Home
--------- Main page
--------- Feedbacks from 'Contact Us'
--------- C2C receipts & user charge
--------- New laboratory sign up requests
--------- Not delivered SMSs
--------- Website statistics
+ ------- Main page
+ ------- Not delivered SMSs
+ ------- New laboratory sign up requests
+ ------- C2C receipts & user charge
+ ------- Feedbacks from 'Contact Us'
+ ------- Website statistics
 >--- Laboratory
 >------- See & search all labs
-:----------- Block/Unblock
-:----------- Restrict/Unrestrict
------------- Edit
------------- Remove
------------- Charge balance
+~----------- Block/Unblock
+~----------- Restrict/Unrestrict
+>----------- Edit
+ ----------- Remove
+>----------- Charge balance
 >--- Patient
--------- Search
------------- Edit
------------- Remove
+ ------- Search
+ ----------- Edit
+ ----------- Remove
 >--- SMS
 >------- Send a dummy SMS
--------- List all used phone numbers
--------- NikSMS left balance
+ ------- List all used phone numbers
+ ------- NikSMS left balance
 
 
 

@@ -45,12 +45,26 @@ router.post('/editLaboratory', function(req, res, next) {
     // var username = userInfo.username;
     var labUsername = req.body.labUsername;
     var labData = req.body.labData;
-    kfs('user/' + labUsername, labData, function(err) {
+    var userKey = 'user/' + labUsername;
+    kfs(userKey, function(err, user) {
         if (err) {
             console.error(err);
             return utils.resEndByCode(res, 5);
         }
-        utils.resEndByCode(res, 0);
+        user.labName = labData.labName;
+        user.mobilePhoneNumber = labData.mobilePhoneNumber;
+        user.phoneNumber = labData.phoneNumber;
+        user.address = labData.address;
+        user.postalCode = labData.postalCode;
+        user.websiteAddress = labData.websiteAddress;
+        user.balance = labData.balance;
+        kfs(userKey, user, function(err) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            utils.resEndByCode(res, 0);
+        });
     });
 });
 

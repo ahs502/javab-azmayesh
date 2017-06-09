@@ -2,8 +2,8 @@
 /*global angular*/
 /*global localStorage*/
 
-app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'UserService', 'DynamicResourceLoader',
-    function($rootScope, $state, $stateParams, $window, $timeout, userService, dynamicResourceLoader) {
+app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config', 'UserService', 'DynamicResourceLoader',
+    function($rootScope, $state, $stateParams, $window, $timeout, config, userService, dynamicResourceLoader) {
 
         // No need to initial loader anymore
         angular.element('#ja-initial-loader-background').hide();
@@ -23,6 +23,9 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'UserSer
         $rootScope.$stateParams = $stateParams;
 
         $rootScope.data = {};
+
+        var titleElement = angular.element("head title");
+        titleElement.html((config.env === 'live' ? '' : config.env + ' - ') + titleElement.html());
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams, options) {

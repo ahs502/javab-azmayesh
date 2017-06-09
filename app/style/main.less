@@ -344,8 +344,12 @@ body {
 }
 
 #ja-admin {
+	padding-top: 13px;
+	#ja-admin-loading {
+		margin-top: 73px;
+	}
 	#ja-admin-laboratory {
-		table#ja-admin-laboratory-table {
+		table.ja-admin-laboratory-table {
 			width: 100%;
 			min-width: 600px;
 			margin: 10px;
@@ -361,6 +365,9 @@ body {
 			tbody {
 				tr {
 					cursor: pointer;
+					&.selected {
+						background-color: #ddd;
+					}
 					td {
 						padding: 10px 0;
 						.nazanin

@@ -1,8 +1,8 @@
 /*global app*/
 /*global angular*/
 
-app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window',
-    function($scope, $rootScope, $q, $window) {
+app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$timeout',
+    function($scope, $rootScope, $q, $window, $timeout) {
 
         // $scope.log = function() {
         //     console.log.apply(console, Array.prototype.slice.call(arguments));

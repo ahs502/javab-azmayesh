@@ -330,6 +330,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 abstract: true,
                 data: {
                     dependencies: [
+                        'loader.rtl.min.css',
                         'dropdown.min.js',
                         'dropdown.rtl.min.css',
                     ]
