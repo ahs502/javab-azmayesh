@@ -15,12 +15,11 @@ router.post('/getAllLaboratories', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'administrator');
     if (!userInfo) return;
     // var username = userInfo.username;
-    kfs('user/', function(err, allUserKeys) {
+    kfs('user/active/', function(err, allUserKeys) {
         if (err) {
             console.error(err);
             return utils.resEndByCode(res, 5);
         }
-        allUserKeys = allUserKeys.filter(userKey => userKey.slice(0, 16) !== 'user/confirming/');
         Promise.all(allUserKeys.map(userKey => kfs(userKey)))
             .then(function(allUsers) {
                 allUsers = allUsers.filter(user => user && user.userType === 'laboratory');
@@ -45,7 +44,7 @@ router.post('/editLaboratory', function(req, res, next) {
     // var username = userInfo.username;
     var labUsername = req.body.labUsername;
     var labData = req.body.labData;
-    var userKey = 'user/' + labUsername;
+    var userKey = 'user/active/' + labUsername;
     kfs(userKey, function(err, user) {
         if (err) {
             console.error(err);
@@ -75,7 +74,7 @@ router.post('/removeLaboratory', function(req, res, next) {
     if (!userInfo) return;
     // var username = userInfo.username;
     var labUsername = req.body.labUsername;
-    var userKey = 'user/' + labUsername;
+    var userKey = 'user/active/' + labUsername;
     new kfs(userKey, function(err) {
         if (err) {
             console.error(err);

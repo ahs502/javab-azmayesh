@@ -164,7 +164,7 @@ router.post('/send', function(req, res, next) {
         });
     }
 
-    var userKey = 'user/' + username;
+    var userKey = 'user/active/' + username;
     kfs(userKey, function(err, user) {
         if (err) {
             console.error(err);

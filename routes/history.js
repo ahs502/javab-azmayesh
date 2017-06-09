@@ -145,7 +145,7 @@ router.post('/load/answer', function(req, res, next) {
             if (!post) {
                 return utils.resEndByCode(res, 73);
             }
-            var userKey = 'user/' + post.username;
+            var userKey = 'user/active/' + post.username;
             kfs(userKey, function(err, user) {
                 if (err) {
                     console.error(err);

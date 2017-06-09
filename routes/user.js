@@ -78,7 +78,7 @@ router.post('/register', function(req, res, next) {
 
     function registerUser() {
         var username = user.username;
-        ('user/' + username) in kfs(function(err, exists) {
+        ('user/active/' + username) in kfs(function(err, exists) {
             if (err) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
@@ -87,7 +87,7 @@ router.post('/register', function(req, res, next) {
                 return utils.resEndByCode(res, 10);
             }
             var validationCode = utils.generateRandomCode(4);
-            var userConfirmingKey = '/user/confirming/' + username;
+            var userConfirmingKey = 'user/confirming/' + username;
             var userConfirmingData = {
                 user,
                 validationCode,
@@ -164,7 +164,7 @@ router.post('/register/confirm', function(req, res, next) {
     var username = String(req.body.username || '').toLowerCase();
     var validationCode = req.body.validationCode;
     utils.generateId('user').then(function(userId) {
-        kfs('/user/confirming/' + username, function(err, data) {
+        kfs('user/confirming/' + username, function(err, data) {
             if (err) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
@@ -184,7 +184,7 @@ router.post('/register/confirm', function(req, res, next) {
             data.user.timeStamp = Date.now();
 
             //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
-            kfs('user/' + username, data.user, function(err) {
+            kfs('user/active/' + username, data.user, function(err) {
                 if (err) {
                     console.error(err);
                     return utils.resEndByCode(res, 5);
@@ -202,7 +202,7 @@ router.post('/register/confirm', function(req, res, next) {
 router.post('/login', function(req, res, next) {
     var username = String(req.body.username || '').toLowerCase();
     var password = req.body.password;
-    kfs('user/' + username, function(err, user) {
+    kfs('user/active/' + username, function(err, user) {
         if (err) {
             console.error(err);
             return utils.resEndByCode(res, 5);
@@ -229,7 +229,7 @@ router.post('/refresh', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res);
     if (!userInfo) return;
     var username = userInfo.username;
-    kfs('user/' + username, function(err, user) {
+    kfs('user/active/' + username, function(err, user) {
         if (err) {
             console.error(err);
             return utils.resEndByCode(res, 5);
@@ -253,7 +253,7 @@ router.post('/edit/:action', function(req, res, next) {
     if (action !== 'account' && action !== 'password') {
         return next();
     }
-    kfs('user/' + username, function(err, user) {
+    kfs('user/active/' + username, function(err, user) {
         if (err) {
             console.error(err);
             return utils.resEndByCode(res, 5);
@@ -375,7 +375,7 @@ router.post('/edit/confirm', function(req, res, next) {
         }
 
         //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
-        kfs('user/' + username, data.user, function(err) {
+        kfs('user/active/' + username, data.user, function(err) {
             if (err) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
@@ -394,7 +394,7 @@ router.post('/restorePassword', function(req, res, next) {
     var username = String(req.body.username || '').toLowerCase();
     var mobilePhoneNumber = String(req.body.mobilePhoneNumber).toPhoneNumber();
     sms.allowanceCheck(mobilePhoneNumber, 'passrecovery').then(function() {
-        var userKey = '/user/' + username;
+        var userKey = '/user/active/' + username;
         kfs(userKey, function(err, user) {
             if (err) {
                 console.error(err);

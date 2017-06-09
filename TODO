@@ -41,7 +41,6 @@
     
     *   Improve security, start by checking the site on: https://www.htbridge.com/websec/
     
-    *   Place non-confirming users' data into a separated folder to solve performance issue of admin.laboratory page.
 
     
     
@@ -80,7 +79,7 @@
 ~----------- Block/Unblock
 ~----------- Restrict/Unrestrict
 >----------- Edit
- ----------- Remove
+>----------- Remove
 >----------- Charge balance
 >--- Patient
  ------- Search
