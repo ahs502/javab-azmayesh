@@ -42,7 +42,13 @@
         </div>
         <div class="content">
 
-            <form class="ui form">
+            <form class="ui {{ updating ? 'loading' : '' }} form">
+
+                <div class="ui horizontal divider">
+                    <span class="nazanin ja-rtl">
+                        اطلاعات
+                    </span>
+                </div>
 
                 <div class="field">
                     <label class="nazanin ja-required">نام آزمایشگاه</label>
@@ -106,6 +112,16 @@
                             <span class="nazanin ja-rtl">شارژ شود</span>
                         </button>
                         <input type="tel" ng-model="charge" class="ja-ltr ja-align-left">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="nazanin"><bdi>(نام کامل آزمایشگاه وارد شود)</bdi> حذف آزمایشگاه</label>
+                    <div class="ui action input">
+                        <button class="ui red button" ng-click="removeLab()">
+                            <span class="nazanin ja-rtl">حذف شود</span>
+                        </button>
+                        <input type="text" ng-model="labNameAgain" class="nazanin ja-rtl ja-align-right">
                     </div>
                 </div>
 

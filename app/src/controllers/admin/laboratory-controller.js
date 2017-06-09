@@ -11,6 +11,7 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
 
         $scope.selectLab = selectLab;
         $scope.chargeLab = chargeLab;
+        $scope.removeLab = removeLab;
 
         $scope.laboratories = [];
         $scope.selectedLab = null;
@@ -24,23 +25,27 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
             $scope.setLoading(false);
         });
 
+        var modalElement;
+
         function selectLab(lab) {
             $scope.selectedLab = lab;
-            var editingLab = angular.copy(lab);
-            $scope.editingLab = editingLab;
-            $('#ja-admin-laboratory-edit-modal')
+            $scope.selectedLabIndex = $scope.laboratories.indexOf(lab);
+            $scope.editingLab = angular.copy(lab);
+            $scope.updating = false;
+            modalElement = $('#ja-admin-laboratory-edit-modal')
                 .modal({
                     closable: false,
                     onApprove: function() {
-                        $scope.setLoading(true);
-                        adminService.editLaboratory(lab.username, editingLab).then(function() {
-                            $scope.laboratories[$scope.laboratories.indexOf(lab)] = editingLab;
+                        $scope.updating = true;
+                        adminService.editLaboratory(lab.username, $scope.editingLab).then(function() {
+                            $scope.laboratories[$scope.selectedLabIndex] = $scope.editingLab;
+                            $scope.selectedLab = $scope.editingLab;
+                            modalElement.modal('hide');
                         }, function(code) {
+                            $scope.updating = false;
                             alert(code);
-                        }).then(function() {
-                            $scope.selectedLab = editingLab;
-                            $scope.setLoading(false);
                         });
+                        return false;
                     },
                     onDeny: function() {
                         // nothing to do !
@@ -50,8 +55,27 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
         }
 
         function chargeLab() {
-            $scope.editingLab.balance = Number($scope.editingLab.balance) + Number($scope.charge);
+            var amount = Number($scope.charge || '');
+            if (!amount) return;
+            $scope.editingLab.balance = Number($scope.editingLab.balance) + amount;
             $scope.charge = '';
+        }
+
+        function removeLab() {
+            if ($scope.labNameAgain !== $scope.editingLab.labName) {
+                alert('نام را اشتباه وارد کرده اید.\nلطفاً از این که می خواهید این آزمایشگاه را حذف کنید مطمئن شوید.');
+                return;
+            }
+            $scope.updating = true;
+            adminService.removeLaboratory($scope.editingLab.username).then(function() {
+                $scope.laboratories.splice($scope.selectedLabIndex, 1);
+                $scope.selectedLab = null;
+                $scope.selectedLabIndex = -1;
+                modalElement.modal('hide');
+            }, function(code) {
+                $scope.updating = false;
+                alert(code);
+            });
         }
 
     }

@@ -7,6 +7,7 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
 
         this.getAllLaboratories = getAllLaboratories;
         this.editLaboratory = editLaboratory;
+        this.removeLaboratory = removeLaboratory;
         this.sendDummySms = sendDummySms;
 
         /////////////////////////////////////////////////////
@@ -25,6 +26,12 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
             return utils.httpPromiseHandler($http.post('/admin/editLaboratory', {
                 labUsername: labUsername,
                 labData: labData
+            }));
+        }
+
+        function removeLaboratory(labUsername) {
+            return utils.httpPromiseHandler($http.post('/admin/removeLaboratory', {
+                labUsername: labUsername
             }));
         }
 

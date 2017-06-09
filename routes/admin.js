@@ -70,6 +70,23 @@ router.post('/editLaboratory', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.post('/removeLaboratory', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var labUsername = req.body.labUsername;
+    var userKey = 'user/' + labUsername;
+    new kfs(userKey, function(err) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        utils.resEndByCode(res, 0);
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.post('/sendDummySms', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'administrator');
     if (!userInfo) return;
