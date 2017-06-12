@@ -15,12 +15,13 @@ module.exports = {
         postAnswer,
         otpGenerated,
     },
-    simplySendSms
+    simplySendSms,
+    status
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// SMS limit on a mobile phon number for a SMS type, maximum (n) messages per (p) hours:
+// SMS limit on a mobile phone number for a SMS type, maximum (n) messages per (p) hours:
 //     "type": n // p = 24 hours
 //  or "type": [n, p]
 var smsLimits = {
@@ -63,7 +64,7 @@ function allowanceCheck(numbers, type) {
 ////////////////////////////////////////////////////////////////////////////////
 
 function validationCodeForRegisteration(relatedKeys, user, validationCode) {
-    var numbers = [user.mobilePhoneNumber];
+    var numbers = [user.mobilePhoneNumber, user.phoneNumber];
     var message = "" + user.labName + "\nسلام!\n" +
         "به سامانه جواب آزمایش خوش آمدید.\n" +
         "کد اعتبار سنجی: " + validationCode;
@@ -75,7 +76,7 @@ function validationCodeForRegisteration(relatedKeys, user, validationCode) {
 }
 
 function validationCodeForUpdatingAccount(relatedKeys, newUser, validationCode) {
-    var numbers = [newUser.mobilePhoneNumber];
+    var numbers = [newUser.mobilePhoneNumber, newUser.phoneNumber];
     var message = "کاربر گرامی " + newUser.username + "\nسلام!\n" +
         "برای تکمیل فرآیند بروزرسانی اطلاعات خود از کد زیر استفاده کنید:\n" +
         "کد اعتبار سنجی: " + validationCode;
@@ -87,7 +88,7 @@ function validationCodeForUpdatingAccount(relatedKeys, newUser, validationCode) 
 }
 
 function passwordRecovery(relatedKeys, user) {
-    var numbers = [user.mobilePhoneNumber];
+    var numbers = [user.mobilePhoneNumber, user.phoneNumber];
     var message = "کاربر گرامی " + user.username + "\nسلام!\n" +
         "کلمه عبور شما این است:\n" +
         user.password;
@@ -112,7 +113,7 @@ function postAnswer(relatedKeys, patient, post) {
 }
 
 function otpGenerated(relatedKeys, otp, patient) {
-    var numbers = [otp.mobilePhoneNumber];
+    var numbers = [otp.mobilePhoneNumber].concat(patient.numbers);
     var message = "" + patient.fullName + " عزیز، سلام!\n" +
         "رمز یکبار مصرف: " + otp.otp;
     return sendSms('otp', numbers, message, {
@@ -124,17 +125,33 @@ function otpGenerated(relatedKeys, otp, patient) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+var smsTypeDescription = {
+    'vericodeusrreg': "کُد اعتبارسنجی برای ثبت نام آزمایشگاه",
+    'vericodeusrupd': "کُد اعتبارسنجی برای به روز رسانی اطلاعات آزمایشگاه",
+    'passrecovery': "بازیابی کلمه عبور آزمایشگاه",
+    'postans': "نتیجه آزمایش بیمار",
+    'otp': "رمز یک بار مصرف مشاهده سوابق بیمار",
+};
+
 function sendSms(type, numbers, message, data) {
-    return utils.generateId('sms').then(function(smsId) {
-        smsId = ('0000000000' + smsId).slice(-10);
+    var jYMD = (new Date()).jYMD();
+    return utils.generateId('sms/' + jYMD[0] + '/' + jYMD[1] + '/' + jYMD[2]).then(function(smsId) {
+        var smsKey = 'sms/' + jYMD[0] + '/' + jYMD[1] + '/' + jYMD[2] + '/' + smsId;
+        data.smsKey = smsKey;
         data.type = type;
+        data.typeDescription = smsTypeDescription[type];
         data.numbers = numbers;
         data.message = message;
-        var smsKey = 'sms/' + smsId.slice(0, -2) + '/' + smsId.slice(-2);
+        data.timeStamp = Date.now();
+        data.checked = false;
         return kfs(smsKey, data).then(function() {
             var number = numbers.find(number => number.isMobileNumber());
-            return nikSms.sendSms(config.nik_sms_main_number, number, message, smsId).then(function(result) {
-                //TODO: Implement message re-sending and restriction mechanism.
+            return nikSms.sendSms(config.nik_sms_main_number, number, message).then(function(result) {
+                delete result.NikIds;
+                data.nikSmsResult = result;
+                return kfs(smsKey, data).catch(function(err) {
+                    console.error(err);
+                });
             });
         });
     });
@@ -142,4 +159,8 @@ function sendSms(type, numbers, message, data) {
 
 function simplySendSms(phoneNumber, message) {
     return nikSms.sendSms(config.nik_sms_main_number, phoneNumber, message);
+}
+
+function status(smsNikId) {
+    return nikSms.smsStatus(smsNikId);
 }

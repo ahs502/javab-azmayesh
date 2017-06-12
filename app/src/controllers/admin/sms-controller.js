@@ -15,16 +15,16 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
         ];
         $scope.selectedSubmenu = 0;
         $scope.selectedSubmenuText = $scope.submenus[0];
-        var submenuSelector = $('#ja-admin-sms-submenu-selector');
-        submenuSelector.dropdown({
-            onChange: function(value, text) {
-                $timeout(function() {
-                    $scope.selectedSubmenu = value;
-                    $scope.selectedSubmenuText = text;
-                });
-            }
-        });
-        submenuSelector.dropdown('set selected', 0);
+        $('#ja-admin-sms-submenu-selector')
+            .dropdown({
+                onChange: function(value, text) {
+                    $timeout(function() {
+                        $scope.selectedSubmenu = value;
+                        $scope.selectedSubmenuText = text;
+                    });
+                }
+            })
+            .dropdown('set selected', 0);
 
         $scope.waiting = false;
 

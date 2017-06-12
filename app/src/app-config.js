@@ -367,7 +367,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
 
         // $locationProvider.html5Mode(true);
 
-        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|sms|tg):/);
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|sms|tg|tel):/);
 
     }
 ]);

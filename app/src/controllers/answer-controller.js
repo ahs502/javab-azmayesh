@@ -3,7 +3,6 @@
 /*global toPersianNumber*/
 /*global Clipboard*/
 /*global simpleQueryString*/
-/*global d3*/
 
 app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService',
     function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService) {

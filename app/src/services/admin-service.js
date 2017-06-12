@@ -5,12 +5,39 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
 
         // All services may reject by code : 1, 2, 5, 50, 52, 100, 101
 
+        this.getNotSentSmses = getNotSentSmses;
+        this.tryAgainNotSentSms = tryAgainNotSentSms;
+        this.checkNotSentSms = checkNotSentSms;
+
         this.getAllLaboratories = getAllLaboratories;
         this.editLaboratory = editLaboratory;
         this.removeLaboratory = removeLaboratory;
+
         this.sendDummySms = sendDummySms;
 
         /////////////////////////////////////////////////////
+
+        function getNotSentSmses() {
+            return utils.httpPromiseHandler($http.post('/admin/getNotSentSmses', {}))
+                .then(function(body) {
+                    return (body.smsStateStatusList || []).map(function(smsStateStatus) {
+                        smsStateStatus.data.timeStamp = new Date(smsStateStatus.data.timeStamp);
+                        return smsStateStatus;
+                    });
+                });
+        }
+
+        function tryAgainNotSentSms(smsKey) {
+            return utils.httpPromiseHandler($http.post('/admin/tryAgainNotSentSms', {
+                smsKey: smsKey
+            }));
+        }
+
+        function checkNotSentSms(smsKey) {
+            return utils.httpPromiseHandler($http.post('/admin/checkNotSentSms', {
+                smsKey: smsKey
+            }));
+        }
 
         function getAllLaboratories() {
             return utils.httpPromiseHandler($http.post('/admin/getAllLaboratories', {}))

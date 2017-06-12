@@ -2251,8 +2251,134 @@
     </div>
 
     <div ng-show="selectedSubmenu == 1">
-        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
-        Page not implemented.
+        <div class="ui centered grid">
+    <div class="fourteen wide small eight wide tablet six wide computer column">
+        <div class="center aligned row">
+
+            <button class="ui fluid green basic button" ng-click="getNotSentSmses()">
+                <span class="nazanin ja-rtl">
+                    به روز رسانی مجدد اطلاعات
+                </span>
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<div class="ui basic segment">
+
+    <div ng-hide="notDeliveredSmses && notDeliveredSmses.length">
+        <p class="nazanin ja-rtl ja-align-right">
+            در حال حاضر، پیامک ارسال نشده ای وجود ندارد.
+        </p>
+    </div>
+
+    <div ng-show="notDeliveredSmses && notDeliveredSmses.length">
+        <div class="ui yellow segment ja-not-delivered-sms {{ sms === selectedSms ? 'selected' : 'not-selected' }}" ng-repeat="sms in notDeliveredSmses" ng-click="openSms(sms, $index)">
+
+            <p class="nazanin ja-rtl ja-align-right">
+                [<small>{{sms.data.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm:ss" }}</small>]&nbsp;&nbsp;
+                <strong>{{sms.data.typeDescription}}</strong>
+            </p>
+            <p class="nazanin ja-rtl ja-align-right">
+                <span ng-if="sms.state === 'not sent'">ارسال نشده</span>
+                <span ng-if="sms.state === 'not delivered'">دریافت نشده</span>
+                <strong><bdi>({{sms.status}})</bdi></strong>
+                <em><small>{{sms.statusDescription}}</small></em>
+            </p>
+
+            <form class="ui {{ updating ? 'loading' : '' }} form" ng-if="sms === selectedSms">
+
+                <div class="field">
+                    <button class="fluid ui basic gray button" ng-click="closeSelectedSms()">
+                        <span class="nazanin">بستن پنجره</span>
+                    </button>
+                </div>
+
+                <div class="ui horizontal divider">
+                    <span class="nazanin ja-rtl">
+                        پیامک اصلی، ارسال مجدد
+                    </span>
+                </div>
+
+                <div class="field">
+                    <label class="nazanin --ja-required ja-align-right">متن پیامک</label>
+                    <p class="nazanin ja-rtl ja-align-right ja-code" ng-bind="selectedSms.data.message"></p>
+                </div>
+
+                <div class="field">
+                    <button class="fluid ui blue button" ng-click="sendSmsAgain()">
+                        <span class="nazanin">ارسال مجدد پیامک</span>
+                    </button>
+                </div>
+
+                <div class="field">
+                    <button class="fluid ui teal button" id="ja-copy-message" data-clipboard-text="{{selectedSms.data.message}}" ng-click="copyMessage()">
+                        <span class="nazanin">کپی متن پیامک</span>
+                    </button>
+                </div>
+
+                <div class="ui horizontal divider">
+                    <span class="nazanin ja-rtl">
+                        سایر شماره های مقصد
+                    </span>
+                </div>
+
+                <p class="nazanin ja-rtl ja-align-right">
+                    گیرنده:
+                    <span ng-if="selectedSms.data.patient" ng-bind="selectedSms.data.patient.fullName"></span>
+                    <span ng-if="selectedSms.data.user" ng-bind="selectedSms.data.user.labName"></span>
+                    <span ng-if="selectedSms.data.newUser" ng-bind="selectedSms.data.newUser.labName"></span>
+                </p>
+
+                <div class="field" ng-repeat="number in selectedSms.data.numbers track by $index">
+                    <div class="ui labeled button">
+                        <div class="ui buttons">
+                            <div class="ui teal button" id="ja-copy-number-{{number}}" data-clipboard-text="{{number}}" ng-click="copyNumber(number)">
+                                <div class="nazanin">کپی</div>
+                            </div>
+                            <div class="ui yellow button">
+                                <a style="color: white;" class="nazanin" ng-href="{{ makeSmsHref(number, selectedSms.data.message) }}">پیامک</a>
+                            </div>
+                            <div class="ui olive button">
+                                <a style="color: white;" class="nazanin" ng-href="{{ 'tel:' + number }}">تماس</a>
+                            </div>
+                        </div>
+                        <div class="ui basic right pointing green label">
+                            {{ number | toPersianNumber }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui horizontal divider">
+                    <span class="nazanin ja-rtl">
+                        اطلاعات خام پیامک
+                    </span>
+                </div>
+
+                <div class="field">
+                    <p class="ja-ltr ja-align-left ja-code" ng-bind="selectedSms.data | json"></p>
+                </div>
+
+                <div class="field">
+                    <button class="fluid ui blue button" ng-click="checkSelectedSms()">
+                        <span class="nazanin">اطلاع رسانی تکمیل شد</span>
+                    </button>
+                </div>
+
+                <div class="field">
+                    <button class="fluid ui basic gray button" ng-click="closeSelectedSms()">
+                        <span class="nazanin">بستن پنجره</span>
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
     </div>
 
     <div ng-show="selectedSubmenu == 2">
