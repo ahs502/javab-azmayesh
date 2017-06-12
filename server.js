@@ -33,7 +33,7 @@ fs.ensureDir(config.upload_path, function(err) {
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-app.use(favicon(path.join(__dirname, 'app/public/img', 'icon-64.png')));
+app.use(favicon(path.join(__dirname, 'app/public/img/Logo', 'Logo - 256.png')));
 app.use(logger('dev' /*config.env*/ ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
