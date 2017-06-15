@@ -16,6 +16,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
         $scope.toggleMenu = toggleMenu;
 
         $scope.showMessage = showMessage;
+        $scope.showConfirmMessage = showConfirmMessage;
 
         $scope.backHandler = undefined;
         $scope.menuHandlers = undefined;
@@ -58,6 +59,29 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
                 .modal({
                     onHide: function() {
                         defer.resolve();
+                    }
+                })
+                .modal('show');
+            return defer.promise;
+        }
+
+        function showConfirmMessage(title, message, yes, no, yesColor, noColor) {
+            $scope.modal = {
+                title: title,
+                message: message,
+                yes: yes || 'بله',
+                no: no || 'خیر',
+                yesColor: yesColor || 'green',
+                noColor: noColor || 'blue'
+            };
+            var defer = $q.defer();
+            angular.element('#ja-confirm-modal')
+                .modal({
+                    onApprove: function() {
+                        defer.resolve();
+                    },
+                    onDecline: function() {
+                        defer.reject();
                     }
                 })
                 .modal('show');

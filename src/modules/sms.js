@@ -1,3 +1,5 @@
+/*global toPersianNumber*/
+
 var config = require("../../config");
 
 var utils = require("./utils");
@@ -14,6 +16,8 @@ module.exports = {
         passwordRecovery,
         postAnswer,
         otpGenerated,
+        newUserApproved,
+        newUserDeclined,
     },
     simplySendSms,
     status
@@ -123,6 +127,28 @@ function otpGenerated(relatedKeys, otp, patient) {
     });
 }
 
+function newUserApproved(relatedKeys, user) {
+    var numbers = [user.mobilePhoneNumber];
+    var message = user.labName + "،\nحساب کاربری شما تأیید و فعال شد!";
+    if (user.balance) {
+        message += "\nبرای حساب شما " + toPersianNumber(user.balance) + " تومان شارژ اولیه در نظر گرفته شده است.";
+    }
+    return sendSms('approvesignup', numbers, message, {
+        relatedKeys,
+        user
+    });
+}
+
+function newUserDeclined(relatedKeys, user) {
+    var numbers = [user.mobilePhoneNumber];
+    var message = user.labName + "،\nمتأسفانه عضویت شما در سامانه JavabAzmayesh.ir تأیید نشد.\n" +
+        "جهت اطلاعات بیشتر می توانید با ما تماس بگیرید.";
+    return sendSms('declinesignup', numbers, message, {
+        relatedKeys,
+        user
+    });
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 var smsTypeDescription = {
@@ -131,6 +157,8 @@ var smsTypeDescription = {
     'passrecovery': "بازیابی کلمه عبور آزمایشگاه",
     'postans': "نتیجه آزمایش بیمار",
     'otp': "رمز یک بار مصرف مشاهده سوابق بیمار",
+    'approvesignup': "تأیید حساب کاربری آزمایشگاه جدید",
+    'declinesignup': "عدم تأیید حساب کاربری آزمایشگاه جدید",
 };
 
 function sendSms(type, numbers, message, data) {

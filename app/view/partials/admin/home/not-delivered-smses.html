@@ -73,9 +73,11 @@
 
                 <p class="nazanin ja-rtl ja-align-right">
                     گیرنده:
-                    <span ng-if="selectedSms.data.patient" ng-bind="selectedSms.data.patient.fullName"></span>
-                    <span ng-if="selectedSms.data.user" ng-bind="selectedSms.data.user.labName"></span>
-                    <span ng-if="selectedSms.data.newUser" ng-bind="selectedSms.data.newUser.labName"></span>
+                    <strong>
+                        <span ng-if="selectedSms.data.patient" ng-bind="selectedSms.data.patient.fullName"></span>
+                        <span ng-if="selectedSms.data.user" ng-bind="selectedSms.data.user.labName"></span>
+                        <span ng-if="selectedSms.data.newUser" ng-bind="selectedSms.data.newUser.labName"></span>
+                    </strong>
                 </p>
 
                 <div class="field" ng-repeat="number in selectedSms.data.numbers track by $index">

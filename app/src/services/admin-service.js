@@ -9,6 +9,10 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         this.tryAgainNotSentSms = tryAgainNotSentSms;
         this.checkNotSentSms = checkNotSentSms;
 
+        this.getNotActivatedLabs = getNotActivatedLabs;
+        this.approveInactiveLab = approveInactiveLab;
+        this.declineInactiveLab = declineInactiveLab;
+
         this.getAllLaboratories = getAllLaboratories;
         this.editLaboratory = editLaboratory;
         this.removeLaboratory = removeLaboratory;
@@ -36,6 +40,29 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         function checkNotSentSms(smsKey) {
             return utils.httpPromiseHandler($http.post('/admin/checkNotSentSms', {
                 smsKey: smsKey
+            }));
+        }
+
+        function getNotActivatedLabs() {
+            return utils.httpPromiseHandler($http.post('/admin/getNotActivatedLabs', {}))
+                .then(function(body) {
+                    return (body.inactiveLabs || []).map(function(inactiveLab) {
+                        inactiveLab.timeStamp = new Date(inactiveLab.timeStamp);
+                        return inactiveLab;
+                    });
+                });
+        }
+
+        function approveInactiveLab(labData) {
+            labData.timeStamp = labData.timeStamp.getTime();
+            return utils.httpPromiseHandler($http.post('/admin/approveInactiveLab', {
+                labData: labData
+            }));
+        }
+
+        function declineInactiveLab(labUsername) {
+            return utils.httpPromiseHandler($http.post('/admin/declineInactiveLab', {
+                labUsername: labUsername
             }));
         }
 

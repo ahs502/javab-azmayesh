@@ -172,6 +172,24 @@
     </div>
 </div>
 
+<div id="ja-confirm-modal" class="ui modal">
+    <div class="header">
+        <span class="nazanin" ng-bind="modal.title"></span>
+    </div>
+    <div class="content">
+        <span class="nazanin"><bdi ng-bind="modal.message"></bdi></span>
+    </div>
+    <div class="actions">
+        <button class="ui {{ modal.noColor }} cancel button">
+            <span class="nazanin" ng-bind="modal.no"></span>
+        </button>
+        <button class="ui {{ modal.yesColor }} ok button">
+            <span class="nazanin" ng-bind="modal.yes"></span>
+        </button>
+    </div>
+</div>
+
+
 
         <div ng-if="footerHandlers" id="ja-main-content-footer-placeholder" class=" ja-screen"></div>
     </div>
@@ -2324,9 +2342,11 @@
 
                 <p class="nazanin ja-rtl ja-align-right">
                     گیرنده:
-                    <span ng-if="selectedSms.data.patient" ng-bind="selectedSms.data.patient.fullName"></span>
-                    <span ng-if="selectedSms.data.user" ng-bind="selectedSms.data.user.labName"></span>
-                    <span ng-if="selectedSms.data.newUser" ng-bind="selectedSms.data.newUser.labName"></span>
+                    <strong>
+                        <span ng-if="selectedSms.data.patient" ng-bind="selectedSms.data.patient.fullName"></span>
+                        <span ng-if="selectedSms.data.user" ng-bind="selectedSms.data.user.labName"></span>
+                        <span ng-if="selectedSms.data.newUser" ng-bind="selectedSms.data.newUser.labName"></span>
+                    </strong>
                 </p>
 
                 <div class="field" ng-repeat="number in selectedSms.data.numbers track by $index">
@@ -2380,8 +2400,133 @@
     </div>
 
     <div ng-show="selectedSubmenu == 2">
-        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
-        Page not implemented.
+        <div class="ui centered grid">
+    <div class="fourteen wide small eight wide tablet six wide computer column">
+        <div class="center aligned row">
+
+            <button class="ui fluid green basic button" ng-click="getNotActivatedLabs()">
+                <span class="nazanin ja-rtl">
+                    به روز رسانی مجدد اطلاعات
+                </span>
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<div class="ui basic segment">
+
+    <div ng-hide="inactiveLabs && inactiveLabs.length">
+        <p class="nazanin ja-rtl ja-align-right">
+            در حال حاضر، آزمایشگاه تازه ثبت نام کرده ای وجود ندارد که تأیید نشده باشد.
+        </p>
+    </div>
+
+    <div ng-show="inactiveLabs && inactiveLabs.length">
+        <div class="ui olive segment ja-not-activated-lab {{ $index === selectedLabIndex ? 'selected' : 'not-selected' }}" ng-repeat="lab in inactiveLabs" ng-click="$index === selectedLabIndex || openLab(lab, $index)">
+
+            <p class="nazanin ja-rtl ja-align-right">
+                [<small>{{lab.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm:ss" }}</small>]&nbsp;({{lab.username}})
+                <strong>{{lab.labName}}</strong>
+            </p>
+            <p class="nazanin ja-rtl ja-align-right">
+                {{lab.address}}
+            </p>
+
+            <form class="ui {{ updating ? 'loading' : '' }} form" ng-if="$index === selectedLabIndex">
+
+                <div class="field">
+                    <button class="fluid ui basic gray button" ng-click="closeSelectedLab()">
+                        <span class="nazanin">بستن پنجره</span>
+                    </button>
+                </div>
+
+                <div class="ui horizontal divider">
+                    <span class="nazanin ja-rtl">
+                        مشخصات آزمایشگاه
+                    </span>
+                </div>
+
+                <div class="field">
+                    <label class="nazanin ja-required">نام آزمایشگاه</label>
+                    <div class="ui input">
+                        <input type="text" ng-model="selectedLab.labName" class="nazanin ja-rtl ja-align-right">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="nazanin ja-required">تلفن همراه ارتباطی آزمایشگاه</label>
+                    <div class="ui input">
+                        <input type="tel" ng-model="selectedLab.mobilePhoneNumber" class="ja-ltr ja-align-left">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="nazanin ja-required">تلفن تماس آزمایشگاه</label>
+                    <div class="ui input">
+                        <input type="tel" ng-model="selectedLab.phoneNumber" class="ja-ltr ja-align-left">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="nazanin ja-required">آدرس آزمایشگاه</label>
+                    <div class="ui input">
+                        <input type="text" ng-model="selectedLab.address" class="nazanin ja-rtl ja-align-right">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="nazanin ja-required">کُد پُستی آزمایشگاه</label>
+                    <div class="ui input">
+                        <input type="tel" ng-model="selectedLab.postalCode" class="ja-ltr ja-align-left">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="nazanin ja-optional">آدرس وبسایت آزمایشگاه</label>
+                    <div class="ui input">
+                        <input type="text" ng-model="selectedLab.websiteAddress" class="ja-ltr ja-align-left">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="nazanin ja-required">شارژ اولیه به تومان</label>
+                    <div class="ui input">
+                        <input type="tel" ng-model="selectedLab.balance" class="ja-ltr ja-align-left">
+                    </div>
+                </div>
+
+                <div class="ui horizontal divider">
+                    <span class="nazanin ja-rtl">
+                        عملیات
+                    </span>
+                </div>
+
+                <div class="field">
+                    <button class="fluid ui blue button" ng-click="approveLab()">
+                        <span class="nazanin">آزمایشگاه تأیید شود</span>
+                    </button>
+                </div>
+
+                <div class="field">
+                    <button class="fluid ui red button" ng-click="declineLab()">
+                        <span class="nazanin">آزمایشگاه رَد شود</span>
+                    </button>
+                </div>
+
+                <div class="field">
+                    <button class="fluid ui basic gray button" ng-click="closeSelectedLab()">
+                        <span class="nazanin">بستن پنجره</span>
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
     </div>
 
     <div ng-show="selectedSubmenu == 3">

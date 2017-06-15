@@ -321,12 +321,6 @@ body {
 #ja-admin #ja-admin-loading {
   margin-top: 73px;
 }
-#ja-admin #ja-admin-home .ja-not-delivered-sms.not-selected {
-  cursor: pointer;
-}
-#ja-admin #ja-admin-home .ja-not-delivered-sms.not-selected:hover {
-  background-color: #ffffe2;
-}
 #ja-admin #ja-admin-home .ja-code {
   border: 1px solid #ee80be;
   border-radius: 5px;
@@ -334,6 +328,18 @@ body {
   padding: 9px;
   white-space: pre;
   overflow-x: auto;
+}
+#ja-admin #ja-admin-home .ja-not-delivered-sms.not-selected {
+  cursor: pointer;
+}
+#ja-admin #ja-admin-home .ja-not-delivered-sms.not-selected:hover {
+  background-color: #ffffe2;
+}
+#ja-admin #ja-admin-home .ja-not-activated-lab.not-selected {
+  cursor: pointer;
+}
+#ja-admin #ja-admin-home .ja-not-activated-lab.not-selected:hover {
+  background-color: #ffffe2;
 }
 #ja-admin #ja-admin-laboratory table.ja-admin-laboratory-table {
   width: 100%;

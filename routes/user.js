@@ -78,12 +78,11 @@ router.post('/register', function(req, res, next) {
 
     function registerUser() {
         var username = user.username;
-        ('user/active/' + username) in kfs(function(err, exists) {
-            if (err) {
-                console.error(err);
-                return utils.resEndByCode(res, 5);
-            }
-            if (exists) {
+        Promise.all([
+            (('user/active/' + username) in kfs(), kfs()),
+            (('user/inactive/' + username) in kfs(), kfs()),
+        ]).then(function(exists) {
+            if (exists[0] || exists[1]) {
                 return utils.resEndByCode(res, 10);
             }
             var validationCode = utils.generateRandomCode(4);
@@ -101,6 +100,9 @@ router.post('/register', function(req, res, next) {
                 sms.send.validationCodeForRegisteration([userConfirmingKey], user, validationCode);
                 utils.resEndByCode(res, 0);
             });
+        }, function(err) {
+            console.error(err);
+            utils.resEndByCode(res, 5);
         });
     }
 
@@ -182,17 +184,20 @@ router.post('/register/confirm', function(req, res, next) {
             data.user.balance = 0;
             data.user.userType = "laboratory";
             data.user.timeStamp = Date.now();
-
-            //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
-            kfs('user/active/' + username, data.user, function(err) {
+            kfs('user/inactive/' + username, data.user, function(err) {
                 if (err) {
                     console.error(err);
                     return utils.resEndByCode(res, 5);
                 }
-                utils.resEndByCode(res, 0);
-                statistics.dailyCount('userRegister');
+                new kfs('user/confirming/' + username, function(err) {
+                    if (err) {
+                        console.error(err);
+                        return utils.resEndByCode(res, 5);
+                    }
+                    utils.resEndByCode(res, 0);
+                    statistics.dailyCount('userRegister');
+                });
             });
-
         });
     });
 });
@@ -359,7 +364,7 @@ router.post('/edit/confirm', function(req, res, next) {
         return utils.resEndByCode(res, 50);
     }
     var validationCode = req.body.validationCode;
-    kfs('/user/confirming/' + username, function(err, data) {
+    kfs('user/confirming/' + username, function(err, data) {
         if (err) {
             console.error(err);
             return utils.resEndByCode(res, 5);
@@ -373,18 +378,21 @@ router.post('/edit/confirm', function(req, res, next) {
         if (validationCode != data.validationCode) {
             return utils.resEndByCode(res, 32);
         }
-
-        //TODO: Instead of registering the user (below code), add it to the MustBeManuallyVerified list ...
         kfs('user/active/' + username, data.user, function(err) {
             if (err) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
             }
-            utils.resEndByCode(res, 0, {
-                userInfo: getUserInfo(data.user)
+            new kfs('user/confirming/' + username, function(err) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                utils.resEndByCode(res, 0, {
+                    userInfo: getUserInfo(data.user)
+                });
             });
         });
-
     });
 });
 

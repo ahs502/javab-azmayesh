@@ -1328,6 +1328,10 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         this.tryAgainNotSentSms = tryAgainNotSentSms;
         this.checkNotSentSms = checkNotSentSms;
 
+        this.getNotActivatedLabs = getNotActivatedLabs;
+        this.approveInactiveLab = approveInactiveLab;
+        this.declineInactiveLab = declineInactiveLab;
+
         this.getAllLaboratories = getAllLaboratories;
         this.editLaboratory = editLaboratory;
         this.removeLaboratory = removeLaboratory;
@@ -1355,6 +1359,29 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         function checkNotSentSms(smsKey) {
             return utils.httpPromiseHandler($http.post('/admin/checkNotSentSms', {
                 smsKey: smsKey
+            }));
+        }
+
+        function getNotActivatedLabs() {
+            return utils.httpPromiseHandler($http.post('/admin/getNotActivatedLabs', {}))
+                .then(function(body) {
+                    return (body.inactiveLabs || []).map(function(inactiveLab) {
+                        inactiveLab.timeStamp = new Date(inactiveLab.timeStamp);
+                        return inactiveLab;
+                    });
+                });
+        }
+
+        function approveInactiveLab(labData) {
+            labData.timeStamp = labData.timeStamp.getTime();
+            return utils.httpPromiseHandler($http.post('/admin/approveInactiveLab', {
+                labData: labData
+            }));
+        }
+
+        function declineInactiveLab(labUsername) {
+            return utils.httpPromiseHandler($http.post('/admin/declineInactiveLab', {
+                labUsername: labUsername
             }));
         }
 
@@ -1878,6 +1905,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
 */
 
 /*global app*/
+/*global angular*/
 /*global $*/
 /*global simpleQueryString*/
 /*global Clipboard*/
@@ -1911,6 +1939,10 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
                         if ($scope.selectedSubmenu == 1) {
                             getNotSentSmses();
                         }
+
+                        if ($scope.selectedSubmenu == 2) {
+                            getNotActivatedLabs();
+                        }
                     });
                 }
             })
@@ -1920,9 +1952,9 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
 
         $scope.getNotSentSmses = getNotSentSmses;
         $scope.openSms = openSms;
+        $scope.closeSelectedSms = closeSelectedSms;
         $scope.sendSmsAgain = sendSmsAgain;
         $scope.checkSelectedSms = checkSelectedSms;
-        $scope.closeSelectedSms = closeSelectedSms;
         $scope.makeSmsHref = makeSmsHref;
         $scope.copyMessage = copyMessage;
         $scope.copyNumber = copyNumber;
@@ -1952,12 +1984,18 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
             }
         }
 
+        function closeSelectedSms() {
+            $scope.selectedSms = null;
+            $scope.selectedSmsIndex = null;
+        }
+
         function sendSmsAgain() {
             $scope.updating = true;
             adminService.tryAgainNotSentSms($scope.selectedSms.data.smsKey)
                 .then(function() {
                     $scope.notDeliveredSmses.splice($scope.selectedSmsIndex, 1);
-                    $scope.selectedSms = null;
+                    delete $scope.selectedSms;
+                    delete $scope.selectedSmsIndex;
                 }, function(code) {
                     alert(code);
                 }).then(function() {
@@ -1970,17 +2008,13 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
             adminService.checkNotSentSms($scope.selectedSms.data.smsKey)
                 .then(function() {
                     $scope.notDeliveredSmses.splice($scope.selectedSmsIndex, 1);
-                    $scope.selectedSms = null;
+                    delete $scope.selectedSms;
+                    delete $scope.selectedSmsIndex;
                 }, function(code) {
                     alert(code);
                 }).then(function() {
                     $scope.updating = false;
                 });
-        }
-
-        function closeSelectedSms() {
-            $scope.selectedSms = null;
-            $scope.selectedSmsIndex = null;
         }
 
         function makeSmsHref(number, message) {
@@ -2014,6 +2048,82 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
                     console.info('Error', e.action, e.text);
                 });
             }
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+
+        $scope.getNotActivatedLabs = getNotActivatedLabs;
+        $scope.openLab = openLab;
+        $scope.closeSelectedLab = closeSelectedLab;
+        $scope.approveLab = approveLab;
+        $scope.declineLab = declineLab;
+
+        function getNotActivatedLabs() {
+            $scope.setLoading(true);
+            adminService.getNotActivatedLabs()
+                .then(function(inactiveLabs) {
+                    $scope.inactiveLabs = inactiveLabs;
+                }, function(code) {
+                    alert(code);
+                }).then(function() {
+                    $scope.setLoading(false);
+                });
+        }
+
+        function openLab(lab, index) {
+            if ($scope.selectedLab === null) {
+                delete $scope.selectedLab;
+                delete $scope.selectedLabIndex;
+            }
+            else if ($scope.selectedLabIndex !== index) {
+                $scope.selectedLab = angular.copy(lab);
+                $scope.selectedLabIndex = index;
+            }
+        }
+
+        function closeSelectedLab() {
+            $scope.selectedLab = null;
+            $scope.selectedLabIndex = null;
+        }
+
+        function approveLab() {
+            $scope.showConfirmMessage('تأیید کاربر جدید',
+                    "آیا از تأیید کاربر جدید مطمئن هستید؟",
+                    'بله، تأیید شود', 'خیر',
+                    'green', 'basic gray')
+                .then(function() {
+                    $scope.updating = true;
+                    adminService.approveInactiveLab($scope.selectedLab)
+                        .then(function() {
+                            $scope.inactiveLabs.splice($scope.selectedLabIndex, 1);
+                            delete $scope.selectedLab;
+                            delete $scope.selectedLabIndex;
+                        }, function(code) {
+                            alert(code);
+                        }).then(function() {
+                            $scope.updating = false;
+                        });
+                });
+        }
+
+        function declineLab() {
+            $scope.showConfirmMessage('تأییدیه برای حذف کاربر جدید',
+                    "آیا از تصمیم خود مبنی بر حذف کامل کاربر جدید مطمئن هستید؟\n در صورت حذف، امکان بازگشت وجود ندارد.",
+                    'بله، حذف شود', 'نه، حذف نشود',
+                    'red', 'basic green')
+                .then(function() {
+                    $scope.updating = true;
+                    adminService.declineInactiveLab($scope.selectedLab.username)
+                        .then(function() {
+                            $scope.inactiveLabs.splice($scope.selectedLabIndex, 1);
+                            delete $scope.selectedLab;
+                            delete $scope.selectedLabIndex;
+                        }, function(code) {
+                            alert(code);
+                        }).then(function() {
+                            $scope.updating = false;
+                        });
+                });
         }
 
     }
@@ -4185,6 +4295,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
         $scope.toggleMenu = toggleMenu;
 
         $scope.showMessage = showMessage;
+        $scope.showConfirmMessage = showConfirmMessage;
 
         $scope.backHandler = undefined;
         $scope.menuHandlers = undefined;
@@ -4227,6 +4338,29 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
                 .modal({
                     onHide: function() {
                         defer.resolve();
+                    }
+                })
+                .modal('show');
+            return defer.promise;
+        }
+
+        function showConfirmMessage(title, message, yes, no, yesColor, noColor) {
+            $scope.modal = {
+                title: title,
+                message: message,
+                yes: yes || 'بله',
+                no: no || 'خیر',
+                yesColor: yesColor || 'green',
+                noColor: noColor || 'blue'
+            };
+            var defer = $q.defer();
+            angular.element('#ja-confirm-modal')
+                .modal({
+                    onApprove: function() {
+                        defer.resolve();
+                    },
+                    onDecline: function() {
+                        defer.reject();
                     }
                 })
                 .modal('show');

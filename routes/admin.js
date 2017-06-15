@@ -170,6 +170,83 @@ router.post('/checkNotSentSms', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.post('/getNotActivatedLabs', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    kfs('user/inactive/', function(err, inactiveUserKeys) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        if (!inactiveUserKeys || !inactiveUserKeys.length) {
+            return utils.resEndByCode(res, 0, {
+                inactiveLabs: []
+            });
+        }
+        Promise.all(inactiveUserKeys.map(inactiveUserKey => kfs(inactiveUserKey)))
+            .then(inactiveUsers => {
+                utils.resEndByCode(res, 0, {
+                    inactiveLabs: inactiveUsers
+                });
+            }, err => {
+                console.error(err);
+                utils.resEndByCode(res, 5);
+            });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/approveInactiveLab', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var labData = req.body.labData;
+    var labUsername = labData.username;
+    var labKey = 'user/active/' + labUsername;
+    kfs(labKey, labData, function(err) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        new kfs('user/inactive/' + labUsername, function(err) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            sms.send.newUserApproved([labKey], labData);
+            utils.resEndByCode(res, 0);
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/declineInactiveLab', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var labUsername = req.body.labUsername;
+    var labKey = 'user/inactive/' + labUsername;
+    kfs(labKey, function(err, labData) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        new kfs(labKey, function(err) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            sms.send.newUserDeclined([], labData);
+            utils.resEndByCode(res, 0);
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.post('/getAllLaboratories', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'administrator');
     if (!userInfo) return;

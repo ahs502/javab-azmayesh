@@ -12,3 +12,21 @@
         </button>
     </div>
 </div>
+
+<div id="ja-confirm-modal" class="ui modal">
+    <div class="header">
+        <span class="nazanin" ng-bind="modal.title"></span>
+    </div>
+    <div class="content">
+        <span class="nazanin"><bdi ng-bind="modal.message"></bdi></span>
+    </div>
+    <div class="actions">
+        <button class="ui {{ modal.noColor }} cancel button">
+            <span class="nazanin" ng-bind="modal.no"></span>
+        </button>
+        <button class="ui {{ modal.yesColor }} ok button">
+            <span class="nazanin" ng-bind="modal.yes"></span>
+        </button>
+    </div>
+</div>
+
