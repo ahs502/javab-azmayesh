@@ -56,7 +56,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
                 .then(function() {
                     $scope.preparingPayment = false;
                     $scope.showMessage('درخواست شما ثبت شد',
-                            'درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد')
+                            'درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد.')
                         .then(function() {
                             $state.go('panel.home');
                         });

@@ -339,7 +339,13 @@ body {
   cursor: pointer;
 }
 #ja-admin #ja-admin-home .ja-not-activated-lab.not-selected:hover {
-  background-color: #ffffe2;
+  background-color: #e8fdcc;
+}
+#ja-admin #ja-admin-home .ja-new-c2c-payment-code.not-selected {
+  cursor: pointer;
+}
+#ja-admin #ja-admin-home .ja-new-c2c-payment-code.not-selected:hover {
+  background-color: #d9f8ff;
 }
 #ja-admin #ja-admin-laboratory table.ja-admin-laboratory-table {
   width: 100%;

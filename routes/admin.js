@@ -247,6 +247,117 @@ router.post('/declineInactiveLab', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.post('/getAllNewC2cPaymentReceipts', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    kfs('balance/c2c/new/', function(err, c2cReceiptKeys) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        Promise.all(c2cReceiptKeys.map(c2cReceiptKey => kfs(c2cReceiptKey)))
+            .then(function(c2cReceiptCodes) {
+                utils.resEndByCode(res, 0, {
+                    c2cReceiptCodes
+                });
+            }, function(err) {
+                if (err) {
+                    console.error(err);
+                    utils.resEndByCode(res, 5);
+                }
+            });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/chargeLabFromC2c', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var c2cReceiptId = req.body.c2cReceiptId;
+    var labUsername = req.body.labUsername;
+    var amount = req.body.amount;
+    var labKey = 'user/active/' + labUsername;
+    var c2cNewKey = 'balance/c2c/new/' + c2cReceiptId;
+    var c2cPaidKey = 'balance/c2c/paied/' + c2cReceiptId;
+    kfs(c2cNewKey, function(err, c2cReceipt) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        kfs(labKey, function(err, labData) {
+            if (err || !labData) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            labData.balance = Number(labData.balance || 0) + Number(amount || 0);
+            kfs(labKey, labData, function(err) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                kfs(c2cPaidKey, c2cReceipt, function(err) {
+                    if (err) {
+                        console.error(err);
+                        return utils.resEndByCode(res, 5);
+                    }
+                    new kfs(c2cNewKey, function(err) {
+                        if (err) {
+                            console.error(err);
+                            return utils.resEndByCode(res, 5);
+                        }
+                        sms.send.c2cReceiptCodeApproved([labKey, c2cPaidKey], labData, c2cReceipt, amount);
+                        utils.resEndByCode(res, 0);
+                    });
+                });
+            });
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/declineC2cReceipt', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var c2cReceiptId = req.body.c2cReceiptId;
+    var c2cNewKey = 'balance/c2c/new/' + c2cReceiptId;
+    var c2cDeclinedKey = 'balance/c2c/declined/' + c2cReceiptId;
+    kfs(c2cNewKey, function(err, c2cReceipt) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        var labUsername = c2cReceipt.username;
+        var labKey = 'user/active/' + labUsername;
+        kfs(labKey, function(err, labData) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            kfs(c2cDeclinedKey, c2cReceipt, function(err) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                new kfs(c2cNewKey, function(err) {
+                    if (err) {
+                        console.error(err);
+                        return utils.resEndByCode(res, 5);
+                    }
+                    sms.send.c2cReceiptCodeDeclined([labKey, c2cDeclinedKey], labData, c2cReceipt);
+                    utils.resEndByCode(res, 0);
+                });
+            });
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.post('/getAllLaboratories', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'administrator');
     if (!userInfo) return;

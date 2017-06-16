@@ -18,6 +18,8 @@ module.exports = {
         otpGenerated,
         newUserApproved,
         newUserDeclined,
+        c2cReceiptCodeApproved,
+        c2cReceiptCodeDeclined,
     },
     simplySendSms,
     status
@@ -149,6 +151,32 @@ function newUserDeclined(relatedKeys, user) {
     });
 }
 
+function c2cReceiptCodeApproved(relatedKeys, user, c2cReceipt, amount) {
+    var numbers = [user.mobilePhoneNumber];
+    var message = user.labName + "،\nکُد رهگیری ثبت شده شما به شماره " +
+        toPersianNumber(c2cReceipt.c2cReceiptCode) + " تأیید شد و مبلغ " +
+        toPersianNumber(amount) + " تومان به حساب شما واریز شد. \nشارژ باقیمانده:\n" +
+        toPersianNumber(user.balance) + " تومان";
+    return sendSms('approvec2c', numbers, message, {
+        relatedKeys,
+        user,
+        c2cReceipt,
+        amount
+    });
+}
+
+function c2cReceiptCodeDeclined(relatedKeys, user, c2cReceipt) {
+    var numbers = [user.mobilePhoneNumber];
+    var message = user.labName + "،\nمتأسفانه کُد رهگیری ثبت شده شما به شماره " +
+        toPersianNumber(c2cReceipt.c2cReceiptCode) + " مورد تأیید سامانه قرار نگرفت.\n" +
+        "جهت اطلاعات بیشتر می توانید با ما تماس بگیرید.";
+    return sendSms('declinec2c', numbers, message, {
+        relatedKeys,
+        user,
+        c2cReceipt
+    });
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 var smsTypeDescription = {
@@ -159,6 +187,8 @@ var smsTypeDescription = {
     'otp': "رمز یک بار مصرف مشاهده سوابق بیمار",
     'approvesignup': "تأیید حساب کاربری آزمایشگاه جدید",
     'declinesignup': "عدم تأیید حساب کاربری آزمایشگاه جدید",
+    'approvec2c': "تأیید کُد رهگیری پرداخت کارت به کارت آزمایشگاه",
+    'declinec2c': "عدم تأیید کُد رهگیری پرداخت کارت به کارت آزمایشگاه",
 };
 
 function sendSms(type, numbers, message, data) {

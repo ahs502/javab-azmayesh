@@ -1332,6 +1332,10 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         this.approveInactiveLab = approveInactiveLab;
         this.declineInactiveLab = declineInactiveLab;
 
+        this.getAllNewC2cPaymentReceipts = getAllNewC2cPaymentReceipts;
+        this.chargeLabFromC2c = chargeLabFromC2c;
+        this.declineC2cReceipt = declineC2cReceipt;
+
         this.getAllLaboratories = getAllLaboratories;
         this.editLaboratory = editLaboratory;
         this.removeLaboratory = removeLaboratory;
@@ -1382,6 +1386,30 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         function declineInactiveLab(labUsername) {
             return utils.httpPromiseHandler($http.post('/admin/declineInactiveLab', {
                 labUsername: labUsername
+            }));
+        }
+
+        function getAllNewC2cPaymentReceipts() {
+            return utils.httpPromiseHandler($http.post('/admin/getAllNewC2cPaymentReceipts', {}))
+                .then(function(body) {
+                    return (body.c2cReceiptCodes || []).map(function(c2cReceiptCode) {
+                        c2cReceiptCode.timeStamp = new Date(c2cReceiptCode.timeStamp);
+                        return c2cReceiptCode;
+                    });
+                });
+        }
+
+        function chargeLabFromC2c(c2cReceiptId, labUsername, amount) {
+            return utils.httpPromiseHandler($http.post('/admin/chargeLabFromC2c', {
+                c2cReceiptId: c2cReceiptId,
+                labUsername: labUsername,
+                amount: amount
+            }));
+        }
+
+        function declineC2cReceipt(c2cReceiptId) {
+            return utils.httpPromiseHandler($http.post('/admin/declineC2cReceipt', {
+                c2cReceiptId: c2cReceiptId
             }));
         }
 
@@ -1936,13 +1964,9 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
                         $scope.selectedSubmenu = value;
                         $scope.selectedSubmenuText = text;
 
-                        if ($scope.selectedSubmenu == 1) {
-                            getNotSentSmses();
-                        }
-
-                        if ($scope.selectedSubmenu == 2) {
-                            getNotActivatedLabs();
-                        }
+                        if ($scope.selectedSubmenu == 1) getNotSentSmses();
+                        if ($scope.selectedSubmenu == 2) getNotActivatedLabs();
+                        if ($scope.selectedSubmenu == 3) getAllNewC2cPaymentReceipts();
                     });
                 }
             })
@@ -2118,6 +2142,78 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
                             $scope.inactiveLabs.splice($scope.selectedLabIndex, 1);
                             delete $scope.selectedLab;
                             delete $scope.selectedLabIndex;
+                        }, function(code) {
+                            alert(code);
+                        }).then(function() {
+                            $scope.updating = false;
+                        });
+                });
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+
+        $scope.getAllNewC2cPaymentReceipts = getAllNewC2cPaymentReceipts;
+        $scope.openC2c = openC2c;
+        $scope.closeSelectedC2c = closeSelectedC2c;
+        $scope.chargeLab = chargeLab;
+        $scope.declineC2c = declineC2c;
+
+        function getAllNewC2cPaymentReceipts() {
+            $scope.setLoading(true);
+            adminService.getAllNewC2cPaymentReceipts()
+                .then(function(c2cPaymentCodes) {
+                    $scope.c2cPaymentCodes = c2cPaymentCodes;
+                }, function(code) {
+                    alert(code);
+                }).then(function() {
+                    $scope.setLoading(false);
+                });
+        }
+
+        function openC2c(c2c, index) {
+            if ($scope.selectedC2c === null) {
+                delete $scope.selectedC2c;
+                delete $scope.selectedC2cIndex;
+            }
+            else if ($scope.selectedC2cIndex !== index) {
+                $scope.selectedC2c = c2c;
+                $scope.selectedC2cIndex = index;
+            }
+        }
+
+        function closeSelectedC2c() {
+            $scope.selectedC2c = null;
+            $scope.selectedC2cIndex = null;
+        }
+
+        function chargeLab(charge) {
+            var amount = Number(charge || '');
+            if (!amount) return;
+            $scope.updating = true;
+            adminService.chargeLabFromC2c($scope.selectedC2c.id, $scope.selectedC2c.username, amount)
+                .then(function() {
+                    $scope.c2cPaymentCodes.splice($scope.selectedC2cIndex, 1);
+                    delete $scope.selectedC2c;
+                    delete $scope.selectedC2cIndex;
+                }, function(code) {
+                    alert(code);
+                }).then(function() {
+                    $scope.updating = false;
+                });
+        }
+
+        function declineC2c() {
+            $scope.showConfirmMessage('حذف کد رهگیری ثبت شده',
+                    "شما در شُرُف حذف و نا دیده گرفتن شماره رهگیری پرداخت ثبت شده توسط کاربر هستید.\nآیا از این کار اطمینان دارید؟",
+                    'بله، حذف شود', 'نه، حذف نشود',
+                    'red', 'basic green')
+                .then(function() {
+                    $scope.updating = true;
+                    adminService.declineC2cReceipt($scope.selectedC2c.id)
+                        .then(function() {
+                            $scope.c2cPaymentCodes.splice($scope.selectedC2cIndex, 1);
+                            delete $scope.selectedC2c;
+                            delete $scope.selectedC2cIndex;
                         }, function(code) {
                             alert(code);
                         }).then(function() {
@@ -2950,7 +3046,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
                 .then(function() {
                     $scope.preparingPayment = false;
                     $scope.showMessage('درخواست شما ثبت شد',
-                            'درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد')
+                            'درخواست شما در اسرع وقت مورد بررسی قرار خواهد گرفت و حساب شما شارژ خواهد شد.')
                         .then(function() {
                             $state.go('panel.home');
                         });
