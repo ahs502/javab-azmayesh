@@ -17,6 +17,10 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         this.chargeLabFromC2c = chargeLabFromC2c;
         this.declineC2cReceipt = declineC2cReceipt;
 
+        this.getNewFeedbacks = getNewFeedbacks;
+        this.checkFeedback = checkFeedback;
+        this.respondFeedback = respondFeedback;
+
         this.getAllLaboratories = getAllLaboratories;
         this.editLaboratory = editLaboratory;
         this.removeLaboratory = removeLaboratory;
@@ -91,6 +95,29 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         function declineC2cReceipt(c2cReceiptId) {
             return utils.httpPromiseHandler($http.post('/admin/declineC2cReceipt', {
                 c2cReceiptId: c2cReceiptId
+            }));
+        }
+
+        function getNewFeedbacks() {
+            return utils.httpPromiseHandler($http.post('/admin/getNewFeedbacks', {}))
+                .then(function(body) {
+                    return (body.feedbacks || []).map(function(lab) {
+                        lab.timeStamp = new Date(lab.timeStamp);
+                        return lab;
+                    });
+                });
+        }
+
+        function checkFeedback(feedbackId) {
+            return utils.httpPromiseHandler($http.post('/admin/checkFeedback', {
+                feedbackId: feedbackId
+            }));
+        }
+
+        function respondFeedback(feedbackId, message) {
+            return utils.httpPromiseHandler($http.post('/admin/respondFeedback', {
+                feedbackId: feedbackId,
+                message: message
             }));
         }
 

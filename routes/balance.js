@@ -39,7 +39,6 @@ router.post('/submit/c2cReceiptCode', function(req, res, next) {
         var receiptKey = 'balance/c2c/new/' + id;
         var receiptData = {
             id,
-            c2cReceiptKey: receiptKey,
             c2cReceiptCode,
             username,
             labName,

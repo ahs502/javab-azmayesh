@@ -7,5 +7,7 @@ app.controller('AdminPatientController', ['$scope', '$rootScope', '$state',
 
         $scope.setPageTitle('بیمارها');
 
+        $scope.setBackHandler($scope.menuHandlers.goToMainPage);
+
     }
 ]);

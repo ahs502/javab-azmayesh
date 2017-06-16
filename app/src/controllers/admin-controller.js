@@ -40,8 +40,6 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
             }
         });
 
-        $scope.setBackHandler($scope.menuHandlers.logout);
-
         var headerHandlers = {
             pageTitle: ''
         };

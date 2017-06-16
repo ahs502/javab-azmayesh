@@ -20,6 +20,7 @@ module.exports = {
         newUserDeclined,
         c2cReceiptCodeApproved,
         c2cReceiptCodeDeclined,
+        respondFeedback,
     },
     simplySendSms,
     status
@@ -177,6 +178,14 @@ function c2cReceiptCodeDeclined(relatedKeys, user, c2cReceipt) {
     });
 }
 
+function respondFeedback(relatedKeys, feedback, message) {
+    var numbers = [feedback.mobilePhoneNumber];
+    return sendSms('respondfeedback', numbers, message, {
+        relatedKeys,
+        feedback
+    });
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 var smsTypeDescription = {
@@ -189,6 +198,7 @@ var smsTypeDescription = {
     'declinesignup': "عدم تأیید حساب کاربری آزمایشگاه جدید",
     'approvec2c': "تأیید کُد رهگیری پرداخت کارت به کارت آزمایشگاه",
     'declinec2c': "عدم تأیید کُد رهگیری پرداخت کارت به کارت آزمایشگاه",
+    'respondfeedback': "پاسخ به بازخورد ثبت شده",
 };
 
 function sendSms(type, numbers, message, data) {

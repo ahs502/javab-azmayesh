@@ -8,6 +8,8 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
 
         $scope.setPageTitle('پیامک ها');
 
+        $scope.setBackHandler($scope.menuHandlers.goToMainPage);
+
         $scope.submenus = [
             'ارسال پیامک آزمایشی',
             'فهرست تمام شماره تلفن های استفاده شده',

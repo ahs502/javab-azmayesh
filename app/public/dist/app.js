@@ -1336,6 +1336,10 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         this.chargeLabFromC2c = chargeLabFromC2c;
         this.declineC2cReceipt = declineC2cReceipt;
 
+        this.getNewFeedbacks = getNewFeedbacks;
+        this.checkFeedback = checkFeedback;
+        this.respondFeedback = respondFeedback;
+
         this.getAllLaboratories = getAllLaboratories;
         this.editLaboratory = editLaboratory;
         this.removeLaboratory = removeLaboratory;
@@ -1410,6 +1414,29 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         function declineC2cReceipt(c2cReceiptId) {
             return utils.httpPromiseHandler($http.post('/admin/declineC2cReceipt', {
                 c2cReceiptId: c2cReceiptId
+            }));
+        }
+
+        function getNewFeedbacks() {
+            return utils.httpPromiseHandler($http.post('/admin/getNewFeedbacks', {}))
+                .then(function(body) {
+                    return (body.feedbacks || []).map(function(lab) {
+                        lab.timeStamp = new Date(lab.timeStamp);
+                        return lab;
+                    });
+                });
+        }
+
+        function checkFeedback(feedbackId) {
+            return utils.httpPromiseHandler($http.post('/admin/checkFeedback', {
+                feedbackId: feedbackId
+            }));
+        }
+
+        function respondFeedback(feedbackId, message) {
+            return utils.httpPromiseHandler($http.post('/admin/respondFeedback', {
+                feedbackId: feedbackId,
+                message: message
             }));
         }
 
@@ -1651,11 +1678,11 @@ app.service('MasterService', ['$q', '$http', '$window', 'Utils',
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 80
-        function sendFeedback(email, message, invalidModelHandler) {
+        // May reject by code : 1, 2, 5, 80
+        function sendFeedback(mobilePhoneNumber, message, invalidModelHandler) {
             return utils.httpPromiseHandler($http.post('/master/send/feedback', {
-                email:email,
-                message:message
+                mobilePhoneNumber: mobilePhoneNumber,
+                message: message
             }), function(data) {
                 if (invalidModelHandler)
                     invalidModelHandler(data.errors || {});
@@ -1664,6 +1691,7 @@ app.service('MasterService', ['$q', '$http', '$window', 'Utils',
 
     }
 ]);
+
 
 /*
 	AHS502 : End of 'master-service.js'
@@ -1967,6 +1995,7 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
                         if ($scope.selectedSubmenu == 1) getNotSentSmses();
                         if ($scope.selectedSubmenu == 2) getNotActivatedLabs();
                         if ($scope.selectedSubmenu == 3) getAllNewC2cPaymentReceipts();
+                        if ($scope.selectedSubmenu == 4) getNewFeedbacks();
                     });
                 }
             })
@@ -2222,6 +2251,76 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
                 });
         }
 
+        ////////////////////////////////////////////////////////////////////////
+
+        $scope.getNewFeedbacks = getNewFeedbacks;
+        $scope.openFb = openFb;
+        $scope.closeSelectedFb = closeSelectedFb;
+        $scope.checkFb = checkFb;
+        $scope.respondFb = respondFb;
+
+        function getNewFeedbacks() {
+            $scope.setLoading(true);
+            adminService.getNewFeedbacks()
+                .then(function(feedbacks) {
+                    $scope.feedbacks = feedbacks;
+                }, function(code) {
+                    alert(code);
+                }).then(function() {
+                    $scope.setLoading(false);
+                });
+        }
+
+        function openFb(fb, index) {
+            if ($scope.selectedFb === null) {
+                delete $scope.selectedFb;
+                delete $scope.selectedFbIndex;
+            }
+            else if ($scope.selectedFbIndex !== index) {
+                $scope.selectedFb = fb;
+                $scope.selectedFbIndex = index;
+            }
+        }
+
+        function closeSelectedFb() {
+            $scope.selectedFb = null;
+            $scope.selectedFbIndex = null;
+        }
+
+        function checkFb() {
+            $scope.showConfirmMessage('حذف بازخورد ثیت شده کاربر',
+                    "پس از تأیید، بازخورد مورد نظر از سامانه حذف می شود.\nآیا این بازخورد را مطالعه و بررسی کرده و پاسخ مناسب را به کاربر داده اید؟",
+                    'بله، حذف شود', 'نه، حذف نشود',
+                    'orange', 'basic green')
+                .then(function() {
+                    $scope.updating = true;
+                    adminService.checkFeedback($scope.selectedFb.id)
+                        .then(function() {
+                            $scope.feedbacks.splice($scope.selectedFbIndex, 1);
+                            delete $scope.selectedFb;
+                            delete $scope.selectedFbIndex;
+                        }, function(code) {
+                            alert(code);
+                        }).then(function() {
+                            $scope.updating = false;
+                        });
+                });
+        }
+
+        function respondFb(message) {
+            $scope.updating = true;
+            adminService.respondFeedback($scope.selectedFb.id, message)
+                .then(function() {
+                    $scope.feedbacks.splice($scope.selectedFbIndex, 1);
+                    delete $scope.selectedFb;
+                    delete $scope.selectedFbIndex;
+                }, function(code) {
+                    alert(code);
+                }).then(function() {
+                    $scope.updating = false;
+                });
+        }
+
     }
 ]);
 
@@ -2450,13 +2549,13 @@ app.controller('CommonContactController', ['$scope', '$state', '$stateParams', '
             $state.go($scope.previousState);
         });
 
-        //$scope.email
+        //$scope.mobilePhoneNumber
         //$scope.message
 
         $scope.vs = new ValidationSystem($scope)
-            .field('email', [
+            .field('mobilePhoneNumber', [
                 ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.email()
+                ValidationSystem.validators.mobilePhoneNumber()
             ])
             .field('message', [
                 ValidationSystem.validators.notEmpty()
@@ -2466,7 +2565,7 @@ app.controller('CommonContactController', ['$scope', '$state', '$stateParams', '
             if (!$scope.vs.validate()) return;
 
             $scope.sendingFeedback = true;
-            masterService.sendFeedback($scope.email, $scope.message, $scope.vs.dictate)
+            masterService.sendFeedback($scope.mobilePhoneNumber, $scope.message, $scope.vs.dictate)
                 .then(function() {
                     $scope.sendingFeedback = false;
                     $scope.showMessage('ارسال موفقیت آمیز پیام',

@@ -13,6 +13,8 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
 
         $scope.setPageTitle((userInfo && userInfo.fullName) || ' ');
 
+        $scope.setBackHandler($scope.menuHandlers.logout);
+
         $scope.submenus = [
             'صفحه اصلی',
             'پیامک های ارسال نشده',
@@ -33,6 +35,7 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
                         if ($scope.selectedSubmenu == 1) getNotSentSmses();
                         if ($scope.selectedSubmenu == 2) getNotActivatedLabs();
                         if ($scope.selectedSubmenu == 3) getAllNewC2cPaymentReceipts();
+                        if ($scope.selectedSubmenu == 4) getNewFeedbacks();
                     });
                 }
             })
@@ -285,6 +288,76 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
                         }).then(function() {
                             $scope.updating = false;
                         });
+                });
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+
+        $scope.getNewFeedbacks = getNewFeedbacks;
+        $scope.openFb = openFb;
+        $scope.closeSelectedFb = closeSelectedFb;
+        $scope.checkFb = checkFb;
+        $scope.respondFb = respondFb;
+
+        function getNewFeedbacks() {
+            $scope.setLoading(true);
+            adminService.getNewFeedbacks()
+                .then(function(feedbacks) {
+                    $scope.feedbacks = feedbacks;
+                }, function(code) {
+                    alert(code);
+                }).then(function() {
+                    $scope.setLoading(false);
+                });
+        }
+
+        function openFb(fb, index) {
+            if ($scope.selectedFb === null) {
+                delete $scope.selectedFb;
+                delete $scope.selectedFbIndex;
+            }
+            else if ($scope.selectedFbIndex !== index) {
+                $scope.selectedFb = fb;
+                $scope.selectedFbIndex = index;
+            }
+        }
+
+        function closeSelectedFb() {
+            $scope.selectedFb = null;
+            $scope.selectedFbIndex = null;
+        }
+
+        function checkFb() {
+            $scope.showConfirmMessage('حذف بازخورد ثیت شده کاربر',
+                    "پس از تأیید، بازخورد مورد نظر از سامانه حذف می شود.\nآیا این بازخورد را مطالعه و بررسی کرده و پاسخ مناسب را به کاربر داده اید؟",
+                    'بله، حذف شود', 'نه، حذف نشود',
+                    'orange', 'basic green')
+                .then(function() {
+                    $scope.updating = true;
+                    adminService.checkFeedback($scope.selectedFb.id)
+                        .then(function() {
+                            $scope.feedbacks.splice($scope.selectedFbIndex, 1);
+                            delete $scope.selectedFb;
+                            delete $scope.selectedFbIndex;
+                        }, function(code) {
+                            alert(code);
+                        }).then(function() {
+                            $scope.updating = false;
+                        });
+                });
+        }
+
+        function respondFb(message) {
+            $scope.updating = true;
+            adminService.respondFeedback($scope.selectedFb.id, message)
+                .then(function() {
+                    $scope.feedbacks.splice($scope.selectedFbIndex, 1);
+                    delete $scope.selectedFb;
+                    delete $scope.selectedFbIndex;
+                }, function(code) {
+                    alert(code);
+                }).then(function() {
+                    $scope.updating = false;
                 });
         }
 

@@ -7,11 +7,11 @@ app.service('MasterService', ['$q', '$http', '$window', 'Utils',
 
         /////////////////////////////////////////////////////
 
-        // May reject by code : 1, 2, 80
-        function sendFeedback(email, message, invalidModelHandler) {
+        // May reject by code : 1, 2, 5, 80
+        function sendFeedback(mobilePhoneNumber, message, invalidModelHandler) {
             return utils.httpPromiseHandler($http.post('/master/send/feedback', {
-                email:email,
-                message:message
+                mobilePhoneNumber: mobilePhoneNumber,
+                message: message
             }), function(data) {
                 if (invalidModelHandler)
                     invalidModelHandler(data.errors || {});

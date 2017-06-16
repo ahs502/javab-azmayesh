@@ -1,0 +1,85 @@
+<div class="ui centered grid">
+    <div class="fourteen wide small eight wide tablet six wide computer column">
+        <div class="center aligned row">
+
+            <button class="ui fluid green basic button" ng-click="getNewFeedbacks()">
+                <span class="nazanin ja-rtl">
+                    به روز رسانی مجدد اطلاعات
+                </span>
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<div class="ui basic segment">
+
+    <div ng-hide="feedbacks && feedbacks.length">
+        <p class="nazanin ja-rtl ja-align-right">
+            در حال حاضر، بازخورد بررسی نشده جدیدی وجود ندارد.
+        </p>
+    </div>
+
+    <div ng-show="feedbacks && feedbacks.length">
+        <div class="ui purple segment ja-new-feedback {{ $index === selectedFbIndex ? 'selected' : 'not-selected' }}" ng-repeat="fb in feedbacks" ng-click="$index === selectedFbIndex || openFb(fb, $index)">
+
+            <p class="nazanin ja-rtl ja-align-right">
+                [<small>{{fb.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm:ss" }}</small>]
+                <strong>{{fb.mobilePhoneNumber | toPersianNumber}}</strong>
+            </p>
+            <p class="nazanin ja-rtl ja-align-right ja-code" ng-bind="fb.message"></p>
+
+            <form class="ui {{ updating ? 'loading' : '' }} form" ng-if="$index === selectedFbIndex">
+
+                <div class="field">
+                    <button class="fluid ui basic gray button" ng-click="closeSelectedFb()">
+                        <span class="nazanin">بستن پنجره</span>
+                    </button>
+                </div>
+
+                <div class="ui horizontal divider">
+                    <span class="nazanin ja-rtl">
+                        عملیات
+                    </span>
+                </div>
+
+                <div class="field">
+                    <label class="nazanin --ja-required">پاسخ به کاربر</label>
+                    <div class="ui input">
+                        <textarea class="nazanin ja-rtl" ng-model="respondMessage" rows=6 maxlength=10000 placeholder=""></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <button class="fluid ui blue button" ng-click="respondFb(respondMessage)">
+                        <span class="nazanin">ارسال پاسخ به کاربر</span>
+                    </button>
+                </div>
+
+                <div class="field ja-align-right">
+                    <a style="color: white;" class="ui green button" ng-href="{{ 'tel:' + fb.mobilePhoneNumber }}">
+                        <span class="nazanin">تماس تلفنی با کاربر</span>
+                    </a>
+                    <bdi><span class="nazanin ja-rtl">
+                        برای گوشی های موبایل:
+                    </span></bdi>
+                </div>
+
+                <div class="field">
+                    <button class="fluid ui orange button" ng-click="checkFb()">
+                        <span class="nazanin">بازخورد بررسی شد</span>
+                    </button>
+                </div>
+
+                <div class="field">
+                    <button class="fluid ui basic gray button" ng-click="closeSelectedFb()">
+                        <span class="nazanin">بستن پنجره</span>
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

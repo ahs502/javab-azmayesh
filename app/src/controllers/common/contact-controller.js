@@ -14,13 +14,13 @@ app.controller('CommonContactController', ['$scope', '$state', '$stateParams', '
             $state.go($scope.previousState);
         });
 
-        //$scope.email
+        //$scope.mobilePhoneNumber
         //$scope.message
 
         $scope.vs = new ValidationSystem($scope)
-            .field('email', [
+            .field('mobilePhoneNumber', [
                 ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.email()
+                ValidationSystem.validators.mobilePhoneNumber()
             ])
             .field('message', [
                 ValidationSystem.validators.notEmpty()
@@ -30,7 +30,7 @@ app.controller('CommonContactController', ['$scope', '$state', '$stateParams', '
             if (!$scope.vs.validate()) return;
 
             $scope.sendingFeedback = true;
-            masterService.sendFeedback($scope.email, $scope.message, $scope.vs.dictate)
+            masterService.sendFeedback($scope.mobilePhoneNumber, $scope.message, $scope.vs.dictate)
                 .then(function() {
                     $scope.sendingFeedback = false;
                     $scope.showMessage('ارسال موفقیت آمیز پیام',

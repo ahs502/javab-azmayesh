@@ -18,17 +18,17 @@ var querystring = require('querystring');
 ////////////////////////////////////////////////////////////////////////////////
 
 router.post('/send/feedback', function(req, res, next) {
-    var email = req.body.email || '';
+    var mobilePhoneNumber = req.body.mobilePhoneNumber || '';
     var message = req.body.message || '';
     var feedback = {
-        email,
+        mobilePhoneNumber,
         message
     };
 
     var feedbackValidator = new Validator(feedback)
-        .field('email', [
+        .field('mobilePhoneNumber', [
             ValidationSystem.validators.notEmpty(),
-            ValidationSystem.validators.email()
+            ValidationSystem.validators.mobilePhoneNumber()
         ])
         .field('message', [
             ValidationSystem.validators.notEmpty()
@@ -39,10 +39,18 @@ router.post('/send/feedback', function(req, res, next) {
         });
     }
 
-    //TODO: Do something about this feedback:
-    console.log('FEEDBACK:', email);
-    console.log(message);
-    utils.resEndByCode(res, 0);
+    utils.generateId('feedback').then(function(id) {
+        feedback.id = id;
+        feedback.timeStamp = Date.now();
+        var feedbackNewKey = 'feedback/new/' + id;
+        kfs(feedbackNewKey, feedback, function(err) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            utils.resEndByCode(res, 0);
+        });
+    });
 });
 
 ////////////////////////////////////////////////////////////////////////////////

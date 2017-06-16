@@ -23,8 +23,8 @@ router.post('/getNotSentSmses', function(req, res, next) {
         var jYMD = date.jYMD();
         return kfs('sms/' + jYMD[0] + '/' + jYMD[1] + '/' + jYMD[2] + '/');
     })).then(smsKeyCollections => {
-        smsKeyCollections.forEach(smsKeyCollection => smsKeyCollection.sort((sk1, sk2) => {
-            return Number(sk1.match(/([0-9]+)$/g)[0]) - Number(sk1.match(/([0-9]+)$/g)[0]);
+        smsKeyCollections.forEach(smsKeyCollection => smsKeyCollection.sort((k1, k2) => {
+            return Number(k1.match(/([0-9]+)$/g)[0]) - Number(k1.match(/([0-9]+)$/g)[0]);
         }));
         var smsKeys = smsKeyCollections.reduce((allSmsKeys, smsKeysCollection) => allSmsKeys.concat(smsKeysCollection));
         return Promise.all(smsKeys.map((smsKey) => kfs(smsKey)));
@@ -351,6 +351,95 @@ router.post('/declineC2cReceipt', function(req, res, next) {
                     sms.send.c2cReceiptCodeDeclined([labKey, c2cDeclinedKey], labData, c2cReceipt);
                     utils.resEndByCode(res, 0);
                 });
+            });
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/getNewFeedbacks', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    kfs('feedback/new/', function(err, feedbackKeys) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        feedbackKeys = feedbackKeys.sort((k1, k2) => {
+            return Number(k1.match(/([0-9]+)$/g)[0]) - Number(k1.match(/([0-9]+)$/g)[0]);
+        });
+        Promise.all(feedbackKeys.map(feedbackKey => kfs(feedbackKey)))
+            .then(function(feedbacks) {
+                utils.resEndByCode(res, 0, {
+                    feedbacks
+                });
+            }, function(err) {
+                console.error(err);
+                utils.resEndByCode(res, 5);
+            });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/checkFeedback', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var feedbackId = req.body.feedbackId;
+    var feedbackNewKey = 'feedback/new/' + feedbackId;
+    var feedbackCheckedKey = 'feedback/checked/' + feedbackId;
+    kfs(feedbackNewKey, function(err, feedback) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        kfs(feedbackCheckedKey, feedback, function(err) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            new kfs(feedbackNewKey, function(err) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                utils.resEndByCode(res, 0);
+            });
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/respondFeedback', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var feedbackId = req.body.feedbackId;
+    var message = req.body.message;
+    var feedbackNewKey = 'feedback/new/' + feedbackId;
+    var feedbackCheckedKey = 'feedback/checked/' + feedbackId;
+    kfs(feedbackNewKey, function(err, feedback) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        var mobilePhoneNumber = feedback.mobilePhoneNumber;
+        kfs(feedbackCheckedKey, feedback, function(err) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            new kfs(feedbackNewKey, function(err) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                sms.send.respondFeedback([feedbackCheckedKey], feedback, message);
+                utils.resEndByCode(res, 0);
             });
         });
     });

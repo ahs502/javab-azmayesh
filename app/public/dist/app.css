@@ -347,6 +347,12 @@ body {
 #ja-admin #ja-admin-home .ja-new-c2c-payment-code.not-selected:hover {
   background-color: #d9f8ff;
 }
+#ja-admin #ja-admin-home .ja-new-feedback.not-selected {
+  cursor: pointer;
+}
+#ja-admin #ja-admin-home .ja-new-feedback.not-selected:hover {
+  background-color: #ffd7f8;
+}
 #ja-admin #ja-admin-laboratory table.ja-admin-laboratory-table {
   width: 100%;
   min-width: 600px;

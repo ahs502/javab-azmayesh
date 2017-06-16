@@ -9,6 +9,8 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
 
         $scope.setPageTitle('آزمایشگاه ها');
 
+        $scope.setBackHandler($scope.menuHandlers.goToMainPage);
+
         $scope.selectLab = selectLab;
         $scope.chargeLab = chargeLab;
         $scope.removeLab = removeLab;

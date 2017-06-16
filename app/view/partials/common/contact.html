@@ -74,12 +74,12 @@
 
                 <form class="ui {{ sendingFeedback ? 'loading' : '' }} form">
 
-                    <div class="field" ng-class="{'error': vs.error('email')}">
-                        <label class="nazanin ja-required">آدرس پست الکترونیک </label>
+                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
+                        <label class="nazanin ja-required">تلفن همراه ارتباطی</label>
                         <div class="ui input">
-                            <input type="email" ng-model="email" ng-change="vs.check('email')" class="ja-align-left" placeholder="your@email.com">
+                            <input type="tel" ng-model="mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
                         </div>
-                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('email')" ng-bind="vs.error('email')"></div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
                     </div>
 
                     <div class="field" ng-class="{'error': vs.error('message')}">
