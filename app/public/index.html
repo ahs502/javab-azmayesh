@@ -2862,10 +2862,42 @@
 
 <script type="text/ng-template" id="admin/patient.html">
     <div id="ja-admin-patient">
-    
-    patient
-    
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ searching ? 'loading' : '' }} form">
+
+                    <div class="field">
+                        <label class="nazanin">کد ملی</label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="nationalCode" ng-class="{ 'ja-align-right': !nationalCode, 'ja-align-left': nationalCode }" placeholder="کد ملی" title="کد ملی">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="findPatientByNationalCode()">
+                            <span class="nazanin">جستجو بیمار</span>
+                        </button>
+                    </div>
+
+                    <p class="nazanin ja-rtl ja-align-right" ng-if="showResult && !patient">
+                        بیماری با کُد ملی مورد نظر یافت نشد.
+                    </p>
+
+                    <div class="field" ng-if="showResult && patient">
+                        <p class="ja-ltr ja-align-left ja-code" ng-bind="patient | json"></p>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
 </div>
+
 </script>
 
 <script type="text/ng-template" id="admin/sms.html">

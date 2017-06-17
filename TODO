@@ -1,6 +1,4 @@
 
-    *   Do something about site administration.
-    
     *   Fill 'about us' page.
     
     *   Restrict lab users in any environment other than live to send SMS to any arbitrary patient.
@@ -8,6 +6,8 @@
     *   Implement a status code decoder angular service.
     
     *   Improve Panel.Home page, so the user can see almost everything by the first look.
+    
+    *   Import ZarrinPal payment gate.
     
 ================================================================================
 
@@ -86,12 +86,12 @@
 >----------- Remove
 >----------- Charge balance
 >--- Patient
- ------- Search
+>------- Search
 ------------ Edit
 ------------ Remove
 >--- SMS
 >------- Send a dummy SMS
- ------- List all used phone numbers
+>------- List all used phone numbers
 >------- NikSMS left balance
 
 

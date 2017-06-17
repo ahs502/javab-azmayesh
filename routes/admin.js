@@ -524,6 +524,24 @@ router.post('/removeLaboratory', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.post('/findPatientByNationalCode', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var nationalCode = req.body.nationalCode;
+    kfs('patient/' + nationalCode, function(err, patient) {
+        if (err) {
+            console.error(err);
+            utils.resEndByCode(res, 5);
+        }
+        utils.resEndByCode(res, 0, {
+            patient
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.post('/sendDummySms', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'administrator');
     if (!userInfo) return;

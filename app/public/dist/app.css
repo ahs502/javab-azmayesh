@@ -321,7 +321,7 @@ body {
 #ja-admin #ja-admin-loading {
   margin-top: 73px;
 }
-#ja-admin #ja-admin-home .ja-code {
+#ja-admin .ja-code {
   border: 1px solid #ee80be;
   border-radius: 5px;
   background-color: #ffeaf6;

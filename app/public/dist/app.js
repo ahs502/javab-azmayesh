@@ -1349,6 +1349,8 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         this.editLaboratory = editLaboratory;
         this.removeLaboratory = removeLaboratory;
 
+        this.findPatientByNationalCode = findPatientByNationalCode;
+
         this.sendDummySms = sendDummySms;
         this.findAllPhoneNumbers = findAllPhoneNumbers;
         this.getNikSmsCredit = getNikSmsCredit;
@@ -1468,6 +1470,15 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
             return utils.httpPromiseHandler($http.post('/admin/removeLaboratory', {
                 labUsername: labUsername
             }));
+        }
+
+        function findPatientByNationalCode(nationalCode) {
+            return utils.httpPromiseHandler($http.post('/admin/findPatientByNationalCode', {
+                    nationalCode: nationalCode
+                }))
+                .then(function(body) {
+                    return body.patient;
+                });
         }
 
         function sendDummySms(phoneNumber, message) {
@@ -2131,6 +2142,27 @@ app.controller('AdminPatientController', ['$scope', '$rootScope', '$state',
         $scope.setPageTitle('بیمارها');
 
         $scope.setBackHandler($scope.menuHandlers.goToMainPage);
+
+        $scope.findPatientByNationalCode = findPatientByNationalCode;
+
+        $scope.searching = false;
+        $scope.showResult = false;
+
+        function findPatientByNationalCode() {
+            if (!$scope.nationalCode) return;
+            $scope.searching = true;
+            $scope.showResult == false;
+            adminService.findPatientByNationalCode($scope.nationalCode)
+                .then(function(patient) {
+                    $scope.patient = patient;
+                    $scope.showResult = true;
+                }, function(code) {
+                    $scope.showResult = false;
+                    alert(code);
+                }).then(function() {
+                    $scope.searching = false;
+                });
+        }
 
     }
 ]);
