@@ -50,18 +50,37 @@
 
                 </form>
 
+                <!-- Submenu: 1 -->
+                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 1">
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="findAllPhoneNumbers()">
+                            <span class="nazanin">یافتن تمام شماره تلفن های همراه</span>
+                        </button>
+                    </div>
+                    
+                    <a class="nazanin ja-rtl ja-align-right ja-phone-number-link" ng-show="areAllPhoneNumbersReady" ng-href="/admin/allPhoneNumbers" target="_blank">دانلود فایل شماره تلفن های همراه</a>
+
+                </form>
+
+                <!-- Submenu: 2 -->
+                <div class="ui right floated blue tiny statistic ja-align-center" ng-show="selectedSubmenu == 2">
+                    <div class="label">
+                        <span class="nazanin">اعتبار باقیمانده پنل نیک اِس اِم اِس</span>
+                    </div>
+                    <div class="value">
+                        <bdi>
+                            <span class="nazanin ja-rtl" ng-show="waiting">در حال بارگذاری...</span>
+                            <span class="nazanin ja-rtl" ng-hide="waiting" ng-bind="credit | toPersianNumber | currencySeparator"></span>
+                        </bdi>
+                    </div>
+                    <div class="label">
+                        <span class="nazanin">تومان</span>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-
-    <div ng-show="selectedSubmenu == 1">
-        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
-        Page not implemented.
-    </div>
-
-    <div ng-show="selectedSubmenu == 2">
-        <p ng-bind="selectedSubmenuText" class="nazanin"></p>
-        Page not implemented.
     </div>
 
 </div>

@@ -26,6 +26,8 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         this.removeLaboratory = removeLaboratory;
 
         this.sendDummySms = sendDummySms;
+        this.findAllPhoneNumbers = findAllPhoneNumbers;
+        this.getNikSmsCredit = getNikSmsCredit;
 
         /////////////////////////////////////////////////////
 
@@ -149,6 +151,17 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
                 phoneNumber: String(phoneNumber),
                 message: message
             }));
+        }
+
+        function findAllPhoneNumbers() {
+            return utils.httpPromiseHandler($http.post('/admin/findAllPhoneNumbers'));
+        }
+
+        function getNikSmsCredit() {
+            return utils.httpPromiseHandler($http.post('/admin/getNikSmsCredit'))
+                .then(function(body) {
+                    return body.credit || 0;
+                });
         }
 
     }

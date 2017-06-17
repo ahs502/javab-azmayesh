@@ -23,6 +23,8 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
                     $timeout(function() {
                         $scope.selectedSubmenu = value;
                         $scope.selectedSubmenuText = text;
+
+                        if ($scope.selectedSubmenu == 2) getNikSmsCredit();
                     });
                 }
             })
@@ -34,15 +36,41 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
         //$scope.message
 
         $scope.sendDummySms = sendDummySms;
+        $scope.findAllPhoneNumbers = findAllPhoneNumbers;
+
         $scope.message = 'سامانه اینترنتی جواب آزمایش\nJavabAzmayesh.ir';
+        $scope.areAllPhoneNumbersReady = false;
 
         function sendDummySms() {
             $scope.waiting = true;
             adminService.sendDummySms($scope.phoneNumber, $scope.message)
-                .then(function() {
+                .catch(function(code) {
+                    alert(code);
+                }).then(function() {
                     $scope.waiting = false;
+                });
+        }
+
+        function findAllPhoneNumbers() {
+            $scope.waiting = true;
+            adminService.findAllPhoneNumbers()
+                .then(function() {
+                    $scope.areAllPhoneNumbersReady = true;
                 }, function(code) {
                     alert(code);
+                }).then(function() {
+                    $scope.waiting = false;
+                });
+        }
+
+        function getNikSmsCredit() {
+            $scope.waiting = true;
+            adminService.getNikSmsCredit()
+                .then(function(credit) {
+                    $scope.credit = credit;
+                }, function(code) {
+                    alert(code);
+                }).then(function() {
                     $scope.waiting = false;
                 });
         }

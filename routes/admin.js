@@ -1,6 +1,9 @@
 var express = require('express');
 var router = module.exports = express.Router();
 
+var fs = require("fs-extra");
+var path = require("path");
+
 var config = require("../config");
 var src = require("../src"),
     kfs = src.kfs,
@@ -427,7 +430,6 @@ router.post('/respondFeedback', function(req, res, next) {
             console.error(err);
             return utils.resEndByCode(res, 5);
         }
-        var mobilePhoneNumber = feedback.mobilePhoneNumber;
         kfs(feedbackCheckedKey, feedback, function(err) {
             if (err) {
                 console.error(err);
@@ -534,6 +536,77 @@ router.post('/sendDummySms', function(req, res, next) {
         console.error(err);
         utils.resEndByCode(res, 5);
     });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/getNikSmsCredit', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    nikSms.credit().then(function(credit) {
+        utils.resEndByCode(res, 0, {
+            credit
+        });
+    }, function(err) {
+        console.error(err);
+        utils.resEndByCode(res, 5);
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/findAllPhoneNumbers', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var allPhoneNumbersFilename = path.join(config.storage_path, "allPhoneNumbers");
+    var writer = fs.createWriteStream(allPhoneNumbersFilename, {
+        flags: 'w',
+        defaultEncoding: 'utf8',
+        fd: null,
+        mode: 0o666,
+        autoClose: true
+    });
+    writer.on('open', () => {
+        Promise.all([
+                kfs('user/active/').then(userKeys =>
+                    Promise.all(userKeys.map(userKey => kfs(userKey))))
+                .then(users => users.forEach(user =>
+                    (user.userType === 'laboratory') && writer.write(user.mobilePhoneNumber + '\n'))),
+                kfs('patient/').then(patientKeys =>
+                    Promise.all(patientKeys.map(patientKey => kfs(patientKey))))
+                .then(patients => patients.forEach(patient =>
+                    patient.numbers.forEach(number =>
+                        number.isMobileNumber() && writer.write(number + '\n'))))
+            ])
+            .then(() => writer.end(), err => {
+                if (res) {
+                    console.error(err);
+                    utils.resEndByCode(res, 5);
+                    res = null;
+                }
+            });
+    });
+    writer.on('error', err => {
+        if (res) {
+            console.error(err);
+            utils.resEndByCode(res, 5);
+            res = null;
+        }
+    });
+    writer.on('finish', () => res && utils.resEndByCode(res, 0));
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.get('/allPhoneNumbers', function(req, res, next) {
+    // var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    // if (!userInfo) return;
+    // // var username = userInfo.username;
+    var allPhoneNumbersFilename = path.join(config.storage_path, "allPhoneNumbers");
+    res.set('Content-Type', 'text/plain; charset=UTF-8');
+    res.sendFile(allPhoneNumbersFilename);
 });
 
 ////////////////////////////////////////////////////////////////////////////////

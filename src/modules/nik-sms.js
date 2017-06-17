@@ -283,14 +283,16 @@ function nikSms(username, password) {
      >> Input
             - No inputs -
 
-     >> Output              :   Remaining credit (long, in Rials)
+     >> Output              :   Remaining credit (long, in Tomans)
      
     ***/
     function credit() {
 
         var data = {};
 
-        return nikSmsWebServiceApiPromise('GetCredit', data);
+        return nikSmsWebServiceApiPromise('GetCredit', data, function(result) {
+            return Number(result) / 10;
+        });
     }
 
     //////////////////////////////////////////////////////////////////////////////
@@ -300,14 +302,16 @@ function nikSms(username, password) {
      >> Input
             - No inputs -
 
-     >> Output              :   Remaining discount credit (long, in Rials)
+     >> Output              :   Remaining discount credit (long, in Tomans)
      
     ***/
     function discount() {
 
         var data = {};
 
-        return nikSmsWebServiceApiPromise('GetDiscountCredit', data);
+        return nikSmsWebServiceApiPromise('GetDiscountCredit', data, function(result) {
+            return Number(result) / 10;
+        });
     }
 
     //////////////////////////////////////////////////////////////////////////////

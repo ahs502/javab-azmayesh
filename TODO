@@ -80,19 +80,19 @@
  ------- Website statistics
 >--- Laboratory
 >------- See & search all labs
-/----------- Block/Unblock
-/----------- Restrict/Unrestrict
+------------ Block/Unblock
+------------ Restrict/Unrestrict
 >----------- Edit
 >----------- Remove
 >----------- Charge balance
 >--- Patient
  ------- Search
- ----------- Edit
- ----------- Remove
+------------ Edit
+------------ Remove
 >--- SMS
 >------- Send a dummy SMS
  ------- List all used phone numbers
- ------- NikSMS left balance
+>------- NikSMS left balance
 
 
 

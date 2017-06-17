@@ -360,7 +360,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('admin.sms', {
                 url: '/sms',
                 templateUrl: 'admin/sms.html',
-                controller: 'AdminSmsController'
+                controller: 'AdminSmsController',
+                data: {
+                    dependencies: [
+                        'statistic.min.css',
+                    ]
+                }
             });
 
         $urlRouterProvider.otherwise('/home/find');

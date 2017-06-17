@@ -1093,7 +1093,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('admin.sms', {
                 url: '/sms',
                 templateUrl: 'admin/sms.html',
-                controller: 'AdminSmsController'
+                controller: 'AdminSmsController',
+                data: {
+                    dependencies: [
+                        'statistic.min.css',
+                    ]
+                }
             });
 
         $urlRouterProvider.otherwise('/home/find');
@@ -1345,6 +1350,8 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         this.removeLaboratory = removeLaboratory;
 
         this.sendDummySms = sendDummySms;
+        this.findAllPhoneNumbers = findAllPhoneNumbers;
+        this.getNikSmsCredit = getNikSmsCredit;
 
         /////////////////////////////////////////////////////
 
@@ -1468,6 +1475,17 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
                 phoneNumber: String(phoneNumber),
                 message: message
             }));
+        }
+
+        function findAllPhoneNumbers() {
+            return utils.httpPromiseHandler($http.post('/admin/findAllPhoneNumbers'));
+        }
+
+        function getNikSmsCredit() {
+            return utils.httpPromiseHandler($http.post('/admin/getNikSmsCredit'))
+                .then(function(body) {
+                    return body.credit || 0;
+                });
         }
 
     }
@@ -2152,6 +2170,8 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
                     $timeout(function() {
                         $scope.selectedSubmenu = value;
                         $scope.selectedSubmenuText = text;
+
+                        if ($scope.selectedSubmenu == 2) getNikSmsCredit();
                     });
                 }
             })
@@ -2163,15 +2183,41 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
         //$scope.message
 
         $scope.sendDummySms = sendDummySms;
+        $scope.findAllPhoneNumbers = findAllPhoneNumbers;
+
         $scope.message = 'سامانه اینترنتی جواب آزمایش\nJavabAzmayesh.ir';
+        $scope.areAllPhoneNumbersReady = false;
 
         function sendDummySms() {
             $scope.waiting = true;
             adminService.sendDummySms($scope.phoneNumber, $scope.message)
-                .then(function() {
+                .catch(function(code) {
+                    alert(code);
+                }).then(function() {
                     $scope.waiting = false;
+                });
+        }
+
+        function findAllPhoneNumbers() {
+            $scope.waiting = true;
+            adminService.findAllPhoneNumbers()
+                .then(function() {
+                    $scope.areAllPhoneNumbersReady = true;
                 }, function(code) {
                     alert(code);
+                }).then(function() {
+                    $scope.waiting = false;
+                });
+        }
+
+        function getNikSmsCredit() {
+            $scope.waiting = true;
+            adminService.getNikSmsCredit()
+                .then(function(credit) {
+                    $scope.credit = credit;
+                }, function(code) {
+                    alert(code);
+                }).then(function() {
                     $scope.waiting = false;
                 });
         }
@@ -5062,6 +5108,32 @@ app.directive('zoomable', ['$timeout', function($timeout) {
 
 /*
 	AHS502 : End of 'zoomable.js'
+*/
+
+
+/*
+	AHS502 : Start of 'currency-separator.js'
+*/
+
+/*global app*/
+
+app.filter('currencySeparator', function() {
+    return function(input, seperator) {
+        input = String(input || '');
+        seperator = seperator || ',';
+        var output = '';
+        while (input.length) {
+            output = input.slice(-3) + output;
+            input = input.slice(0, -3);
+            if (input.length) output = seperator + output;
+        }
+        return output;
+    }
+});
+
+
+/*
+	AHS502 : End of 'currency-separator.js'
 */
 
 

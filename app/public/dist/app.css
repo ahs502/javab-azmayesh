@@ -375,6 +375,17 @@ body {
   font-family: BNazanin !important;
   font-size: 130%;
 }
+#ja-admin #ja-admin-sms .ja-phone-number-link {
+  border: 1px #0072ff solid;
+  padding: 4px 36px;
+  border-radius: 5px;
+  background-color: aliceblue;
+  color: blue;
+  line-height: 37px;
+}
+#ja-admin #ja-admin-sms .ja-phone-number-link:hover {
+  color: #00daff;
+}
 .ui.modal > .content {
   width: 90%;
 }
