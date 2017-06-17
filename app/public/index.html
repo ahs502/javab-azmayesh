@@ -2266,8 +2266,9 @@
         Page not implemented.
     </div>
 
-    <div ng-show="selectedSubmenu == 1">
-        <div class="ui centered grid">
+    <div ng-if="selectedSubmenu == 1">
+        <div ng-controller="AdminHomeNotDeliveredSmsesController">
+            <div class="ui centered grid">
     <div class="fourteen wide small eight wide tablet six wide computer column">
         <div class="center aligned row">
 
@@ -2397,10 +2398,12 @@
 
 </div>
 
+        </div>
     </div>
 
-    <div ng-show="selectedSubmenu == 2">
-        <div class="ui centered grid">
+    <div ng-if="selectedSubmenu == 2">
+        <div ng-controller="AdminHomeNotActivatedLabsController">
+            <div class="ui centered grid">
     <div class="fourteen wide small eight wide tablet six wide computer column">
         <div class="center aligned row">
 
@@ -2527,10 +2530,12 @@
 
 </div>
 
+        </div>
     </div>
 
-    <div ng-show="selectedSubmenu == 3">
-        <div class="ui centered grid">
+    <div ng-if="selectedSubmenu == 3">
+        <div ng-controller="AdminHomeNewC2cPaymentCodesController">
+            <div class="ui centered grid">
     <div class="fourteen wide small eight wide tablet six wide computer column">
         <div class="center aligned row">
 
@@ -2606,10 +2611,12 @@
 
 </div>
 
+        </div>
     </div>
 
-    <div ng-show="selectedSubmenu == 4">
-        <div class="ui centered grid">
+    <div ng-if="selectedSubmenu == 4">
+        <div ng-controller="AdminHomeNewFeedbacksController">
+            <div class="ui centered grid">
     <div class="fourteen wide small eight wide tablet six wide computer column">
         <div class="center aligned row">
 
@@ -2662,7 +2669,7 @@
                 </div>
 
                 <div class="field">
-                    <button class="fluid ui blue button" ng-click="respondFb(respondMessage)">
+                    <button class="fluid ui blue button" ng-click="respondFb()">
                         <span class="nazanin">ارسال پاسخ به کاربر</span>
                     </button>
                 </div>
@@ -2695,6 +2702,7 @@
 
 </div>
 
+        </div>
     </div>
 
     <div ng-show="selectedSubmenu == 5">

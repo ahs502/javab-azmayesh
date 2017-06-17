@@ -26,20 +26,28 @@
         Page not implemented.
     </div>
 
-    <div ng-show="selectedSubmenu == 1">
-        <!-- import:./app/view/partials/admin/home/not-delivered-smses.html -->
+    <div ng-if="selectedSubmenu == 1">
+        <div ng-controller="AdminHomeNotDeliveredSmsesController">
+            <!-- import:./app/view/partials/admin/home/not-delivered-smses.html -->
+        </div>
     </div>
 
-    <div ng-show="selectedSubmenu == 2">
-        <!-- import:./app/view/partials/admin/home/not-activated-labs.html -->
+    <div ng-if="selectedSubmenu == 2">
+        <div ng-controller="AdminHomeNotActivatedLabsController">
+            <!-- import:./app/view/partials/admin/home/not-activated-labs.html -->
+        </div>
     </div>
 
-    <div ng-show="selectedSubmenu == 3">
-        <!-- import:./app/view/partials/admin/home/new-c2c-payment-codes.html -->
+    <div ng-if="selectedSubmenu == 3">
+        <div ng-controller="AdminHomeNewC2cPaymentCodesController">
+            <!-- import:./app/view/partials/admin/home/new-c2c-payment-codes.html -->
+        </div>
     </div>
 
-    <div ng-show="selectedSubmenu == 4">
-        <!-- import:./app/view/partials/admin/home/new-feedbacks.html -->
+    <div ng-if="selectedSubmenu == 4">
+        <div ng-controller="AdminHomeNewFeedbacksController">
+            <!-- import:./app/view/partials/admin/home/new-feedbacks.html -->
+        </div>
     </div>
 
     <div ng-show="selectedSubmenu == 5">
