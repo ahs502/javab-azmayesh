@@ -28,6 +28,7 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         this.findPatientByNationalCode = findPatientByNationalCode;
 
         this.sendDummySms = sendDummySms;
+        this.broadcastMessage = broadcastMessage;
         this.findAllPhoneNumbers = findAllPhoneNumbers;
         this.getNikSmsCredit = getNikSmsCredit;
 
@@ -160,6 +161,12 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         function sendDummySms(phoneNumber, message) {
             return utils.httpPromiseHandler($http.post('/admin/sendDummySms', {
                 phoneNumber: String(phoneNumber),
+                message: message
+            }));
+        }
+
+        function broadcastMessage(message) {
+            return utils.httpPromiseHandler($http.post('/admin/broadcastMessage', {
                 message: message
             }));
         }

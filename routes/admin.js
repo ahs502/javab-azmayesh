@@ -558,6 +558,31 @@ router.post('/sendDummySms', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.post('/broadcastMessage', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var message = req.body.message;
+    kfs('user/active/')
+        .then(userKeys => Promise.all(userKeys.map(userKey => kfs(userKey))))
+        .then(users => users
+            .filter(user => user.userType === 'laboratory')
+            .map(user => user.mobilePhoneNumber))
+        .then(mobilePhoneNumbers => {
+            let obj = {};
+            mobilePhoneNumbers.forEach(mobilePhoneNumber => obj[mobilePhoneNumber] = null);
+            return Object.keys(obj);
+        })
+        .then(mobilePhoneNumbers => sms.simplySendSms(mobilePhoneNumbers, message))
+        .then(() => utils.resEndByCode(res, 0),
+            err => {
+                console.error(err);
+                utils.resEndByCode(res, 5);
+            });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.post('/getNikSmsCredit', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'administrator');
     if (!userInfo) return;

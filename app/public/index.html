@@ -2736,22 +2736,24 @@
         </div>
     </div>
 
-    <table class="ja-admin-laboratory-table">
-        <thead>
-            <tr>
-                <th class="ja-rtl ja-align-right">آدرس</th>
-                <th class="ja-rtl ja-align-center">نام آزمایشگاه</th>
-                <th class="ja-rtl ja-align-left">نام کاربری</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="lab in laboratories | filter: searchKeyword | limitTo: 1000" ng-click="selectLab(lab)" ng-class="{ 'selected': selectedLab === lab }">
-                <td class="ja-rtl ja-align-right">{{lab.address}}</td>
-                <td class="ja-rtl ja-align-center">{{lab.labName}}</td>
-                <td class="ja-ltr ja-align-left">{{lab.username}}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="ja-admin-laboratory-table-container">
+        <table class="ja-admin-laboratory-table">
+            <thead>
+                <tr>
+                    <th class="ja-rtl ja-align-right">آدرس</th>
+                    <th class="ja-rtl ja-align-center">نام آزمایشگاه</th>
+                    <th class="ja-rtl ja-align-left">نام کاربری</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="lab in laboratories | filter: searchKeyword | limitTo: 1000" ng-click="selectLab(lab)" ng-class="{ 'selected': selectedLab === lab }">
+                    <td class="ja-rtl ja-align-right">{{lab.address}}</td>
+                    <td class="ja-rtl ja-align-center">{{lab.labName}}</td>
+                    <td class="ja-ltr ja-align-left">{{lab.username}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div id="ja-admin-laboratory-edit-modal" class="ui modal">
         <div class="header">
@@ -2957,6 +2959,24 @@
                 <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 1">
 
                     <div class="field">
+                        <label class="nazanin ja-required">متن پیامک ارسال سراسری</label>
+                        <div class="ui input">
+                            <textarea ng-model="messageToBroadcast" rows=6 maxlength=10000 class="nazanin ja-rtl ja-align-right"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="broadcastMessage()">
+                            <span class="nazanin">ارسال پیامک</span>
+                        </button>
+                    </div>
+
+                </form>
+
+                <!-- Submenu: 2 -->
+                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 2">
+
+                    <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="findAllPhoneNumbers()">
                             <span class="nazanin">یافتن تمام شماره تلفن های همراه</span>
                         </button>
@@ -2966,8 +2986,8 @@
 
                 </form>
 
-                <!-- Submenu: 2 -->
-                <div class="ui right floated blue tiny statistic ja-align-center" ng-show="selectedSubmenu == 2">
+                <!-- Submenu: 3 -->
+                <div class="ui right floated blue tiny statistic ja-align-center" ng-show="selectedSubmenu == 3">
                     <div class="label">
                         <span class="nazanin">اعتبار باقیمانده پنل نیک اِس اِم اِس</span>
                     </div>

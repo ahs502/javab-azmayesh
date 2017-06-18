@@ -54,6 +54,24 @@
                 <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 1">
 
                     <div class="field">
+                        <label class="nazanin ja-required">متن پیامک ارسال سراسری</label>
+                        <div class="ui input">
+                            <textarea ng-model="messageToBroadcast" rows=6 maxlength=10000 class="nazanin ja-rtl ja-align-right"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="broadcastMessage()">
+                            <span class="nazanin">ارسال پیامک</span>
+                        </button>
+                    </div>
+
+                </form>
+
+                <!-- Submenu: 2 -->
+                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 2">
+
+                    <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="findAllPhoneNumbers()">
                             <span class="nazanin">یافتن تمام شماره تلفن های همراه</span>
                         </button>
@@ -63,8 +81,8 @@
 
                 </form>
 
-                <!-- Submenu: 2 -->
-                <div class="ui right floated blue tiny statistic ja-align-center" ng-show="selectedSubmenu == 2">
+                <!-- Submenu: 3 -->
+                <div class="ui right floated blue tiny statistic ja-align-center" ng-show="selectedSubmenu == 3">
                     <div class="label">
                         <span class="nazanin">اعتبار باقیمانده پنل نیک اِس اِم اِس</span>
                     </div>

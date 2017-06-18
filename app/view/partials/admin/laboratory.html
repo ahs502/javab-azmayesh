@@ -19,22 +19,24 @@
         </div>
     </div>
 
-    <table class="ja-admin-laboratory-table">
-        <thead>
-            <tr>
-                <th class="ja-rtl ja-align-right">آدرس</th>
-                <th class="ja-rtl ja-align-center">نام آزمایشگاه</th>
-                <th class="ja-rtl ja-align-left">نام کاربری</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="lab in laboratories | filter: searchKeyword | limitTo: 1000" ng-click="selectLab(lab)" ng-class="{ 'selected': selectedLab === lab }">
-                <td class="ja-rtl ja-align-right">{{lab.address}}</td>
-                <td class="ja-rtl ja-align-center">{{lab.labName}}</td>
-                <td class="ja-ltr ja-align-left">{{lab.username}}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="ja-admin-laboratory-table-container">
+        <table class="ja-admin-laboratory-table">
+            <thead>
+                <tr>
+                    <th class="ja-rtl ja-align-right">آدرس</th>
+                    <th class="ja-rtl ja-align-center">نام آزمایشگاه</th>
+                    <th class="ja-rtl ja-align-left">نام کاربری</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="lab in laboratories | filter: searchKeyword | limitTo: 1000" ng-click="selectLab(lab)" ng-class="{ 'selected': selectedLab === lab }">
+                    <td class="ja-rtl ja-align-right">{{lab.address}}</td>
+                    <td class="ja-rtl ja-align-center">{{lab.labName}}</td>
+                    <td class="ja-ltr ja-align-left">{{lab.username}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div id="ja-admin-laboratory-edit-modal" class="ui modal">
         <div class="header">

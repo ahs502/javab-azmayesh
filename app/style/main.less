@@ -391,28 +391,31 @@ body {
 		}
 	}
 	#ja-admin-laboratory {
-		table.ja-admin-laboratory-table {
-			width: 100%;
-			min-width: 600px;
-			margin: 10px;
-			padding-right: 10px;
-			thead {
-				tr {
-					th {
-						padding: 10px 0;
-						.nazanin
+		#ja-admin-laboratory-table-container {
+			overflow-x: auto;
+			table.ja-admin-laboratory-table {
+				width: 100%;
+				min-width: 600px;
+				margin: 10px;
+				padding-right: 10px;
+				thead {
+					tr {
+						th {
+							padding: 10px 0;
+							.nazanin
+						}
 					}
 				}
-			}
-			tbody {
-				tr {
-					cursor: pointer;
-					&.selected {
-						background-color: #ddd;
-					}
-					td {
-						padding: 10px 0;
-						.nazanin
+				tbody {
+					tr {
+						cursor: pointer;
+						&.selected {
+							background-color: #ddd;
+						}
+						td {
+							padding: 10px 0;
+							.nazanin
+						}
 					}
 				}
 			}

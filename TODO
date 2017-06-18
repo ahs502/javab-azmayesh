@@ -1,4 +1,7 @@
 
+    *   In Admin panel: Add functionality to inform users by the new updates.
+    *   In Admin panel: Do something about Laboratory list in Admin.Laboratory page for small screens.
+
     *   Fill 'about us' page.
     
     *   Restrict lab users in any environment other than live to send SMS to any arbitrary patient.
@@ -91,6 +94,7 @@
 ------------ Remove
 >--- SMS
 >------- Send a dummy SMS
+ ------- Broadcast to all users
 >------- List all used phone numbers
 >------- NikSMS left balance
 
