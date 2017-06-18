@@ -1,4 +1,4 @@
-/*! simple-query-string v1.3.0 - MIT license */
+/*! simple-query-string v1.3.2 - MIT license */
 
 /* jshint
 eqeqeq: true, undef: true, unused: true, indent: 4, plusplus: false, curly: false, forin: true, trailing: true, white: true, sub:true,
@@ -64,18 +64,18 @@ browser: true, node: true, devel: true, mocha: true
      */
     function encode(v) {
         switch (typeof v) {
-            case 'string':
-                return encodeURIComponent(v);
-            case 'boolean':
-                return v ? 'true' : 'false';
-            case 'number':
-                return isFinite(v) ? v : '';
-            case 'object':
-                if (v === undefined || v === null) { return ''; }
-                if (JSON && JSON.stringify) { return encodeURIComponent(JSON.stringify(v)); }
-                return '';
-            default:
-                return '';
+        case 'string':
+            return encodeURIComponent(v);
+        case 'boolean':
+            return v ? 'true' : 'false';
+        case 'number':
+            return isFinite(v) ? v : '';
+        case 'object':
+            if (v === undefined || v === null) { return ''; }
+            if (JSON && JSON.stringify) { return encodeURIComponent(JSON.stringify(v)); }
+            return '';
+        default:
+            return '';
         }
     }
 
@@ -83,7 +83,7 @@ browser: true, node: true, devel: true, mocha: true
      * return our simple Query String object
      */
     return {
-        version: '1.3.0',
+        version: '1.3.2',
 
         /**
          * parse a query string.
@@ -105,16 +105,16 @@ browser: true, node: true, devel: true, mocha: true
             // step 0: sanity checks
             if (typeof str !== 'string') { return dic; }
 
-            // step 1: prepare query string
-            // split by '?'
+            // detect if we have or not a query string
             i = str.indexOf('?');
-            if (i >= 0) {
-                str = str.substr(i + 1);
+            if (i < 0 && str.indexOf(eq) < 0) {
+                return dic;
             }
 
-            // detect if we have or not a query string
-            if (str.indexOf(eq) < 0) {
-                return dic;
+            // step 1: prepare query string
+            // split by '?'
+            if (i >= 0) {
+                str = str.substr(i + 1);
             }
 
             // trim space (see MDN polyfill), ?, # and & (allow passing location.search or location.hash as parameter)
