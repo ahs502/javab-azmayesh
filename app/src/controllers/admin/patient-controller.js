@@ -1,4 +1,5 @@
 /*global app*/
+/*global sscAlert*/
 
 app.controller('AdminPatientController', ['$scope', '$rootScope', '$state',
     '$stateParams', 'UserService', 'AdminService',
@@ -24,7 +25,7 @@ app.controller('AdminPatientController', ['$scope', '$rootScope', '$state',
                     $scope.showResult = true;
                 }, function(code) {
                     $scope.showResult = false;
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.searching = false;
                 });

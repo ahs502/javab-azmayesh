@@ -1,6 +1,7 @@
 /*global app*/
 /*global simpleQueryString*/
 /*global Clipboard*/
+/*global sscAlert*/
 
 app.controller('AdminHomeNotDeliveredSmsesController', ['$scope', '$rootScope', '$state', '$stateParams', 'AdminService',
     function($scope, $rootScope, $state, $stateParams, adminService) {
@@ -24,7 +25,7 @@ app.controller('AdminHomeNotDeliveredSmsesController', ['$scope', '$rootScope', 
                 .then(function(smsStateStatusList) {
                     $scope.notDeliveredSmses = smsStateStatusList;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.setLoading(false);
                 });
@@ -54,7 +55,7 @@ app.controller('AdminHomeNotDeliveredSmsesController', ['$scope', '$rootScope', 
                     delete $scope.selectedSms;
                     delete $scope.selectedSmsIndex;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.updating = false;
                 });
@@ -68,7 +69,7 @@ app.controller('AdminHomeNotDeliveredSmsesController', ['$scope', '$rootScope', 
                     delete $scope.selectedSms;
                     delete $scope.selectedSmsIndex;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.updating = false;
                 });

@@ -3,6 +3,7 @@
 /*global toPersianNumber*/
 /*global Clipboard*/
 /*global simpleQueryString*/
+/*global sscAlert*/
 
 app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService',
     function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService) {
@@ -155,9 +156,8 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                 $scope.answer = answer;
                 $scope.loading = false;
             }, function(code) {
-                //TODO: Handle errors...
                 $scope.loading = false;
-                alert(code);
+                sscAlert(code);
             })
             .then(function() {
                 $scope.answer = $scope.answer || {};

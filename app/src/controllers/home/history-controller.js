@@ -1,5 +1,6 @@
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'HistoryService',
     function($rootScope, $scope, $state, $stateParams, $timeout, historyService) {
@@ -36,9 +37,8 @@ app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$sta
                         nationalCode: $scope.nationalCode
                     });
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.findingHistory = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 

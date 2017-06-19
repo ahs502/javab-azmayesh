@@ -1,6 +1,7 @@
 /*global app*/
 /*global toPersianNumber*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'Config', 'BalanceService',
     function($scope, $rootScope, $state, $stateParams, $timeout, config, balanceService) {
@@ -62,7 +63,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
                         });
                 }, function(code) {
                     $scope.preparingPayment = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 

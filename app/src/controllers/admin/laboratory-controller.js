@@ -1,6 +1,7 @@
 /*global app*/
 /*global angular*/
 /*global $*/
+/*global sscAlert*/
 
 app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
     '$stateParams', 'UserService', 'AdminService',
@@ -23,7 +24,7 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
             $scope.laboratories = laboratories;
             $scope.setLoading(false);
         }, function(code) {
-            alert(code);
+            sscAlert(code);
             $scope.setLoading(false);
         });
 
@@ -45,7 +46,7 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
                             modalElement.modal('hide');
                         }, function(code) {
                             $scope.updating = false;
-                            alert(code);
+                            sscAlert(code);
                         });
                         return false;
                     },
@@ -76,7 +77,7 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
                 modalElement.modal('hide');
             }, function(code) {
                 $scope.updating = false;
-                alert(code);
+                sscAlert(code);
             });
         }
 

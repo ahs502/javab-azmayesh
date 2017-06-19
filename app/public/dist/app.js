@@ -710,6 +710,76 @@ global.global = global;
 
 
 /*
+	AHS502 : Start of 'service-status-codes.js'
+*/
+
+/*global toastr*/
+
+(function(global) {
+
+    global.sscAlert = sscAlert;
+
+    var serviceStatusCodes = {
+
+        0: 'عملیات موفقیت آمیز',
+        1: 'خطای ناشناخته سمت سِروِر',
+        2: 'خطای ناشناخته سمت کاربر',
+
+        5: 'خطای داخلی سمت سِروِر',
+
+        10: 'کاربر با این نام در حال حاضر موجود است',
+        11: 'عدم تأیید ریکَپچا',
+
+        30: 'کاربر منتظر تأیید شدن وجود ندارد',
+        31: 'زمان انقضای درخواست به اتمام رسیده است',
+        32: 'کُد اعتبار سنجی اشتباه است',
+
+        40: 'نام کاربری یا کلمه عبور اشتباه است',
+
+        50: 'کاربر به درستی وارد سامانه نشده است',
+        51: 'کاربر یافت نشد',
+        52: 'نوع کاربر نامتناسب است',
+
+        60: 'اطلاعات حساب کاربری انطباق ندارد',
+
+        70: 'بیمار به درستی به سوابق خود دسترسی پیدا نکرده است',
+        71: 'سوابقی برای بیمار ثبت نشده است',
+        72: 'این پُست مربوط به این بیمار نیست',
+        73: 'پُست ارسال شده یافت نشد',
+        74: 'کاربر آزمایشگاه یافت نشد',
+
+        80: 'اطلاعات فرم اشتباه است',
+
+        100: 'کلید دسترسی کاربر نامعتبر است',
+        101: 'کلید دسترسی کاربر منقضی شده است',
+
+        120: 'از تعداد پیامک های مجاز رَد شده است، مدتی صبر کنید',
+
+        130: 'شارژ حساب کاربر به اتمام رسیده است',
+
+    };
+
+    var options = {
+        rtl: true,
+        closeButton: true,
+        timeOut: 0&&7000,
+        extendedTimeOut :0,
+    };
+
+    function sscAlert(code) {
+        var message = serviceStatusCodes[code] || 'خطای ناشناخته';
+        toastr.error(message, 'خطا در عملیات', options);
+    }
+
+})(global);
+
+
+/*
+	AHS502 : End of 'service-status-codes.js'
+*/
+
+
+/*
 	AHS502 : Start of 'app.js'
 */
 
@@ -2047,6 +2117,7 @@ app.controller('AdminHomeController', ['$scope', '$rootScope', '$state', '$state
 /*global app*/
 /*global angular*/
 /*global $*/
+/*global sscAlert*/
 
 app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
     '$stateParams', 'UserService', 'AdminService',
@@ -2069,7 +2140,7 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
             $scope.laboratories = laboratories;
             $scope.setLoading(false);
         }, function(code) {
-            alert(code);
+            sscAlert(code);
             $scope.setLoading(false);
         });
 
@@ -2091,7 +2162,7 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
                             modalElement.modal('hide');
                         }, function(code) {
                             $scope.updating = false;
-                            alert(code);
+                            sscAlert(code);
                         });
                         return false;
                     },
@@ -2122,7 +2193,7 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
                 modalElement.modal('hide');
             }, function(code) {
                 $scope.updating = false;
-                alert(code);
+                sscAlert(code);
             });
         }
 
@@ -2140,6 +2211,7 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
 */
 
 /*global app*/
+/*global sscAlert*/
 
 app.controller('AdminPatientController', ['$scope', '$rootScope', '$state',
     '$stateParams', 'UserService', 'AdminService',
@@ -2165,7 +2237,7 @@ app.controller('AdminPatientController', ['$scope', '$rootScope', '$state',
                     $scope.showResult = true;
                 }, function(code) {
                     $scope.showResult = false;
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.searching = false;
                 });
@@ -2186,6 +2258,7 @@ app.controller('AdminPatientController', ['$scope', '$rootScope', '$state',
 
 /*global app*/
 /*global $*/
+/*global sscAlert*/
 
 app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeout',
     '$stateParams', 'UserService', 'AdminService',
@@ -2231,7 +2304,7 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
             $scope.waiting = true;
             adminService.sendDummySms($scope.phoneNumber, $scope.message)
                 .catch(function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.waiting = false;
                 });
@@ -2250,7 +2323,7 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
                     $scope.waiting = true;
                     adminService.broadcastMessage($scope.messageToBroadcast)
                         .catch(function(code) {
-                            alert(code);
+                            sscAlert(code);
                         }).then(function() {
                             $scope.waiting = false;
                         });
@@ -2264,7 +2337,7 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
                 .then(function() {
                     $scope.areAllPhoneNumbersReady = true;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.waiting = false;
                 });
@@ -2274,9 +2347,9 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
             $scope.waiting = true;
             adminService.getNikSmsCredit()
                 .then(function(credit) {
-                    $scope.credit = credit;
+                    $scope.credit = Math.floor(credit);
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.waiting = false;
                 });
@@ -2321,6 +2394,7 @@ app.controller('CommonAboutController', ['$scope', '$state', '$stateParams',
 
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('CommonContactController', ['$scope', '$state', '$stateParams', 'MasterService',
     function($scope, $state, $stateParams, masterService) {
@@ -2361,7 +2435,7 @@ app.controller('CommonContactController', ['$scope', '$state', '$stateParams', '
                         });
                 }, function(code) {
                     $scope.sendingFeedback = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 
@@ -2432,6 +2506,7 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
 
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'HistoryService',
     function($rootScope, $scope, $state, $stateParams, $timeout, historyService) {
@@ -2468,9 +2543,8 @@ app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$sta
                         nationalCode: $scope.nationalCode
                     });
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.findingHistory = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 
@@ -2489,6 +2563,7 @@ app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$sta
 
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout', 'HistoryService',
     function($rootScope, $scope, $state, $timeout, historyService) {
@@ -2526,9 +2601,8 @@ app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout
                         requestCode: data.requestCode
                     });
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.sendingOtp = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 
@@ -2547,6 +2621,7 @@ app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout
 
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeout', 'UserService',
     function($rootScope, $scope, $state, $timeout, userService) {
@@ -2581,9 +2656,8 @@ app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeo
                 .then(function() {
                     $state.go('lab.password');
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.restoringPassword = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 
@@ -2603,6 +2677,7 @@ app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeo
 /*global app*/
 /*global ValidationSystem*/
 /*global localStorage*/
+/*global sscAlert*/
 
 app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserService',
     function($rootScope, $scope, $state, userService) {
@@ -2644,9 +2719,8 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
                         $state.go('admin.home');
                     }
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.loggingIn = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 
@@ -2665,6 +2739,7 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
 
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
     'vcRecaptchaService', 'UserService', 'Config',
@@ -2779,9 +2854,8 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
                         username: $scope.model.username
                     });
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.sendingRegisterationForm = false;
-                    alert(code);
+                    sscAlert(code);
                     config.google_recaptcha && vcRecaptchaService.reload($scope.widgetId);
                 });
         }
@@ -2801,6 +2875,7 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
 
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$stateParams', 'UserService',
     function($rootScope, $scope, $state, $stateParams, userService) {
@@ -2834,9 +2909,8 @@ app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$sta
                     $scope.confirmingRegisteration = false;
                     $state.go('lab.signedup');
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.confirmingRegisteration = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 
@@ -2876,6 +2950,7 @@ app.controller('PanelAccountController', ['$scope', '$rootScope', '$state', '$st
 /*global app*/
 /*global toPersianNumber*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'Config', 'BalanceService',
     function($scope, $rootScope, $state, $stateParams, $timeout, config, balanceService) {
@@ -2937,7 +3012,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
                         });
                 }, function(code) {
                     $scope.preparingPayment = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 
@@ -2960,6 +3035,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
 
 /*global app*/
 /*global angular*/
+/*global sscAlert*/
 
 app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$window', 'UserService', 'PostService',
     function($scope, $rootScope, $state, $stateParams, $timeout, $window, userService, postService) {
@@ -3067,8 +3143,7 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
             if (Object.keys(filteredMonths).length) {
                 promise = postService.getPosts($scope.selectedYear, filteredMonths)
                     .catch(function(code) {
-                        //TODO: Handle errors...
-                        alert(code);
+                        sscAlert(code);
                     });
             }
             else {
@@ -3135,6 +3210,7 @@ app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$state
 /*global app*/
 /*global toPersianNumber*/
 /*global persianDate*/
+/*global sscAlert*/
 
 app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$stateParams', 'PostService',
     function($scope, $rootScope, $state, $stateParams, postService) {
@@ -3177,8 +3253,7 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
                 }];
 
             }, function(code) {
-                //TODO: Handle errors...
-                alert(code);
+                sscAlert(code);
             })
             .then(function() {
                 $scope.setLoading(false);
@@ -3201,6 +3276,7 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
 /*global angular*/
 /*global ValidationSystem*/
 /*global iconJs*/
+/*global sscAlert*/
 
 app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http', 'AnswerService',
     function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http, answerService) {
@@ -3326,7 +3402,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
                         });
                 }, function(code) {
                     $scope.sendingAnswer = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 
@@ -3493,6 +3569,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 */
 
 /*global app*/
+/*global sscAlert*/
 
 app.controller('AdminHomeNewC2cPaymentCodesController', ['$scope', '$rootScope', '$state', '$stateParams', 'AdminService',
     function($scope, $rootScope, $state, $stateParams, adminService) {
@@ -3511,7 +3588,7 @@ app.controller('AdminHomeNewC2cPaymentCodesController', ['$scope', '$rootScope',
                 .then(function(c2cPaymentCodes) {
                     $scope.c2cPaymentCodes = c2cPaymentCodes;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.setLoading(false);
                 });
@@ -3543,7 +3620,7 @@ app.controller('AdminHomeNewC2cPaymentCodesController', ['$scope', '$rootScope',
                     delete $scope.selectedC2c;
                     delete $scope.selectedC2cIndex;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.updating = false;
                 });
@@ -3562,7 +3639,7 @@ app.controller('AdminHomeNewC2cPaymentCodesController', ['$scope', '$rootScope',
                             delete $scope.selectedC2c;
                             delete $scope.selectedC2cIndex;
                         }, function(code) {
-                            alert(code);
+                            sscAlert(code);
                         }).then(function() {
                             $scope.updating = false;
                         });
@@ -3583,6 +3660,7 @@ app.controller('AdminHomeNewC2cPaymentCodesController', ['$scope', '$rootScope',
 */
 
 /*global app*/
+/*global sscAlert*/
 
 app.controller('AdminHomeNewFeedbacksController', ['$scope', '$rootScope', '$state', '$stateParams', 'AdminService',
     function($scope, $rootScope, $state, $stateParams, adminService) {
@@ -3601,7 +3679,7 @@ app.controller('AdminHomeNewFeedbacksController', ['$scope', '$rootScope', '$sta
                 .then(function(feedbacks) {
                     $scope.feedbacks = feedbacks;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.setLoading(false);
                 });
@@ -3637,7 +3715,7 @@ app.controller('AdminHomeNewFeedbacksController', ['$scope', '$rootScope', '$sta
                             delete $scope.selectedFb;
                             delete $scope.selectedFbIndex;
                         }, function(code) {
-                            alert(code);
+                            sscAlert(code);
                         }).then(function() {
                             $scope.updating = false;
                         });
@@ -3652,7 +3730,7 @@ app.controller('AdminHomeNewFeedbacksController', ['$scope', '$rootScope', '$sta
                     delete $scope.selectedFb;
                     delete $scope.selectedFbIndex;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.updating = false;
                 });
@@ -3673,6 +3751,7 @@ app.controller('AdminHomeNewFeedbacksController', ['$scope', '$rootScope', '$sta
 
 /*global app*/
 /*global angular*/
+/*global sscAlert*/
 
 app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '$state', '$stateParams', 'AdminService',
     function($scope, $rootScope, $state, $stateParams, adminService) {
@@ -3691,7 +3770,7 @@ app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '
                 .then(function(inactiveLabs) {
                     $scope.inactiveLabs = inactiveLabs;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.setLoading(false);
                 });
@@ -3726,7 +3805,7 @@ app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '
                             delete $scope.selectedLab;
                             delete $scope.selectedLabIndex;
                         }, function(code) {
-                            alert(code);
+                            sscAlert(code);
                         }).then(function() {
                             $scope.updating = false;
                         });
@@ -3746,7 +3825,7 @@ app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '
                             delete $scope.selectedLab;
                             delete $scope.selectedLabIndex;
                         }, function(code) {
-                            alert(code);
+                            sscAlert(code);
                         }).then(function() {
                             $scope.updating = false;
                         });
@@ -3769,6 +3848,7 @@ app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '
 /*global app*/
 /*global simpleQueryString*/
 /*global Clipboard*/
+/*global sscAlert*/
 
 app.controller('AdminHomeNotDeliveredSmsesController', ['$scope', '$rootScope', '$state', '$stateParams', 'AdminService',
     function($scope, $rootScope, $state, $stateParams, adminService) {
@@ -3792,7 +3872,7 @@ app.controller('AdminHomeNotDeliveredSmsesController', ['$scope', '$rootScope', 
                 .then(function(smsStateStatusList) {
                     $scope.notDeliveredSmses = smsStateStatusList;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.setLoading(false);
                 });
@@ -3822,7 +3902,7 @@ app.controller('AdminHomeNotDeliveredSmsesController', ['$scope', '$rootScope', 
                     delete $scope.selectedSms;
                     delete $scope.selectedSmsIndex;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.updating = false;
                 });
@@ -3836,7 +3916,7 @@ app.controller('AdminHomeNotDeliveredSmsesController', ['$scope', '$rootScope', 
                     delete $scope.selectedSms;
                     delete $scope.selectedSmsIndex;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.updating = false;
                 });
@@ -3890,6 +3970,7 @@ app.controller('AdminHomeNotDeliveredSmsesController', ['$scope', '$rootScope', 
 
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
     function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
@@ -3939,7 +4020,7 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
                         });
                 }, function(code) {
                     $scope.confirming = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 
@@ -3958,6 +4039,7 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
 
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
     function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
@@ -4021,7 +4103,7 @@ app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', 
                     $scope.editingAccount = false;
                 }, function(code) {
                     $scope.editingAccount = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 
@@ -4040,6 +4122,7 @@ app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', 
 
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
     function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
@@ -4096,9 +4179,8 @@ app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$stat
                     });
                     $scope.changingPassword = false;
                 }, function(code) {
-                    //TODO: handle error...
                     $scope.changingPassword = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 
@@ -4270,6 +4352,7 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
 /*global toPersianNumber*/
 /*global Clipboard*/
 /*global simpleQueryString*/
+/*global sscAlert*/
 
 app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService',
     function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService) {
@@ -4422,9 +4505,8 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                 $scope.answer = answer;
                 $scope.loading = false;
             }, function(code) {
-                //TODO: Handle errors...
                 $scope.loading = false;
-                alert(code);
+                sscAlert(code);
             })
             .then(function() {
                 $scope.answer = $scope.answer || {};

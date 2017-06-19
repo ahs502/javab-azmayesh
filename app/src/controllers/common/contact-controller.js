@@ -1,5 +1,6 @@
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('CommonContactController', ['$scope', '$state', '$stateParams', 'MasterService',
     function($scope, $state, $stateParams, masterService) {
@@ -40,7 +41,7 @@ app.controller('CommonContactController', ['$scope', '$state', '$stateParams', '
                         });
                 }, function(code) {
                     $scope.sendingFeedback = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 

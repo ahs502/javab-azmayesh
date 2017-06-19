@@ -1,5 +1,6 @@
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeout', 'UserService',
     function($rootScope, $scope, $state, $timeout, userService) {
@@ -34,9 +35,8 @@ app.controller('LabForgetController', ['$rootScope', '$scope', '$state', '$timeo
                 .then(function() {
                     $state.go('lab.password');
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.restoringPassword = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 

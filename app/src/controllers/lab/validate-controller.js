@@ -1,5 +1,6 @@
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$stateParams', 'UserService',
     function($rootScope, $scope, $state, $stateParams, userService) {
@@ -33,9 +34,8 @@ app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$sta
                     $scope.confirmingRegisteration = false;
                     $state.go('lab.signedup');
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.confirmingRegisteration = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 

@@ -1,4 +1,5 @@
 /*global app*/
+/*global sscAlert*/
 
 app.controller('AdminHomeNewC2cPaymentCodesController', ['$scope', '$rootScope', '$state', '$stateParams', 'AdminService',
     function($scope, $rootScope, $state, $stateParams, adminService) {
@@ -17,7 +18,7 @@ app.controller('AdminHomeNewC2cPaymentCodesController', ['$scope', '$rootScope',
                 .then(function(c2cPaymentCodes) {
                     $scope.c2cPaymentCodes = c2cPaymentCodes;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.setLoading(false);
                 });
@@ -49,7 +50,7 @@ app.controller('AdminHomeNewC2cPaymentCodesController', ['$scope', '$rootScope',
                     delete $scope.selectedC2c;
                     delete $scope.selectedC2cIndex;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.updating = false;
                 });
@@ -68,7 +69,7 @@ app.controller('AdminHomeNewC2cPaymentCodesController', ['$scope', '$rootScope',
                             delete $scope.selectedC2c;
                             delete $scope.selectedC2cIndex;
                         }, function(code) {
-                            alert(code);
+                            sscAlert(code);
                         }).then(function() {
                             $scope.updating = false;
                         });

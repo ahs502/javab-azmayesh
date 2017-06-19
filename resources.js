@@ -33,6 +33,7 @@ module.exports = {
         "./app/lib/persian-date/dist/0.1.8/persian-date-0.1.8.min.js",
         "./app/lib/clipboard/dist/clipboard.min.js",
         "./app/lib/simple-query-string/src/simplequerystring.min.js",
+        "./app/lib/toastr/toastr.min.js",
 
         //"./app/lib/semantic/dist/semantic.min.js",
         "./app/lib/semantic/dist/components/site.min.js",
@@ -48,6 +49,8 @@ module.exports = {
     ////////////////////////////////////////////////////////////////////////////
 
     stylesheets_lib: [
+        "./app/lib/toastr/toastr.min.css",
+
         //"./app/lib/semantic/dist/semantic.rtl.min.css",
         "./app/lib/semantic/dist/components/site.rtl.min.css",
         "./app/lib/semantic/dist/components/grid.rtl.min.css",
@@ -74,7 +77,7 @@ module.exports = {
 
         "./app/lib/pdfjs-dist/build/pdf.min.js",
         "./app/lib/pdfjs-dist/build/pdf.worker.min.js",
-        
+
         "./app/lib/dygraphs/dist/dygraph.min.js",
         "./app/lib/dygraphs/dist/dygraph.min.css",
 

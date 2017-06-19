@@ -1,5 +1,6 @@
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
     function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
@@ -49,7 +50,7 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
                         });
                 }, function(code) {
                     $scope.confirming = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 

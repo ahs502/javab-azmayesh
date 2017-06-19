@@ -1,6 +1,7 @@
 /*global app*/
 /*global ValidationSystem*/
 /*global localStorage*/
+/*global sscAlert*/
 
 app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserService',
     function($rootScope, $scope, $state, userService) {
@@ -42,9 +43,8 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
                         $state.go('admin.home');
                     }
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.loggingIn = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 

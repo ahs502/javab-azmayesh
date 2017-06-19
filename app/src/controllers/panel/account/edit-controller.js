@@ -1,5 +1,6 @@
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
     function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
@@ -63,7 +64,7 @@ app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', 
                     $scope.editingAccount = false;
                 }, function(code) {
                     $scope.editingAccount = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 

@@ -1,5 +1,6 @@
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'UserService',
     function($scope, $rootScope, $state, $stateParams, $timeout, userService) {
@@ -56,9 +57,8 @@ app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$stat
                     });
                     $scope.changingPassword = false;
                 }, function(code) {
-                    //TODO: handle error...
                     $scope.changingPassword = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 

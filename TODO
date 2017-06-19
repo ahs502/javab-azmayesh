@@ -3,6 +3,8 @@
     
     *   Implement a status code decoder angular service.
     
+    *   Answer page for not existing post should not work.
+    
     *   Improve Panel.Home page, so the user can see almost everything by the first look.
     
     *   Import ZarrinPal payment gate.

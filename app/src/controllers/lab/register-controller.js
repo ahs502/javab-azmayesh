@@ -1,5 +1,6 @@
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout',
     'vcRecaptchaService', 'UserService', 'Config',
@@ -114,9 +115,8 @@ app.controller('LabRegisterController', ['$rootScope', '$scope', '$state', '$sta
                         username: $scope.model.username
                     });
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.sendingRegisterationForm = false;
-                    alert(code);
+                    sscAlert(code);
                     config.google_recaptcha && vcRecaptchaService.reload($scope.widgetId);
                 });
         }

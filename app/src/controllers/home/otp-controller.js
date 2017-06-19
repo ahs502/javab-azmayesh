@@ -1,5 +1,6 @@
 /*global app*/
 /*global ValidationSystem*/
+/*global sscAlert*/
 
 app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout', 'HistoryService',
     function($rootScope, $scope, $state, $timeout, historyService) {
@@ -37,9 +38,8 @@ app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout
                         requestCode: data.requestCode
                     });
                 }, function(code) {
-                    //TODO: Handle errors...
                     $scope.sendingOtp = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 

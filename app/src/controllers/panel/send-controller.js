@@ -2,6 +2,7 @@
 /*global angular*/
 /*global ValidationSystem*/
 /*global iconJs*/
+/*global sscAlert*/
 
 app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http', 'AnswerService',
     function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http, answerService) {
@@ -127,7 +128,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
                         });
                 }, function(code) {
                     $scope.sendingAnswer = false;
-                    alert(code);
+                    sscAlert(code);
                 });
         }
 

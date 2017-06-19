@@ -1,4 +1,5 @@
 /*global app*/
+/*global sscAlert*/
 
 app.controller('AdminHomeNewFeedbacksController', ['$scope', '$rootScope', '$state', '$stateParams', 'AdminService',
     function($scope, $rootScope, $state, $stateParams, adminService) {
@@ -17,7 +18,7 @@ app.controller('AdminHomeNewFeedbacksController', ['$scope', '$rootScope', '$sta
                 .then(function(feedbacks) {
                     $scope.feedbacks = feedbacks;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.setLoading(false);
                 });
@@ -53,7 +54,7 @@ app.controller('AdminHomeNewFeedbacksController', ['$scope', '$rootScope', '$sta
                             delete $scope.selectedFb;
                             delete $scope.selectedFbIndex;
                         }, function(code) {
-                            alert(code);
+                            sscAlert(code);
                         }).then(function() {
                             $scope.updating = false;
                         });
@@ -68,7 +69,7 @@ app.controller('AdminHomeNewFeedbacksController', ['$scope', '$rootScope', '$sta
                     delete $scope.selectedFb;
                     delete $scope.selectedFbIndex;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.updating = false;
                 });

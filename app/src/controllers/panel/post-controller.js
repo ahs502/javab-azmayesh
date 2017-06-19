@@ -1,6 +1,7 @@
 /*global app*/
 /*global toPersianNumber*/
 /*global persianDate*/
+/*global sscAlert*/
 
 app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$stateParams', 'PostService',
     function($scope, $rootScope, $state, $stateParams, postService) {
@@ -43,8 +44,7 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
                 }];
 
             }, function(code) {
-                //TODO: Handle errors...
-                alert(code);
+                sscAlert(code);
             })
             .then(function() {
                 $scope.setLoading(false);

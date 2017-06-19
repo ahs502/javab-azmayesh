@@ -1,5 +1,6 @@
 /*global app*/
 /*global angular*/
+/*global sscAlert*/
 
 app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '$state', '$stateParams', 'AdminService',
     function($scope, $rootScope, $state, $stateParams, adminService) {
@@ -18,7 +19,7 @@ app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '
                 .then(function(inactiveLabs) {
                     $scope.inactiveLabs = inactiveLabs;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.setLoading(false);
                 });
@@ -53,7 +54,7 @@ app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '
                             delete $scope.selectedLab;
                             delete $scope.selectedLabIndex;
                         }, function(code) {
-                            alert(code);
+                            sscAlert(code);
                         }).then(function() {
                             $scope.updating = false;
                         });
@@ -73,7 +74,7 @@ app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '
                             delete $scope.selectedLab;
                             delete $scope.selectedLabIndex;
                         }, function(code) {
-                            alert(code);
+                            sscAlert(code);
                         }).then(function() {
                             $scope.updating = false;
                         });

@@ -1,5 +1,6 @@
 /*global app*/
 /*global $*/
+/*global sscAlert*/
 
 app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeout',
     '$stateParams', 'UserService', 'AdminService',
@@ -45,7 +46,7 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
             $scope.waiting = true;
             adminService.sendDummySms($scope.phoneNumber, $scope.message)
                 .catch(function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.waiting = false;
                 });
@@ -64,7 +65,7 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
                     $scope.waiting = true;
                     adminService.broadcastMessage($scope.messageToBroadcast)
                         .catch(function(code) {
-                            alert(code);
+                            sscAlert(code);
                         }).then(function() {
                             $scope.waiting = false;
                         });
@@ -78,7 +79,7 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
                 .then(function() {
                     $scope.areAllPhoneNumbersReady = true;
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.waiting = false;
                 });
@@ -88,9 +89,9 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
             $scope.waiting = true;
             adminService.getNikSmsCredit()
                 .then(function(credit) {
-                    $scope.credit = credit;
+                    $scope.credit = Math.floor(credit);
                 }, function(code) {
-                    alert(code);
+                    sscAlert(code);
                 }).then(function() {
                     $scope.waiting = false;
                 });

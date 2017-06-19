@@ -40,7 +40,7 @@ body {
   padding: 0;
 }
 #ja-header {
-  z-index: 2147483646;
+  z-index: 777777;
 }
 #ja-header .ja-item.ja-text {
   line-height: 34px;
@@ -82,7 +82,7 @@ body {
 #ja-free-back-arrow,
 #ja-free-menu-bars {
   position: fixed;
-  z-index: 2147483647;
+  z-index: 777777;
   background-color: white;
   -webkit-box-shadow: 0px 0px 20px 12px #ffffff;
   -moz-box-shadow: 0px 0px 20px 12px #ffffff;
@@ -128,6 +128,11 @@ body {
 .ja-menu-logo {
   margin-top: 8px;
   margin-bottom: 8px;
+}
+#toast-container .toast .toast-title,
+#toast-container .toast .toast-message {
+  font-family: BNazanin !important;
+  font-size: 130%;
 }
 #ja-answer .ja-multiline-pre {
   white-space: pre-wrap;
@@ -274,7 +279,7 @@ body {
   right: 0;
   left: 0;
   padding: 4px 15px;
-  z-index: 2147483644;
+  z-index: 700000;
   background-color: white;
   -webkit-box-shadow: 0px 4px 24px 5px white;
   -moz-box-shadow: 0px 4px 24px 5px white;
@@ -289,7 +294,7 @@ body {
   right: 0;
   left: 0;
   padding: 4px 15px;
-  z-index: 2147483645;
+  z-index: 700000;
   background-color: white;
 }
 #ja-panel #ja-panel-history #ja-panel-history-search-menu .ja-filter {
