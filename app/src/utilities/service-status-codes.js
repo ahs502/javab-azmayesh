@@ -47,8 +47,8 @@
     var options = {
         rtl: true,
         closeButton: true,
-        timeOut: 0&&7000,
-        extendedTimeOut :0,
+        timeOut: 10000,
+        extendedTimeOut: 3000,
     };
 
     function sscAlert(code) {

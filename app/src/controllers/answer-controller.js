@@ -154,13 +154,6 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                     else if (file.type === 'application/pdf') file.material = 'pdf';
                 });
                 $scope.answer = answer;
-                $scope.loading = false;
-            }, function(code) {
-                $scope.loading = false;
-                sscAlert(code);
-            })
-            .then(function() {
-                $scope.answer = $scope.answer || {};
                 $scope.answer.lab = $scope.answer.lab || {};
                 $scope.labDataForDisplay = [{
                     label: 'نام آزمایشگاه',
@@ -178,6 +171,19 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                     label: 'آدرس درگاه اینترنتی',
                     value: $scope.answer.lab.websiteAddress
                 }];
+                $scope.loading = false;
+            }, function(code) {
+                $scope.loading = false;
+                $scope.setBackHandler();
+                $scope.setMenuHandlers();
+                $scope.setHeaderHandlers();
+                $scope.setFooterHandlers();
+                sscAlert(code);
+                $scope.showMessage('خطا در بارگذاری نتیجه آزمایش',
+                        "به دلیل بروز خطا، جواب آزمایش مورد نظر شما بارگذاری نشد.\nلطفاً مجدداً تلاش بفرمایید.")
+                    .then(function() {
+                        $state.go('home.find');
+                    });
             });
 
         function copySharedUrl() {
