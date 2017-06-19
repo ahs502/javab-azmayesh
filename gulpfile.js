@@ -126,6 +126,10 @@ gulp.task('build-app-css', () => {
         restore: true
     });
     return gulp.src(resources.stylesheets_app)
+        .pipe(wrapper({
+            header: "\n/*\n\tAHS502 : Start of '${filename}'\n*/\n\n",
+            footer: "\n\n/*\n\tAHS502 : End of '${filename}'\n*/\n"
+        }))
         .pipe(cssFilter)
         .pipe(gprint(file => ' -> [' + 'app'.cyan + '] Stylesheet file: ' + file))
         .pipe(rename({
@@ -134,6 +138,7 @@ gulp.task('build-app-css', () => {
         .pipe(cssFilter.restore)
         .pipe(lessFilter)
         .pipe(gprint(file => ' -> [' + 'app'.cyan + '] Less file: ' + file))
+        .pipe(concat('main.less'))
         .pipe(less(
             /*{
                 //TODO: Array of paths to be used for @import directives
@@ -150,10 +155,6 @@ gulp.task('build-app-css', () => {
             extname: '.less'
         }))
         .pipe(lessFilter.restore)
-        .pipe(wrapper({
-            header: "\n/*\n\tAHS502 : Start of '${filename}'\n*/\n\n",
-            footer: "\n\n/*\n\tAHS502 : End of '${filename}'\n*/\n"
-        }))
         .pipe(file('introduction.css', "/* AHS502 : Application stylesheet file : */"))
         .pipe(concat('app.css'))
         .pipe(gulp.dest('./app/public/dist/'))

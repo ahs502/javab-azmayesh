@@ -1,0 +1,60 @@
+.ui {
+    &.modal>.content {
+        width: 90%;
+    }
+    &.form {
+        .ui.input input.nazanin {
+            .nazanin();
+            padding: 7px;
+            text-rendering: geometricPrecision;
+        }
+        .field {
+            label {
+                font-size: 110%;
+            }
+            .ja-required {
+                &::before {
+                    content: "∗ ";
+                    color: red;
+                    font-size: 80%;
+                }
+            }
+            .ja-optional {
+                &::after {
+                    .nazanin();
+                    content: " اختیاری";
+                    color: #b4b4b4;
+                    font-size: 80%;
+                }
+            }
+        }
+        textarea.nazanin {
+            font-size: 120%;
+        }
+    }
+    &.dropdown {
+        .ja-dropdown-sign {
+            height: 12px;
+            width: 18px !important;
+        }
+    }
+    &.card>.content>.header:not(.ui) {
+        &.nazanin {
+            .nazanin();
+        }
+    }
+    &.vertical.menu {
+        .item>img {
+            &.ja-menu-item-icon {
+                height: 26px;
+                width: 26px;
+                margin-left: 12px;
+                &:not(.ui):only-child {
+                    display: inline;
+                    height: 26px;
+                    margin-left: 12px;
+                }
+            }
+        }
+    }
+}

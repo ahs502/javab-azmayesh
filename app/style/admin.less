@@ -1,0 +1,92 @@
+#ja-admin {
+    padding-top: 13px;
+    #ja-admin-loading {
+        margin-top: 73px;
+    }
+    .ja-code {
+        border: 1px solid #ee80be;
+        border-radius: 5px;
+        background-color: #ffeaf6;
+        padding: 9px;
+        white-space: pre;
+        overflow-x: auto;
+    }
+    #ja-admin-home {
+        .ja-not-delivered-sms {
+            &.not-selected {
+                cursor: pointer;
+                &:hover {
+                    background-color: #ffffe2;
+                }
+            }
+        }
+        .ja-not-activated-lab {
+            &.not-selected {
+                cursor: pointer;
+                &:hover {
+                    background-color: #e8fdcc;
+                }
+            }
+        }
+        .ja-new-c2c-payment-code {
+            &.not-selected {
+                cursor: pointer;
+                &:hover {
+                    background-color: #d9f8ff;
+                }
+            }
+        }
+        .ja-new-feedback {
+            &.not-selected {
+                cursor: pointer;
+                &:hover {
+                    background-color: #ffd7f8;
+                }
+            }
+        }
+    }
+    #ja-admin-laboratory {
+        #ja-admin-laboratory-table-container {
+            overflow-x: auto;
+            table.ja-admin-laboratory-table {
+                width: 100%;
+                min-width: 600px;
+                margin: 10px;
+                padding-right: 10px;
+                thead {
+                    tr {
+                        th {
+                            padding: 10px 0;
+                            .nazanin
+                        }
+                    }
+                }
+                tbody {
+                    tr {
+                        cursor: pointer;
+                        &.selected {
+                            background-color: #ddd;
+                        }
+                        td {
+                            padding: 10px 0;
+                            .nazanin
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #ja-admin-sms {
+        .ja-phone-number-link {
+            border: 1px #0072ff solid;
+            padding: 4px 36px;
+            border-radius: 5px;
+            background-color: aliceblue;
+            color: blue;
+            line-height: 37px;
+            &:hover {
+                color: #00daff;
+            }
+        }
+    }
+}

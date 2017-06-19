@@ -21,6 +21,12 @@ module.exports = {
 
     stylesheets_app: [
         "./app/style/main.less",
+        "./app/style/semantic-ui.less",
+        "./app/style/print.less",
+        "./app/style/screens.less",
+        "./app/style/answer.less",
+        "./app/style/panel.less",
+        "./app/style/admin.less",
     ],
 
     ////////////////////////////////////////////////////////////////////////////
