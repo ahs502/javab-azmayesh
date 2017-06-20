@@ -23,11 +23,11 @@ module.exports = {
         "./app/style/main.less",
         "./app/style/main.semantic-ui.less",
         "./app/style/main.print.less",
-        "./app/style/main.screens.less",
         "./app/style/common.about.less",
         "./app/style/answer.less",
         "./app/style/panel.less",
         "./app/style/admin.less",
+        "./app/style/main.screens.less",
     ],
 
     ////////////////////////////////////////////////////////////////////////////

@@ -1,16 +1,14 @@
 
-    *   Fill 'about us' page.
-    
-    *   Improve Panel.Home page, so the user can see almost everything by the first look.
-    
-    *   Import ZarrinPal payment gate.
-    
     *   DEBUG: pdf files are being loaded several times during answer.post page initializing.
 
     *   DEBUG: Why it is so slow to load pdf answer files?
 
 ================================================================================
 
+    *   Import ZarrinPal payment gate.
+    
+    *   Improve Panel.Home page, so the user can see almost everything by the first look.
+    
     *   Restrict lab users in any environment other than live to send SMS to any arbitrary patient.
     
     *   Separate user passwords from its main file to a separate file.
