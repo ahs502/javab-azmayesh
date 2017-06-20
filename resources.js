@@ -21,9 +21,10 @@ module.exports = {
 
     stylesheets_app: [
         "./app/style/main.less",
-        "./app/style/semantic-ui.less",
-        "./app/style/print.less",
-        "./app/style/screens.less",
+        "./app/style/main.semantic-ui.less",
+        "./app/style/main.print.less",
+        "./app/style/main.screens.less",
+        "./app/style/common.about.less",
         "./app/style/answer.less",
         "./app/style/panel.less",
         "./app/style/admin.less",
@@ -97,6 +98,7 @@ module.exports = {
         "./app/lib/semantic/dist/components/progress.rtl.min.css",
         "./app/lib/semantic/dist/components/container.rtl.min.css",
         "./app/lib/semantic/dist/components/statistic.min.css",
+        "./app/lib/semantic/dist/components/image.rtl.min.css",
     ],
 
     ////////////////////////////////////////////////////////////////////////////

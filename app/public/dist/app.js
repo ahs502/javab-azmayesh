@@ -853,6 +853,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 data: {
                     dependencies: [
                         'container.rtl.min.css',
+                        'card.rtl.min.css',
+                        'image.rtl.min.css',
                     ]
                 }
             })
@@ -999,6 +1001,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 data: {
                     dependencies: [
                         'container.rtl.min.css',
+                        'card.rtl.min.css',
+                        'image.rtl.min.css',
                     ]
                 }
             })
@@ -2378,6 +2382,26 @@ app.controller('CommonAboutController', ['$scope', '$state', '$stateParams',
         $scope.setBackHandler(function() {
             $state.go($scope.previousState);
         });
+
+        $scope.people = [{
+            name: 'حسام الدین امین شکروی',
+            description: 'کارشناس ارشد مهندسی نرم افزار از دانشگاه صنعتی شریف',
+            title: 'طراح و برنامه نویس',
+            img: '/img/about/hessam.png',
+            color: 'blue'
+        }, {
+            name: 'نگار امین شکروی',
+            description: 'کارشناس ارشد کارآفرینی گرایش بین الملل از دانشگاه تهران',
+            title: 'توسعه کسب و کار',
+            img: '/img/about/negar.png',
+            color: 'teal'
+        }, {
+            name: 'مهرنوش فتحی',
+            description: 'کارشناس روان شناسی از دانشگاه پیام نور',
+            title: 'مسئول پشتیبانی و مدیریت داخلی',
+            img: '/img/about/mehrnoosh.png',
+            color: 'green'
+        }];
 
     }
 ]);

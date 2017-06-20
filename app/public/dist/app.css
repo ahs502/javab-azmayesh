@@ -31,6 +31,9 @@ body {
   text-align: -webkit-center !important;
   text-align: center !important;
 }
+.ja-align-justify {
+  text-align: justify !important;
+}
 #ja-header,
 #ja-footer {
   width: 100%;
@@ -136,7 +139,7 @@ body {
 	AHS502 : End of 'main.less'
 */
 /*
-	AHS502 : Start of 'semantic-ui.less'
+	AHS502 : Start of 'main.semantic-ui.less'
 */
 .ui.modal > .content {
   width: 90%;
@@ -184,10 +187,10 @@ body {
   margin-left: 12px;
 }
 /*
-	AHS502 : End of 'semantic-ui.less'
+	AHS502 : End of 'main.semantic-ui.less'
 */
 /*
-	AHS502 : Start of 'print.less'
+	AHS502 : Start of 'main.print.less'
 */
 .ja-print {
   display: none;
@@ -201,10 +204,10 @@ body {
   }
 }
 /*
-	AHS502 : End of 'print.less'
+	AHS502 : End of 'main.print.less'
 */
 /*
-	AHS502 : Start of 'screens.less'
+	AHS502 : Start of 'main.screens.less'
 */
 @media (max-width: 430px) {
   .ja-less-than-430 {
@@ -247,7 +250,64 @@ body {
   }
 }
 /*
-	AHS502 : End of 'screens.less'
+	AHS502 : End of 'main.screens.less'
+*/
+/*
+	AHS502 : Start of 'common.about.less'
+*/
+#ja-common-about .ja-main-image.ja-main-image-small {
+  display: none;
+}
+#ja-common-about .ui.container.ja-para {
+  font-size: 21px;
+  margin: 16px 0 19px 0;
+  padding: 11px;
+}
+#ja-common-about .ui.container.ja-para strong {
+  color: #0070ff;
+}
+#ja-common-about .ja-key-image {
+  margin-top: 20px;
+}
+#ja-common-about .ja-description {
+  font-size: 20px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+#ja-common-about .ja-description .highlight {
+  color: #0059b8;
+  font-weight: bold;
+}
+#ja-common-about .ja-people {
+  margin: auto;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+#ja-common-about .ja-people.ja-people-large {
+  max-width: 720px;
+}
+#ja-common-about .ja-people.ja-people-small {
+  max-width: 280px;
+  display: none;
+}
+@media (max-width: 740px) {
+  #ja-common-about .ja-main-image.ja-main-image-large {
+    display: none;
+  }
+  #ja-common-about .ja-main-image.ja-main-image-small {
+    display: block;
+  }
+}
+@media (max-width: 670px) {
+  #ja-common-about .ja-people.ja-people-large {
+    display: none;
+  }
+  #ja-common-about .ja-people.ja-people-small {
+    display: block;
+  }
+}
+/*
+	AHS502 : End of 'common.about.less'
 */
 /*
 	AHS502 : Start of 'answer.less'

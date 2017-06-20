@@ -298,8 +298,92 @@
     <script type="text/ng-template" id="common/about.html">
     <div id="ja-common-about">
 
+    <img class="ui centered image ja-main-image ja-main-image-large" src="/img/about/all-togather-wide.png">
+    <img class="ui centered image ja-main-image ja-main-image-small" src="/img/about/all-togather.png">
+
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        ما یک خانواده خلاق و با نشاط هستیم که مشتاقانه توانایی های گوناگون خود را روی هم گذاشتیم تا با هم بتوانیم راه حل های جدیدی برای مشکلات بسازیم.
+    </div>
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        <strong>هدف ما</strong> ساده کردن کارها و کاهش هزینه ها با کمک گرفتن از ابزار فن آوری اطلاعات است.
+    </div>
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        <strong>چشم انداز ما</strong> این است که هیچ انسانی زمان و توان ارزشمند خود را صرف کاری نکند در حالی که یک سامانه کامپیوتری می تواند همان کار را به صورت خودکار، سریع، ارزان و با بهترین کیفیت انجام دهد.
+    </div>
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        <strong>ارزش های ما</strong> راست گویی، خیرخواهی، تعهد عمیق، سخت کوشی، احترام متقابل و خلاقیت هستند. ما با توکل بر خدا و اعتماد به نفس می خواهیم ارزشی با کیفیت استثنایی برای میهن عزیزمان بسازیم و در این مسیر از هیچ تلاشی فروگزار نخواهیم کرد.
+    </div>
+
+    <img class="ui centered big image ja-key-image" src="/img/about/mahdiar.png">
     <div class="ui justified text container">
-        about us
+        <p class="nazanin ja-rtl ja-align-justify ja-description">
+            <span class="highlight">«مهدیار»</span>
+            <span>
+                الآن دیگه یک سالشه! یادمه که مامانش قبل از اینکه مهدیار رو به دنیا بیاره، کلی آزمایش های مختلف می داد ولی همیشه براش سخت بود که باید خودش با یک بچه توی شکمش بره اون طرف شهر و جواب آزمایشش رو بگیره. حتی یک بار هم کلی پول داد به یک تاکسی تلفنی که بره و جوابش رو براش بگیره. خوب، آزمایشگاه هایی که ما می رفتیم برای خودشون سایت نداشتند. این شد که ما با خودمون فکر کردیم که:
+            </span>
+            <span class="highlight">
+                «چی می شد اگر یک سامانه ارزان قیمت و سریع بود که جواب آزمایش ها رو از همه آزمایشگاه ها می گرفت و به دست بیمارها می رسوند؟ چی می شد اگر من می تونستم همون لحظه ای که جواب آزمایشم حاضره، توی گوشی موبایلم ببینمش و همون جا با پزشک خودم به اشتراک بزارمش؟»
+            </span>
+            <span>
+                این شد که ما دست به کار شدیم و سامانه
+            </span>
+            <span class="highlight">«جواب آزمایش»</span>
+            <span>
+                رو برای استفاده همه آزمایشگاه های ایران دُرست کردیم. همه تلاش ما این بوده و هست که بیشترین رضایت رو هم برای آزمایشگاه ها و هم برای بیماران با کم ترین هزینه ممکن به وجود بیاریم. امید ما هم اینه که یک روزی همه ایرانی ها از
+            </span>
+            <span class="highlight">«جواب آزمایش»</span>
+            <span>
+                لذت ببرند و ما هم بتونیم این کار رو گسترش بدیم.
+            </span>
+        </p>
+    </div>
+
+    <div class="ui three cards ja-people ja-people-large">
+
+        <div class="ui {{person.color}} card" ng-repeat="person in people | orderBy:'-'">
+            <div class="image">
+                <img ng-src="{{person.img}}">
+            </div>
+            <div class="content">
+                <div class="header nazanin ja-rtl ja-align-right">
+                    {{person.name}}
+                </div>
+                <!--<div class="meta nazanin ja-rtl ja-align-right">-->
+                <!--    -->
+                <!--</div>-->
+                <div class="description nazanin ja-rtl ja-align-right">
+                    {{person.description}}
+                </div>
+            </div>
+            <div class="extra content nazanin ja-rtl ja-align-left">
+                {{person.title}}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ui one cards ja-people ja-people-small">
+
+        <div class="ui {{person.color}} card" ng-repeat="person in people">
+            <div class="image">
+                <img ng-src="{{person.img}}">
+            </div>
+            <div class="content">
+                <div class="header nazanin ja-rtl ja-align-right">
+                    {{person.name}}
+                </div>
+                <!--<div class="meta nazanin ja-rtl ja-align-right">-->
+                <!--    -->
+                <!--</div>-->
+                <div class="description nazanin ja-rtl ja-align-right">
+                    {{person.description}}
+                </div>
+            </div>
+            <div class="extra content nazanin ja-rtl ja-align-left">
+                {{person.title}}
+            </div>
+        </div>
+
     </div>
 
 </div>

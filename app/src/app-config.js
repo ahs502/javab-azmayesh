@@ -50,6 +50,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 data: {
                     dependencies: [
                         'container.rtl.min.css',
+                        'card.rtl.min.css',
+                        'image.rtl.min.css',
                     ]
                 }
             })
@@ -196,6 +198,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 data: {
                     dependencies: [
                         'container.rtl.min.css',
+                        'card.rtl.min.css',
+                        'image.rtl.min.css',
                     ]
                 }
             })
