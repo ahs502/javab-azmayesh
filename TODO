@@ -1,8 +1,6 @@
 
-    *   DEBUG: pdf files are being loaded several times during answer.post page initializing.
-
-    *   DEBUG: Why it is so slow to load pdf answer files?
-
+    *   Add proper support for 'Add to homescreen' functionality of modern browsers.
+    
 ================================================================================
 
     *   Import ZarrinPal payment gate.
@@ -21,6 +19,8 @@
 
     *   The max zoom factor is set to 2.0, shouldn't we make this larger and more dynamic?
 
+    *   Add a vertical pseudo scroll bar to Answer.Post page.
+    
     *   Debug: Sometimes PDFs does not appear in print layout.
     
     *   Let the patient download توضیحات as an text file in answer.download page.
@@ -30,8 +30,6 @@
     *   Empower users to do all kind of staff (delete, edit, re-send, ...) to their posts.
     
     *   What if user changes view by menu when the site is still loading some request?
-    
-    *   Add proper support for 'Add to homescreen' functionality of modern browsers.
     
     *   Add the ability to upload some test results without sending or as private posts,
         where are harder to seek than url encoded data headers.

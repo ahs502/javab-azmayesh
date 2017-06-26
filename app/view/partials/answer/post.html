@@ -9,6 +9,8 @@
         <div zoomable ng-if="!loading && answer" max-zoom="2" top="52" bottom="42" right="10" left="10">
             <div>
 
+                <br />
+
                 <p class="nazanin ja-rtl ja-align-right" ng-show="!loading && !(answer && answer.files && answer.files.length)">
                     برای این آزمایش فایلی آپلود نشده است.
                 </p>
@@ -48,11 +50,13 @@
 
                 <br />
 
-                <p ng-if="!loading && answer" class="nazanin ja-rtl ja-align-right"><strong>توضیحات :</strong></p>
+                <p ng-if="!loading && answer" class="nazanin ja-rtl ja-align-right">
+                    <strong>توضیحات :</strong>
+                </p>
                 <div ng-if="!loading && answer" class="ui segment">
                     <pre class="nazanin ja-rtl ja-right-align ja-multiline-pre" ng-bind="answer.notes || '(توضیحات ندارد)'"></pre>
                 </div>
-                
+
                 <br />
 
             </div>

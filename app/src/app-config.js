@@ -374,6 +374,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
 
         $urlRouterProvider.otherwise('/home/find');
 
+        $locationProvider.hashPrefix('');
         // $locationProvider.html5Mode(true);
 
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|sms|tg|tel):/);

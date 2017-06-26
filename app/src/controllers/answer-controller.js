@@ -8,7 +8,7 @@
 app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService',
     function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService) {
 
-        var printLayoutWidth = 2400;
+        var printLayoutWidth = 2400; // px
 
         $scope.nationalCode = $stateParams.p;
         $scope.postCode = $stateParams.n;
@@ -88,9 +88,13 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                         }
                     })
                 ]).then(function() {
-                    $window.print();
+                    $timeout(function() {
+                        $timeout(function() {
+                            $window.print();
+                        });
+                    });
                 }, function(reason) {
-                    console.log("Coulldn't print:", reason);
+                    console.error("Coulldn't print:", reason);
                 }).then(function() {
                     $timeout(function() {
                         $scope.printing = false;
