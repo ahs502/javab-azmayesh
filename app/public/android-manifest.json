@@ -1,0 +1,22 @@
+{
+    "background_color": "white",
+    "description": "سامانه اینترنتی دریافت نتایج آزمایشگاهی",
+    "dir": "rtl",
+    "lang": "fa",
+    "name": "جواب آزمایش - سامانه اینترنتی دریافت نتایج آزمایشگاهی",
+    "short_name": "جواب آزمایش",
+    "display": "fullscreen",
+    "icons": [{
+        "src": "/img/Logo/Icon - 144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+    },{
+        "src": "/img/Logo/Semi-Full Logo - 600.png",
+        "sizes": "600x312",
+        "type": "image/png"
+    }],
+    "orientation": "any",
+    "scope": "/",
+    "start_url": "/",
+    "theme_color": "#140070"
+}

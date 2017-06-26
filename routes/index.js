@@ -49,4 +49,27 @@ router.get('/config', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.get('/android-manifest.json', function(req, res, next) {
+    try {
+        fs.readFile(path.join(__dirname, '../app/public/android-manifest.json'), function(error, androidManifest) {
+            if (error) {
+                console.error(error);
+                return next();
+            }
+            androidManifest = String(androidManifest || '');
+            res
+                .header('Content-Type', 'application/manifest+json')
+                .status(200)
+                .send(androidManifest)
+                .end();
+        });
+    }
+    catch (error) {
+        console.error(error);
+        next();
+    }
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 module.exports = router;
