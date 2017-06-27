@@ -13,6 +13,7 @@ app.controller('AdminHomeStatisticsController', ['$scope', '$rootScope', '$state
             adminService.getStatistics()
                 .then(function(stat) {
                     $scope.stat = stat;
+                    $scope.statForDisplay = JSON.stringify(stat, null, 4);
                 }, function(code) {
                     sscAlert(code);
                 }).then(function() {
