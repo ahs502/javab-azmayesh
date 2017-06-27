@@ -1420,6 +1420,8 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         this.checkFeedback = checkFeedback;
         this.respondFeedback = respondFeedback;
 
+        this.getStatistics = getStatistics;
+
         this.getAllLaboratories = getAllLaboratories;
         this.editLaboratory = editLaboratory;
         this.removeLaboratory = removeLaboratory;
@@ -1523,6 +1525,13 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
                 feedbackId: feedbackId,
                 message: message
             }));
+        }
+
+        function getStatistics() {
+            return utils.httpPromiseHandler($http.post('/admin/getStatistics', {}))
+                .then(function(body) {
+                    return body.stat || {};
+                });
         }
 
         function getAllLaboratories() {
@@ -3986,6 +3995,41 @@ app.controller('AdminHomeNotDeliveredSmsesController', ['$scope', '$rootScope', 
 
 /*
 	AHS502 : End of 'admin/home/not-delivered-smses-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'admin/home/statistics-controller.js'
+*/
+
+/*global app*/
+/*global sscAlert*/
+
+app.controller('AdminHomeStatisticsController', ['$scope', '$rootScope', '$state', '$stateParams', 'AdminService',
+    function($scope, $rootScope, $state, $stateParams, adminService) {
+
+        $scope.getStatistics = getStatistics;
+
+        getStatistics();
+
+        function getStatistics() {
+            $scope.setLoading(true);
+            adminService.getStatistics()
+                .then(function(stat) {
+                    $scope.stat = stat;
+                }, function(code) {
+                    sscAlert(code);
+                }).then(function() {
+                    $scope.setLoading(false);
+                });
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'admin/home/statistics-controller.js'
 */
 
 

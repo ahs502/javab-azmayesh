@@ -15,6 +15,12 @@
     <link rel="shortcut icon" type="image/png" href="/img/Logo/Logo - 256.png" />
 
     <link rel="manifest" href="/android-manifest.json">
+    
+    <link rel="apple-touch-icon" href="/img/Logo/Logo - 256.png">
+    <link rel="apple-touch-startup-image" href="/img/Logo/Full Logo - 600.png">
+    <meta name="apple-mobile-web-app-title" content="جواب آزمایش">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!--<meta name="apple-mobile-web-app-status-bar-style" content="black">-->
 
     <script src="//www.google.com/recaptcha/api.js?render=explicit&onload=vcRecaptchaApiLoaded&hl=fa" async defer></script>
 
@@ -2893,8 +2899,17 @@
     </div>
 
     <div ng-show="selectedSubmenu == 5">
+        
         <p ng-bind="selectedSubmenuText" class="nazanin"></p>
         Page not implemented.
+        <br />
+        <br />
+        
+        <div ng-controller="AdminHomeStatisticsController">
+            <p class="ja-ltr ja-align-left ja-code">{{stat}}</p>
+
+        </div>
+
     </div>
 
 </div>

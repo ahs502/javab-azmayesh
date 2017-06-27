@@ -21,6 +21,8 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
         this.checkFeedback = checkFeedback;
         this.respondFeedback = respondFeedback;
 
+        this.getStatistics = getStatistics;
+
         this.getAllLaboratories = getAllLaboratories;
         this.editLaboratory = editLaboratory;
         this.removeLaboratory = removeLaboratory;
@@ -124,6 +126,13 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
                 feedbackId: feedbackId,
                 message: message
             }));
+        }
+
+        function getStatistics() {
+            return utils.httpPromiseHandler($http.post('/admin/getStatistics', {}))
+                .then(function(body) {
+                    return body.stat || {};
+                });
         }
 
         function getAllLaboratories() {

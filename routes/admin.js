@@ -449,6 +449,75 @@ router.post('/respondFeedback', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.post('/getStatistics', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'administrator');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    let date = new Date();
+    let daysPromises = [];
+    let daysYMDs = [];
+    for (let i = 0; i < 31; i++) {
+        let ymd = date.jYMD();
+        daysYMDs.push(ymd);
+        date.setDate(date.getDate() - 1);
+        let dKey = 'statistics/=' + ymd[0] + '/=' + ymd[1] + '/' + ymd[2];
+        daysPromises.push(kfs(dKey));
+    }
+    let monthsPromises = [];
+    let monthsYMDs = [];
+    for (let i = 0; i < 12; i++) {
+        let ymd = (new Date()).jYMD();
+        if ((ymd[1] -= i) > 1) {
+            ymd = [ymd[0], ymd[1]];
+        }
+        else {
+            ymd = [ymd[0] - 1, ymd[1] + 12];
+        }
+        monthsYMDs.push(ymd);
+        let mKey = 'statistics/=' + ymd[0] + '/' + ymd[1];
+        monthsPromises.push(kfs(mKey));
+    }
+    let yearsPromises = [];
+    let years = [];
+    for (let i = 0; i < 10; i++) {
+        let ymd = (new Date()).jYMD();
+        let year = ymd[0] - i;
+        years.push(year);
+        let yKey = 'statistics/' + year;
+        yearsPromises.push(kfs(yKey));
+    }
+    Promise.all([Promise.all(daysPromises).then(daysStatistics => daysStatistics.map((ds, i) => ({
+            y: daysYMDs[i][0],
+            m: daysYMDs[i][1],
+            d: daysYMDs[i][2],
+            stat: ds
+        })).filter(days => !!days.stat)),
+        Promise.all(monthsPromises).then(monthsStatistics => monthsStatistics.map((ms, i) => ({
+            y: monthsYMDs[i][0],
+            m: monthsYMDs[i][1],
+            stat: ms
+        })).filter(months => !!months.stat)),
+        Promise.all(yearsPromises).then(yearsStatistics => yearsStatistics.map((ys, i) => ({
+            y: years[i],
+            stat: ys
+        })).filter(years => !!years.stat))
+    ]).then(allStat => {
+        var stat = {
+            daily: allStat[0],
+            monthly: allStat[1],
+            yearly: allStat[2]
+        };
+        utils.resEndByCode(res, 0, {
+            stat
+        });
+    }, err => {
+        console.error(err);
+        utils.resEndByCode(res, 5);
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.post('/getAllLaboratories', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'administrator');
     if (!userInfo) return;
