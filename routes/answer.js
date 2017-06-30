@@ -10,6 +10,7 @@ var src = require("../src"),
     utils = src.utils,
     access = src.access,
     sms = src.sms,
+    email = src.email,
     statistics = src.statistics;
 
 var path = require("path");
@@ -234,6 +235,13 @@ router.post('/send', function(req, res, next) {
                                     return utils.resEndByCode(res, 5);
                                 }
                                 sms.send.postAnswer([patientKey, postKey], patient, post);
+                                patient.email && email.send(patient.email,
+                                    "نتایج آزمایش شما",
+                                    "" + patient.fullName + " عزیز، سلام!\n" +
+                                    "نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس است.\n" +
+                                    "شماره آزمایش: " + post.postCode + "\n" /*+ post.labName*/ +
+                                    "می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:\n" +
+                                    config.protocol + '://' + config.domain + '/#/answer?p=' + patient.nationalCode + '&n=' + post.postCode);
                                 utils.resEndByCode(res, 0);
                                 statistics.dailyCount('sendAnswer');
                             });

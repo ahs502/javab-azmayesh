@@ -1,6 +1,8 @@
 
-    *   Add the functionality to send SMS to admins when there is something he/she should now.
+    *   Send Telegram alongside SMS to patients.
     
+    *   Restrict wrong answer code entries for a national code to at most three times a day.
+
 ================================================================================
 
     *   Import ZarrinPal payment gate.
@@ -22,6 +24,8 @@
     *   Add a vertical pseudo scroll bar to Answer.Post page.
     
     *   Debug: Sometimes PDFs does not appear in print layout.
+    
+    *   Add the functionality to send SMS to admins when there is something he/she should now.
     
     *   Let the patient download توضیحات as an text file in answer.download page.
 

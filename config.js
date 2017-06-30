@@ -26,6 +26,11 @@ var config = {
     nik_sms_password: /*-------------------*/ "nspassword",
     nik_sms_main_number: /*----------------*/ "50004545454545",
     /*-------------------------------------*/
+    email_transporter_service: /*----------*/ 'gmail',
+    email_transporter_username: /*---------*/ 'ahs502@gmail.com',
+    email_transporter_password: /*---------*/ 'gpassword',
+    email_sender_display_name: /*----------*/ "(DEV) Javab Azmayesh [DO NOT REPLY]",
+    /*-------------------------------------*/
     google_recaptcha: /*-------------------*/ false,
     google_recaptcha_secret_key: /*--------*/ "",
     google_recaptcha_public_key: /*--------*/ "",
