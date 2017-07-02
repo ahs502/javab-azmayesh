@@ -1,6 +1,4 @@
 
-    *   Send Telegram alongside SMS to patients.
-    
     *   Restrict wrong answer code entries for a national code to at most three times a day.
 
 ================================================================================

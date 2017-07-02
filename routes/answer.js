@@ -11,6 +11,7 @@ var src = require("../src"),
     access = src.access,
     sms = src.sms,
     email = src.email,
+    telegram = src.telegram,
     statistics = src.statistics;
 
 var path = require("path");
@@ -235,13 +236,25 @@ router.post('/send', function(req, res, next) {
                                     return utils.resEndByCode(res, 5);
                                 }
                                 sms.send.postAnswer([patientKey, postKey], patient, post);
+                                var answerUrl = config.protocol + '://' + config.domain + '/#/answer?p=' + patient.nationalCode + '&n=' + post.postCode;
                                 patient.email && email.send(patient.email,
                                     "نتایج آزمایش شما",
-                                    "" + patient.fullName + " عزیز، سلام!\n" +
+                                    "باسمه تعالی\n" +
+                                    patient.fullName + " عزیز، سلام!\n" +
                                     "نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس است.\n" +
                                     "شماره آزمایش: " + post.postCode + "\n" /*+ post.labName*/ +
                                     "می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:\n" +
-                                    config.protocol + '://' + config.domain + '/#/answer?p=' + patient.nationalCode + '&n=' + post.postCode);
+                                    answerUrl,
+                                    "<div style=\"direction: rtl; text-align: -webkit-right !important; text-align: right !important;\">" +
+                                    "<h3>باسمه تعالی</h3>" +
+                                    "<p><strong>" + patient.fullName + "</strong> عزیز، سلام!</p>" +
+                                    "<p>نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس است.</p>" +
+                                    "<p>شماره آزمایش: <strong>" + post.postCode + "</strong></p>" /*+ post.labName*/ +
+                                    "<p>می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:</p>" +
+                                    "<a style=\"font-size: 120%;\" href=\"" + answerUrl + "\">نتایج من در سامانه جواب آزمایش</a>" +
+                                    "</div>");
+                                telegram.sendMessage(patient.numbers, 'نتایج آزمایش شما هم اکنون در سامانه «جواب آزمایش» در دسترس است. می توانید از طریق لینک زیر آن را مشاهده کنید:')
+                                    .then(() => telegram.sendMessage(patient.numbers, answerUrl));
                                 utils.resEndByCode(res, 0);
                                 statistics.dailyCount('sendAnswer');
                             });
