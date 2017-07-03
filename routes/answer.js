@@ -125,6 +125,79 @@ router.post('/patient/info', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.post('/patient/update', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'laboratory');
+    if (!userInfo) return;
+    // var username = userInfo.username;
+    var person = req.body.person;
+
+    var personValidator = new Validator(person)
+        .field('nationalCode', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.nationalCode()
+        ])
+        .field('fullName', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.minLength(3)
+        ])
+        .field('mobilePhoneNumber', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.mobilePhoneNumber()
+        ])
+        .field('phoneNumber', [
+            ValidationSystem.validators.notRequired(),
+            ValidationSystem.validators.phoneNumber()
+        ])
+        .field('extraPhoneNumber', [
+            ValidationSystem.validators.notRequired(),
+            ValidationSystem.validators.phoneNumber()
+        ])
+        .field('email', [
+            ValidationSystem.validators.notRequired(),
+            ValidationSystem.validators.email()
+        ]);
+    if (!personValidator.isValid()) {
+        return utils.resEndByCode(res, 80, {
+            errors: personValidator.getErrors()
+        });
+    }
+
+    var patientKey = 'patient/' + person.nationalCode;
+    kfs(patientKey, function(err, patient) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        patient = patient || {};
+        patient.numbers = patient.numbers || [];
+        [person.extraPhoneNumber, person.phoneNumber, person.mobilePhoneNumber].forEach(function(num) {
+            if (typeof num !== 'string') return;
+            num = num.toPhoneNumber();
+            if (num === '') return;
+            var index = patient.numbers.indexOf(num);
+            index >= 0 && patient.numbers.splice(index, 1);
+            patient.numbers = [num].concat(patient.numbers);
+        });
+        patient.nationalCode = person.nationalCode;
+        patient.fullName = person.fullName;
+        patient.fullNames = patient.fullNames || [];
+        if (patient.fullNames.indexOf(patient.fullName) >= 0)
+            patient.fullNames.splice(patient.fullNames.indexOf(patient.fullName), 1);
+        patient.fullNames = [patient.fullName].concat(patient.fullNames);
+        patient.email = person.email;
+        patient.posts = patient.posts || {};
+        kfs(patientKey, patient, function(err) {
+            if (err) {
+                console.error(err);
+                return utils.resEndByCode(res, 5);
+            }
+            utils.resEndByCode(res, 0);
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.post('/send', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;

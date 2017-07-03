@@ -4,6 +4,7 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
 
         this.patientInfo = patientInfo;
+        this.updatePatient = updatePatient;
         this.send = send;
 
         /////////////////////////////////////////////////////
@@ -23,7 +24,24 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 50, 52, 80, 100, 101, 120, 130
+        // May reject by code : 1, 2, 5, 50, 52, 80, 100, 101
+        function updatePatient(person, invalidPersonHandler) {
+            return utils.httpPromiseHandler($http.post('/answer/patient/update', {
+                person: {
+                    nationalCode: person.nationalCode,
+                    fullName: person.fullName,
+                    mobilePhoneNumber: person.mobilePhoneNumber,
+                    phoneNumber: person.phoneNumber,
+                    extraPhoneNumber: person.extraPhoneNumber,
+                    email: person.email
+                }
+            }), function(data) {
+                if (invalidPersonHandler)
+                    invalidPersonHandler(data.errors || {});
+            });
+        }
+
+        // May reject by code : 1, 2, 5, 50, 51, 52, 80, 100, 101, 120, 130
         function send(person, files, notes, invalidPersonHandler) {
             return utils.httpPromiseHandler($http.post('/answer/send', {
                 timeStamp: Date.now(),

@@ -265,6 +265,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 templateUrl: 'panel/post.html',
                 controller: 'PanelPostController'
             })
+            .state('panel.patient', {
+                url: '/patient',
+                templateUrl: 'panel/patient.html',
+                controller: 'PanelPatientController'
+            })
             .state('panel.send', {
                 url: '/send',
                 templateUrl: 'panel/send.html',

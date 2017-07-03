@@ -462,7 +462,7 @@ body {
   #ja-panel #ja-panel-history .ja-not-small-display {
     display: none !important;
   }
-  #ja-panel #ja-panel-history #ja-panel-history-search-menu {
+  #ja-panel #ja-panel-history #ja-panel-history-filter-menu {
     top: 80px;
   }
   #ja-panel #ja-panel-history #ja-panel-history-scrolling-container {

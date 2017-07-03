@@ -1537,6 +1537,11 @@
     <img class="ja-menu-item-icon" ng-src="{{iconJs('home')}}">
 </a>
 
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToUpdatePatient(); toggleMenu()">
+    ثبت بیمار
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('patient')}}">
+</a>
+
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToSendResults(); toggleMenu()">
     ارسال نتایج
     <img class="ja-menu-item-icon" ng-src="{{iconJs('post')}}">
@@ -1581,7 +1586,28 @@
         <div class="twelve wide small eight wide tablet six wide computer column">
             <div class="center aligned row ltr">
 
-                <div class="ui blue raised fluid link card" ng-click="menuHandlers.goToSendResults()">
+                <div class="ui blue raised fluid link card" ng-click="menuHandlers.goToUpdatePatient()">
+                    <div class="content">
+                        <div class="header nazanin">
+                            ثبت بیمار
+                        </div>
+                        <!--<div class="meta nazanin">-->
+                        <!--    آخرین پُست در تاریخ -------------- و ساعت ----------- ارسال شده است-->
+                        <!--</div>-->
+                        <div class="description nazanin">
+                            ثبت و به روز رسانی اطلاعات بیماران
+                        </div>
+                    </div>
+                    <!--<div class="extra content">-->
+                    <!--    <span class="right floated nazanin">-->
+                    <!--        شما شارژ کافی برای ارسال-->
+                    <!--        <strong ng-bind="{{ '125' }}"></strong>-->
+                    <!--        پُست را دارید-->
+                    <!--    </span>-->
+                    <!--</div>-->
+                </div>
+
+                <div class="ui teal raised fluid link card" ng-click="menuHandlers.goToSendResults()">
                     <div class="content">
                         <div class="header nazanin">
                             ارسال نتایج
@@ -1868,6 +1894,78 @@
 
 </div>
 
+</script>
+
+<script type="text/ng-template" id="panel/patient.html">
+    <div id="ja-panel-patient">
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ updatingPatient ? 'loading' : '' }} form">
+
+                    <div class="field" ng-class="{'error': vs.error('nationalCode')}">
+                        <label class="nazanin ja-required">کد ملی بیمار</label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="person.nationalCode" ng-change="vs.check('nationalCode'); loadPatientInfo()" ng-class="{'ja-align-left': person.nationalCode, 'nazanin': !person.nationalCode}" placeholder="کد ملی">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('nationalCode')" ng-bind="vs.error('nationalCode')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('fullName')}">
+                        <label class="nazanin ja-required">نام و نام خانوادگی بیمار</label>
+                        <div class="ui input">
+                            <input class="nazanin ja-rtl" type="text" ng-model="person.fullName" ng-change="vs.check('fullName')" placeholder="نام و نام خانوادگی">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('fullName')" ng-bind="vs.error('fullName')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
+                        <label class="nazanin ja-required">شماره تلفن همراه</label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="person.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
+                        <label class="nazanin ja-optional">شماره تلفن دوم</label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="person.phoneNumber" ng-change="vs.check('phoneNumber')" ng-class="{'ja-align-left': person.phoneNumber, 'nazanin': !person.phoneNumber}" placeholder="تلفن همراه یا ثابت">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('phoneNumber')" ng-bind="vs.error('phoneNumber')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('extraPhoneNumber')}">
+                        <label class="nazanin ja-optional">شماره تلفن سوم </label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="person.extraPhoneNumber" ng-change="vs.check('extraPhoneNumber')" ng-class="{'ja-align-left': person.extraPhoneNumber, 'nazanin': !person.extraPhoneNumber}" placeholder="تلفن همراه یا ثابت">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('extraPhoneNumber')" ng-bind="vs.error('extraPhoneNumber')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('email')}">
+                        <label class="nazanin ja-optional">آدرس پست الکترونیک </label>
+                        <div class="ui input">
+                            <input type="email" ng-model="person.email" ng-change="vs.check('email')" class="ja-align-left" placeholder="your@email.com">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('email')" ng-bind="vs.error('email')"></div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="updatePatient()">
+                            <span class="nazanin">ثبت یا به روز رسانی اطلاعات بیمار</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
 </script>
 
 <script type="text/ng-template" id="panel/post.html">

@@ -21,6 +21,9 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
             goToMainPage: function() {
                 $state.go('panel.home');
             },
+            goToUpdatePatient: function() {
+                $state.go('panel.patient');
+            },
             goToSendResults: function() {
                 $state.go('panel.send');
             },
