@@ -9,11 +9,12 @@ var statistics = {
     dailyCount,
 };
 
-function dailyCount(subject) {
+function dailyCount(subject, count) {
     if (!config.enable_statistics) return;
 
+    count = count || +1;
     var ymd = (new Date()).jYMD();
-    var yKey =  ymd[0],
+    var yKey = ymd[0],
         mKey = '=' + ymd[0] + '/' + ymd[1],
         dKey = '=' + ymd[0] + '/=' + ymd[1] + '/' + ymd[2];
 
@@ -27,9 +28,9 @@ function dailyCount(subject) {
                 m = data[1] || {},
                 d = data[2] || {};
 
-            y[subject] = (y[subject] || 0) + 1;
-            m[subject] = (m[subject] || 0) + 1;
-            d[subject] = (d[subject] || 0) + 1;
+            y[subject] = (y[subject] || 0) + count;
+            m[subject] = (m[subject] || 0) + count;
+            d[subject] = (d[subject] || 0) + count;
 
             return Promise.all([
                 kfsStatistics(yKey, y),

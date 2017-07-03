@@ -220,11 +220,18 @@ router.post('/login', function(req, res, next) {
         }
         var remoteIp = req.ip;
         var accessKey = access.generateUserAccessKey(user, remoteIp);
+        var userInfo = getUserInfo(user);
         utils.resEndByCode(res, 0, {
             accessKey,
-            userInfo: getUserInfo(user)
+            userInfo
         });
-        statistics.dailyCount('userLogin');
+        if (userInfo.userType !== 'administrator') {
+            statistics.dailyCount('userLogin');
+        }
+        else {
+            // Do not count anything for administers.
+            statistics.dailyCount('index', -1);
+        }
     });
 });
 
