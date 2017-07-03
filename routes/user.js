@@ -225,12 +225,11 @@ router.post('/login', function(req, res, next) {
             accessKey,
             userInfo
         });
-        if (userInfo.userType !== 'administrator') {
-            statistics.dailyCount('userLogin');
+        if (userInfo.userType === 'administrator') {
+            statistics.dailyCount('adminLogin');
         }
         else {
-            // Do not count anything for administers.
-            statistics.dailyCount('index', -1);
+            statistics.dailyCount('userLogin');
         }
     });
 });
