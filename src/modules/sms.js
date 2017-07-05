@@ -14,6 +14,7 @@ module.exports = {
         validationCodeForRegisteration,
         validationCodeForUpdatingAccount,
         passwordRecovery,
+        updatePatient,
         postAnswer,
         otpGenerated,
         newUserApproved,
@@ -105,6 +106,20 @@ function passwordRecovery(relatedKeys, user) {
     });
 }
 
+function updatePatient(relatedKeys, patient) {
+    var numbers = patient.numbers;
+    var message = "" + patient.fullName + " عزیز، سلام!\n" +
+        "اطلاعات شما در سامانه جواب آزمایش به روز رسانی شدند.\n" +
+        "در صورتی که تمایل دارید هنگام آماده شدن جواب آزمایشتان از طریق تلگرام نیز مطلع شوید، به روبات تلگرامی\n" +
+        config.telegram_bot_name + "\n متصل شوید و دکمه Start را بزنید.\n" +
+        "برای این منظور می توانید از لینک زیر استفاده کنید:\n" +
+        'https://t.me/' + config.telegram_bot_name.slice(1);
+    return sendSms('updatepatient', numbers, message, {
+        relatedKeys,
+        patient
+    });
+}
+
 function postAnswer(relatedKeys, patient, post) {
     var numbers = patient.numbers;
     var message = "" + patient.fullName + " عزیز، سلام!\n" +
@@ -192,6 +207,7 @@ var smsTypeDescription = {
     'vericodeusrreg': "کُد اعتبارسنجی برای ثبت نام آزمایشگاه",
     'vericodeusrupd': "کُد اعتبارسنجی برای به روز رسانی اطلاعات آزمایشگاه",
     'passrecovery': "بازیابی کلمه عبور آزمایشگاه",
+    'updatepatient': "اعلام ثبت اطلاعات و پیشنهاد عضویت در تلگرام بیمار",
     'postans': "نتیجه آزمایش بیمار",
     'otp': "رمز یک بار مصرف مشاهده سوابق بیمار",
     'approvesignup': "تأیید حساب کاربری آزمایشگاه جدید",

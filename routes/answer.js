@@ -191,6 +191,7 @@ router.post('/patient/update', function(req, res, next) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
             }
+            sms.send.updatePatient([patientKey], patient);
             utils.resEndByCode(res, 0);
         });
     });
