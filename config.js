@@ -31,6 +31,9 @@ var config = {
     email_transporter_password: /*---------*/ 'gpassword',
     email_sender_display_name: /*----------*/ "(DEV) Javab Azmayesh [DO NOT REPLY]",
     /*-------------------------------------*/
+    telegram_bot_name: /*------------------*/ "@JaDevBot",
+    telegram_bot_api_token: /*-------------*/ "419656073:AAE-Hv1imGLchkIlHWeGq2GMWeJisXxEb5A",
+    /*-------------------------------------*/
     google_recaptcha: /*-------------------*/ false,
     google_recaptcha_secret_key: /*--------*/ "",
     google_recaptcha_public_key: /*--------*/ "",

@@ -1,7 +1,9 @@
+var config = require("../../config");
+
 var kfs = require("./kfs");
 
 const TeleBot = require('telebot');
-const bot = new TeleBot('419687845:AAFEocIodRfrTCIrEYQKBohMVBWDcZdpo84');
+const bot = new TeleBot(config.telegram_bot_api_token);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -68,7 +70,7 @@ bot.on('contact', contact => {
         lastName: contactData.last_name,
         userId: contactData.user_id
     };
-    return kfs('telegram/contact/' + contactInfo.phoneNumber, contactInfo, function(err) {
+    return kfs('telegram/contact/phone/' + contactInfo.phoneNumber, contactInfo, function(err) {
         if (err) {
             console.error(err);
             return bot.sendMessage(contactInfo.userId,
@@ -130,7 +132,7 @@ function sendMessage(mobilePhoneNumbers, message) {
     });
 
     function sendMessageToOneNumber(mobilePhoneNumber, message) {
-        return kfs('telegram/contact/' + mobilePhoneNumber)
+        return kfs('telegram/contact/phone/' + mobilePhoneNumber)
             .then(contact => {
                 if (!contact) {
                     return Promise.reject('Contact not found.');
