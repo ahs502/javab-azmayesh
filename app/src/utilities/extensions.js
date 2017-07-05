@@ -73,7 +73,7 @@
     function toPhoneNumber() {
         var s = this.replace(/\s/g, "");
         if (s.slice(0, 3) === '+98') s = '0' + s.slice(3);
-        if (s.slice(0, 2) === '98') s = '0' + s.slice(2);
+        else if (s.slice(0, 2) === '98') s = '0' + s.slice(2);
         return s.split('').filter(function(char) {
             return '0123456789'.indexOf(char) >= 0;
         }).join('');

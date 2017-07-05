@@ -24,7 +24,7 @@ bot.on('/start', msg => {
         .then(() => bot.sendMessage(fromId,
             'برای این منظور لازم است اطلاعات تماس خود را در اختیار سامانه «جواب آزمایش» قرار دهید.'))
         .then(() => bot.sendMessage(fromId,
-            'لطفاً با فشردن دکمه (ارسال اطلاعات تماس من) اطلاعات تماس خود را با ما به اشتراک بگذارید:', {
+            'لطفاً با فشردن دکمه (ارسال اطلاعات تماس من) و پس از آن دکمه (OK) اطلاعات تماس خود را با ما به اشتراک بگذارید:', {
                 replyMarkup: bot.keyboard([
                     [{
                         request_contact: true,
@@ -70,7 +70,7 @@ bot.on('contact', contact => {
         lastName: contactData.last_name,
         userId: contactData.user_id
     };
-    return kfs('telegram/contact/phone/' + contactInfo.phoneNumber, contactInfo, function(err) {
+    return kfs('telegram/contact/phone/' + contactInfo.mobilePhoneNumber, contactInfo, function(err) {
         if (err) {
             console.error(err);
             return bot.sendMessage(contactInfo.userId,
