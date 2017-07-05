@@ -42,7 +42,7 @@ app.service('HistoryService', ['$http', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 71, 72, 73, 74
+        // May reject by code : 1, 2, 5, 71, 72, 73, 74, 75
         // Resolves to patient's answer content
         function loadAnswer(nationalCode, postCode) {
             return utils.httpPromiseHandler($http.post('/history/load/answer', {

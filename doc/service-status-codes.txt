@@ -25,6 +25,7 @@
     72  : Post does not belong to patient
     73  : Post not found
     74  : User (laboratory) not found
+    75  : Patient has reached daily try count limit
     
     80  : Invalid form data
     

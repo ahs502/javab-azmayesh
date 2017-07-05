@@ -123,60 +123,81 @@ router.post('/find/history', function(req, res, next) {
 router.post('/load/answer', function(req, res, next) {
     var nationalCode = req.body.nationalCode;
     var postCode = req.body.postCode;
-    var patientKey = 'patient/' + nationalCode;
-    kfs(patientKey, function(err, patient) {
+    var patientTryLimitKey = 'patient-try-limit/' + nationalCode;
+    kfs(patientTryLimitKey, function(err, patientTryLimit) {
         if (err) {
             console.error(err);
             return utils.resEndByCode(res, 5);
         }
-        if (!patient) {
-            return utils.resEndByCode(res, 71);
+        patientTryLimit = patientTryLimit || {};
+        patientTryLimit.count = patientTryLimit.count || 0;
+        var jDate = (new Date()).jYMD().join('/');
+        if (patientTryLimit.jDate !== jDate) {
+            patientTryLimit.jDate = jDate;
+            patientTryLimit.count = 0;
         }
-        var posts = patient.posts || {};
-        var postKey = posts[postCode];
-        if (!postKey) {
-            return utils.resEndByCode(res, 72);
+        if (patientTryLimit.count >= 3) {
+            return utils.resEndByCode(res, 75);
         }
-        kfs(postKey, function(err, post) {
+        var patientKey = 'patient/' + nationalCode;
+        kfs(patientKey, function(err, patient) {
             if (err) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
             }
-            if (!post) {
-                return utils.resEndByCode(res, 73);
+            if (!patient) {
+                return utils.resEndByCode(res, 71);
             }
-            var userKey = 'user/active/' + post.username;
-            kfs(userKey, function(err, user) {
+            var posts = patient.posts || {};
+            var postKey = posts[postCode];
+            if (!postKey) {
+                patientTryLimit.count = Math.min(patientTryLimit.count + 1, 3);
+                return kfs(patientTryLimitKey, patientTryLimit, function(err) {
+                    err && console.error(err);
+                    utils.resEndByCode(res, 72);
+                });
+            }
+            kfs(postKey, function(err, post) {
                 if (err) {
                     console.error(err);
                     return utils.resEndByCode(res, 5);
                 }
-                if (!user) {
-                    return utils.resEndByCode(res, 74);
+                if (!post) {
+                    return utils.resEndByCode(res, 73);
                 }
-                var files = (post.files || []).map(file => {
-                    return {
-                        serverName: file.serverName,
-                        name: file.name,
-                        size: file.size,
-                        type: file.type
-                    };
-                });
-                utils.resEndByCode(res, 0, {
-                    patientName: patient.fullName,
-                    timeStamp: post.timeStamp,
-                    notes: post.notes,
-                    files,
-                    lab: {
-                        name: user.labName,
-                        mobilePhoneNumber: user.mobilePhoneNumber,
-                        phoneNumber: user.phoneNumber,
-                        address: user.address,
-                        postalCode: user.postalCode,
-                        websiteAddress: user.websiteAddress
+                var userKey = 'user/active/' + post.username;
+                kfs(userKey, function(err, user) {
+                    if (err) {
+                        console.error(err);
+                        return utils.resEndByCode(res, 5);
                     }
+                    if (!user) {
+                        return utils.resEndByCode(res, 74);
+                    }
+                    var files = (post.files || []).map(file => {
+                        return {
+                            serverName: file.serverName,
+                            name: file.name,
+                            size: file.size,
+                            type: file.type
+                        };
+                    });
+                    utils.resEndByCode(res, 0, {
+                        patientName: patient.fullName,
+                        timeStamp: post.timeStamp,
+                        notes: post.notes,
+                        files,
+                        lab: {
+                            name: user.labName,
+                            mobilePhoneNumber: user.mobilePhoneNumber,
+                            phoneNumber: user.phoneNumber,
+                            address: user.address,
+                            postalCode: user.postalCode,
+                            websiteAddress: user.websiteAddress
+                        }
+                    });
+                    statistics.dailyCount('answerLoaded');
                 });
-                statistics.dailyCount('answerLoaded');
             });
         });
     });

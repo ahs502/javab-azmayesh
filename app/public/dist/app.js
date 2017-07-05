@@ -749,6 +749,7 @@ global.global = global;
         72: 'این پُست مربوط به این بیمار نیست',
         73: 'پُست ارسال شده یافت نشد',
         74: 'کاربر آزمایشگاه یافت نشد',
+        75: 'بیمار به حداکثر تعداد خطاهای روزانه رسیده است',
 
         80: 'اطلاعات فرم اشتباه است',
 
@@ -1771,7 +1772,7 @@ app.service('HistoryService', ['$http', 'Utils',
                 });
         }
 
-        // May reject by code : 1, 2, 5, 71, 72, 73, 74
+        // May reject by code : 1, 2, 5, 71, 72, 73, 74, 75
         // Resolves to patient's answer content
         function loadAnswer(nationalCode, postCode) {
             return utils.httpPromiseHandler($http.post('/history/load/answer', {
