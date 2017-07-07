@@ -191,7 +191,8 @@ router.post('/patient/update', function(req, res, next) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
             }
-            sms.send.updatePatient([patientKey], patient);
+            (('telegram/contact/phone/' + patient.numbers[0]) in kfs(), kfs())
+            .then(telegramContactExists => sms.send.updatePatient([patientKey], patient, telegramContactExists));
             utils.resEndByCode(res, 0);
         });
     });

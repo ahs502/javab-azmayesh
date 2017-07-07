@@ -108,14 +108,17 @@ function passwordRecovery(relatedKeys, user) {
     });
 }
 
-function updatePatient(relatedKeys, patient) {
+function updatePatient(relatedKeys, patient, telegramContactExists) {
     var numbers = patient.numbers;
     var message = "" + patient.fullName + " عزیز، سلام!\n" +
-        "اطلاعات شما در سامانه جواب آزمایش به روز رسانی شدند.\n" +
-        "در صورتی که تمایل دارید هنگام آماده شدن جواب آزمایشتان از طریق تلگرام نیز مطلع شوید، به روبات تلگرامی\n" +
-        config.telegram_bot_name + "\n متصل شوید و دکمه Start را بزنید.\n" +
-        "برای این منظور می توانید از لینک زیر استفاده کنید:\n" +
-        'https://t.me/' + config.telegram_bot_name.slice(1);
+        "اطلاعات شما در سامانه جواب آزمایش به روز رسانی شدند.";
+    if (!telegramContactExists) {
+        message +=
+            "\nدر صورتی که تمایل دارید هنگام آماده شدن جواب آزمایشتان از طریق تلگرام نیز مطلع شوید، به روبات تلگرامی\n" +
+            config.telegram_bot_name + "\n متصل شوید و دکمه Start را بزنید.\n" +
+            "برای این منظور می توانید از لینک زیر استفاده کنید:\n" +
+            'https://t.me/' + config.telegram_bot_name.slice(1);
+    }
     return sendSms('updatepatient', numbers, message, {
         relatedKeys,
         patient

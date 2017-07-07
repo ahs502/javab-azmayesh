@@ -73,7 +73,7 @@
                     <div class="field" ng-class="{'error': vs.error('username')}">
                         <label class="nazanin ja-required">نام کاربری</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.username" ng-change="vs.check('username')" class="ja-align-left" placeholder="username">
+                            <input class="lowercase" type="text" ng-model="model.username" ng-change="vs.check('username')" class="ja-align-left" placeholder="username">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>

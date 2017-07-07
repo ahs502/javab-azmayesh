@@ -1177,7 +1177,7 @@
 
 <script type="text/ng-template" id="lab/login.html">
     <div id="ja-lab-login">
-
+    
     <div class="ui centered grid">
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
@@ -1187,7 +1187,7 @@
                     <div class="field" ng-class="{'error': vs.error('username')}">
                         <label class="nazanin ja-required">نام کاربری</label>
                         <div class="ui input">
-                            <input type="text" ng-model="username" ng-change="vs.check('username')" ng-class="{'ja-align-left': username, 'nazanin': !username}" placeholder="نام کاربری">
+                            <input class="lowercase" type="text" ng-model="username" ng-change="vs.check('username')" ng-class="{'ja-align-left': username, 'nazanin': !username}" placeholder="نام کاربری">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>
@@ -1250,7 +1250,7 @@
                     <div class="field" ng-class="{'error': vs.error('username')}">
                         <label class="nazanin ja-required">نام کاربری</label>
                         <div class="ui input">
-                            <input type="text" ng-model="username" ng-change="vs.check('username')" ng-class="{'ja-align-left': username, 'nazanin': !username}" placeholder="نام کاربری">
+                            <input class="lowercase" type="text" ng-model="username" ng-change="vs.check('username')" ng-class="{'ja-align-left': username, 'nazanin': !username}" placeholder="نام کاربری">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>
@@ -1388,7 +1388,7 @@
                     <div class="field" ng-class="{'error': vs.error('username')}">
                         <label class="nazanin ja-required">نام کاربری</label>
                         <div class="ui input">
-                            <input type="text" ng-model="model.username" ng-change="vs.check('username')" class="ja-align-left" placeholder="username">
+                            <input class="lowercase" type="text" ng-model="model.username" ng-change="vs.check('username')" class="ja-align-left" placeholder="username">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>

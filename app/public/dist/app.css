@@ -34,6 +34,15 @@ body {
 .ja-align-justify {
   text-align: justify !important;
 }
+.lowercase {
+  text-transform: lowercase;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+.capitalize {
+  text-transform: capitalize;
+}
 #ja-header,
 #ja-footer {
   width: 100%;
