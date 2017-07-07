@@ -5,6 +5,8 @@ app.service('PostService', ['$q', '$http', 'Utils',
 
         this.getPosts = getPosts;
         this.getOnePost = getOnePost;
+        this.deleteOnePost = deleteOnePost;
+        this.updateOnePost = updateOnePost;
 
         /////////////////////////////////////////////////////
 
@@ -56,6 +58,23 @@ app.service('PostService', ['$q', '$http', 'Utils',
                         files: body.files || []
                     };
                 });
+        }
+
+        // May reject by code : 1, 2, 5, 50, 52, 71, 72, 100, 101
+        function deleteOnePost(nationalCode, postCode) {
+            return utils.httpPromiseHandler($http.post('/post/delete/one', {
+                nationalCode: nationalCode,
+                postCode: postCode
+            }));
+        }
+
+        // May reject by code : 1, 2, 5, 50, 52, 71, 72, 73 100, 101, 120
+        function updateOnePost(nationalCode, postCode, postData) {
+            return utils.httpPromiseHandler($http.post('/post/update/one', {
+                nationalCode: nationalCode,
+                postCode: postCode,
+                postData: postData
+            }));
         }
 
     }

@@ -12,8 +12,8 @@
         <div ng-if="!loading && (answer && answer.files && answer.files.length)">
 
             <a class="ja-link" ng-repeat="file in answer.files" ng-href="{{file.url}}" target="_blank">
-                <img ng-if="file.material === 'image'" class="ja-link-image" ng-src="{{file.url}}">
-                <img ng-if="file.material !== 'image'" class="ja-link-image" ng-src="{{iconJs.file(file.name)}}">
+                <img ng-if="file.material === 'image'" class="ja-link-image" ng-src="{{file.url}}" />
+                <img ng-if="file.material !== 'image'" class="ja-link-image" ng-src="{{iconJs.file(file.name)}}" />
                 <p class="nazanin ja-link-filename" ng-bind="file.name"></p>
             </a>
 

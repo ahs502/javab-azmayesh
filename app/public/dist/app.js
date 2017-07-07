@@ -1856,6 +1856,8 @@ app.service('PostService', ['$q', '$http', 'Utils',
 
         this.getPosts = getPosts;
         this.getOnePost = getOnePost;
+        this.deleteOnePost = deleteOnePost;
+        this.updateOnePost = updateOnePost;
 
         /////////////////////////////////////////////////////
 
@@ -1909,8 +1911,26 @@ app.service('PostService', ['$q', '$http', 'Utils',
                 });
         }
 
+        // May reject by code : 1, 2, 5, 50, 52, 71, 72, 100, 101
+        function deleteOnePost(nationalCode, postCode) {
+            return utils.httpPromiseHandler($http.post('/post/delete/one', {
+                nationalCode: nationalCode,
+                postCode: postCode
+            }));
+        }
+
+        // May reject by code : 1, 2, 5, 50, 52, 71, 72, 73 100, 101, 120
+        function updateOnePost(nationalCode, postCode, postData) {
+            return utils.httpPromiseHandler($http.post('/post/update/one', {
+                nationalCode: nationalCode,
+                postCode: postCode,
+                postData: postData
+            }));
+        }
+
     }
 ]);
+
 
 /*
 	AHS502 : End of 'post-serveice.js'
@@ -1938,6 +1958,9 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
         this.logout = logout;
         this.current = current;
         this.restorePassword = restorePassword;
+
+        this.getUserSession = getUserSession;
+        this.setUserSession = setUserSession;
 
         /////////////////////////////////////////////////////
 
@@ -2072,6 +2095,20 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }));
         }
 
+        // Gets the current raw authorization status
+        function getUserSession() {
+            return {
+                httpHeader: $http.defaults.headers.common['X-Access-Token'],
+                sessionStorage: $window.sessionStorage['CurrentUser']
+            };
+        }
+
+        // Sets the current raw authorization status
+        function setUserSession(userSession) {
+            $http.defaults.headers.common['X-Access-Token'] = userSession.httpHeader;
+            $window.sessionStorage['CurrentUser'] = userSession.sessionStorage;
+        }
+
         /////////////////////////////////////////////////////
 
         function setCurrent(accessKey, userInfo) {
@@ -2097,6 +2134,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
 
     }
 ]);
+
 
 /*
 	AHS502 : End of 'user-service.js'
@@ -3382,8 +3420,12 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
 /*global persianDate*/
 /*global sscAlert*/
 
-app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$stateParams', 'PostService',
-    function($scope, $rootScope, $state, $stateParams, postService) {
+app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$stateParams', '$q', 'PostService', 'UserService',
+    function($scope, $rootScope, $state, $stateParams, $q, postService, userService) {
+
+        $scope.seePostAsPatient = seePostAsPatient;
+        $scope.updatePost = updatePost;
+        $scope.deletePost = deletePost;
 
         var postSummary = $rootScope.data.post;
 
@@ -3393,10 +3435,23 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
 
         $scope.setPageTitle('لطفاً کمی صبر کنید...');
 
+        $scope.$on('$destroy', function() {
+            delete $rootScope.data.panelPostData;
+        });
+
         $scope.setLoading(true);
-        postService.getOnePost(postSummary.nationalCode, postSummary.postCode)
-            .then(function(post) {
+        ($rootScope.data.panelPostData ? $q.when($rootScope.data.panelPostData) :
+            postService.getOnePost(postSummary.nationalCode, postSummary.postCode))
+        .then(function(post) {
+                post.files = post.files || [];
+                post.files.forEach(function(file) {
+                    file.url = '/answer/file/download?p=' + post.nationalCode +
+                        '&n=' + post.postCode + '&f=' + file.serverName;
+                    if (file.type.indexOf('image') >= 0) file.material = 'image';
+                    else if (file.type === 'application/pdf') file.material = 'pdf';
+                });
                 $scope.post = post;
+                $rootScope.data.panelPostData = post;
                 $scope.setPageTitle($scope.post.fullName);
 
                 $scope.postDataForDisplay = [{
@@ -3428,6 +3483,46 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
             .then(function() {
                 $scope.setLoading(false);
             });
+
+        function seePostAsPatient() {
+            $state.go('answer', {
+                p: $scope.post.nationalCode,
+                n: $scope.post.postCode,
+                previousState: 'panel.post',
+                previousStateData: {
+                    postCache: $rootScope.data.postCache,
+                    historyState: $rootScope.data.historyState,
+                    panelPostData: $scope.post,
+                    userSession: userService.getUserSession()
+                }
+            });
+        }
+
+        function updatePost() {
+            // Use: postService.updateOnePost(nationalCode, postCode, postData)
+        }
+
+        function deletePost() {
+            $scope.showConfirmMessage('حذف پُست از سامانه',
+                'آیا مطمئن هستید که می خواهید این پُست را برای همیشه از سامانه پاک کنید؟',
+                'بله، پاک شود', 'خیر، پاک نشود',
+                'red', 'basic green').then(function() {
+                $scope.setLoading(true);
+                postService.deleteOnePost(postSummary.nationalCode, postSummary.postCode)
+                    .then(function() {
+                        $scope.showMessage('حذف موفقیت آمیز پُست از سامانه',
+                            'پُست مورد نظر شما از سامانه پاک شد و اطلاع رسانی لازم به بیمار خواهد شد.').then(function() {
+                            delete $rootScope.data.postCache;
+                            $state.go('panel.history');
+                        });
+                    }, function(code) {
+                        sscAlert(code);
+                    })
+                    .then(function() {
+                        $scope.setLoading(false);
+                    });
+            });
+        }
 
     }
 ]);
@@ -4560,8 +4655,8 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
 /*global simpleQueryString*/
 /*global sscAlert*/
 
-app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService',
-    function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService) {
+app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService', 'UserService',
+    function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService, userService) {
 
         var printLayoutWidth = 2400; // px
 
@@ -4587,6 +4682,13 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                     $state.go(previousState, {
                         nationalCode: $scope.nationalCode
                     });
+                }
+                else if (previousState === 'panel.post') {
+                    $rootScope.data.postCache = previousStateData.postCache;
+                    $rootScope.data.historyState = previousStateData.historyState;
+                    $rootScope.data.panelPostData = previousStateData.panelPostData;
+                    userService.setUserSession(previousStateData.userSession);
+                    $state.go(previousState);
                 }
                 else {
                     $state.go(previousState || 'home.find');
@@ -5128,6 +5230,8 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
                 return userService.refresh().then(function(userInfo) {
                     $rootScope.data.labData = userInfo;
                     silent || $scope.setLoading(false);
+                }, function() {
+                    // No need to do anything !
                 });
             };
         }

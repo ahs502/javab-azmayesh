@@ -60,7 +60,35 @@
     }
     #ja-panel-account-summary,
     #ja-panel-post {
-        .ja-information-grid();
+        .ja-information-grid {
+            .ja-information-grid();
+        }
+        .ja-link {
+            border: solid 1px #fff;
+            border-radius: 6px;
+            border-style: outset;
+            background-color: #f4f3f6;
+            margin: 0 0 10px 0;
+            padding: 10px;
+            padding-bottom: 1px;
+            cursor: pointer;
+            display: block;
+            &:hover {
+                background-color: #f0f0f0;
+                margin: -2px 0 12px 0;
+            }
+            .ja-link-image {
+                height: 55px;
+                max-width: 55px;
+            }
+            .ja-link-filename {
+                display: inline-block;
+            }
+        }
+        .ja-notes {
+            margin-right: 10px;
+            margin-left: 10px;
+        }
     }
     #ja-panel-history {
         // md-virtual-repeat-container {

@@ -16,6 +16,8 @@ module.exports = {
         passwordRecovery,
         updatePatient,
         postAnswer,
+        deleteAnswer,
+        updateAnswer,
         otpGenerated,
         newUserApproved,
         newUserDeclined,
@@ -120,17 +122,42 @@ function updatePatient(relatedKeys, patient) {
     });
 }
 
-function postAnswer(relatedKeys, patient, post) {
+function postAnswer(relatedKeys, patient, post, url) {
     var numbers = patient.numbers;
     var message = "" + patient.fullName + " عزیز، سلام!\n" +
-        "نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس است.\n" +
+        "نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس هستند.\n" +
         "شماره آزمایش: " + post.postCode + "\n" /*+ post.labName*/ +
-        "می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:\n" +
-        config.protocol + '://' + config.domain + '/#/answer?p=' + patient.nationalCode + '&n=' + post.postCode;
+        "می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:\n" + url;
     return sendSms('postans', numbers, message, {
         relatedKeys,
         patient,
-        post
+        post,
+        url
+    });
+}
+
+function deleteAnswer(relatedKeys, patient, postCode) {
+    var numbers = patient.numbers;
+    var message = "" + patient.fullName + " عزیز، سلام!\n" +
+        "نتایج آزمایش شما به شماره آزمایش " + postCode + " توسط آزمایشگاه از سامانه حذف شدند.";
+    return sendSms('deleteans', numbers, message, {
+        relatedKeys,
+        patient,
+        postCode
+    });
+}
+
+function updateAnswer(relatedKeys, patient, post, url) {
+    var numbers = patient.numbers;
+    var message = "" + patient.fullName + " عزیز، سلام!\n" +
+        "نتایج آزمایش شما به روز رسانی شدند و هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس هستند.\n" +
+        "شماره آزمایش: " + post.postCode + "\n" /*+ post.labName*/ +
+        "می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:\n" + url;
+    return sendSms('updateans', numbers, message, {
+        relatedKeys,
+        patient,
+        post,
+        url
     });
 }
 
@@ -208,7 +235,9 @@ var smsTypeDescription = {
     'vericodeusrupd': "کُد اعتبارسنجی برای به روز رسانی اطلاعات آزمایشگاه",
     'passrecovery': "بازیابی کلمه عبور آزمایشگاه",
     'updatepatient': "اعلام ثبت اطلاعات و پیشنهاد عضویت در تلگرام بیمار",
-    'postans': "نتیجه آزمایش بیمار",
+    'postans': "ارسال نتیجه آزمایش بیمار",
+    'postans': "حذف نتیجه آزمایش بیمار",
+    'updateans': "به روز رسانی نتیجه آزمایش بیمار",
     'otp': "رمز یک بار مصرف مشاهده سوابق بیمار",
     'approvesignup': "تأیید حساب کاربری آزمایشگاه جدید",
     'declinesignup': "عدم تأیید حساب کاربری آزمایشگاه جدید",

@@ -1,10 +1,15 @@
 
-    *   Use the link: "t.me/JavabAzmayeshBot" as a QR Code on brushour.
-
-================================================================================
+    *   Empower users to UPDATE their posts.
+    
+    *   Use the link: "https://t.me/JavabAzmayeshBot" as a QR Code on brushour.
 
     *   Import ZarrinPal payment gate.
     
+================================================================================
+
+    *   Add support for more secret answer posts where they need an OTP to
+        the patient phone every time he/she is trying to see them.
+
     *   Improve Panel.Home page, so the user can see almost everything by the first look.
     
     *   Restrict lab users in any environment other than live to send SMS to any arbitrary patient.
@@ -29,17 +34,12 @@
 
     *   DEBUG: 'gulp build' does not work fine.
     
-    *   Empower users to do all kind of staff (delete, edit, re-send, ...) to their posts.
-    
     *   What if user changes view by menu when the site is still loading some request?
-    
-    *   Add the ability to upload some test results without sending or as private posts,
-        where are harder to seek than url encoded data headers.
     
     *   Use 'PurifyCSS' or something to exclude unused CSS from libraries.
         Do some similar thing with JSes of libraries if possible.
     
-    *   Improve security, start by checking the site on: https://www.htbridge.com/websec/
+    *   Improve security even more!
     
 
     
@@ -68,7 +68,7 @@
             // $scope.postDate = persianDate(new Date()).format('L');
             // $scope.postCode = toPersianNumber(6140);
 
-
+    *   Online security checker: https://www.htbridge.com/websec/
 
 
 ================================================================================

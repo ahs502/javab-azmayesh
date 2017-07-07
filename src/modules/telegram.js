@@ -17,6 +17,18 @@ module.exports = {
 
 bot.on('/start', msg => {
     var fromId = msg.from.id;
+    var shareContactKeyboard = bot.keyboard([
+        [{
+            request_contact: true,
+            request_location: false,
+            text: 'ارسال اطلاعات تماس من'
+        }]
+    ], {
+        resize: true,
+        once: true
+    });
+    shareContactKeyboard['hide_keyboard'] = true;
+
     return bot.sendMessage(fromId,
             'سلام!\nبه روبات تلگرام سامانه «جواب آزمایش» خوش آمدید!!')
         .then(() => bot.sendMessage(fromId,
@@ -24,16 +36,8 @@ bot.on('/start', msg => {
         .then(() => bot.sendMessage(fromId,
             'برای این منظور لازم است اطلاعات تماس خود را در اختیار سامانه «جواب آزمایش» قرار دهید.'))
         .then(() => bot.sendMessage(fromId,
-            'لطفاً با فشردن دکمه (ارسال اطلاعات تماس من) و پس از آن دکمه (OK) اطلاعات تماس خود را با ما به اشتراک بگذارید:', {
-                replyMarkup: bot.keyboard([
-                    [{
-                        request_contact: true,
-                        request_location: false,
-                        text: 'ارسال اطلاعات تماس من'
-                    }]
-                ], {
-                    once: true
-                })
+            'لطفاً با فشردن دکمه (ارسال اطلاعات تماس من) و پس از آن دکمه (OK) یا (SHARE) اطلاعات تماس خود را با ما به اشتراک بگذارید:', {
+                replyMarkup: shareContactKeyboard
             }));
 });
 

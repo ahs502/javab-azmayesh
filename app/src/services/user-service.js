@@ -16,6 +16,9 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
         this.current = current;
         this.restorePassword = restorePassword;
 
+        this.getUserSession = getUserSession;
+        this.setUserSession = setUserSession;
+
         /////////////////////////////////////////////////////
 
         // May reject by code : 1, 2, 5, 10, 11, 80
@@ -147,6 +150,20 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 username: username,
                 mobilePhoneNumber: mobilePhoneNumber
             }));
+        }
+
+        // Gets the current raw authorization status
+        function getUserSession() {
+            return {
+                httpHeader: $http.defaults.headers.common['X-Access-Token'],
+                sessionStorage: $window.sessionStorage['CurrentUser']
+            };
+        }
+
+        // Sets the current raw authorization status
+        function setUserSession(userSession) {
+            $http.defaults.headers.common['X-Access-Token'] = userSession.httpHeader;
+            $window.sessionStorage['CurrentUser'] = userSession.sessionStorage;
         }
 
         /////////////////////////////////////////////////////

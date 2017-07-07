@@ -73,6 +73,8 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
                 return userService.refresh().then(function(userInfo) {
                     $rootScope.data.labData = userInfo;
                     silent || $scope.setLoading(false);
+                }, function() {
+                    // No need to do anything !
                 });
             };
         }

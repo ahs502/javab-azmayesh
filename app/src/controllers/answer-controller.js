@@ -5,8 +5,8 @@
 /*global simpleQueryString*/
 /*global sscAlert*/
 
-app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService',
-    function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService) {
+app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService', 'UserService',
+    function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService, userService) {
 
         var printLayoutWidth = 2400; // px
 
@@ -32,6 +32,13 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                     $state.go(previousState, {
                         nationalCode: $scope.nationalCode
                     });
+                }
+                else if (previousState === 'panel.post') {
+                    $rootScope.data.postCache = previousStateData.postCache;
+                    $rootScope.data.historyState = previousStateData.historyState;
+                    $rootScope.data.panelPostData = previousStateData.panelPostData;
+                    userService.setUserSession(previousStateData.userSession);
+                    $state.go(previousState);
                 }
                 else {
                     $state.go(previousState || 'home.find');

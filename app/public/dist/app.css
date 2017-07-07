@@ -392,24 +392,55 @@ body {
 #ja-panel #ja-panel-send #input-file {
   display: none;
 }
-#ja-panel #ja-panel-account-summary,
-#ja-panel #ja-panel-post {
+#ja-panel #ja-panel-account-summary .ja-information-grid,
+#ja-panel #ja-panel-post .ja-information-grid {
   padding: 14px 10px;
 }
-#ja-panel #ja-panel-account-summary .ja-information-row,
-#ja-panel #ja-panel-post .ja-information-row {
+#ja-panel #ja-panel-account-summary .ja-information-grid .ja-information-row,
+#ja-panel #ja-panel-post .ja-information-grid .ja-information-row {
   padding: 5px 0;
   border: 1px solid #f0f0f0;
   border-top: 0;
 }
-#ja-panel #ja-panel-account-summary .ja-information-label,
-#ja-panel #ja-panel-post .ja-information-label {
+#ja-panel #ja-panel-account-summary .ja-information-grid .ja-information-label,
+#ja-panel #ja-panel-post .ja-information-grid .ja-information-label {
   color: #aaa;
 }
-#ja-panel #ja-panel-account-summary .ja-information-value,
-#ja-panel #ja-panel-post .ja-information-value {
+#ja-panel #ja-panel-account-summary .ja-information-grid .ja-information-value,
+#ja-panel #ja-panel-post .ja-information-grid .ja-information-value {
   color: #000;
   font-size: 140%;
+}
+#ja-panel #ja-panel-account-summary .ja-link,
+#ja-panel #ja-panel-post .ja-link {
+  border: solid 1px #fff;
+  border-radius: 6px;
+  border-style: outset;
+  background-color: #f4f3f6;
+  margin: 0 0 10px 0;
+  padding: 10px;
+  padding-bottom: 1px;
+  cursor: pointer;
+  display: block;
+}
+#ja-panel #ja-panel-account-summary .ja-link:hover,
+#ja-panel #ja-panel-post .ja-link:hover {
+  background-color: #f0f0f0;
+  margin: -2px 0 12px 0;
+}
+#ja-panel #ja-panel-account-summary .ja-link .ja-link-image,
+#ja-panel #ja-panel-post .ja-link .ja-link-image {
+  height: 55px;
+  max-width: 55px;
+}
+#ja-panel #ja-panel-account-summary .ja-link .ja-link-filename,
+#ja-panel #ja-panel-post .ja-link .ja-link-filename {
+  display: inline-block;
+}
+#ja-panel #ja-panel-account-summary .ja-notes,
+#ja-panel #ja-panel-post .ja-notes {
+  margin-right: 10px;
+  margin-left: 10px;
 }
 #ja-panel #ja-panel-history #ja-panel-history-filter-menu {
   position: fixed;

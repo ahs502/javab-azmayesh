@@ -991,8 +991,8 @@
         <div ng-if="!loading && (answer && answer.files && answer.files.length)">
 
             <a class="ja-link" ng-repeat="file in answer.files" ng-href="{{file.url}}" target="_blank">
-                <img ng-if="file.material === 'image'" class="ja-link-image" ng-src="{{file.url}}">
-                <img ng-if="file.material !== 'image'" class="ja-link-image" ng-src="{{iconJs.file(file.name)}}">
+                <img ng-if="file.material === 'image'" class="ja-link-image" ng-src="{{file.url}}" />
+                <img ng-if="file.material !== 'image'" class="ja-link-image" ng-src="{{iconJs.file(file.name)}}" />
                 <p class="nazanin ja-link-filename" ng-bind="file.name"></p>
             </a>
 
@@ -1001,6 +1001,7 @@
     </div>
 
 </div>
+
 </script>
 
 <script type="text/ng-template" id="answer/share.html">
@@ -1899,6 +1900,18 @@
 <script type="text/ng-template" id="panel/patient.html">
     <div id="ja-panel-patient">
 
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    <bdi>لطفاً اطلاعات زیر را با دقت پُر کنید</bdi>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
     <div class="ui centered grid">
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
@@ -1966,6 +1979,7 @@
     </div>
 
 </div>
+
 </script>
 
 <script type="text/ng-template" id="panel/post.html">
@@ -1982,18 +1996,59 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="column">
-                <div class="ui segment">
-                    <!--<strong class="nazanin ja-rtl ja-left-align">توضیحات:</strong>-->
-                    <pre class="nazanin ja-rtl ja-right-align" ng-bind="post.notes || '(توضیحات ندارد)'"></pre>
-                </div>
-            </div>
-        </div>
+    </div>
+
+    <div class="ui basic segment" ng-if="post.files && post.files.length">
+
+        <a class="ja-link" ng-repeat="file in post.files" ng-href="{{file.url}}" target="_blank">
+            <img ng-if="file.material === 'image'" class="ja-link-image" ng-src="{{file.url}}" />
+            <img ng-if="file.material !== 'image'" class="ja-link-image" ng-src="{{iconJs.file(file.name)}}" />
+            <p class="nazanin ja-link-filename" ng-bind="file.name"></p>
+        </a>
 
     </div>
 
+    <div class="ui segment ja-rtl ja-align-right ja-notes">
+        <strong class="nazanin" ng-show="post.notes">توضیحات:</strong>
+        <pre class="nazanin ja-rtl ja-align-right" ng-bind="post.notes || '(توضیحات ندارد)'"></pre>
+    </div>
+
+    <div class="ui horizontal divider">
+        <span class="nazanin">عملیات</span>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui form">
+
+                    <div class="field">
+                        <button class="fluid ui basic blue button" ng-click="seePostAsPatient()">
+                            <span class="nazanin">مشاهده از دیدگاه کاربر</span>
+                        </button>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue disabled button" ng-click="updatePost()">
+                            <span class="nazanin">به روز رسانی و ارسال مجدد</span>
+                        </button>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui red button" ng-click="deletePost()">
+                            <span class="nazanin">حذف پُست</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
 </div>
+
 </script>
 
 <script type="text/ng-template" id="panel/send.html">
