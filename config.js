@@ -38,10 +38,11 @@ var config = {
     google_recaptcha_secret_key: /*--------*/ "",
     google_recaptcha_public_key: /*--------*/ "",
     /*-------------------------------------*/
-    enable_statistics: /*------------------*/ false,
+    enable_statistics: /*------------------*/ true,
     enable_sms_limits: /*------------------*/ false, // See: ./src/modules/sms.js >> smsLimits
     /*-------------------------------------*/
     minified_app_sources: /*---------------*/ false,
+    developer_modal: /*--------------------*/ true,
     /*-------------------------------------*/
     post_price: /*-------------------------*/ 1000, // Tomans
     /*-------------------------------------*/
@@ -51,6 +52,7 @@ var config = {
         'google_recaptcha',
         'google_recaptcha_public_key',
         'post_price',
+        'developer_modal',
     ]
 
 };

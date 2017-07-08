@@ -1,8 +1,8 @@
 /*global app*/
 /*global angular*/
 
-app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$timeout',
-    function($scope, $rootScope, $q, $window, $timeout) {
+app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$timeout', 'Config',
+    function($scope, $rootScope, $q, $window, $timeout, config) {
 
         // $scope.log = function() {
         //     console.log.apply(console, Array.prototype.slice.call(arguments));
@@ -17,6 +17,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
 
         $scope.showMessage = showMessage;
         $scope.showConfirmMessage = showConfirmMessage;
+        $scope.showDeveloperModal = showDeveloperModal;
 
         $scope.backHandler = undefined;
         $scope.menuHandlers = undefined;
@@ -86,6 +87,12 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
                 })
                 .modal('show');
             return defer.promise;
+        }
+
+        function showDeveloperModal() {
+            if (!config.developer_modal) return;
+            angular.element('#ja-developer-modal')
+                .modal('show');
         }
 
     }

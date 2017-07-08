@@ -1,7 +1,16 @@
 /*global app*/
 
-app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compileProvider',
-    function($stateProvider, $urlRouterProvider, $locationProvider, $compileProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compileProvider', 'Config',
+    function($stateProvider, $urlRouterProvider, $locationProvider, $compileProvider, config) {
+
+        if (config.developer_modal) {
+            $stateProvider
+                .state('developer', {
+                    url: '/d',
+                    templateUrl: 'developer.html',
+                    controller: 'DeveloperController'
+                });
+        }
 
         $stateProvider
             .state('home', {
