@@ -23,6 +23,7 @@ module.exports = {
         "./app/style/main.less",
         "./app/style/main.semantic-ui.less",
         "./app/style/main.print.less",
+        "./app/style/directive.table-list-container.less",
         "./app/style/common.about.less",
         "./app/style/answer.less",
         "./app/style/panel.less",

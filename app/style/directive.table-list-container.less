@@ -1,0 +1,44 @@
+.ja-bold {
+    font-weight: bold !important;
+}
+
+.ja-italic {
+    font-style: italic !important;
+}
+
+div[table-list-container] {
+    overflow-x: auto;
+    table {
+        width: 100%;
+        // min-width: 365px;
+        thead {
+            tr {
+                th {
+                    padding: 10px 3px;
+                    &.nazanin {
+                        .nazanin()
+                    }
+                }
+            }
+        }
+        tbody {
+            tr {
+                cursor: pointer;
+                &:hover {
+                    td {
+                        background-color: #f0f0f0;
+                    }
+                }
+                &.selected {
+                    background-color: #ddd;
+                }
+                td {
+                    padding: 10px 3px;
+                    &.nazanin {
+                        .nazanin()
+                    }
+                }
+            }
+        }
+    }
+}

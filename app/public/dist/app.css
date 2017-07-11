@@ -216,6 +216,47 @@ body {
 	AHS502 : End of 'main.print.less'
 */
 /*
+	AHS502 : Start of 'directive.table-list-container.less'
+*/
+.ja-bold {
+  font-weight: bold !important;
+}
+.ja-italic {
+  font-style: italic !important;
+}
+div[table-list-container] {
+  overflow-x: auto;
+}
+div[table-list-container] table {
+  width: 100%;
+}
+div[table-list-container] table thead tr th {
+  padding: 10px 3px;
+}
+div[table-list-container] table thead tr th.nazanin {
+  font-family: BNazanin !important;
+  font-size: 130%;
+}
+div[table-list-container] table tbody tr {
+  cursor: pointer;
+}
+div[table-list-container] table tbody tr:hover td {
+  background-color: #f0f0f0;
+}
+div[table-list-container] table tbody tr.selected {
+  background-color: #ddd;
+}
+div[table-list-container] table tbody tr td {
+  padding: 10px 3px;
+}
+div[table-list-container] table tbody tr td.nazanin {
+  font-family: BNazanin !important;
+  font-size: 130%;
+}
+/*
+	AHS502 : End of 'directive.table-list-container.less'
+*/
+/*
 	AHS502 : Start of 'common.about.less'
 */
 #ja-common-about .ja-main-image.ja-main-image-small {
@@ -478,26 +519,6 @@ body {
 #ja-panel #ja-panel-history #ja-panel-history-scrolling-container {
   margin-top: 20px;
 }
-#ja-panel #ja-panel-history #ja-panel-history-table-container {
-  overflow-x: auto;
-}
-#ja-panel #ja-panel-history #ja-panel-history-table-container table.ja-panel-history-table {
-  width: 100%;
-  min-width: 365px;
-}
-#ja-panel #ja-panel-history #ja-panel-history-table-container table.ja-panel-history-table tbody tr {
-  cursor: pointer;
-}
-#ja-panel #ja-panel-history #ja-panel-history-table-container table.ja-panel-history-table tbody tr:hover td {
-  background-color: #f0f0f0;
-}
-#ja-panel #ja-panel-history #ja-panel-history-table-container table.ja-panel-history-table tbody tr td {
-  font-family: BNazanin !important;
-  font-size: 130%;
-  text-align: -webkit-center !important;
-  text-align: center !important;
-  padding: 10px 0;
-}
 @media (max-width: 530px) {
   #ja-panel #ja-panel-history .ja-not-small-display {
     display: none !important;
@@ -558,30 +579,9 @@ body {
 #ja-admin #ja-admin-home .ja-new-feedback.not-selected:hover {
   background-color: #ffd7f8;
 }
-#ja-admin #ja-admin-laboratory #ja-admin-laboratory-table-container {
-  overflow-x: auto;
-}
-#ja-admin #ja-admin-laboratory #ja-admin-laboratory-table-container table.ja-admin-laboratory-table {
-  width: 100%;
-  min-width: 600px;
+#ja-admin #ja-admin-laboratory table.ja-admin-laboratory-table {
   margin: 10px;
   padding-right: 10px;
-}
-#ja-admin #ja-admin-laboratory #ja-admin-laboratory-table-container table.ja-admin-laboratory-table thead tr th {
-  padding: 10px 0;
-  font-family: BNazanin !important;
-  font-size: 130%;
-}
-#ja-admin #ja-admin-laboratory #ja-admin-laboratory-table-container table.ja-admin-laboratory-table tbody tr {
-  cursor: pointer;
-}
-#ja-admin #ja-admin-laboratory #ja-admin-laboratory-table-container table.ja-admin-laboratory-table tbody tr.selected {
-  background-color: #ddd;
-}
-#ja-admin #ja-admin-laboratory #ja-admin-laboratory-table-container table.ja-admin-laboratory-table tbody tr td {
-  padding: 10px 0;
-  font-family: BNazanin !important;
-  font-size: 130%;
 }
 #ja-admin #ja-admin-sms .ja-phone-number-link {
   border: 1px #0072ff solid;

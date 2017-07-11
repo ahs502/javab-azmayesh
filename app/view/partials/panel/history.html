@@ -67,19 +67,19 @@
         <div class="ui centered grid">
             <div class="fourteen wide small eight wide tablet six wide computer column">
 
-                <div id="ja-panel-history-table-container">
+                <div table-list-container="380px" initialiy-right>
                     <table class="ja-panel-history-table">
                         <tbody>
                             <tr ng-repeat="post in posts | filter: { nationalCode: nationalCode } | limitTo: maxCount as filteredPosts track by $index" ng-click="postClicked(post)">
-                                <td>{{ post.postCode | toPersianNumber }}</td>
-                                <td>
+                                <td fa l>{{ post.postCode | toPersianNumber }}</td>
+                                <td fa c>
                                     <span ng-if="post.filesCount">فایل</span>
                                     <bdi><strong>{{ (post.filesCount || null) | emptyCheck | toPersianNumber }}</strong></bdi>
                                 </td>
-                                <td>{{ post.postDate | toPersianDate: "hh:mm" }}</td>
-                                <td>{{ post.postDate | toPersianDate: "dddd" }}</td>
-                                <td>{{ post.postDate | toPersianDate: "YYYY/MM/DD" }}</td>
-                                <td><strong>{{ post.nationalCode | toPersianNumber }}</strong></td>
+                                <td fa c>{{ post.postDate | toPersianDate: "hh:mm" }}</td>
+                                <td fa c>{{ post.postDate | toPersianDate: "dddd" }}</td>
+                                <td fa c>{{ post.postDate | toPersianDate: "YYYY/MM/DD" }}</td>
+                                <td fa r b>{{ post.nationalCode | toPersianNumber }}</td>
                             </tr>
                         </tbody>
                     </table>
