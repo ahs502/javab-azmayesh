@@ -220,6 +220,38 @@
     </div>
 </div>
 
+<div id="ja-rules-modal" class="ui modal ja-rtl" ng-controller="DeveloperController">
+    <div class="header">
+        <span class="nazanin">قوانین و مقررات سامانه</span>
+    </div>
+    <div class="content">
+        
+        <div id="ja-rules">
+
+    در حال حاضر قوانین سامانه مورد تصویب قرار نگرفته اند. این قوانین به محض آماده شدن در سامانه قرار خواهند گرفت.
+
+    <!--<ol>-->
+
+    <!--    <li>قانون اول</li>-->
+
+    <!--    <li>قانون دوم</li>-->
+
+    <!--    <li>قانون سوم</li>-->
+
+    <!--</ol>-->
+
+</div>
+
+        
+    </div>
+    <div class="actions">
+        <button class="ui basic blue ok button">
+            <span class="nazanin">خواندم و می پذیرم</span>
+        </button>
+    </div>
+</div>
+
+
 
         <div ng-if="footerHandlers" id="ja-main-content-footer-placeholder" class=" ja-screen"></div>
     </div>
@@ -1483,7 +1515,7 @@
                     <div class="field">
                         <div class="ui checkbox">
                             <input type="checkbox" ng-model="rememberMe" id="ja-lab-login-rememberMe">
-                            <label class="nazanin" for="ja-lab-login-rememberMe"><span class="ja-required"></span>من را به خاطر بسپار</label>
+                            <label class="nazanin" for="ja-lab-login-rememberMe">من را به خاطر بسپار</label>
                         </div>
                     </div>
 
@@ -1704,7 +1736,13 @@
                     <div class="field" ng-class="{'error': vs.error('acceptRules')}">
                         <div class="ui checkbox">
                             <input type="checkbox" ng-model="model.acceptRules" ng-change="vs.check('acceptRules')" id="ja-lab-register-acceptRules">
-                            <label class="nazanin" for="ja-lab-register-acceptRules"><span class="ja-required"></span>قوانین و مقررات را می پذیرم</label>
+                            <label class="nazanin ja-rtl" for="ja-lab-register-acceptRules">
+                                قوانین و مقررات را می پذیرم
+                                <span class="ja-required"></span>
+                                <bdi><a class="nazanin ja-rtl" ng-click="showRulesModal()">
+                                    (مشاهده قوانین سامانه)
+                                </a></bdi>
+                            </label>
                         </div>
                         <br />
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('acceptRules')" ng-bind="vs.error('acceptRules')"></div>
@@ -1723,6 +1761,7 @@
     </div>
 
 </div>
+
 </script>
 
 <script type="text/ng-template" id="lab/validate.html">

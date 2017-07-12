@@ -18,6 +18,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
         $scope.showMessage = showMessage;
         $scope.showConfirmMessage = showConfirmMessage;
         $scope.showDeveloperModal = showDeveloperModal;
+        $scope.showRulesModal = showRulesModal;
 
         $scope.backHandler = undefined;
         $scope.menuHandlers = undefined;
@@ -92,6 +93,11 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
         function showDeveloperModal() {
             if (!config.developer_modal) return;
             angular.element('#ja-developer-modal')
+                .modal('show');
+        }
+
+        function showRulesModal() {
+            angular.element('#ja-rules-modal')
                 .modal('show');
         }
 

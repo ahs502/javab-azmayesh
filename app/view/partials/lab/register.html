@@ -101,7 +101,13 @@
                     <div class="field" ng-class="{'error': vs.error('acceptRules')}">
                         <div class="ui checkbox">
                             <input type="checkbox" ng-model="model.acceptRules" ng-change="vs.check('acceptRules')" id="ja-lab-register-acceptRules">
-                            <label class="nazanin" for="ja-lab-register-acceptRules"><span class="ja-required"></span>قوانین و مقررات را می پذیرم</label>
+                            <label class="nazanin ja-rtl" for="ja-lab-register-acceptRules">
+                                قوانین و مقررات را می پذیرم
+                                <span class="ja-required"></span>
+                                <bdi><a class="nazanin ja-rtl" ng-click="showRulesModal()">
+                                    (مشاهده قوانین سامانه)
+                                </a></bdi>
+                            </label>
                         </div>
                         <br />
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('acceptRules')" ng-bind="vs.error('acceptRules')"></div>
