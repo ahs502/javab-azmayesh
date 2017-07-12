@@ -13,7 +13,6 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
         localStorage.startState = "lab.login";
 
         var userSession = userService.getUserPersistent();
-        console.log(userSession);
         if (userSession) {
             userService.setUserSession(userSession);
             goForUser(userSession.userInfo);

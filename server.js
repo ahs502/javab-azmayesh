@@ -2,12 +2,13 @@
 
 var autoLoad = require('auto-load');
 var express = require('express');
+var fs = require('fs-extra');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var fs = require('fs-extra');
+var compression = require('compression');
 
 require("./src/client-import");
 autoLoad(path.join(__dirname, 'src/global'));
@@ -41,6 +42,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.enable('trust proxy');
+app.use(compression());
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
