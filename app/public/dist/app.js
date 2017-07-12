@@ -930,9 +930,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             })
             .state('home.about', {
                 url: '/about',
-                params: {
-                    previousState: null
-                },
                 templateUrl: 'common/about.html',
                 controller: 'CommonAboutController',
                 data: {
@@ -945,9 +942,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             })
             .state('home.contact', {
                 url: '/contact',
-                params: {
-                    previousState: null
-                },
                 templateUrl: 'common/contact.html',
                 controller: 'CommonContactController',
                 data: {
@@ -1017,6 +1011,28 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('answer.laboratory', {
                 url: '/laboratory',
                 templateUrl: 'answer/laboratory.html'
+            })
+            .state('answer.about', {
+                url: '/about',
+                templateUrl: 'answer/about.html',
+                controller: 'CommonAboutController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                        'card.rtl.min.css',
+                        'image.rtl.min.css',
+                    ]
+                }
+            })
+            .state('answer.contact', {
+                url: '/contact',
+                templateUrl: 'answer/contact.html',
+                controller: 'CommonContactController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                    ]
+                }
             });
 
         $stateProvider
@@ -1039,13 +1055,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('lab.login', {
                 url: '/login',
                 templateUrl: 'lab/login.html',
-                controller: 'LabLoginController',
-                data: {
-                    dependencies: [
-                        'checkbox.min.js',
-                        'checkbox.rtl.min.css',
-                    ]
-                }
+                controller: 'LabLoginController'
             })
             .state('lab.register', {
                 url: '/register',
@@ -1053,13 +1063,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                     username: null
                 },
                 templateUrl: 'lab/register.html',
-                controller: 'LabRegisterController',
-                data: {
-                    dependencies: [
-                        'checkbox.min.js',
-                        'checkbox.rtl.min.css',
-                    ]
-                }
+                controller: 'LabRegisterController'
             })
             .state('lab.validate', {
                 url: '/validate',
@@ -1084,9 +1088,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             })
             .state('lab.about', {
                 url: '/about',
-                params: {
-                    previousState: null
-                },
                 templateUrl: 'common/about.html',
                 controller: 'CommonAboutController',
                 data: {
@@ -1099,9 +1100,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             })
             .state('lab.contact', {
                 url: '/contact',
-                params: {
-                    previousState: null
-                },
                 templateUrl: 'common/contact.html',
                 controller: 'CommonContactController',
                 data: {
@@ -1213,6 +1211,28 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 },
                 templateUrl: 'panel/account/confirm.html',
                 controller: 'PanelAccountConfirmController'
+            })
+            .state('panel.about', {
+                url: '/about',
+                templateUrl: 'panel/about.html',
+                controller: 'CommonAboutController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                        'card.rtl.min.css',
+                        'image.rtl.min.css',
+                    ]
+                }
+            })
+            .state('panel.contact', {
+                url: '/contact',
+                templateUrl: 'panel/contact.html',
+                controller: 'CommonContactController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                    ]
+                }
             });
 
         $stateProvider
@@ -2567,14 +2587,14 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
 
 /*global app*/
 
-app.controller('CommonAboutController', ['$scope', '$state', '$stateParams',
-    function($scope, $state, $stateParams) {
+app.controller('CommonAboutController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
 
-        $scope.previousState = $stateParams.previousState;
-
-        $scope.setBackHandler(function() {
-            $state.go($scope.previousState);
-        });
+        if ($rootScope.homeState !== 'answer.post') { // Because it is being handled within AnswerController.
+            $scope.setBackHandler(function() {
+                $state.go($rootScope.homeState || 'home.find');
+            });
+        }
 
         $scope.people = [{
             name: 'نگار امین شکروی',
@@ -2613,18 +2633,18 @@ app.controller('CommonAboutController', ['$scope', '$state', '$stateParams',
 /*global ValidationSystem*/
 /*global sscAlert*/
 
-app.controller('CommonContactController', ['$scope', '$state', '$stateParams', 'MasterService',
-    function($scope, $state, $stateParams, masterService) {
+app.controller('CommonContactController', ['$scope', '$rootScope', '$state', '$stateParams', 'MasterService',
+    function($scope, $rootScope, $state, $stateParams, masterService) {
 
         $scope.sendFeedback = sendFeedback;
 
         $scope.sendingFeedback = false;
 
-        $scope.previousState = $stateParams.previousState;
-
-        $scope.setBackHandler(function() {
-            $state.go($scope.previousState);
-        });
+        if ($rootScope.homeState !== 'answer.post') { // Because it is being handled within AnswerController.
+            $scope.setBackHandler(function() {
+                $state.go($rootScope.homeState || 'home.find');
+            });
+        }
 
         //$scope.mobilePhoneNumber
         //$scope.message
@@ -4793,6 +4813,8 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
         $scope.pdfFileEventHandlerMaker = pdfFileEventHandlerMaker;
         $scope.copySharedUrl = copySharedUrl;
 
+        $rootScope.homeState = 'answer.post';
+
         var clipboard, url = $location.absUrl();
         url = url.slice(0, url.indexOf('#') + 2) + 'answer' + url.slice(url.indexOf('?'));
 
@@ -4901,6 +4923,12 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
             },
             labGetter: function() {
                 return ($scope.answer && $scope.answer.lab) || {};
+            },
+            goToAnswerAbout: function() {
+                $state.go('answer.about');
+            },
+            goToAnswerContact: function() {
+                $state.go('answer.contact');
             },
         });
 
@@ -5073,6 +5101,8 @@ app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$statePa
 
         $scope.postClicked = postClicked;
 
+        $rootScope.homeState = 'home.find';
+
         $scope.nationalCode = $stateParams.nationalCode;
 
         $scope.patientInfo = $rootScope.data.patientInfo;
@@ -5125,9 +5155,11 @@ app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$statePa
 
 /*global app*/
 
-app.controller('HomeController', ['$scope', '$state',
-    function($scope, $state) {
-        
+app.controller('HomeController', ['$scope', '$rootScope', '$state',
+    function($scope, $rootScope, $state) {
+
+        $rootScope.homeState = 'home.find';
+
         $scope.setMenuHandlers({
             goToHomeFind: function() {
                 $state.go('home.find');
@@ -5139,14 +5171,10 @@ app.controller('HomeController', ['$scope', '$state',
                 $state.go('lab.login');
             },
             goToHomeAbout: function() {
-                $state.go('home.about', {
-                    previousState: $state.current
-                });
+                $state.go('home.about');
             },
             goToHomeContact: function() {
-                $state.go('home.contact', {
-                    previousState: $state.current
-                });
+                $state.go('home.contact');
             },
         });
 
@@ -5169,8 +5197,10 @@ app.controller('HomeController', ['$scope', '$state',
 
 /*global app*/
 
-app.controller('LabController', ['$scope', '$state',
-    function($scope, $state) {
+app.controller('LabController', ['$scope', '$rootScope', '$state',
+    function($scope, $rootScope, $state) {
+
+        $rootScope.homeState = 'lab.login';
 
         $scope.setMenuHandlers({
             goToLabLogin: function() {
@@ -5183,14 +5213,10 @@ app.controller('LabController', ['$scope', '$state',
                 $state.go('home.find');
             },
             goToLabAbout: function() {
-                $state.go('lab.about', {
-                    previousState: $state.current
-                });
+                $state.go('lab.about');
             },
             goToLabContact: function() {
-                $state.go('lab.contact', {
-                    previousState: $state.current
-                });
+                $state.go('lab.contact');
             },
         });
 
@@ -5332,6 +5358,8 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         $scope.setPageTitle = setPageTitle;
         $scope.refreshUserData = refreshUserDataProvider(false);
 
+        $rootScope.homeState = 'panel.home';
+
         $scope.loading = $scope.loadingMessage = false;
 
         // Refresh user info every 1 minute
@@ -5358,6 +5386,12 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
             },
             goToUserAccount: function() {
                 $state.go('panel.account.summary');
+            },
+            goToPanelAbout: function() {
+                $state.go('panel.about');
+            },
+            goToPanelContact: function() {
+                $state.go('panel.contact');
             },
             logout: function() {
                 setLoading(true);

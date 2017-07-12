@@ -1,7 +1,9 @@
 /*global app*/
 
-app.controller('LabController', ['$scope', '$state',
-    function($scope, $state) {
+app.controller('LabController', ['$scope', '$rootScope', '$state',
+    function($scope, $rootScope, $state) {
+
+        $rootScope.homeState = 'lab.login';
 
         $scope.setMenuHandlers({
             goToLabLogin: function() {
@@ -14,14 +16,10 @@ app.controller('LabController', ['$scope', '$state',
                 $state.go('home.find');
             },
             goToLabAbout: function() {
-                $state.go('lab.about', {
-                    previousState: $state.current
-                });
+                $state.go('lab.about');
             },
             goToLabContact: function() {
-                $state.go('lab.contact', {
-                    previousState: $state.current
-                });
+                $state.go('lab.contact');
             },
         });
 

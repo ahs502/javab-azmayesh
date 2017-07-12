@@ -49,7 +49,8 @@ module.exports = {
         "./app/lib/semantic/dist/components/modal.min.js",
         "./app/lib/semantic/dist/components/sidebar.min.js",
         "./app/lib/semantic/dist/components/sticky.min.js",
-
+        "./app/lib/semantic/dist/components/checkbox.min.js",
+        
         "./app/lib/semantic/dist/components/dimmer.min.js",
         "./app/lib/semantic/dist/components/transition.min.js",
     ],
@@ -73,6 +74,7 @@ module.exports = {
         "./app/lib/semantic/dist/components/segment.rtl.min.css",
         "./app/lib/semantic/dist/components/image.min.css",
         "./app/lib/semantic/dist/components/divider.min.css",
+        "./app/lib/semantic/dist/components/checkbox.rtl.min.css",
 
         "./app/lib/semantic/dist/components/dimmer.rtl.min.css",
         "./app/lib/semantic/dist/components/transition.min.css",
@@ -89,8 +91,6 @@ module.exports = {
         "./app/lib/dygraphs/dist/dygraph.min.js",
         "./app/lib/dygraphs/dist/dygraph.min.css",
 
-        "./app/lib/semantic/dist/components/checkbox.min.js",
-        "./app/lib/semantic/dist/components/checkbox.rtl.min.css",
         "./app/lib/semantic/dist/components/card.rtl.min.css",
         "./app/lib/semantic/dist/components/loader.rtl.min.css",
         "./app/lib/semantic/dist/components/dropdown.min.js",

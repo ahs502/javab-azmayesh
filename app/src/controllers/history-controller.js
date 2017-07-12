@@ -5,6 +5,8 @@ app.controller('HistoryController', ['$rootScope', '$scope', '$state', '$statePa
 
         $scope.postClicked = postClicked;
 
+        $rootScope.homeState = 'home.find';
+
         $scope.nationalCode = $stateParams.nationalCode;
 
         $scope.patientInfo = $rootScope.data.patientInfo;

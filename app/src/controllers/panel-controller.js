@@ -9,6 +9,8 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         $scope.setPageTitle = setPageTitle;
         $scope.refreshUserData = refreshUserDataProvider(false);
 
+        $rootScope.homeState = 'panel.home';
+
         $scope.loading = $scope.loadingMessage = false;
 
         // Refresh user info every 1 minute
@@ -35,6 +37,12 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
             },
             goToUserAccount: function() {
                 $state.go('panel.account.summary');
+            },
+            goToPanelAbout: function() {
+                $state.go('panel.about');
+            },
+            goToPanelContact: function() {
+                $state.go('panel.contact');
             },
             logout: function() {
                 setLoading(true);

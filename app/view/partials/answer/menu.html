@@ -22,3 +22,14 @@
     <span ng-bind="menuHandlers.labGetter().name || ' '"></span>
     <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
 </a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToAnswerAbout(); toggleMenu()">
+    درباره ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('about us')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToAnswerContact(); toggleMenu()">
+    تماس با ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('contact us')}}">
+</a>
+

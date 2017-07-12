@@ -890,6 +890,17 @@
     <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
 </a>
 
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToAnswerAbout(); toggleMenu()">
+    درباره ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('about us')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToAnswerContact(); toggleMenu()">
+    تماس با ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('contact us')}}">
+</a>
+
+
 </script>
 
 <script type="text/ng-template" id="answer/header.html">
@@ -1146,6 +1157,242 @@
     </div>
 
 </div>
+</script>
+
+<script type="text/ng-template" id="answer/about.html">
+    <div id="ja-answer-about">
+
+    <!-- Logo -->
+    <div class="ui centered grid">
+    <div class="twelve wide small eight wide tablet six wide computer column">
+        <div class="center aligned row ltr">
+            <img class="ui centered medium image ja-logo" src="/img/Logo/Full Logo - 600.png" alt="جواب آزمایش" />
+        </div>
+    </div>
+</div>
+
+
+    <!-- About us -->
+    <div id="ja-common-about">
+
+    <img class="ui centered image ja-main-image ja-main-image-large" src="/img/about/all-togather-wide.png">
+    <img class="ui centered image ja-main-image ja-main-image-small" src="/img/about/all-togather.png">
+
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        ما یک خانواده خلاق و با نشاط هستیم که مشتاقانه توانایی های گوناگون خود را روی هم گذاشتیم تا با هم بتوانیم راه حل های جدیدی برای مشکلات بسازیم.
+    </div>
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        <strong>هدف ما</strong> ساده کردن کارها و کاهش هزینه ها با کمک گرفتن از ابزار فن آوری اطلاعات است.
+    </div>
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        <strong>چشم انداز ما</strong> این است که هیچ انسانی زمان و توان ارزشمند خود را صرف کاری نکند در حالی که یک سامانه کامپیوتری می تواند همان کار را به صورت خودکار، سریع، ارزان و با بهترین کیفیت انجام دهد.
+    </div>
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        <strong>ارزش های ما</strong> راست گویی، خیرخواهی، تعهد عمیق، سخت کوشی، احترام متقابل و خلاقیت هستند. ما با توکل بر خدا و اعتماد به نفس می خواهیم ارزشی با کیفیت استثنایی برای میهن عزیزمان بسازیم و در این مسیر از هیچ تلاشی فروگزار نخواهیم کرد.
+    </div>
+
+    <img class="ui centered big image ja-key-image" src="/img/about/mahdiar.png">
+    <div class="ui justified text container">
+        <p class="nazanin ja-rtl ja-align-justify ja-description">
+            <span class="highlight">«مهدیار»</span>
+            <span>
+                الآن دیگه یک سالشه! یادمه که مامانش قبل از اینکه مهدیار رو به دنیا بیاره، کلی آزمایش های مختلف می داد ولی همیشه براش سخت بود که باید خودش با یک بچه توی شکمش بره اون طرف شهر و جواب آزمایشش رو بگیره. حتی یک بار هم کلی پول داد به یک تاکسی تلفنی که بره و جوابش رو براش بگیره. خوب، آزمایشگاه هایی که ما می رفتیم برای خودشون سایت نداشتند. این شد که ما با خودمون فکر کردیم که:
+            </span>
+            <span class="highlight">
+                «چی می شد اگر یک سامانه ارزان قیمت و سریع بود که جواب آزمایش ها رو از همه آزمایشگاه ها می گرفت و به دست بیمارها می رسوند؟ چی می شد اگر من می تونستم همون لحظه ای که جواب آزمایشم حاضره، توی گوشی موبایلم ببینمش و همون جا با پزشک خودم به اشتراک بزارمش؟»
+            </span>
+            <span>
+                این شد که ما دست به کار شدیم و سامانه
+            </span>
+            <span class="highlight">«جواب آزمایش»</span>
+            <span>
+                رو برای استفاده همه آزمایشگاه های ایران دُرست کردیم. همه تلاش ما این بوده و هست که بیشترین رضایت رو هم برای آزمایشگاه ها و هم برای بیماران با کم ترین هزینه ممکن به وجود بیاریم. امید ما هم اینه که یک روزی همه ایرانی ها از
+            </span>
+            <span class="highlight">«جواب آزمایش»</span>
+            <span>
+                لذت ببرند و ما هم بتونیم این کار رو گسترش بدیم.
+            </span>
+        </p>
+    </div>
+
+    <div class="ui three cards ja-people ja-people-large">
+
+        <div class="ui {{person.color}} card" ng-repeat="person in people | orderBy:'-'">
+            <div class="image">
+                <img ng-src="{{person.img}}">
+            </div>
+            <div class="content">
+                <div class="header nazanin ja-rtl ja-align-right">
+                    {{person.name}}
+                </div>
+                <!--<div class="meta nazanin ja-rtl ja-align-right">-->
+                <!--    -->
+                <!--</div>-->
+                <div class="description nazanin ja-rtl ja-align-right">
+                    {{person.description}}
+                </div>
+            </div>
+            <div class="extra content nazanin ja-rtl ja-align-left">
+                {{person.title}}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ui one cards ja-people ja-people-small">
+
+        <div class="ui {{person.color}} card" ng-repeat="person in people">
+            <div class="image">
+                <img ng-src="{{person.img}}">
+            </div>
+            <div class="content">
+                <div class="header nazanin ja-rtl ja-align-right">
+                    {{person.name}}
+                </div>
+                <!--<div class="meta nazanin ja-rtl ja-align-right">-->
+                <!--    -->
+                <!--</div>-->
+                <div class="description nazanin ja-rtl ja-align-right">
+                    {{person.description}}
+                </div>
+            </div>
+            <div class="extra content nazanin ja-rtl ja-align-left">
+                {{person.title}}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+</script>
+
+<script type="text/ng-template" id="answer/contact.html">
+    <div id="ja-answer-contact">
+
+    <!-- Logo -->
+    <div class="ui centered grid">
+    <div class="twelve wide small eight wide tablet six wide computer column">
+        <div class="center aligned row ltr">
+            <img class="ui centered medium image ja-logo" src="/img/Logo/Full Logo - 600.png" alt="جواب آزمایش" />
+        </div>
+    </div>
+</div>
+
+
+    <!-- Contact us -->
+    <div id="ja-common-contact">
+
+    <div class="ui justified text container">
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">نام شرکت</span>
+        </div>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            شرکت
+            <strong>
+                آرتا ایده پرداز آرتین
+                <small>
+                    (سهامی خاص)
+                </small>
+            </strong>
+        </p>
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">تلفن تماس</span>
+        </div>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            ثابت:
+            <bdi><strong ng-bind="'021-66910430' | toPersianNumber"></strong></bdi>
+        </p>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            همراه:
+            <bdi><strong ng-bind="'09330330975' | toPersianNumber"></strong></bdi>
+        </p>
+
+        <!--<p class="nazanin ja-rtl ja-align-right">-->
+        <!--    <small>-->
+        <!--        (سه شنبه و چهار شنبه، بین ساعت-->
+        <!--        <bdi><strong ng-bind="'11:00' | toPersianNumber"></strong></bdi> تا-->
+        <!--        <bdi><strong ng-bind="'14:00' | toPersianNumber"></strong></bdi>)-->
+        <!--    </small>-->
+        <!--</p>-->
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">آدرس شرکت</span>
+        </div>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            آدرس:&nbsp;
+            <em>
+                تهران، خیابان آزادی، خیابان شهید زارع، خیابان شهید کلهر، پلاک 104، واحد 1
+            </em>
+        </p>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            کد پُستی:
+            <bdi><strong ng-bind="'13117-55811' | toPersianNumber"></strong></bdi>
+        </p>
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">پُست الکترونیکی</span>
+        </div>
+
+        <p class="nazanin ja-ltr ja-align-left">
+            <bdi><strong>ahs502@gmail.com</strong></bdi>
+        </p>
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">ارسال نظرات، پیشنهادات و انتقادات</span>
+        </div>
+
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ sendingFeedback ? 'loading' : '' }} form">
+
+                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
+                        <label class="nazanin ja-required">تلفن همراه ارتباطی</label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('message')}">
+                        <label class="nazanin ja-required">متن پیغام</label>
+                        <div class="ui input">
+                            <textarea class="nazanin ja-rtl" ng-model="message" ng-change="vs.check('message')" rows=6 maxlength=10000 placeholder=""></textarea>
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('message')" ng-bind="vs.error('message')"></div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="sendFeedback()">
+                            <span class="nazanin">ارسال</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+</div>
+
 </script>
 
 <script type="text/ng-template" id="lab.html">
@@ -1602,6 +1849,16 @@
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToUserAccount(); toggleMenu()">
     مشخصات کاربری آزمایشگاه
     <img class="ja-menu-item-icon" ng-src="{{iconJs('user')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToPanelAbout(); toggleMenu()">
+    درباره ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('about us')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToPanelContact(); toggleMenu()">
+    تماس با ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('contact us')}}">
 </a>
 
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.logout(); toggleMenu()">
@@ -2569,6 +2826,242 @@
             </div>
         </div>
     </div>
+
+</div>
+
+</script>
+
+<script type="text/ng-template" id="panel/about.html">
+    <div id="ja-panel-about">
+
+    <!-- Logo -->
+    <div class="ui centered grid">
+    <div class="twelve wide small eight wide tablet six wide computer column">
+        <div class="center aligned row ltr">
+            <img class="ui centered medium image ja-logo" src="/img/Logo/Full Logo - 600.png" alt="جواب آزمایش" />
+        </div>
+    </div>
+</div>
+
+
+    <!-- About us -->
+    <div id="ja-common-about">
+
+    <img class="ui centered image ja-main-image ja-main-image-large" src="/img/about/all-togather-wide.png">
+    <img class="ui centered image ja-main-image ja-main-image-small" src="/img/about/all-togather.png">
+
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        ما یک خانواده خلاق و با نشاط هستیم که مشتاقانه توانایی های گوناگون خود را روی هم گذاشتیم تا با هم بتوانیم راه حل های جدیدی برای مشکلات بسازیم.
+    </div>
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        <strong>هدف ما</strong> ساده کردن کارها و کاهش هزینه ها با کمک گرفتن از ابزار فن آوری اطلاعات است.
+    </div>
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        <strong>چشم انداز ما</strong> این است که هیچ انسانی زمان و توان ارزشمند خود را صرف کاری نکند در حالی که یک سامانه کامپیوتری می تواند همان کار را به صورت خودکار، سریع، ارزان و با بهترین کیفیت انجام دهد.
+    </div>
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        <strong>ارزش های ما</strong> راست گویی، خیرخواهی، تعهد عمیق، سخت کوشی، احترام متقابل و خلاقیت هستند. ما با توکل بر خدا و اعتماد به نفس می خواهیم ارزشی با کیفیت استثنایی برای میهن عزیزمان بسازیم و در این مسیر از هیچ تلاشی فروگزار نخواهیم کرد.
+    </div>
+
+    <img class="ui centered big image ja-key-image" src="/img/about/mahdiar.png">
+    <div class="ui justified text container">
+        <p class="nazanin ja-rtl ja-align-justify ja-description">
+            <span class="highlight">«مهدیار»</span>
+            <span>
+                الآن دیگه یک سالشه! یادمه که مامانش قبل از اینکه مهدیار رو به دنیا بیاره، کلی آزمایش های مختلف می داد ولی همیشه براش سخت بود که باید خودش با یک بچه توی شکمش بره اون طرف شهر و جواب آزمایشش رو بگیره. حتی یک بار هم کلی پول داد به یک تاکسی تلفنی که بره و جوابش رو براش بگیره. خوب، آزمایشگاه هایی که ما می رفتیم برای خودشون سایت نداشتند. این شد که ما با خودمون فکر کردیم که:
+            </span>
+            <span class="highlight">
+                «چی می شد اگر یک سامانه ارزان قیمت و سریع بود که جواب آزمایش ها رو از همه آزمایشگاه ها می گرفت و به دست بیمارها می رسوند؟ چی می شد اگر من می تونستم همون لحظه ای که جواب آزمایشم حاضره، توی گوشی موبایلم ببینمش و همون جا با پزشک خودم به اشتراک بزارمش؟»
+            </span>
+            <span>
+                این شد که ما دست به کار شدیم و سامانه
+            </span>
+            <span class="highlight">«جواب آزمایش»</span>
+            <span>
+                رو برای استفاده همه آزمایشگاه های ایران دُرست کردیم. همه تلاش ما این بوده و هست که بیشترین رضایت رو هم برای آزمایشگاه ها و هم برای بیماران با کم ترین هزینه ممکن به وجود بیاریم. امید ما هم اینه که یک روزی همه ایرانی ها از
+            </span>
+            <span class="highlight">«جواب آزمایش»</span>
+            <span>
+                لذت ببرند و ما هم بتونیم این کار رو گسترش بدیم.
+            </span>
+        </p>
+    </div>
+
+    <div class="ui three cards ja-people ja-people-large">
+
+        <div class="ui {{person.color}} card" ng-repeat="person in people | orderBy:'-'">
+            <div class="image">
+                <img ng-src="{{person.img}}">
+            </div>
+            <div class="content">
+                <div class="header nazanin ja-rtl ja-align-right">
+                    {{person.name}}
+                </div>
+                <!--<div class="meta nazanin ja-rtl ja-align-right">-->
+                <!--    -->
+                <!--</div>-->
+                <div class="description nazanin ja-rtl ja-align-right">
+                    {{person.description}}
+                </div>
+            </div>
+            <div class="extra content nazanin ja-rtl ja-align-left">
+                {{person.title}}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ui one cards ja-people ja-people-small">
+
+        <div class="ui {{person.color}} card" ng-repeat="person in people">
+            <div class="image">
+                <img ng-src="{{person.img}}">
+            </div>
+            <div class="content">
+                <div class="header nazanin ja-rtl ja-align-right">
+                    {{person.name}}
+                </div>
+                <!--<div class="meta nazanin ja-rtl ja-align-right">-->
+                <!--    -->
+                <!--</div>-->
+                <div class="description nazanin ja-rtl ja-align-right">
+                    {{person.description}}
+                </div>
+            </div>
+            <div class="extra content nazanin ja-rtl ja-align-left">
+                {{person.title}}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+</script>
+
+<script type="text/ng-template" id="panel/contact.html">
+    <div id="ja-panel-contact">
+
+    <!-- Logo -->
+    <div class="ui centered grid">
+    <div class="twelve wide small eight wide tablet six wide computer column">
+        <div class="center aligned row ltr">
+            <img class="ui centered medium image ja-logo" src="/img/Logo/Full Logo - 600.png" alt="جواب آزمایش" />
+        </div>
+    </div>
+</div>
+
+
+    <!-- Contact us -->
+    <div id="ja-common-contact">
+
+    <div class="ui justified text container">
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">نام شرکت</span>
+        </div>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            شرکت
+            <strong>
+                آرتا ایده پرداز آرتین
+                <small>
+                    (سهامی خاص)
+                </small>
+            </strong>
+        </p>
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">تلفن تماس</span>
+        </div>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            ثابت:
+            <bdi><strong ng-bind="'021-66910430' | toPersianNumber"></strong></bdi>
+        </p>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            همراه:
+            <bdi><strong ng-bind="'09330330975' | toPersianNumber"></strong></bdi>
+        </p>
+
+        <!--<p class="nazanin ja-rtl ja-align-right">-->
+        <!--    <small>-->
+        <!--        (سه شنبه و چهار شنبه، بین ساعت-->
+        <!--        <bdi><strong ng-bind="'11:00' | toPersianNumber"></strong></bdi> تا-->
+        <!--        <bdi><strong ng-bind="'14:00' | toPersianNumber"></strong></bdi>)-->
+        <!--    </small>-->
+        <!--</p>-->
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">آدرس شرکت</span>
+        </div>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            آدرس:&nbsp;
+            <em>
+                تهران، خیابان آزادی، خیابان شهید زارع، خیابان شهید کلهر، پلاک 104، واحد 1
+            </em>
+        </p>
+
+        <p class="nazanin ja-rtl ja-align-right">
+            کد پُستی:
+            <bdi><strong ng-bind="'13117-55811' | toPersianNumber"></strong></bdi>
+        </p>
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">پُست الکترونیکی</span>
+        </div>
+
+        <p class="nazanin ja-ltr ja-align-left">
+            <bdi><strong>ahs502@gmail.com</strong></bdi>
+        </p>
+
+        <div class="ui horizontal divider">
+            <span class="nazanin">ارسال نظرات، پیشنهادات و انتقادات</span>
+        </div>
+
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ sendingFeedback ? 'loading' : '' }} form">
+
+                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
+                        <label class="nazanin ja-required">تلفن همراه ارتباطی</label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="ja-align-left" placeholder="09xxxxxxxxx">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('message')}">
+                        <label class="nazanin ja-required">متن پیغام</label>
+                        <div class="ui input">
+                            <textarea class="nazanin ja-rtl" ng-model="message" ng-change="vs.check('message')" rows=6 maxlength=10000 placeholder=""></textarea>
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('message')" ng-bind="vs.error('message')"></div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="sendFeedback()">
+                            <span class="nazanin">ارسال</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
 
 </div>
 

@@ -2,18 +2,18 @@
 /*global ValidationSystem*/
 /*global sscAlert*/
 
-app.controller('CommonContactController', ['$scope', '$state', '$stateParams', 'MasterService',
-    function($scope, $state, $stateParams, masterService) {
+app.controller('CommonContactController', ['$scope', '$rootScope', '$state', '$stateParams', 'MasterService',
+    function($scope, $rootScope, $state, $stateParams, masterService) {
 
         $scope.sendFeedback = sendFeedback;
 
         $scope.sendingFeedback = false;
 
-        $scope.previousState = $stateParams.previousState;
-
-        $scope.setBackHandler(function() {
-            $state.go($scope.previousState);
-        });
+        if ($rootScope.homeState !== 'answer.post') { // Because it is being handled within AnswerController.
+            $scope.setBackHandler(function() {
+                $state.go($rootScope.homeState || 'home.find');
+            });
+        }
 
         //$scope.mobilePhoneNumber
         //$scope.message

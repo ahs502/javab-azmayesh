@@ -28,6 +28,16 @@
     <img class="ja-menu-item-icon" ng-src="{{iconJs('user')}}">
 </a>
 
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToPanelAbout(); toggleMenu()">
+    درباره ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('about us')}}">
+</a>
+
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToPanelContact(); toggleMenu()">
+    تماس با ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('contact us')}}">
+</a>
+
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.logout(); toggleMenu()">
     خروج از سامانه
     <img class="ja-menu-item-icon" ng-src="{{iconJs('logout')}}">

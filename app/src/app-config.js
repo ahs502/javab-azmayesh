@@ -58,9 +58,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             })
             .state('home.about', {
                 url: '/about',
-                params: {
-                    previousState: null
-                },
                 templateUrl: 'common/about.html',
                 controller: 'CommonAboutController',
                 data: {
@@ -73,9 +70,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             })
             .state('home.contact', {
                 url: '/contact',
-                params: {
-                    previousState: null
-                },
                 templateUrl: 'common/contact.html',
                 controller: 'CommonContactController',
                 data: {
@@ -145,6 +139,28 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('answer.laboratory', {
                 url: '/laboratory',
                 templateUrl: 'answer/laboratory.html'
+            })
+            .state('answer.about', {
+                url: '/about',
+                templateUrl: 'answer/about.html',
+                controller: 'CommonAboutController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                        'card.rtl.min.css',
+                        'image.rtl.min.css',
+                    ]
+                }
+            })
+            .state('answer.contact', {
+                url: '/contact',
+                templateUrl: 'answer/contact.html',
+                controller: 'CommonContactController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                    ]
+                }
             });
 
         $stateProvider
@@ -167,13 +183,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('lab.login', {
                 url: '/login',
                 templateUrl: 'lab/login.html',
-                controller: 'LabLoginController',
-                data: {
-                    dependencies: [
-                        'checkbox.min.js',
-                        'checkbox.rtl.min.css',
-                    ]
-                }
+                controller: 'LabLoginController'
             })
             .state('lab.register', {
                 url: '/register',
@@ -181,13 +191,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                     username: null
                 },
                 templateUrl: 'lab/register.html',
-                controller: 'LabRegisterController',
-                data: {
-                    dependencies: [
-                        'checkbox.min.js',
-                        'checkbox.rtl.min.css',
-                    ]
-                }
+                controller: 'LabRegisterController'
             })
             .state('lab.validate', {
                 url: '/validate',
@@ -212,9 +216,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             })
             .state('lab.about', {
                 url: '/about',
-                params: {
-                    previousState: null
-                },
                 templateUrl: 'common/about.html',
                 controller: 'CommonAboutController',
                 data: {
@@ -227,9 +228,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             })
             .state('lab.contact', {
                 url: '/contact',
-                params: {
-                    previousState: null
-                },
                 templateUrl: 'common/contact.html',
                 controller: 'CommonContactController',
                 data: {
@@ -341,6 +339,28 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 },
                 templateUrl: 'panel/account/confirm.html',
                 controller: 'PanelAccountConfirmController'
+            })
+            .state('panel.about', {
+                url: '/about',
+                templateUrl: 'panel/about.html',
+                controller: 'CommonAboutController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                        'card.rtl.min.css',
+                        'image.rtl.min.css',
+                    ]
+                }
+            })
+            .state('panel.contact', {
+                url: '/contact',
+                templateUrl: 'panel/contact.html',
+                controller: 'CommonContactController',
+                data: {
+                    dependencies: [
+                        'container.rtl.min.css',
+                    ]
+                }
             });
 
         $stateProvider

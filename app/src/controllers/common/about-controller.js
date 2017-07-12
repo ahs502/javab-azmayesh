@@ -1,13 +1,13 @@
 /*global app*/
 
-app.controller('CommonAboutController', ['$scope', '$state', '$stateParams',
-    function($scope, $state, $stateParams) {
+app.controller('CommonAboutController', ['$scope', '$rootScope', '$state', '$stateParams',
+    function($scope, $rootScope, $state, $stateParams) {
 
-        $scope.previousState = $stateParams.previousState;
-
-        $scope.setBackHandler(function() {
-            $state.go($scope.previousState);
-        });
+        if ($rootScope.homeState !== 'answer.post') { // Because it is being handled within AnswerController.
+            $scope.setBackHandler(function() {
+                $state.go($rootScope.homeState || 'home.find');
+            });
+        }
 
         $scope.people = [{
             name: 'نگار امین شکروی',

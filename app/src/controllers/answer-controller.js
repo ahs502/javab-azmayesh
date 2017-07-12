@@ -16,6 +16,8 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
         $scope.pdfFileEventHandlerMaker = pdfFileEventHandlerMaker;
         $scope.copySharedUrl = copySharedUrl;
 
+        $rootScope.homeState = 'answer.post';
+
         var clipboard, url = $location.absUrl();
         url = url.slice(0, url.indexOf('#') + 2) + 'answer' + url.slice(url.indexOf('?'));
 
@@ -124,6 +126,12 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
             },
             labGetter: function() {
                 return ($scope.answer && $scope.answer.lab) || {};
+            },
+            goToAnswerAbout: function() {
+                $state.go('answer.about');
+            },
+            goToAnswerContact: function() {
+                $state.go('answer.contact');
             },
         });
 
