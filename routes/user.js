@@ -207,6 +207,7 @@ router.post('/register/confirm', function(req, res, next) {
 router.post('/login', function(req, res, next) {
     var username = String(req.body.username || '').toLowerCase();
     var password = req.body.password;
+    var rememberMe = req.body.rememberMe;
     kfs('user/active/' + username, function(err, user) {
         if (err) {
             console.error(err);
@@ -219,7 +220,7 @@ router.post('/login', function(req, res, next) {
             return utils.resEndByCode(res, 40);
         }
         var remoteIp = req.ip;
-        var accessKey = access.generateUserAccessKey(user, remoteIp);
+        var accessKey = access.generateUserAccessKey(user, remoteIp, rememberMe);
         var userInfo = getUserInfo(user);
         utils.resEndByCode(res, 0, {
             accessKey,

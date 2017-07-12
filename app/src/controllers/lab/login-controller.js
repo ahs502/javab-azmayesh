@@ -12,10 +12,19 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
 
         localStorage.startState = "lab.login";
 
+        var userSession = userService.getUserPersistent();
+        console.log(userSession);
+        if (userSession) {
+            userService.setUserSession(userSession);
+            goForUser(userSession.userInfo);
+            return;
+        }
+
         $scope.setBackHandler(false);
 
         //$scope.username
         //$scope.password
+        //$scope.rememberMe
 
         $scope.vs = new ValidationSystem($scope)
             .field('username', [
@@ -32,20 +41,22 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
             if (!$scope.vs.validate()) return;
 
             $scope.loggingIn = true;
-            return userService.login($scope.username, $scope.password)
-                .then(function(userInfo) {
-                    if (userInfo.userType === 'laboratory') {
-                        $rootScope.data.labData = userInfo;
-                        $state.go('panel.home');
-                    }
-                    else if (userInfo.userType === 'administrator') {
-                        $rootScope.data.adminData = userInfo;
-                        $state.go('admin.home');
-                    }
-                }, function(code) {
+            return userService.login($scope.username, $scope.password, $scope.rememberMe)
+                .then(goForUser, function(code) {
                     $scope.loggingIn = false;
                     sscAlert(code);
                 });
+        }
+
+        function goForUser(userInfo) {
+            if (userInfo.userType === 'laboratory') {
+                $rootScope.data.labData = userInfo;
+                $state.go('panel.home');
+            }
+            else if (userInfo.userType === 'administrator') {
+                $rootScope.data.adminData = userInfo;
+                $state.go('admin.home');
+            }
         }
 
     }

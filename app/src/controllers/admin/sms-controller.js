@@ -12,10 +12,10 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
         $scope.setBackHandler($scope.menuHandlers.goToMainPage);
 
         $scope.submenus = [
+            'شارژ باقیمانده نیک اِس اِم اِس',
             'ارسال پیامک آزمایشی',
             'ارسال عمومی پیامک به تمامی کاربران',
             'فهرست تمام شماره تلفن های استفاده شده',
-            'شارژ باقیمانده نیک اِس اِم اِس',
         ];
         $scope.selectedSubmenu = 0;
         $scope.selectedSubmenuText = $scope.submenus[0];
@@ -26,7 +26,7 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
                         $scope.selectedSubmenu = value;
                         $scope.selectedSubmenuText = text;
 
-                        if ($scope.selectedSubmenu == 3) getNikSmsCredit();
+                        if ($scope.selectedSubmenu == 0) getNikSmsCredit();
                     });
                 }
             })
@@ -41,6 +41,20 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
         $scope.message = 'سامانه اینترنتی جواب آزمایش\nJavabAzmayesh.ir';
         $scope.messageToBroadcast = 'کاربران عزیز سامانه جواب آزمایش، سلام!\nمتن اصلی...\nJavabAzmayesh.ir';
         $scope.areAllPhoneNumbersReady = false;
+        
+        getNikSmsCredit();
+
+        function getNikSmsCredit() {
+            $scope.waiting = true;
+            adminService.getNikSmsCredit()
+                .then(function(credit) {
+                    $scope.credit = Math.floor(credit);
+                }, function(code) {
+                    sscAlert(code);
+                }).then(function() {
+                    $scope.waiting = false;
+                });
+        }
 
         function sendDummySms() {
             $scope.waiting = true;
@@ -78,18 +92,6 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
             adminService.findAllPhoneNumbers()
                 .then(function() {
                     $scope.areAllPhoneNumbersReady = true;
-                }, function(code) {
-                    sscAlert(code);
-                }).then(function() {
-                    $scope.waiting = false;
-                });
-        }
-
-        function getNikSmsCredit() {
-            $scope.waiting = true;
-            adminService.getNikSmsCredit()
-                .then(function(credit) {
-                    $scope.credit = Math.floor(credit);
                 }, function(code) {
                     sscAlert(code);
                 }).then(function() {

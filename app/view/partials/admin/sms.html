@@ -26,7 +26,23 @@
             <div class="center aligned row">
 
                 <!-- Submenu: 0 -->
-                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 0">
+                <div class="ui right floated blue tiny statistic ja-align-center" ng-show="selectedSubmenu == 0">
+                    <div class="label">
+                        <span class="nazanin">اعتبار باقیمانده پنل نیک اِس اِم اِس</span>
+                    </div>
+                    <div class="value">
+                        <bdi>
+                            <span class="nazanin ja-rtl" ng-show="waiting">در حال بارگذاری...</span>
+                            <span class="nazanin ja-rtl" ng-hide="waiting" ng-bind="credit | toPersianNumber | currencySeparator"></span>
+                        </bdi>
+                    </div>
+                    <div class="label">
+                        <span class="nazanin">تومان</span>
+                    </div>
+                </div>
+
+                <!-- Submenu: 1 -->
+                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 1">
 
                     <div class="field">
                         <label class="nazanin ja-required">به شماره تلفن</label>
@@ -50,8 +66,8 @@
 
                 </form>
 
-                <!-- Submenu: 1 -->
-                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 1">
+                <!-- Submenu: 2 -->
+                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 2">
 
                     <div class="field">
                         <label class="nazanin ja-required">متن پیامک ارسال سراسری</label>
@@ -68,8 +84,8 @@
 
                 </form>
 
-                <!-- Submenu: 2 -->
-                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 2">
+                <!-- Submenu: 3 -->
+                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 3">
 
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="findAllPhoneNumbers()">
@@ -80,22 +96,6 @@
                     <a class="nazanin ja-rtl ja-align-right ja-phone-number-link" ng-show="areAllPhoneNumbersReady" ng-href="/admin/allPhoneNumbers" target="_blank">دانلود فایل شماره تلفن های همراه</a>
 
                 </form>
-
-                <!-- Submenu: 3 -->
-                <div class="ui right floated blue tiny statistic ja-align-center" ng-show="selectedSubmenu == 3">
-                    <div class="label">
-                        <span class="nazanin">اعتبار باقیمانده پنل نیک اِس اِم اِس</span>
-                    </div>
-                    <div class="value">
-                        <bdi>
-                            <span class="nazanin ja-rtl" ng-show="waiting">در حال بارگذاری...</span>
-                            <span class="nazanin ja-rtl" ng-hide="waiting" ng-bind="credit | toPersianNumber | currencySeparator"></span>
-                        </bdi>
-                    </div>
-                    <div class="label">
-                        <span class="nazanin">تومان</span>
-                    </div>
-                </div>
 
             </div>
         </div>

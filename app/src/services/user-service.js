@@ -18,6 +18,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
 
         this.getUserSession = getUserSession;
         this.setUserSession = setUserSession;
+        this.getUserPersistent = getUserPersistent;
 
         /////////////////////////////////////////////////////
 
@@ -85,25 +86,31 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                     validationCode: validationCode
                 }))
                 .then(function(body) {
-                    var userInfo = processUserInfo(body.userInfo);
+                    var userInfo = body.userInfo;
                     setCurrent(undefined, userInfo);
-                    return userInfo;
+                    return processUserInfo(userInfo);
                 });
         }
 
         // May reject by code : 1, 2, 5, 40
         // Resolves to current user info
-        function login(username, password) {
+        function login(username, password, rememberMe) {
             return utils.httpPromiseHandler($http.post('/user/login', {
                     username: username,
-                    password: password
+                    password: password,
+                    rememberMe: rememberMe
                 }))
                 .then(function(body) {
                     var accessKey = body.accessKey,
-                        userInfo = processUserInfo(body.userInfo);
-                    $http.defaults.headers.common['X-Access-Token'] = accessKey;
+                        userInfo = body.userInfo;
                     setCurrent(accessKey, userInfo);
-                    return userInfo;
+                    if (rememberMe) {
+                        $window.localStorage['CurrentUser'] = $window.sessionStorage['CurrentUser'];
+                    }
+                    else {
+                        $window.localStorage.removeItem('CurrentUser');
+                    }
+                    return processUserInfo(userInfo);
                 });
         }
 
@@ -115,16 +122,17 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }
             return utils.httpPromiseHandler($http.post('/user/refresh', {}))
                 .then(function(body) {
-                    var userInfo = processUserInfo(body.userInfo);
+                    var userInfo = body.userInfo;
                     setCurrent(undefined, userInfo);
-                    return userInfo;
+                    return processUserInfo(userInfo);
                 });
         }
 
-        // No rejection
-        function logout() {
+        // Sync & Async; No rejection
+        function logout(sessionStorageOnly) {
             delete $http.defaults.headers.common['X-Access-Token'];
             delete $window.sessionStorage['CurrentUser'];
+            sessionStorageOnly || delete $window.localStorage['CurrentUser'];
             return $q.when();
         }
 
@@ -136,8 +144,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 var currentUser = JSON.parse(currentUserEncoded);
                 if (!currentUser) return null;
                 var userInfo = processUserInfo(currentUser.userInfo);
-                if (!userInfo) return null;
-                return userInfo;
+                return userInfo || null;
             }
             catch (err) {
                 return null;
@@ -152,18 +159,35 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }));
         }
 
-        // Gets the current raw authorization status
+        // Gets the current authorization status
         function getUserSession() {
-            return {
-                httpHeader: $http.defaults.headers.common['X-Access-Token'],
-                sessionStorage: $window.sessionStorage['CurrentUser']
-            };
+            try {
+                var currentUserEncoded = $window.sessionStorage['CurrentUser'];
+                if (!currentUserEncoded) return null;
+                var currentUser = JSON.parse(currentUserEncoded);
+                return currentUser || null;
+            }
+            catch (err) {
+                return null;
+            }
         }
 
-        // Sets the current raw authorization status
+        // Sets the current authorization status
         function setUserSession(userSession) {
-            $http.defaults.headers.common['X-Access-Token'] = userSession.httpHeader;
-            $window.sessionStorage['CurrentUser'] = userSession.sessionStorage;
+            userSession && setCurrent(userSession.accessKey, userSession.userInfo);
+        }
+
+        // Gets the persistent authorization status
+        function getUserPersistent() {
+            try {
+                var currentUserEncoded = $window.localStorage['CurrentUser'];
+                if (!currentUserEncoded) return null;
+                var currentUser = JSON.parse(currentUserEncoded);
+                return currentUser || null;
+            }
+            catch (err) {
+                return null;
+            }
         }
 
         /////////////////////////////////////////////////////
@@ -176,8 +200,13 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             catch (err) {
                 data = {};
             }
-            (accessKey !== undefined) && (data.accessKey = accessKey);
-            (userInfo !== undefined) && (data.userInfo = userInfo);
+            if (accessKey !== undefined) {
+                data.accessKey = accessKey;
+                $http.defaults.headers.common['X-Access-Token'] = accessKey;
+            }
+            if (userInfo !== undefined) {
+                data.userInfo = userInfo;
+            }
             $window.sessionStorage['CurrentUser'] = JSON.stringify(data);
         }
 

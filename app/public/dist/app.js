@@ -875,6 +875,13 @@ var app = angular.module('JavabAzmayesh', [
 app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compileProvider', 'Config',
     function($stateProvider, $urlRouterProvider, $locationProvider, $compileProvider, config) {
 
+        $stateProvider
+            .state('start', {
+                url: '/start',
+                template: '',
+                controller: 'StartController'
+            });
+
         if (config.developer_modal) {
             $stateProvider
                 .state('developer', {
@@ -1032,7 +1039,13 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('lab.login', {
                 url: '/login',
                 templateUrl: 'lab/login.html',
-                controller: 'LabLoginController'
+                controller: 'LabLoginController',
+                data: {
+                    dependencies: [
+                        'checkbox.min.js',
+                        'checkbox.rtl.min.css',
+                    ]
+                }
             })
             .state('lab.register', {
                 url: '/register',
@@ -1280,7 +1293,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
 
 /*global app*/
 /*global angular*/
-/*global localStorage*/
 
 app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config', 'UserService', 'DynamicResourceLoader',
     function($rootScope, $state, $stateParams, $window, $timeout, config, userService, dynamicResourceLoader) {
@@ -1296,7 +1308,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config'
         });
 
         if ($window.location.hash.indexOf('#/answer') !== 0) {
-            $state.go(localStorage.startState || 'home.find');
+            $state.go('start');
         }
 
         $rootScope.$state = $state;
@@ -1348,7 +1360,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config'
                     }
                     else {
                         if (userService.current()) {
-                            userService.logout();
+                            userService.logout(true);
                         }
                     }
                 }
@@ -2036,6 +2048,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
 
         this.getUserSession = getUserSession;
         this.setUserSession = setUserSession;
+        this.getUserPersistent = getUserPersistent;
 
         /////////////////////////////////////////////////////
 
@@ -2103,25 +2116,31 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                     validationCode: validationCode
                 }))
                 .then(function(body) {
-                    var userInfo = processUserInfo(body.userInfo);
+                    var userInfo = body.userInfo;
                     setCurrent(undefined, userInfo);
-                    return userInfo;
+                    return processUserInfo(userInfo);
                 });
         }
 
         // May reject by code : 1, 2, 5, 40
         // Resolves to current user info
-        function login(username, password) {
+        function login(username, password, rememberMe) {
             return utils.httpPromiseHandler($http.post('/user/login', {
                     username: username,
-                    password: password
+                    password: password,
+                    rememberMe: rememberMe
                 }))
                 .then(function(body) {
                     var accessKey = body.accessKey,
-                        userInfo = processUserInfo(body.userInfo);
-                    $http.defaults.headers.common['X-Access-Token'] = accessKey;
+                        userInfo = body.userInfo;
                     setCurrent(accessKey, userInfo);
-                    return userInfo;
+                    if (rememberMe) {
+                        $window.localStorage['CurrentUser'] = $window.sessionStorage['CurrentUser'];
+                    }
+                    else {
+                        $window.localStorage.removeItem('CurrentUser');
+                    }
+                    return processUserInfo(userInfo);
                 });
         }
 
@@ -2133,16 +2152,17 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }
             return utils.httpPromiseHandler($http.post('/user/refresh', {}))
                 .then(function(body) {
-                    var userInfo = processUserInfo(body.userInfo);
+                    var userInfo = body.userInfo;
                     setCurrent(undefined, userInfo);
-                    return userInfo;
+                    return processUserInfo(userInfo);
                 });
         }
 
-        // No rejection
-        function logout() {
+        // Sync & Async; No rejection
+        function logout(sessionStorageOnly) {
             delete $http.defaults.headers.common['X-Access-Token'];
             delete $window.sessionStorage['CurrentUser'];
+            sessionStorageOnly || delete $window.localStorage['CurrentUser'];
             return $q.when();
         }
 
@@ -2154,8 +2174,7 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 var currentUser = JSON.parse(currentUserEncoded);
                 if (!currentUser) return null;
                 var userInfo = processUserInfo(currentUser.userInfo);
-                if (!userInfo) return null;
-                return userInfo;
+                return userInfo || null;
             }
             catch (err) {
                 return null;
@@ -2170,18 +2189,35 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             }));
         }
 
-        // Gets the current raw authorization status
+        // Gets the current authorization status
         function getUserSession() {
-            return {
-                httpHeader: $http.defaults.headers.common['X-Access-Token'],
-                sessionStorage: $window.sessionStorage['CurrentUser']
-            };
+            try {
+                var currentUserEncoded = $window.sessionStorage['CurrentUser'];
+                if (!currentUserEncoded) return null;
+                var currentUser = JSON.parse(currentUserEncoded);
+                return currentUser || null;
+            }
+            catch (err) {
+                return null;
+            }
         }
 
-        // Sets the current raw authorization status
+        // Sets the current authorization status
         function setUserSession(userSession) {
-            $http.defaults.headers.common['X-Access-Token'] = userSession.httpHeader;
-            $window.sessionStorage['CurrentUser'] = userSession.sessionStorage;
+            userSession && setCurrent(userSession.accessKey, userSession.userInfo);
+        }
+
+        // Gets the persistent authorization status
+        function getUserPersistent() {
+            try {
+                var currentUserEncoded = $window.localStorage['CurrentUser'];
+                if (!currentUserEncoded) return null;
+                var currentUser = JSON.parse(currentUserEncoded);
+                return currentUser || null;
+            }
+            catch (err) {
+                return null;
+            }
         }
 
         /////////////////////////////////////////////////////
@@ -2194,8 +2230,13 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             catch (err) {
                 data = {};
             }
-            (accessKey !== undefined) && (data.accessKey = accessKey);
-            (userInfo !== undefined) && (data.userInfo = userInfo);
+            if (accessKey !== undefined) {
+                data.accessKey = accessKey;
+                $http.defaults.headers.common['X-Access-Token'] = accessKey;
+            }
+            if (userInfo !== undefined) {
+                data.userInfo = userInfo;
+            }
             $window.sessionStorage['CurrentUser'] = JSON.stringify(data);
         }
 
@@ -2424,10 +2465,10 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
         $scope.setBackHandler($scope.menuHandlers.goToMainPage);
 
         $scope.submenus = [
+            'شارژ باقیمانده نیک اِس اِم اِس',
             'ارسال پیامک آزمایشی',
             'ارسال عمومی پیامک به تمامی کاربران',
             'فهرست تمام شماره تلفن های استفاده شده',
-            'شارژ باقیمانده نیک اِس اِم اِس',
         ];
         $scope.selectedSubmenu = 0;
         $scope.selectedSubmenuText = $scope.submenus[0];
@@ -2438,7 +2479,7 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
                         $scope.selectedSubmenu = value;
                         $scope.selectedSubmenuText = text;
 
-                        if ($scope.selectedSubmenu == 3) getNikSmsCredit();
+                        if ($scope.selectedSubmenu == 0) getNikSmsCredit();
                     });
                 }
             })
@@ -2453,6 +2494,20 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
         $scope.message = 'سامانه اینترنتی جواب آزمایش\nJavabAzmayesh.ir';
         $scope.messageToBroadcast = 'کاربران عزیز سامانه جواب آزمایش، سلام!\nمتن اصلی...\nJavabAzmayesh.ir';
         $scope.areAllPhoneNumbersReady = false;
+        
+        getNikSmsCredit();
+
+        function getNikSmsCredit() {
+            $scope.waiting = true;
+            adminService.getNikSmsCredit()
+                .then(function(credit) {
+                    $scope.credit = Math.floor(credit);
+                }, function(code) {
+                    sscAlert(code);
+                }).then(function() {
+                    $scope.waiting = false;
+                });
+        }
 
         function sendDummySms() {
             $scope.waiting = true;
@@ -2490,18 +2545,6 @@ app.controller('AdminSmsController', ['$scope', '$rootScope', '$state', '$timeou
             adminService.findAllPhoneNumbers()
                 .then(function() {
                     $scope.areAllPhoneNumbersReady = true;
-                }, function(code) {
-                    sscAlert(code);
-                }).then(function() {
-                    $scope.waiting = false;
-                });
-        }
-
-        function getNikSmsCredit() {
-            $scope.waiting = true;
-            adminService.getNikSmsCredit()
-                .then(function(credit) {
-                    $scope.credit = Math.floor(credit);
                 }, function(code) {
                     sscAlert(code);
                 }).then(function() {
@@ -2862,10 +2905,19 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
 
         localStorage.startState = "lab.login";
 
+        var userSession = userService.getUserPersistent();
+        console.log(userSession);
+        if (userSession) {
+            userService.setUserSession(userSession);
+            goForUser(userSession.userInfo);
+            return;
+        }
+
         $scope.setBackHandler(false);
 
         //$scope.username
         //$scope.password
+        //$scope.rememberMe
 
         $scope.vs = new ValidationSystem($scope)
             .field('username', [
@@ -2882,20 +2934,22 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
             if (!$scope.vs.validate()) return;
 
             $scope.loggingIn = true;
-            return userService.login($scope.username, $scope.password)
-                .then(function(userInfo) {
-                    if (userInfo.userType === 'laboratory') {
-                        $rootScope.data.labData = userInfo;
-                        $state.go('panel.home');
-                    }
-                    else if (userInfo.userType === 'administrator') {
-                        $rootScope.data.adminData = userInfo;
-                        $state.go('admin.home');
-                    }
-                }, function(code) {
+            return userService.login($scope.username, $scope.password, $scope.rememberMe)
+                .then(goForUser, function(code) {
                     $scope.loggingIn = false;
                     sscAlert(code);
                 });
+        }
+
+        function goForUser(userInfo) {
+            if (userInfo.userType === 'laboratory') {
+                $rootScope.data.labData = userInfo;
+                $state.go('panel.home');
+            }
+            else if (userInfo.userType === 'administrator') {
+                $rootScope.data.adminData = userInfo;
+                $state.go('admin.home');
+            }
         }
 
     }
@@ -5355,6 +5409,27 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 
 /*
 	AHS502 : End of 'panel-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'start-controller.js'
+*/
+
+/*global app*/
+/*global localStorage*/
+
+app.controller('StartController', ['$scope', '$state',
+    function($scope, $state) {
+
+        $state.go(localStorage.startState || 'home.find');
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'start-controller.js'
 */
 
 

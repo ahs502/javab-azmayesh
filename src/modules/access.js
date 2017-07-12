@@ -23,9 +23,12 @@ module.exports = {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function generateUserAccessKey(user, remoteIp) {
+function generateUserAccessKey(user, remoteIp, rememberMe) {
+    var userAccessKeyExpirationHours = rememberMe ?
+        config.long_user_access_key_expires_after :
+        config.user_access_key_expires_after;
     var accessKeyData = {
-        expiresAt: Date.now() + config.user_access_key_expires_after * 60 * 60 * 1000,
+        expiresAt: Date.now() + userAccessKeyExpirationHours * 60 * 60 * 1000,
         userInfo: {
             username: user.username,
             userType: user.userType,

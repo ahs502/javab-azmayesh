@@ -1,6 +1,5 @@
 /*global app*/
 /*global angular*/
-/*global localStorage*/
 
 app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config', 'UserService', 'DynamicResourceLoader',
     function($rootScope, $state, $stateParams, $window, $timeout, config, userService, dynamicResourceLoader) {
@@ -16,7 +15,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config'
         });
 
         if ($window.location.hash.indexOf('#/answer') !== 0) {
-            $state.go(localStorage.startState || 'home.find');
+            $state.go('start');
         }
 
         $rootScope.$state = $state;
@@ -68,7 +67,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config'
                     }
                     else {
                         if (userService.current()) {
-                            userService.logout();
+                            userService.logout(true);
                         }
                     }
                 }

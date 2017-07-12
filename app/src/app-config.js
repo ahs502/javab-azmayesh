@@ -3,6 +3,13 @@
 app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compileProvider', 'Config',
     function($stateProvider, $urlRouterProvider, $locationProvider, $compileProvider, config) {
 
+        $stateProvider
+            .state('start', {
+                url: '/start',
+                template: '',
+                controller: 'StartController'
+            });
+
         if (config.developer_modal) {
             $stateProvider
                 .state('developer', {
@@ -160,7 +167,13 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('lab.login', {
                 url: '/login',
                 templateUrl: 'lab/login.html',
-                controller: 'LabLoginController'
+                controller: 'LabLoginController',
+                data: {
+                    dependencies: [
+                        'checkbox.min.js',
+                        'checkbox.rtl.min.css',
+                    ]
+                }
             })
             .state('lab.register', {
                 url: '/register',

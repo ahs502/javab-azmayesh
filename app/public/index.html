@@ -1210,13 +1210,13 @@
 
 <script type="text/ng-template" id="lab/login.html">
     <div id="ja-lab-login">
-    
+
     <div class="ui centered grid">
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
 
                 <form class="ui {{ loggingIn ? 'loading' : '' }} form">
-                    
+
                     <div class="field" ng-class="{'error': vs.error('username')}">
                         <label class="nazanin ja-required">نام کاربری</label>
                         <div class="ui input">
@@ -1224,7 +1224,7 @@
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>
-                    
+
                     <div class="field" ng-class="{'error': vs.error('password')}">
                         <label class="nazanin ja-required">کلمه عبور</label>
                         <div class="ui input">
@@ -1232,7 +1232,14 @@
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('password')" ng-bind="vs.error('password')"></div>
                     </div>
-                    
+
+                    <div class="field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" ng-model="rememberMe" id="ja-lab-login-rememberMe">
+                            <label class="nazanin" for="ja-lab-login-rememberMe"><span class="ja-required"></span>من را به خاطر بسپار</label>
+                        </div>
+                    </div>
+
                     <div class="field">
                         <div class="two ui buttons">
                             <button class="fluid ui blue button" type="submit" ng-click="login()">
@@ -1249,7 +1256,7 @@
                             <span class="nazanin">کلمه عبور خود را فراموش کرده ام</span>
                         </button>
                     </div>
-                    
+
                 </form>
 
             </div>
@@ -1257,6 +1264,7 @@
     </div>
 
 </div>
+
 </script>
 
 <script type="text/ng-template" id="lab/forget.html">
@@ -1822,7 +1830,7 @@
 </script>
 
 <script type="text/ng-template" id="panel/history.html">
-    <div id="ja-panel-history" class="ui basic segment">
+    <div id="ja-panel-history">
 
     <div class="ui text menu" id="ja-panel-history-filter-menu">
 
@@ -1886,7 +1894,7 @@
     <!-- https://github.com/pioug/md-virtual-repeater -->
     <!--<md-virtual-repeat-container class="ui cards" md-top-index="topPostIndex">-->
     <!--    <div class="ui link fluid raised blue card" md-virtual-repeat="post in posts" md-item-size="92.15" ng-click="postClicked(post)">-->
-    <div class="ui basic segment" id="ja-panel-history-scrolling-container">
+    <div id="ja-panel-history-scrolling-container">
 
         <div class="ui centered grid">
             <div class="fourteen wide small eight wide tablet six wide computer column">
@@ -3319,7 +3327,23 @@
             <div class="center aligned row">
 
                 <!-- Submenu: 0 -->
-                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 0">
+                <div class="ui right floated blue tiny statistic ja-align-center" ng-show="selectedSubmenu == 0">
+                    <div class="label">
+                        <span class="nazanin">اعتبار باقیمانده پنل نیک اِس اِم اِس</span>
+                    </div>
+                    <div class="value">
+                        <bdi>
+                            <span class="nazanin ja-rtl" ng-show="waiting">در حال بارگذاری...</span>
+                            <span class="nazanin ja-rtl" ng-hide="waiting" ng-bind="credit | toPersianNumber | currencySeparator"></span>
+                        </bdi>
+                    </div>
+                    <div class="label">
+                        <span class="nazanin">تومان</span>
+                    </div>
+                </div>
+
+                <!-- Submenu: 1 -->
+                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 1">
 
                     <div class="field">
                         <label class="nazanin ja-required">به شماره تلفن</label>
@@ -3343,8 +3367,8 @@
 
                 </form>
 
-                <!-- Submenu: 1 -->
-                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 1">
+                <!-- Submenu: 2 -->
+                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 2">
 
                     <div class="field">
                         <label class="nazanin ja-required">متن پیامک ارسال سراسری</label>
@@ -3361,8 +3385,8 @@
 
                 </form>
 
-                <!-- Submenu: 2 -->
-                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 2">
+                <!-- Submenu: 3 -->
+                <form class="ui {{ waiting ? 'loading' : '' }} form" ng-show="selectedSubmenu == 3">
 
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="findAllPhoneNumbers()">
@@ -3373,22 +3397,6 @@
                     <a class="nazanin ja-rtl ja-align-right ja-phone-number-link" ng-show="areAllPhoneNumbersReady" ng-href="/admin/allPhoneNumbers" target="_blank">دانلود فایل شماره تلفن های همراه</a>
 
                 </form>
-
-                <!-- Submenu: 3 -->
-                <div class="ui right floated blue tiny statistic ja-align-center" ng-show="selectedSubmenu == 3">
-                    <div class="label">
-                        <span class="nazanin">اعتبار باقیمانده پنل نیک اِس اِم اِس</span>
-                    </div>
-                    <div class="value">
-                        <bdi>
-                            <span class="nazanin ja-rtl" ng-show="waiting">در حال بارگذاری...</span>
-                            <span class="nazanin ja-rtl" ng-hide="waiting" ng-bind="credit | toPersianNumber | currencySeparator"></span>
-                        </bdi>
-                    </div>
-                    <div class="label">
-                        <span class="nazanin">تومان</span>
-                    </div>
-                </div>
 
             </div>
         </div>
