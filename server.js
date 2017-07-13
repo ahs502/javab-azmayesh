@@ -2,13 +2,12 @@
 
 var autoLoad = require('auto-load');
 var express = require('express');
-var fs = require('fs-extra');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var compression = require('compression');
+var fs = require('fs-extra');
 
 require("./src/client-import");
 autoLoad(path.join(__dirname, 'src/global'));
@@ -42,7 +41,18 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.enable('trust proxy');
-app.use(compression());
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+
+// set Content-Security-Policy header
+app.use((req, res, next) => {
+  res.header('Content-Security-Policy',
+    "default-src 'self' 'unsafe-inline' www.google.com www.gstatic.com;" +
+    "img-src 'self' data:;" +
+    "font-src 'self' data:;" +
+    "connect-src 'self'" + (config.env === 'dev' ? " http://dev.javabazmayesh.ir:50305 ws://dev.javabazmayesh.ir:50305" : "") + ";");
+  next();
+});
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 

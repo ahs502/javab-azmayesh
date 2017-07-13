@@ -44,7 +44,11 @@ router.get('/', function(req, res, next) {
 
 router.get('/config', function(req, res, next) {
     var data = 'app.constant("Config",' + JSON.stringify(config.client_config) + ');';
-    res.send(data).status(200).end();
+    res
+        .header('Content-Type', 'application/javascript')
+        .send(data)
+        .status(200)
+        .end();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
