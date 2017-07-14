@@ -183,7 +183,7 @@
     }
 
     function usernameValidator(message) {
-        message = message || 'نام کاربری فقط باید شامل حروف لاتین، ارقام، نقطه و خط زیر _ باشد';
+        message = message || 'نام کاربری فقط باید شامل حروف و ارقام لاتین، نقطه و خط زیر _ باشد';
         return function(value) {
             return /^[a-zA-Z_][a-zA-Z_0-9]+$/.test(value) ? null : message;
         };

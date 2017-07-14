@@ -318,7 +318,7 @@ global.global = global;
     }
 
     function usernameValidator(message) {
-        message = message || 'نام کاربری فقط باید شامل حروف لاتین، ارقام، نقطه و خط زیر _ باشد';
+        message = message || 'نام کاربری فقط باید شامل حروف و ارقام لاتین، نقطه و خط زیر _ باشد';
         return function(value) {
             return /^[a-zA-Z_][a-zA-Z_0-9]+$/.test(value) ? null : message;
         };
@@ -346,6 +346,7 @@ global.global = global;
     }
 
 })(global);
+
 
 /*
 	AHS502 : End of 'ValidationSystem.js'
@@ -745,6 +746,7 @@ global.global = global;
 (function(global) {
 
     global.toPersianNumber = toPersianNumber;
+    global.toLatinNumber = toLatinNumber;
 
     var persianDigitConvertions = {
         0: '۰',
@@ -759,18 +761,37 @@ global.global = global;
         9: '۹'
     };
 
+    var latinDigitConvertions = {
+        '۰': '0',
+        '۱': '1',
+        '۲': '2',
+        '۳': '3',
+        '۴': '4',
+        '۵': '5',
+        '۶': '6',
+        '۷': '7',
+        '۸': '8',
+        '۹': '9'
+    };
+
     function toPersianNumber(text) {
         text = String(text || '');
         var chars = text.split('');
         return chars.map(function(char) {
-            if (persianDigitConvertions[char] != undefined)
-                return persianDigitConvertions[char];
-            else
-                return char;
+            return persianDigitConvertions[char] || char;
+        }).join('');
+    }
+
+    function toLatinNumber(text) {
+        text = String(text || '');
+        var chars = text.split('');
+        return chars.map(function(char) {
+            return latinDigitConvertions[char] || char;
         }).join('');
     }
 
 })(global);
+
 
 /*
 	AHS502 : End of 'persian-number.js'
@@ -4856,7 +4877,7 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                 clipboard = undefined;
                 $scope.sharedUrl = url;
                 $scope.sharingViaSms = 'sms:;?&' + simpleQueryString.stringify({
-                    body: 'سلام!\n' + 'نتایج آزمایش ' + $scope.answer.patientNam + 'در لینک زیر:\n\n' + url
+                    body: 'سلام!\n' + 'نتایج آزمایش ' + $scope.answer.patientName + ' در لینک زیر:\n\n' + url
                 });
                 $scope.sharingViaEmail = 'mailto:?&' + simpleQueryString.stringify({
                     body: 'سلام!\n' + $scope.answer.patientName + ' می خواهد نتایج آزمایش خود را با شما به اشتراک بگذارد:\n\n' + url,
@@ -5469,6 +5490,48 @@ app.controller('StartController', ['$scope', '$state',
 
 /*
 	AHS502 : End of 'start-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'accept-persian-numbers.js'
+*/
+
+/*global app*/
+/*global toPersianNumber*/
+/*global toLatinNumber*/
+
+app.directive('acceptPersianNumbers', function() {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+
+        replace: false,
+        transclude: false,
+        scope: false,
+
+        link: function(scope, instanceElement, instanceAttributes, ngModel) {
+
+            ngModel.$formatters.push(function(value) {
+                return toPersianNumber(value);
+            });
+
+            ngModel.$parsers.push(function(value) {
+                var viewValue = toPersianNumber(value);
+                if (viewValue !== ngModel.$viewValue) {
+                    ngModel.$setViewValue(viewValue);
+                    ngModel.$render();
+                }
+                return toLatinNumber(value);
+            });
+
+        }
+    };
+});
+
+
+/*
+	AHS502 : End of 'accept-persian-numbers.js'
 */
 
 

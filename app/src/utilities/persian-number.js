@@ -1,6 +1,7 @@
 (function(global) {
 
     global.toPersianNumber = toPersianNumber;
+    global.toLatinNumber = toLatinNumber;
 
     var persianDigitConvertions = {
         0: '۰',
@@ -15,14 +16,32 @@
         9: '۹'
     };
 
+    var latinDigitConvertions = {
+        '۰': '0',
+        '۱': '1',
+        '۲': '2',
+        '۳': '3',
+        '۴': '4',
+        '۵': '5',
+        '۶': '6',
+        '۷': '7',
+        '۸': '8',
+        '۹': '9'
+    };
+
     function toPersianNumber(text) {
         text = String(text || '');
         var chars = text.split('');
         return chars.map(function(char) {
-            if (persianDigitConvertions[char] != undefined)
-                return persianDigitConvertions[char];
-            else
-                return char;
+            return persianDigitConvertions[char] || char;
+        }).join('');
+    }
+
+    function toLatinNumber(text) {
+        text = String(text || '');
+        var chars = text.split('');
+        return chars.map(function(char) {
+            return latinDigitConvertions[char] || char;
         }).join('');
     }
 

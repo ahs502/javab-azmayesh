@@ -21,7 +21,7 @@
                     <div class="field" ng-class="{'error': vs.error('otp')}">
                         <!--<label class="nazanin">رمز یک بار مصرف</label>-->
                         <div class="ui input">
-                            <input type="tel" ng-model="otp" ng-change="vs.check('otp')" ng-class="{'ja-align-left': otp, 'nazanin': !otp}" placeholder="رمز یک بار مصرف">
+                            <input type="tel" ng-model="otp" ng-change="vs.check('otp')" class="nazanin" ng-class="{'ja-align-left': otp}" accept-persian-numbers placeholder="رمز یک بار مصرف">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('otp')" ng-bind="vs.error('otp')"></div>
                     </div>

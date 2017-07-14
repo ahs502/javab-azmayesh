@@ -59,7 +59,7 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
                 clipboard = undefined;
                 $scope.sharedUrl = url;
                 $scope.sharingViaSms = 'sms:;?&' + simpleQueryString.stringify({
-                    body: 'سلام!\n' + 'نتایج آزمایش ' + $scope.answer.patientNam + 'در لینک زیر:\n\n' + url
+                    body: 'سلام!\n' + 'نتایج آزمایش ' + $scope.answer.patientName + ' در لینک زیر:\n\n' + url
                 });
                 $scope.sharingViaEmail = 'mailto:?&' + simpleQueryString.stringify({
                     body: 'سلام!\n' + $scope.answer.patientName + ' می خواهد نتایج آزمایش خود را با شما به اشتراک بگذارد:\n\n' + url,

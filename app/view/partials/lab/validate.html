@@ -21,7 +21,7 @@
                     <div class="field" ng-class="{'error': vs.error('validationCode')}">
                         <!--<label class="nazanin">کد اعتبار سنجی</label>-->
                         <div class="ui input">
-                            <input type="tel" ng-model="validationCode" ng-change="vs.check('validationCode')" ng-class="{'ja-align-left': validationCode, 'nazanin': !validationCode}" placeholder="کد اعتبار سنجی">
+                            <input type="tel" ng-model="validationCode" ng-change="vs.check('validationCode')" class="nazanin" ng-class="{'ja-align-left': validationCode}" accept-persian-numbers placeholder="کد اعتبار سنجی">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('validationCode')" ng-bind="vs.error('validationCode')"></div>
                     </div>
