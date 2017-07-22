@@ -3,9 +3,12 @@ var router = express.Router();
 
 var path = require("path");
 var fs = require("fs-extra");
+var querystring = require('querystring');
 
 var config = require("../config");
 var src = require("../src"),
+    kfs = src.kfs,
+    zarinpal = src.zarinpal,
     statistics = src.statistics;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -72,6 +75,58 @@ router.get('/android-manifest.json', function(req, res, next) {
         console.error(error);
         next();
     }
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.get('/zarinpal/callback', function(req, res, next) {
+    const authority = req.query.Authority;
+    const status = req.query.Status;
+    const baseUrl = config.protocol + '://' + config.domain;
+    (status !== 'OK' ? Promise.reject() :
+        kfs('balance/zarinpal/authorities/' + authority)
+        .then(paymentKey => {
+            return kfs(paymentKey).then(paymentData => {
+                const amount = paymentData.amount;
+                return zarinpal.getReferenceId(authority, amount)
+                    .then(referenceId => {
+                        switch (paymentData.transactionType) {
+
+                            case 'user charge':
+                                const userKey = 'user/active/' + paymentData.data.userData.username;
+                                return kfs(userKey)
+                                    .then(userData => {
+                                        userData.balance += Number(amount);
+                                        return kfs(userKey, userData);
+                                    })
+                                    .then(() => {
+                                        paymentData.verified = true;
+                                        paymentData.referenceId = referenceId;
+                                        return kfs(paymentKey, paymentData);
+                                    })
+                                    .then(() => ({
+                                        title: 'تأیید پرداخت',
+                                        message: 'پرداخت شما با موفقیت انجام شد! شماره پیگیری: ' + referenceId,
+                                        ok: 'خیلی هم عالی!'
+                                    }));
+
+                            default:
+                                return Promise.reject('Un supported transaction type.');
+                        }
+                    }, reason => ({
+                        title: 'عدم تأیید پرداخت',
+                        message: 'پرداخت شما از طرف سایت پذیرنده تأیید نشد: \n' + JSON.stringify(reason)
+                    }));
+            });
+        }))
+    .catch(() => ({
+            title: 'خطا در بازگشت به سایت پذیرنده',
+            message: 'عملیات بازگشت به سایت پذیرنده با خطا مواجه شد.'
+        }))
+        .then(startupMessage => res.redirect(baseUrl + '/#/start?init=' +
+            querystring.escape(JSON.stringify({
+                startupMessage
+            }))));
 });
 
 ////////////////////////////////////////////////////////////////////////////////

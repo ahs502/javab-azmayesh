@@ -1,8 +1,8 @@
 /*global app*/
 /*global angular*/
 
-app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config', 'UserService', 'DynamicResourceLoader',
-    function($rootScope, $state, $stateParams, $window, $timeout, config, userService, dynamicResourceLoader) {
+app.run(['$rootScope', '$state', '$stateParams', '$window', '$location', '$timeout', 'Config', 'UserService', 'DynamicResourceLoader',
+    function($rootScope, $state, $stateParams, $window, $location, $timeout, config, userService, dynamicResourceLoader) {
 
         // No need to initial loader anymore
         angular.element('#ja-initial-loader-background').hide();
@@ -14,7 +14,8 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config'
             $timeout();
         });
 
-        if ($window.location.hash.indexOf('#/answer') !== 0) {
+        if ($window.location.hash.indexOf('#/answer') !== 0 &&
+            $window.location.hash.indexOf('#/start') !== 0) {
             $state.go('start');
         }
 

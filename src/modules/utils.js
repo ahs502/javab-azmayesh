@@ -13,6 +13,8 @@ module.exports = {
 
     moveFile, // ('path/to/a/file', 'path/to/a/folder') => Promise
 
+    removeLeadingZeros, // "00000000326587" => "326587"
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,4 +80,8 @@ function moveFile(src, des) {
             else resolve();
         });
     });
+}
+
+function removeLeadingZeros(zarinpalAuthority) {
+    return String(zarinpalAuthority).replace(/\b0+/g, '');
 }

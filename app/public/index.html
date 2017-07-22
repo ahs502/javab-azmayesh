@@ -165,7 +165,7 @@
             <!-- Main view contents -->
         </div>
 
-        <div id="ja-informer-modal" class="ui modal">
+        <div id="ja-informer-modal" class="ui modal ja-rtl">
     <div class="header">
         <span class="nazanin" ng-bind="modal.title"></span>
     </div>
@@ -173,14 +173,13 @@
         <span class="nazanin"><bdi ng-bind="modal.message"></bdi></span>
     </div>
     <div class="actions">
-        <!--<div class="ui cancel button">Cancel</div>-->
         <button class="ui --basic blue ok button">
             <span class="nazanin" ng-bind="modal.ok"></span>
         </button>
     </div>
 </div>
 
-<div id="ja-confirm-modal" class="ui modal">
+<div id="ja-confirm-modal" class="ui modal ja-rtl">
     <div class="header">
         <span class="nazanin" ng-bind="modal.title"></span>
     </div>
@@ -2583,6 +2582,32 @@
                 <form class="ui {{ preparingPayment ? 'loading' : '' }} form">
 
                     <p class="nazanin">
+                        <bdi>پرداخت از طریق درگاه پرداخت الکترونیکی <strong>زرین پال</strong>:</bdi>
+                    </p>
+
+                    <div class="field" ng-class="{'error': vs.error('zpChargeAmount')}">
+                        <label class="nazanin"><bdi>مبلغ مورد نظر (تومان)</bdi></label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="zpChargeAmount" ng-change="vs.check('zpChargeAmount')" class="nazanin" ng-class="{ 'ja-align-left': zpChargeAmount, 'ja-align-right': !zpChargeAmount }" accept-persian-numbers placeholder="مبلغ شارژ به تومان">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('zpChargeAmount')" ng-bind="vs.error('zpChargeAmount')"></div>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui --basic blue button" ng-click="zpPayment()">
+                            <span class="nazanin">ورود به درگاه پرداخت</span>
+                        </button>
+                    </div>
+
+                    <br />
+
+                    <div class="ui horizontal divider">
+                        <span class="nazanin">یا</span>
+                    </div>
+
+                    <br />
+
+                    <p class="nazanin">
                         <bdi>پرداخت از طریق کارت به کارت:</bdi>
                     </p>
                     <p class="nazanin">
@@ -2596,38 +2621,17 @@
                     <div class="field" ng-class="{'error': vs.error('c2cReceiptCode')}">
                         <label class="nazanin">کد پیگیری پرداخت</label>
                         <div class="ui input">
-                            <input type="text" ng-model="c2cReceiptCode" ng-change="vs.check('c2cReceiptCode'); loadPatientInfo()" class="nazanin ja-align-left" accept-persian-numbers placeholder="۱۲۳۴۵">
+                            <input type="tel" ng-model="c2cReceiptCode" ng-change="vs.check('c2cReceiptCode')" class="nazanin ja-align-left" accept-persian-numbers placeholder="۱۲۳۴۵">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('c2cReceiptCode')" ng-bind="vs.error('c2cReceiptCode')"></div>
                     </div>
-                    
+
                     <div class="field">
                         <button class="fluid ui --basic blue button" ng-click="c2cPayment()">
                             <span class="nazanin">ثبت تراکنش</span>
                         </button>
                     </div>
 
-                    <div class="ui horizontal divider">
-                        <span class="nazanin">یا</span>
-                    </div>
-
-                    <p class="nazanin">
-                        <bdi>پرداخت از طریق درگاه پرداخت الکترونیکی <strong>زرین پال</strong>:</bdi>
-                    </p>
-
-                    <div class="field">
-                        <label class="nazanin"><bdi>مبلغ مورد نظر (تومان)</bdi></label>
-                        <div class="ui disabled input">
-                            <input type="text" ng-model="zpChargeAmount" placeholder="مبلغ شارژ به تومان">
-                        </div>
-                    </div>
-                    
-                    <div class="field">
-                        <button class="disabled fluid ui --basic blue button" ng-click="zpPayment()">
-                            <span class="nazanin">ورود به درگاه پرداخت</span>
-                        </button>
-                    </div>
-                    
                 </form>
 
             </div>
@@ -2635,6 +2639,7 @@
     </div>
 
 </div>
+
 </script>
 
 <script type="text/ng-template" id="panel/account.html">

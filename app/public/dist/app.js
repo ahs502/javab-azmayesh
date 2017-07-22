@@ -659,9 +659,9 @@ global.global = global;
         if (step < 0) step = -step;
         var array = [];
         if (from <= to)
-            while (from <= to) array.push(from++);
+            while (from <= to) array.push((from += step) - step);
         else
-            while (from >= to) array.push(from--);
+            while (from >= to) array.push((from -= step) + step);
         return array;
     }
 
@@ -808,6 +808,46 @@ global.global = global;
 
     global.sscAlert = sscAlert;
 
+    /*
+        0   : Success
+        1   : Unknown error in server
+        2   : Unknown error in client
+        
+        5   : Internal server error
+        
+        10  : Already existing user
+        11  : reCAPTCHA verification error
+
+        30  : User is not waiting for confirmation
+        31  : User confirmation has expired
+        32  : Wrong validation code
+        
+        40  : Wrong username or password
+        
+        50  : User has not logged in correctly
+        51  : User not found
+        52  : Invalid user type
+        
+        60  : User data does not match
+        
+        70  : Patient has not accessed history correctly
+        71  : Patient has no history post
+        72  : Post does not belong to patient
+        73  : Post not found
+        74  : User (laboratory) not found
+        75  : Patient has reached daily try count limit
+        
+        80  : Invalid form data
+        
+        100 : Invalid access key
+        101 : Expired access key
+        
+        120 : Exceeded SMS count number
+        
+        130 : User out of charge
+        131 : Zarrinpal is not active
+    */
+
     var serviceStatusCodes = {
 
         0: 'عملیات موفقیت آمیز',
@@ -846,6 +886,8 @@ global.global = global;
         120: 'از تعداد پیامک های مجاز رَد شده است، مدتی صبر کنید',
 
         130: 'شارژ حساب کاربر به اتمام رسیده است',
+        131: 'درگاه پرداخت زرین پال فعال نیست',
+        132: 'خطا در باز کردن درگاه پرداخت زرین پال',
 
     };
 
@@ -898,7 +940,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
 
         $stateProvider
             .state('start', {
-                url: '/start',
+                url: '/start?init',
+                params: {
+                    init: null,
+                },
                 template: '',
                 controller: 'StartController'
             });
@@ -1181,7 +1226,14 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('panel.patient', {
                 url: '/patient',
                 templateUrl: 'panel/patient.html',
-                controller: 'PanelPatientController'
+                controller: 'PanelPatientController',
+                data: {
+                    dependencies: [
+                        'iriran-provinces-and-cities.js',
+                        'dropdown.min.js',
+                        'dropdown.rtl.min.css',
+                    ]
+                }
             })
             .state('panel.send', {
                 url: '/send',
@@ -1335,8 +1387,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
 /*global app*/
 /*global angular*/
 
-app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config', 'UserService', 'DynamicResourceLoader',
-    function($rootScope, $state, $stateParams, $window, $timeout, config, userService, dynamicResourceLoader) {
+app.run(['$rootScope', '$state', '$stateParams', '$window', '$location', '$timeout', 'Config', 'UserService', 'DynamicResourceLoader',
+    function($rootScope, $state, $stateParams, $window, $location, $timeout, config, userService, dynamicResourceLoader) {
 
         // No need to initial loader anymore
         angular.element('#ja-initial-loader-background').hide();
@@ -1348,7 +1400,8 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$timeout', 'Config'
             $timeout();
         });
 
-        if ($window.location.hash.indexOf('#/answer') !== 0) {
+        if ($window.location.hash.indexOf('#/answer') !== 0 &&
+            $window.location.hash.indexOf('#/start') !== 0) {
             $state.go('start');
         }
 
@@ -3220,8 +3273,8 @@ app.controller('PanelAccountController', ['$scope', '$rootScope', '$state', '$st
 /*global ValidationSystem*/
 /*global sscAlert*/
 
-app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'Config', 'BalanceService',
-    function($scope, $rootScope, $state, $stateParams, $timeout, config, balanceService) {
+app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$window', 'Config', 'BalanceService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, $window, config, balanceService) {
 
         $scope.c2cPayment = c2cPayment;
         $scope.zpPayment = zpPayment;
@@ -3245,8 +3298,9 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
                 ValidationSystem.validators.integer()
             ])
             .field('zpChargeAmount', [
-                //ValidationSystem.validators.notEmpty(),
-                //ValidationSystem.validators.minLength(3)
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(4),
+                ValidationSystem.validators.integer()
             ]);
 
         $scope.testCount = Math.floor($scope.balance / config.post_price);
@@ -3285,7 +3339,9 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
         }
 
         function zpPayment() {
-            // body...
+            if (!$scope.vs.validate('zpChargeAmount')) return;
+            $window.location.href = '/balance/zarinpal/labCharge/' +
+                $rootScope.data.labData.username + '/' + $scope.zpChargeAmount;
         }
 
     }
@@ -5437,6 +5493,10 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 
         $scope.setFooterHandlers(false);
 
+        if (!!userService.getUserPersistent()) {
+            $scope.refreshUserData();
+        }
+
         function setLoading(loading) {
             $timeout(function() {
                 $scope.loading = loading;
@@ -5479,10 +5539,23 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 /*global app*/
 /*global localStorage*/
 
-app.controller('StartController', ['$scope', '$state',
-    function($scope, $state) {
+app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$location',
+    function($q, $scope, $state, $stateParams, $location) {
 
-        $state.go(localStorage.startState || 'home.find');
+        var init, initCoded = $stateParams.init;
+        try {
+            init = initCoded && JSON.parse(initCoded);
+        }
+        catch (err) {}
+        init = init || {};
+
+        var startupMessage = init.startupMessage;
+
+        (!startupMessage ? $q.when() :
+            $scope.showMessage(startupMessage.title, startupMessage.message, startupMessage.ok))
+        .then(function() {
+            $state.go(localStorage.startState || 'home.find');
+        });
 
     }
 ]);

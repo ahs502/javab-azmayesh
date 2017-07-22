@@ -61,6 +61,10 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 
         $scope.setFooterHandlers(false);
 
+        if (!!userService.getUserPersistent()) {
+            $scope.refreshUserData();
+        }
+
         function setLoading(loading) {
             $timeout(function() {
                 $scope.loading = loading;

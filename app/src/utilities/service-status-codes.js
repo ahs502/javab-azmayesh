@@ -4,6 +4,46 @@
 
     global.sscAlert = sscAlert;
 
+    /*
+        0   : Success
+        1   : Unknown error in server
+        2   : Unknown error in client
+        
+        5   : Internal server error
+        
+        10  : Already existing user
+        11  : reCAPTCHA verification error
+
+        30  : User is not waiting for confirmation
+        31  : User confirmation has expired
+        32  : Wrong validation code
+        
+        40  : Wrong username or password
+        
+        50  : User has not logged in correctly
+        51  : User not found
+        52  : Invalid user type
+        
+        60  : User data does not match
+        
+        70  : Patient has not accessed history correctly
+        71  : Patient has no history post
+        72  : Post does not belong to patient
+        73  : Post not found
+        74  : User (laboratory) not found
+        75  : Patient has reached daily try count limit
+        
+        80  : Invalid form data
+        
+        100 : Invalid access key
+        101 : Expired access key
+        
+        120 : Exceeded SMS count number
+        
+        130 : User out of charge
+        131 : Zarrinpal is not active
+    */
+
     var serviceStatusCodes = {
 
         0: 'عملیات موفقیت آمیز',
@@ -42,6 +82,8 @@
         120: 'از تعداد پیامک های مجاز رَد شده است، مدتی صبر کنید',
 
         130: 'شارژ حساب کاربر به اتمام رسیده است',
+        131: 'درگاه پرداخت زرین پال فعال نیست',
+        132: 'خطا در باز کردن درگاه پرداخت زرین پال',
 
     };
 

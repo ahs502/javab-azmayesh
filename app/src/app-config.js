@@ -5,7 +5,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
 
         $stateProvider
             .state('start', {
-                url: '/start',
+                url: '/start?init',
+                params: {
+                    init: null,
+                },
                 template: '',
                 controller: 'StartController'
             });
@@ -288,7 +291,14 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             .state('panel.patient', {
                 url: '/patient',
                 templateUrl: 'panel/patient.html',
-                controller: 'PanelPatientController'
+                controller: 'PanelPatientController',
+                data: {
+                    dependencies: [
+                        'iriran-provinces-and-cities.js',
+                        'dropdown.min.js',
+                        'dropdown.rtl.min.css',
+                    ]
+                }
             })
             .state('panel.send', {
                 url: '/send',

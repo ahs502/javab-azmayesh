@@ -3,8 +3,8 @@
 /*global ValidationSystem*/
 /*global sscAlert*/
 
-app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', 'Config', 'BalanceService',
-    function($scope, $rootScope, $state, $stateParams, $timeout, config, balanceService) {
+app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$window', 'Config', 'BalanceService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, $window, config, balanceService) {
 
         $scope.c2cPayment = c2cPayment;
         $scope.zpPayment = zpPayment;
@@ -28,8 +28,9 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
                 ValidationSystem.validators.integer()
             ])
             .field('zpChargeAmount', [
-                //ValidationSystem.validators.notEmpty(),
-                //ValidationSystem.validators.minLength(3)
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(4),
+                ValidationSystem.validators.integer()
             ]);
 
         $scope.testCount = Math.floor($scope.balance / config.post_price);
@@ -68,7 +69,9 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
         }
 
         function zpPayment() {
-            // body...
+            if (!$scope.vs.validate('zpChargeAmount')) return;
+            $window.location.href = '/balance/zarinpal/labCharge/' +
+                $rootScope.data.labData.username + '/' + $scope.zpChargeAmount;
         }
 
     }

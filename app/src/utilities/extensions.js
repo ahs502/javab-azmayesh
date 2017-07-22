@@ -92,9 +92,9 @@
         if (step < 0) step = -step;
         var array = [];
         if (from <= to)
-            while (from <= to) array.push(from++);
+            while (from <= to) array.push((from += step) - step);
         else
-            while (from >= to) array.push(from--);
+            while (from >= to) array.push((from -= step) + step);
         return array;
     }
 

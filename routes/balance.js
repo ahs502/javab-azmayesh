@@ -10,6 +10,7 @@ var src = require("../src"),
     utils = src.utils,
     access = src.access,
     sms = src.sms,
+    zarinpal = src.zarinpal,
     statistics = src.statistics;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,6 +52,37 @@ router.post('/submit/c2cReceiptCode', function(req, res, next) {
             }
             utils.resEndByCode(res, 0);
         });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.get('/zarinpal/labCharge/:username/:chargeAmount', function(req, res, next) {
+    var username = req.params.username;
+    var chargeAmount = req.params.chargeAmount;
+    var appUrl = config.protocol + '://' + config.domain;
+
+    var chargeAmountValidator = new Validator({
+            chargeAmount
+        })
+        .field('chargeAmount', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.minLength(4),
+            ValidationSystem.validators.integer()
+        ]);
+    if (!chargeAmountValidator.isValid()) {
+        return res.redirect(appUrl);
+    }
+
+    kfs('user/active/' + username, function(err, userData) {
+        if (err || !userData || userData.userType !== 'laboratory') {
+            return res.redirect(appUrl);
+        }
+        zarinpal.gotoPayment(res,'user charge',
+            'تأمین اعتبار برای ' + userData.labName,
+            chargeAmount, userData.mobilePhoneNumber, null, null, {
+                userData
+            }); //TODO: Add email when it's been provided.
     });
 });
 
