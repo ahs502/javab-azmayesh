@@ -328,7 +328,8 @@ router.post('/send', function(req, res, next) {
                                     "<p>می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:</p>" +
                                     "<a style=\"font-size: 120%;\" href=\"" + answerUrl + "\">نتایج من در سامانه جواب آزمایش</a>" +
                                     "</div>");
-                                telegram.sendMessage(patient.numbers, 'نتایج آزمایش شما هم اکنون در سامانه «جواب آزمایش» در دسترس هستند. می توانید از طریق لینک زیر آن را مشاهده کنید:')
+                                telegram.sendMessage(patient.numbers, 'نتایج آزمایش شما به شماره آزمایش ' +
+                                        post.postCode + ' هم اکنون در سامانه «جواب آزمایش» در دسترس هستند. می توانید از طریق لینک زیر آن را مشاهده کنید:')
                                     .then(() => telegram.sendMessage(patient.numbers, answerUrl));
                                 utils.resEndByCode(res, 0);
                                 statistics.dailyCount('sendAnswer');

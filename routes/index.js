@@ -96,7 +96,7 @@ router.get('/zarinpal/callback', function(req, res, next) {
                                 const userKey = 'user/active/' + paymentData.data.userData.username;
                                 return kfs(userKey)
                                     .then(userData => {
-                                        userData.balance += Number(amount);
+                                        userData.balance = Number(userData.balance) + Number(amount);
                                         return kfs(userKey, userData);
                                     })
                                     .then(() => {
@@ -104,11 +104,14 @@ router.get('/zarinpal/callback', function(req, res, next) {
                                         paymentData.referenceId = referenceId;
                                         return kfs(paymentKey, paymentData);
                                     })
-                                    .then(() => ({
-                                        title: 'تأیید پرداخت',
-                                        message: 'پرداخت شما با موفقیت انجام شد! شماره پیگیری: ' + referenceId,
-                                        ok: 'خیلی هم عالی!'
-                                    }));
+                                    .then(() => {
+                                        //TODO: send sms.
+                                        return {
+                                            title: 'تأیید پرداخت',
+                                            message: 'پرداخت شما با موفقیت انجام شد! شماره پیگیری: ' + referenceId,
+                                            ok: 'خیلی هم عالی!'
+                                        };
+                                    });
 
                             default:
                                 return Promise.reject('Un supported transaction type.');

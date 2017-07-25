@@ -1,4 +1,5 @@
 /*global app*/
+/*global sscAlert*/
 
 app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams',
     '$timeout', '$interval', 'UserService',
@@ -8,10 +9,13 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         $scope.setLoading = setLoading;
         $scope.setPageTitle = setPageTitle;
         $scope.refreshUserData = refreshUserDataProvider(false);
+        $scope.redirectToLoginPageIfRequired = redirectToLoginPageIfRequired;
 
         $rootScope.homeState = 'panel.home';
 
         $scope.loading = $scope.loadingMessage = false;
+
+        $rootScope.data.forceRefresh && $scope.refreshUserData();
 
         // Refresh user info every 1 minute
         var refreshUserDataPromise = $interval(refreshUserDataProvider(true), 60000);
@@ -84,11 +88,19 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
                 silent || $scope.setLoading(true);
                 return userService.refresh().then(function(userInfo) {
                     $rootScope.data.labData = userInfo;
+                }, function(code) {
+                    sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
+                }).then(function() {
                     silent || $scope.setLoading(false);
-                }, function() {
-                    // No need to do anything !
                 });
             };
+        }
+
+        function redirectToLoginPageIfRequired(code) {
+            if (code === 100 || code === 101 || code === 50 || code === 52) {
+                $scope.menuHandlers.logout();
+            }
         }
 
     }

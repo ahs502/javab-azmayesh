@@ -65,6 +65,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
                 }, function(code) {
                     $scope.preparingPayment = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 

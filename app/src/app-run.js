@@ -57,8 +57,8 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$location', '$timeo
                     }
                 }
                 else {
-                    delete $rootScope.data.postCache;
-                    delete $rootScope.data.historyState;
+                    // delete $rootScope.data.postCache;
+                    // delete $rootScope.data.historyState;
 
                     if (toState.name.indexOf('admin.') === 0) {
                         if (!userService.current()) {
@@ -68,7 +68,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$location', '$timeo
                     }
                     else {
                         if (userService.current()) {
-                            userService.logout(true);
+                            // userService.logout(true);
                         }
                     }
                 }

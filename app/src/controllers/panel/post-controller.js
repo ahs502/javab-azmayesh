@@ -62,6 +62,7 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
 
             }, function(code) {
                 sscAlert(code);
+                $scope.redirectToLoginPageIfRequired(code);
             })
             .then(function() {
                 $scope.setLoading(false);
@@ -100,6 +101,7 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
                         });
                     }, function(code) {
                         sscAlert(code);
+                        $scope.redirectToLoginPageIfRequired(code);
                     })
                     .then(function() {
                         $scope.setLoading(false);

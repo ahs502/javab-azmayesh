@@ -69,7 +69,7 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                     $scope.vs.check('fullName', 'mobilePhoneNumber', 'phoneNumber', 'extraPhoneNumber', 'email');
 
                 }, function(code) {
-                    // No problem!
+                    $scope.redirectToLoginPageIfRequired(code);
                 })
                 .then(function() {
                     $scope.updatingPatient = false;
@@ -91,6 +91,7 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                 }, function(code) {
                     $scope.updatingPatient = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 

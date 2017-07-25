@@ -12,7 +12,7 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
 
         localStorage.startState = "lab.login";
 
-        var userSession = userService.getUserPersistent();
+        var userSession = userService.getUserSession() || userService.getUserPersistent();
         if (userSession) {
             userService.setUserSession(userSession);
             goForUser(userSession.userInfo);
@@ -50,10 +50,12 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
         function goForUser(userInfo) {
             if (userInfo.userType === 'laboratory') {
                 $rootScope.data.labData = userInfo;
+                $rootScope.data.forceRefresh = true;
                 $state.go('panel.home');
             }
             else if (userInfo.userType === 'administrator') {
                 $rootScope.data.adminData = userInfo;
+                $rootScope.data.forceRefresh = true;
                 $state.go('admin.home');
             }
         }

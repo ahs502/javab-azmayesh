@@ -51,6 +51,7 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
                 }, function(code) {
                     $scope.confirming = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 

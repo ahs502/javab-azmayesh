@@ -109,6 +109,7 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
                 promise = postService.getPosts($scope.selectedYear, filteredMonths)
                     .catch(function(code) {
                         sscAlert(code);
+                        $scope.redirectToLoginPageIfRequired(code);
                     });
             }
             else {

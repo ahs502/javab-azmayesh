@@ -59,6 +59,7 @@ app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$stat
                 }, function(code) {
                     $scope.changingPassword = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 

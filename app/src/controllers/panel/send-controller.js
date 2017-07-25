@@ -104,7 +104,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
                     $scope.vs.check('fullName', 'mobilePhoneNumber', 'phoneNumber', 'extraPhoneNumber', 'email');
 
                 }, function(code) {
-                    // No problem!
+                    $scope.redirectToLoginPageIfRequired(code);
                 })
                 .then(function() {
                     $scope.sendingAnswer = false;
@@ -129,6 +129,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
                 }, function(code) {
                     $scope.sendingAnswer = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 

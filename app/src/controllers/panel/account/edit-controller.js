@@ -65,6 +65,7 @@ app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', 
                 }, function(code) {
                     $scope.editingAccount = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 

@@ -1443,8 +1443,8 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$location', '$timeo
                     }
                 }
                 else {
-                    delete $rootScope.data.postCache;
-                    delete $rootScope.data.historyState;
+                    // delete $rootScope.data.postCache;
+                    // delete $rootScope.data.historyState;
 
                     if (toState.name.indexOf('admin.') === 0) {
                         if (!userService.current()) {
@@ -1454,7 +1454,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$location', '$timeo
                     }
                     else {
                         if (userService.current()) {
-                            userService.logout(true);
+                            // userService.logout(true);
                         }
                     }
                 }
@@ -2999,7 +2999,7 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
 
         localStorage.startState = "lab.login";
 
-        var userSession = userService.getUserPersistent();
+        var userSession = userService.getUserSession() || userService.getUserPersistent();
         if (userSession) {
             userService.setUserSession(userSession);
             goForUser(userSession.userInfo);
@@ -3037,10 +3037,12 @@ app.controller('LabLoginController', ['$rootScope', '$scope', '$state', 'UserSer
         function goForUser(userInfo) {
             if (userInfo.userType === 'laboratory') {
                 $rootScope.data.labData = userInfo;
+                $rootScope.data.forceRefresh = true;
                 $state.go('panel.home');
             }
             else if (userInfo.userType === 'administrator') {
                 $rootScope.data.adminData = userInfo;
+                $rootScope.data.forceRefresh = true;
                 $state.go('admin.home');
             }
         }
@@ -3335,6 +3337,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
                 }, function(code) {
                     $scope.preparingPayment = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 
@@ -3468,6 +3471,7 @@ app.controller('PanelHistoryController', ['$scope', '$rootScope', '$state', '$st
                 promise = postService.getPosts($scope.selectedYear, filteredMonths)
                     .catch(function(code) {
                         sscAlert(code);
+                        $scope.redirectToLoginPageIfRequired(code);
                     });
             }
             else {
@@ -3602,7 +3606,7 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                     $scope.vs.check('fullName', 'mobilePhoneNumber', 'phoneNumber', 'extraPhoneNumber', 'email');
 
                 }, function(code) {
-                    // No problem!
+                    $scope.redirectToLoginPageIfRequired(code);
                 })
                 .then(function() {
                     $scope.updatingPatient = false;
@@ -3624,6 +3628,7 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                 }, function(code) {
                     $scope.updatingPatient = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 
@@ -3704,6 +3709,7 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
 
             }, function(code) {
                 sscAlert(code);
+                $scope.redirectToLoginPageIfRequired(code);
             })
             .then(function() {
                 $scope.setLoading(false);
@@ -3742,6 +3748,7 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
                         });
                     }, function(code) {
                         sscAlert(code);
+                        $scope.redirectToLoginPageIfRequired(code);
                     })
                     .then(function() {
                         $scope.setLoading(false);
@@ -3868,7 +3875,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
                     $scope.vs.check('fullName', 'mobilePhoneNumber', 'phoneNumber', 'extraPhoneNumber', 'email');
 
                 }, function(code) {
-                    // No problem!
+                    $scope.redirectToLoginPageIfRequired(code);
                 })
                 .then(function() {
                     $scope.sendingAnswer = false;
@@ -3893,6 +3900,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
                 }, function(code) {
                     $scope.sendingAnswer = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 
@@ -4547,6 +4555,7 @@ app.controller('PanelAccountConfirmController', ['$scope', '$rootScope', '$state
                 }, function(code) {
                     $scope.confirming = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 
@@ -4630,6 +4639,7 @@ app.controller('PanelAccountEditController', ['$scope', '$rootScope', '$state', 
                 }, function(code) {
                     $scope.editingAccount = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 
@@ -4707,6 +4717,7 @@ app.controller('PanelAccountPasswordController', ['$scope', '$rootScope', '$stat
                 }, function(code) {
                     $scope.changingPassword = false;
                     sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
                 });
         }
 
@@ -5431,6 +5442,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
 */
 
 /*global app*/
+/*global sscAlert*/
 
 app.controller('PanelController', ['$scope', '$rootScope', '$state', '$stateParams',
     '$timeout', '$interval', 'UserService',
@@ -5440,10 +5452,13 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
         $scope.setLoading = setLoading;
         $scope.setPageTitle = setPageTitle;
         $scope.refreshUserData = refreshUserDataProvider(false);
+        $scope.redirectToLoginPageIfRequired = redirectToLoginPageIfRequired;
 
         $rootScope.homeState = 'panel.home';
 
         $scope.loading = $scope.loadingMessage = false;
+
+        $rootScope.data.forceRefresh && $scope.refreshUserData();
 
         // Refresh user info every 1 minute
         var refreshUserDataPromise = $interval(refreshUserDataProvider(true), 60000);
@@ -5516,11 +5531,19 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
                 silent || $scope.setLoading(true);
                 return userService.refresh().then(function(userInfo) {
                     $rootScope.data.labData = userInfo;
+                }, function(code) {
+                    sscAlert(code);
+                    $scope.redirectToLoginPageIfRequired(code);
+                }).then(function() {
                     silent || $scope.setLoading(false);
-                }, function() {
-                    // No need to do anything !
                 });
             };
+        }
+
+        function redirectToLoginPageIfRequired(code) {
+            if (code === 100 || code === 101 || code === 50 || code === 52) {
+                $scope.menuHandlers.logout();
+            }
         }
 
     }
