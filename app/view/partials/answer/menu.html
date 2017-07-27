@@ -3,22 +3,22 @@
     <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
 </a>
 
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.saveFile(); toggleMenu()">
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.saveFile(); toggleMenu()" ng-show="menuHandlers.getAsnwerLoadedStatus()">
     ذخیره فایل
     <img class="ja-menu-item-icon" ng-src="{{iconJs('download')}}">
 </a>
 
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.shareFile(); toggleMenu()">
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.shareFile(); toggleMenu()" ng-show="menuHandlers.getAsnwerLoadedStatus()">
     به اشتراک گذاری
     <img class="ja-menu-item-icon" ng-src="{{iconJs('share')}}">
 </a>
 
-<a class="item nazanin ja-align-right" ng-if="!menuHandlers.getPrintingStatus()" ng-click="menuHandlers.printFile(); toggleMenu()">
+<a class="item nazanin ja-align-right" ng-if="!menuHandlers.getPrintingStatus()" ng-click="menuHandlers.printFile(); toggleMenu()" ng-show="menuHandlers.getAsnwerLoadedStatus()">
     چاپ نتایج
     <img class="ja-menu-item-icon" ng-src="{{iconJs('print')}}">
 </a>
 
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLaboratory(); toggleMenu()">
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLaboratory(); toggleMenu()" ng-show="menuHandlers.getAsnwerLoadedStatus()">
     <span ng-bind="menuHandlers.labGetter().name || ' '"></span>
     <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
 </a>
@@ -32,4 +32,3 @@
     تماس با ما
     <img class="ja-menu-item-icon" ng-src="{{iconJs('contact us')}}">
 </a>
-

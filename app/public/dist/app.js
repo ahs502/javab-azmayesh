@@ -5018,6 +5018,9 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
             goToAnswerContact: function() {
                 $state.go('answer.contact');
             },
+            getAsnwerLoadedStatus: function() {
+                return !!$scope.answer;
+            },
         });
 
         $scope.setHeaderHandlers({
