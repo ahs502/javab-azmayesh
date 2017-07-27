@@ -8,6 +8,7 @@ var querystring = require('querystring');
 var config = require("../config");
 var src = require("../src"),
     kfs = src.kfs,
+    sms = src.sms,
     zarinpal = src.zarinpal,
     statistics = src.statistics;
 
@@ -97,20 +98,20 @@ router.get('/zarinpal/callback', function(req, res, next) {
                                 return kfs(userKey)
                                     .then(userData => {
                                         userData.balance = Number(userData.balance) + Number(amount);
-                                        return kfs(userKey, userData);
-                                    })
-                                    .then(() => {
-                                        paymentData.verified = true;
-                                        paymentData.referenceId = referenceId;
-                                        return kfs(paymentKey, paymentData);
-                                    })
-                                    .then(() => {
-                                        //TODO: send sms.
-                                        return {
-                                            title: 'تأیید پرداخت',
-                                            message: 'پرداخت شما با موفقیت انجام شد! شماره پیگیری: ' + referenceId,
-                                            ok: 'خیلی هم عالی!'
-                                        };
+                                        return kfs(userKey, userData)
+                                            .then(() => {
+                                                paymentData.verified = true;
+                                                paymentData.referenceId = referenceId;
+                                                return kfs(paymentKey, paymentData);
+                                            })
+                                            .then(() => {
+                                                sms.send.accountCharged([userKey, paymentKey], userData, paymentData);
+                                                return {
+                                                    title: 'تأیید پرداخت',
+                                                    message: 'پرداخت شما با موفقیت انجام شد! شماره پیگیری: ' + referenceId,
+                                                    ok: 'خیلی هم عالی!'
+                                                };
+                                            });
                                     });
 
                             default:

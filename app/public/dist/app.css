@@ -144,6 +144,25 @@ body {
   font-family: BNazanin !important;
   font-size: 130%;
 }
+.ja-rules-container {
+  overflow-y: auto;
+  max-height: 50vh;
+  margin: 0 !important;
+  padding: 14px;
+  width: 100%;
+  background-color: aliceblue;
+}
+.ja-rules-container h1,
+.ja-rules-container h2,
+.ja-rules-container h3,
+.ja-rules-container h4,
+.ja-rules-container h5,
+.ja-rules-container h6 {
+  font-family: BNazanin !important;
+  font-size: 130%;
+  direction: rtl;
+  text-align: justify !important;
+}
 /*
 	AHS502 : End of 'main.less'
 */

@@ -23,6 +23,7 @@ module.exports = {
         newUserDeclined,
         c2cReceiptCodeApproved,
         c2cReceiptCodeDeclined,
+        accountCharged,
         respondFeedback,
     },
     simplySendSms,
@@ -223,6 +224,19 @@ function c2cReceiptCodeDeclined(relatedKeys, user, c2cReceipt) {
     });
 }
 
+function accountCharged(relatedKeys, user, payment) {
+    var numbers = [user.mobilePhoneNumber];
+    var message = user.labName + "،\nپرداخت شما با موفقیت انجام شد.\n" +
+        "مبلغ پرداخت شده = " + toPersianNumber(payment.amount) + " تومان\n" +
+        "کد رهگیری : " + toPersianNumber(payment.referenceId) + "\n" +
+        "شارژ باقیمانده = " + toPersianNumber(user.balance) + " تومان";
+    return sendSms('usercharged', numbers, message, {
+        relatedKeys,
+        user,
+        payment
+    });
+}
+
 function respondFeedback(relatedKeys, feedback, message) {
     var numbers = [feedback.mobilePhoneNumber];
     return sendSms('respondfeedback', numbers, message, {
@@ -246,6 +260,7 @@ var smsTypeDescription = {
     'declinesignup': "عدم تأیید حساب کاربری آزمایشگاه جدید",
     'approvec2c': "تأیید کُد رهگیری پرداخت کارت به کارت آزمایشگاه",
     'declinec2c': "عدم تأیید کُد رهگیری پرداخت کارت به کارت آزمایشگاه",
+    'usercharged': "تأیید پرداخت و شارژ حساب آزمایشگاه",
     'respondfeedback': "پاسخ به بازخورد ثبت شده",
 };
 
