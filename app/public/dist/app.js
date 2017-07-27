@@ -3774,6 +3774,7 @@ app.controller('PanelPostController', ['$scope', '$rootScope', '$state', '$state
 /*global ValidationSystem*/
 /*global iconJs*/
 /*global sscAlert*/
+/*global toastr*/
 
 app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http', 'AnswerService',
     function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http, answerService) {
@@ -3884,6 +3885,16 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
 
         function sendAnswer() {
             if (!$scope.vs.validate()) return;
+            if ($scope.files.find(function(file) {
+                    return file.status !== 'Uploaded';
+                }))
+                return toastr.warning("همه فایل های انتخاب شده هنوز به درستی ارسال نشده اند",
+                    "خطا در ارسال فایل هل", {
+                        rtl: true,
+                        closeButton: true,
+                        timeOut: 5000,
+                        extendedTimeOut: 3000,
+                    });
 
             $scope.sendingAnswer = true;
             answerService.send($scope.person, $scope.files, $scope.notes, $scope.vs.dictate)
@@ -3995,6 +4006,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
                 }
             };
             xhr.onerror = function(e) {
+                //alert('1:\n' + JSON.stringify(e, null, 4));
                 file.status = 'Error';
                 $scope.$$phase || $scope.$apply();
             };
@@ -4010,6 +4022,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
                     file.status = 'Uploaded';
                 }
                 catch (err) {
+                    //alert('2:\n' + JSON.stringify(err, null, 4));
                     file.status = 'Error';
                 }
                 $scope.$$phase || $scope.$apply();
