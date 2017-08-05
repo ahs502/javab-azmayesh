@@ -114,6 +114,7 @@
         notEmpty: notEmptyValidator,
         notRequired: notRequiredValidator,
         nationalCode: nationalCodeValidator,
+        postalCode: postalCodeValidator,
         numberCode: numberCodeValidator,
         phoneNumber: phoneNumberValidator,
         mobilePhoneNumber: mobilePhoneNumberValidator,
@@ -142,6 +143,13 @@
 
     function nationalCodeValidator(message) {
         message = message || 'کد ملی صحیح نمی باشد';
+        return function(value) {
+            return /^[0-9]{10}$/.test(value) ? null : message;
+        };
+    }
+
+    function postalCodeValidator(message) {
+        message = message || 'کد پُستی صحیح نمی باشد';
         return function(value) {
             return /^[0-9]{10}$/.test(value) ? null : message;
         };

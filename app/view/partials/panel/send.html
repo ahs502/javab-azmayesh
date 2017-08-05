@@ -18,52 +18,33 @@
 
                 <form class="ui {{ sendingAnswer ? 'loading' : '' }} form">
 
+                    <div class="ui horizontal divider">
+                        <span class="nazanin">گیرنده نتایج</span>
+                    </div>
+
                     <div class="field" ng-class="{'error': vs.error('nationalCode')}">
                         <label class="nazanin ja-required">کد ملی بیمار</label>
                         <div class="ui input">
-                            <input type="tel" ng-model="person.nationalCode" ng-change="vs.check('nationalCode'); loadPatientInfo()" class="nazanin" ng-class="{'ja-align-left': person.nationalCode}" accept-persian-numbers placeholder="کد ملی">
+                            <input type="tel" ng-model="nationalCode" ng-change="vs.check('nationalCode'); loadPatientInfo()" class="nazanin" ng-class="{'ja-align-left': nationalCode}" accept-persian-numbers placeholder="کد ملی">
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('nationalCode')" ng-bind="vs.error('nationalCode')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('fullName')}">
-                        <label class="nazanin ja-required">نام و نام خانوادگی بیمار</label>
-                        <div class="ui input">
-                            <input class="nazanin ja-rtl" type="text" ng-model="person.fullName" ng-change="vs.check('fullName')" placeholder="نام و نام خانوادگی">
+                    <div ng-show="patientLoaded">
+                        <div ng-show="!patient" class="nazanin ja-rtl ja-align-right ja-error-message">
+                            اطلاعات بیمار با کد ملی بالا در سامانه ثبت نشده است.
                         </div>
-                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('fullName')" ng-bind="vs.error('fullName')"></div>
-                    </div>
+                        <div ng-show="patient && !acceptance" class="nazanin ja-rtl ja-align-right ja-error-message">
+                            بیمار با کد ملی بالا پذیرش نشده است.
+                        </div>
 
-                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
-                        <label class="nazanin ja-required">شماره تلفن همراه</label>
-                        <div class="ui input">
-                            <input type="tel" ng-model="person.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="nazanin ja-align-left" accept-persian-numbers placeholder="۰۹∗∗∗∗∗∗∗∗∗">
+                        <div ng-if="patient && acceptance" class="nazanin ja-rtl ja-align-right ja-info-message">
+                            <p>{{patient.fullName}} ({{patient.gender}})</p>
+                            <p>{{patient.province}}، {{patient.city}}، {{patient.address}}</p>
+                            <p>پذیرش شده در روز {{ acceptance.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm" }}</p>
                         </div>
-                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
-                    </div>
 
-                    <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
-                        <label class="nazanin ja-optional">شماره تلفن دوم</label>
-                        <div class="ui input">
-                            <input type="tel" ng-model="person.phoneNumber" ng-change="vs.check('phoneNumber')" class="nazanin" ng-class="{'ja-align-left': person.phoneNumber}" accept-persian-numbers placeholder="تلفن همراه یا ثابت">
-                        </div>
-                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('phoneNumber')" ng-bind="vs.error('phoneNumber')"></div>
-                    </div>
-
-                    <div class="field" ng-class="{'error': vs.error('extraPhoneNumber')}">
-                        <label class="nazanin ja-optional">شماره تلفن سوم </label>
-                        <div class="ui input">
-                            <input type="tel" ng-model="person.extraPhoneNumber" ng-change="vs.check('extraPhoneNumber')" class="nazanin" ng-class="{'ja-align-left': person.extraPhoneNumber}" accept-persian-numbers placeholder="تلفن همراه یا ثابت">
-                        </div>
-                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('extraPhoneNumber')" ng-bind="vs.error('extraPhoneNumber')"></div>
-                    </div>
-
-                    <div class="field" ng-class="{'error': vs.error('email')}">
-                        <label class="nazanin ja-optional">آدرس پست الکترونیک </label>
-                        <div class="ui input">
-                            <input type="email" ng-model="person.email" ng-change="vs.check('email')" class="ja-align-left" placeholder="your@email.com">
-                        </div>
-                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('email')" ng-bind="vs.error('email')"></div>
+                        <br />
                     </div>
 
                     <div class="ui horizontal divider">
@@ -114,7 +95,7 @@
 
                     </div>
 
-                    <div class="ui divider"></div>
+                    <br />
 
                     <div class="field">
                         <label class="nazanin ja-optional">توضیحات</label>
@@ -122,7 +103,11 @@
                             <textarea class="nazanin ja-rtl" ng-model="notes" rows=6 maxlength=10000 placeholder="توضیحات درباره نتایج"></textarea>
                         </div>
                     </div>
-                    
+
+                    <div class="ui horizontal divider">
+                        <span class="nazanin">ثبت و ارسال نتایج</span>
+                    </div>
+
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="sendAnswer()">
                             <span class="nazanin">ارسال نتایج</span>

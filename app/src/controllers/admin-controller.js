@@ -13,7 +13,7 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
 
         // Refresh user info every 1 minute
         var refreshUserDataPromise = $interval(refreshUserDataProvider(true), 60000);
-        $scope.$on('$distroy', function() {
+        $scope.$on('$destroy', function() {
             $interval.cancel(refreshUserDataPromise);
         });
 

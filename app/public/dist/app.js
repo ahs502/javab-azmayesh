@@ -249,6 +249,7 @@ global.global = global;
         notEmpty: notEmptyValidator,
         notRequired: notRequiredValidator,
         nationalCode: nationalCodeValidator,
+        postalCode: postalCodeValidator,
         numberCode: numberCodeValidator,
         phoneNumber: phoneNumberValidator,
         mobilePhoneNumber: mobilePhoneNumberValidator,
@@ -277,6 +278,13 @@ global.global = global;
 
     function nationalCodeValidator(message) {
         message = message || 'کد ملی صحیح نمی باشد';
+        return function(value) {
+            return /^[0-9]{10}$/.test(value) ? null : message;
+        };
+    }
+
+    function postalCodeValidator(message) {
+        message = message || 'کد پُستی صحیح نمی باشد';
         return function(value) {
             return /^[0-9]{10}$/.test(value) ? null : message;
         };
@@ -836,6 +844,8 @@ global.global = global;
         73  : Post not found
         74  : User (laboratory) not found
         75  : Patient has reached daily try count limit
+        76  : Patient not found
+        77  : Patient not accepted
         
         80  : Invalid form data
         
@@ -877,6 +887,8 @@ global.global = global;
         73: 'پُست ارسال شده یافت نشد',
         74: 'کاربر آزمایشگاه یافت نشد',
         75: 'بیمار به حداکثر تعداد خطاهای روزانه رسیده است',
+        76: 'اطلاعات بیمار در سامانه ثبت نشده است',
+        77: 'بیمار در این آزمایشگاه پذیرش نشده است',
 
         80: 'اطلاعات فرم اشتباه است',
 
@@ -1218,6 +1230,17 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                     ]
                 }
             })
+            .state('panel.acceptance', {
+                url: '/acceptance',
+                templateUrl: 'panel/acceptance.html',
+                controller: 'PanelAcceptanceController',
+                data: {
+                    dependencies: [
+                        'dropdown.min.js',
+                        'dropdown.rtl.min.css',
+                    ]
+                }
+            })
             .state('panel.post', {
                 url: '/post',
                 templateUrl: 'panel/post.html',
@@ -1232,6 +1255,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                         'iriran-provinces-and-cities.js',
                         'dropdown.min.js',
                         'dropdown.rtl.min.css',
+                        'statistic.min.css',
                     ]
                 }
             })
@@ -1364,7 +1388,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 }
             });
 
-        $urlRouterProvider.otherwise('/home/find');
+        $urlRouterProvider.otherwise('/start');
 
         $locationProvider.hashPrefix('');
         // $locationProvider.html5Mode(true);
@@ -1798,55 +1822,91 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
 
         this.patientInfo = patientInfo;
-        this.updatePatient = updatePatient;
+        this.acceptPatient = acceptPatient;
+        this.getAcceptances = getAcceptances;
         this.send = send;
 
         /////////////////////////////////////////////////////
 
         // May reject by code : 1, 2, 5, 50, 52, 71, 100, 101
-        // Resolves to patient personal information
+        // Resolves to patient personal and acceptance (if exists) information
         function patientInfo(nationalCode) {
             return utils.httpPromiseHandler($http.post('/answer/patient/info', {
                     nationalCode: nationalCode
                 }))
                 .then(function(body) {
-                    return {
-                        fullName: body.fullName,
-                        numbers: body.numbers || [],
-                        email: body.email
+                    var data = {
+                        patient: {
+                            nationalCode: body.patient.nationalCode,
+                            fullName: body.patient.fullName,
+                            gender: body.patient.gender,
+                            birthday: body.patient.birthday,
+                            numbers: body.patient.numbers || [],
+                            email: body.patient.email,
+                            province: body.patient.province,
+                            city: body.patient.city,
+                            address: body.patient.address,
+                            postalCode: body.patient.postalCode
+                        }
                     };
+                    data.acceptance = body.acceptance ? {
+                        request: body.acceptance.request,
+                        payment: body.acceptance.payment,
+                        timeStamp: new Date(body.acceptance.timeStamp)
+                    } : null;
+                    return data;
                 });
         }
 
-        // May reject by code : 1, 2, 5, 50, 52, 80, 100, 101
-        function updatePatient(person, invalidPersonHandler) {
-            return utils.httpPromiseHandler($http.post('/answer/patient/update', {
+        // May reject by code : 1, 2, 5, 50, 52, 80, 100, 101, 120
+        function acceptPatient(person, request, payment, invalidPersonHandler) {
+            return utils.httpPromiseHandler($http.post('/answer/patient/accept', {
                 person: {
                     nationalCode: person.nationalCode,
                     fullName: person.fullName,
+                    gender: person.gender,
+                    birthday: person.birthday,
                     mobilePhoneNumber: person.mobilePhoneNumber,
                     phoneNumber: person.phoneNumber,
                     extraPhoneNumber: person.extraPhoneNumber,
-                    email: person.email
-                }
+                    email: person.email,
+                    province: person.province,
+                    city: person.city,
+                    address: person.address,
+                    postalCode: person.postalCode
+                },
+                request: {
+                    electronicVersion: request.electronicVersion,
+                    paperVersion: request.paperVersion
+                },
+                payment: payment
             }), function(data) {
                 if (invalidPersonHandler)
                     invalidPersonHandler(data.errors || {});
             });
         }
 
-        // May reject by code : 1, 2, 5, 50, 51, 52, 80, 100, 101, 120, 130
-        function send(person, files, notes, invalidPersonHandler) {
+        // May reject by code : 1, 2, 5, 50, 52, 100, 101
+        // Resolves to all the user's current acceptances
+        function getAcceptances() {
+            return utils.httpPromiseHandler($http.post('/answer/get/acceptances', {}))
+                .then(function(body) {
+                    return (body.acceptances || []).map(function(acceptance) {
+                        return {
+                            username: acceptance.username,
+                            nationalCode: acceptance.nationalCode,
+                            request: acceptance.request,
+                            payment: acceptance.payment,
+                            timeStamp: new Date(acceptance.timeStamp)
+                        };
+                    });
+                });
+        }
+
+        // May reject by code : 1, 2, 5, 50, 51, 52, 76, 77, 80, 100, 101, 120, 130
+        function send(nationalCode, files, notes, invalidPersonHandler) {
             return utils.httpPromiseHandler($http.post('/answer/send', {
-                timeStamp: Date.now(),
-                person: {
-                    nationalCode: person.nationalCode,
-                    fullName: person.fullName,
-                    mobilePhoneNumber: person.mobilePhoneNumber,
-                    phoneNumber: person.phoneNumber,
-                    extraPhoneNumber: person.extraPhoneNumber,
-                    email: person.email
-                },
+                nationalCode: nationalCode,
                 files: files.map(function(file) {
                     return {
                         serverName: file.serverName,
@@ -3247,6 +3307,53 @@ app.controller('LabValidateController', ['$rootScope', '$scope', '$state', '$sta
 
 
 /*
+	AHS502 : Start of 'panel/acceptance-controller.js'
+*/
+
+/*global app*/
+/*global sscAlert*/
+
+app.controller('PanelAcceptanceController', ['$scope', '$rootScope', '$state', '$stateParams', '$timeout', '$window', 'UserService', 'AnswerService',
+    function($scope, $rootScope, $state, $stateParams, $timeout, $window, userService, answerService) {
+
+        $scope.acceptanceClicked = acceptanceClicked;
+
+        $scope.nationalCode = '';
+        $scope.acceptances = [];
+
+        $scope.setLoading(true);
+        answerService.getAcceptances()
+            .then(function(acceptances) {
+                $scope.acceptances = acceptances;
+            })
+            .catch(function(code) {
+                sscAlert(code);
+                $scope.redirectToLoginPageIfRequired(code);
+            })
+            .then(function() {
+                $scope.setLoading(false);
+            });
+
+        $scope.setBackHandler(function() {
+            $state.go('panel.home');
+        });
+
+        $scope.setPageTitle('پذیرش های جاری آزمایشگاه');
+
+        function acceptanceClicked(acceptanceClicked) {
+            //TODO: What to do when acceptance is clicked ?!
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'panel/acceptance-controller.js'
+*/
+
+
+/*
 	AHS502 : Start of 'panel/account-controller..js'
 */
 
@@ -3536,30 +3643,58 @@ app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$state
 */
 
 /*global app*/
+/*global $*/
 /*global ValidationSystem*/
 /*global sscAlert*/
+/*global irIran*/
+/*global irIranProvinces*/
 
-app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$stateParams', '$window', '$timeout', '$http', 'AnswerService',
-    function($scope, $rootScope, $state, $stateParams, $window, $timeout, $http, answerService) {
+app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$stateParams',
+    '$q', '$window', '$timeout', '$http', 'AnswerService', 'Config',
+    function($scope, $rootScope, $state, $stateParams,
+        $q, $window, $timeout, $http, answerService, config) {
 
         $scope.loadPatientInfo = loadPatientInfo;
-        $scope.updatePatient = updatePatient;
+        $scope.acceptPatient = acceptPatient;
+        $scope.requestChange = requestChange;
 
         $scope.updatingPatient = false;
+        $scope.person = {};
+        $scope.person.birthday = [];
+        $scope.request = {
+            electronicVersion: true,
+            paperVersion: false
+        };
+        $scope.payment = config.post_price;
+        var jYMD = (new Date()).jYMD();
+        $scope.years = Array.range(jYMD[0], 1300);
+        $scope.months = Array.range(1, 12);
+        $scope.days = Array.range(1, 31);
+        $scope.irIran = irIran;
+        $scope.provinces = irIranProvinces;
+        $scope.cities = [];
 
         $scope.setBackHandler(function() {
             $state.go('panel.home');
         });
 
-        $scope.setPageTitle('ثبت بیمار');
+        $scope.setPageTitle('پذیرش بیمار');
 
-        $scope.person = {};
         //$scope.person.nationalCode
         //$scope.person.fullName
+        //$scope.person.gender
+        //$scope.person.birthday
         //$scope.person.mobilePhoneNumber
         //$scope.person.phoneNumber
         //$scope.person.extraPhoneNumber
         //$scope.person.email
+        //$scope.person.province
+        //$scope.person.city
+        //$scope.person.address
+        //$scope.person.postalCode
+
+        //$scope.request.electronicVersion
+        //$scope.request.paperVersion
 
         $scope.vs = new ValidationSystem($scope.person)
             .field('nationalCode', [
@@ -3569,6 +3704,17 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
             .field('fullName', [
                 ValidationSystem.validators.notEmpty(),
                 ValidationSystem.validators.minLength(3)
+            ])
+            .field('gender', [
+                ValidationSystem.validators.notEmpty()
+            ])
+            .field('birthday', [
+                function(value) {
+                    if (!value || !value[0]) return "وارد کردن سال تولد الزامی است";
+                    if (!value || !value[1]) return "وارد کردن ماه تولد الزامی است";
+                    if (!value || !value[2]) return "وارد کردن روز تولد الزامی است";
+                    return null;
+                }
             ])
             .field('mobilePhoneNumber', [
                 ValidationSystem.validators.notEmpty(),
@@ -3585,7 +3731,99 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
             .field('email', [
                 ValidationSystem.validators.notRequired(),
                 ValidationSystem.validators.email()
+            ])
+            .field('province', [
+                ValidationSystem.validators.notEmpty()
+            ])
+            .field('city', [
+                ValidationSystem.validators.notEmpty(),
+                function(value) {
+                    if (($scope.irIran[$scope.person.province] || []).indexOf(value) < 0) {
+                        return "این شهر متعلق به استان " + $scope.person.province + " نیست";
+                    }
+                    else return null;
+                }
+            ])
+            .field('address', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(10)
+            ])
+            .field('postalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.postalCode()
             ]);
+
+        $timeout(function() {
+
+            $('#ja-gender-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.gender = value;
+                        $scope.vs.check('gender');
+                    });
+                }
+            });
+
+            $('#ja-years-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.birthday[0] = Number(value);
+                        $scope.vs.check('birthday');
+                    });
+                }
+            });
+            $('#ja-months-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.birthday[1] = Number(value);
+                        $scope.vs.check('birthday');
+                    });
+                }
+            });
+            $('#ja-days-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.birthday[2] = Number(value);
+                        $scope.vs.check('birthday');
+                    });
+                }
+            });
+
+            $('#ja-provinces-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.province = value;
+                        $scope.cities = irIran[$scope.person.province];
+                        if ($scope.cities.indexOf($scope.person.city) < 0) {
+                            setDropdown('cities');
+                        }
+                        $scope.vs.check('province');
+                        $scope.vs.check('city');
+                    });
+                }
+            });
+            $('#ja-cities-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.city = value;
+                        $scope.vs.check('city');
+                    });
+                }
+            });
+
+        });
+
+        function setDropdown(name, value, text) {
+            if (arguments.length < 3) text = value;
+            $timeout(function() {
+                var element = $('#ja-' + name + '-dropdown');
+                if (value) element
+                    .dropdown('set value', value)
+                    .dropdown('set text', text);
+                else
+                    element.dropdown('clear');
+            });
+        }
 
         function loadPatientInfo() {
             if (!$scope.vs.see('nationalCode')) return;
@@ -3595,13 +3833,27 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
 
             $scope.updatingPatient = true;
             return answerService.patientInfo($scope.person.nationalCode)
-                .then(function(patient) {
+                .then(function(data) {
+                    var patient = data.patient;
+                    //TODO: Use data.acceptance here too.
 
                     $scope.person.fullName = $scope.person.fullName || patient.fullName;
+                    $scope.person.gender = $scope.person.gender || patient.gender;
+                    setDropdown('gender', $scope.person.gender);
+                    $scope.person.birthday = patient.birthday || [];
+                    setDropdown('years', $scope.person.birthday[0]);
+                    setDropdown('months', $scope.person.birthday[1]);
+                    setDropdown('days', $scope.person.birthday[2]);
                     $scope.person.mobilePhoneNumber = $scope.person.mobilePhoneNumber || patient.numbers[0];
                     $scope.person.phoneNumber = $scope.person.phoneNumber || patient.numbers[1];
                     $scope.person.extraPhoneNumber = $scope.person.extraPhoneNumber || patient.numbers[2];
                     $scope.person.email = $scope.person.email || patient.email;
+                    $scope.person.province = $scope.person.province || patient.province;
+                    setDropdown('provinces', $scope.person.province);
+                    $scope.person.city = $scope.person.city || patient.city;
+                    setDropdown('cities', $scope.person.city);
+                    $scope.person.address = $scope.person.address || patient.address;
+                    $scope.person.postalCode = $scope.person.postalCode || patient.postalCode;
 
                     $scope.vs.check('fullName', 'mobilePhoneNumber', 'phoneNumber', 'extraPhoneNumber', 'email');
 
@@ -3613,23 +3865,50 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                 });
         }
 
-        function updatePatient() {
+        function acceptPatient() {
             if (!$scope.vs.validate()) return;
 
-            $scope.updatingPatient = true;
-            answerService.updatePatient($scope.person, $scope.vs.dictate)
-                .then(function() {
-                    $scope.updatingPatient = false;
-                    $scope.showMessage('به روز رسانی اطلاعات بیمار',
-                            'اطلاعات بیمار به صورت موفقیت آمیز در سامانه ثبت شدند.')
-                        .then(function() {
-                            $state.go('panel.home');
-                        });
-                }, function(code) {
-                    $scope.updatingPatient = false;
-                    sscAlert(code);
-                    $scope.redirectToLoginPageIfRequired(code);
-                });
+            var promise = $q.when();
+            if ($scope.payment) {
+                promise = $scope.showConfirmMessage('دریافت هزینه ثبت از بیمار',
+                    'هزینه درخواست های بیمار برابر ' + $scope.payment + ' تومان است.\n' +
+                    'لطفاً این مبلغ را از بیمار دریافت کنید.',
+                    'مبلغ مورد نظر دریافت شد', 'لغو عملیات',
+                    'green', 'basic red');
+            }
+            promise.then(function() {
+                $scope.updatingPatient = true;
+                answerService.acceptPatient($scope.person, $scope.request, $scope.payment, $scope.vs.dictate)
+                    .then(function() {
+                        $scope.updatingPatient = false;
+                        $scope.showMessage('به روز رسانی اطلاعات بیمار',
+                                'اطلاعات بیمار به صورت موفقیت آمیز در سامانه ثبت شدند.')
+                            .then(function() {
+                                $state.go('panel.home');
+                            });
+                    }, function(code) {
+                        $scope.updatingPatient = false;
+                        sscAlert(code);
+                        $scope.redirectToLoginPageIfRequired(code);
+                    });
+            });
+        }
+
+        function requestChange(item) {
+            if (item === 'electronicVersion') {
+                $scope.request.paperVersion = $scope.request.paperVersion && $scope.request.electronicVersion;
+            }
+            if (item === 'paperVersion') {
+                $scope.request.electronicVersion = $scope.request.paperVersion || $scope.request.electronicVersion;
+            }
+
+            //TODO: Remove these temporary lines later:
+            $scope.request.paperVersion && $scope.showMessage('اطلاع رسانی',
+                "متأسفانه این قابلیت در حال حاضر فعال نیست اما به زودی فعال خواهد شد.");
+            $scope.request.paperVersion = false;
+
+            $scope.payment = ($scope.request.electronicVersion ? config.post_price : 0) +
+                ($scope.request.paperVersion ? config.paper_post_price : 0);
         }
 
     }
@@ -3786,6 +4065,9 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         $scope.removeFile = removeFile;
 
         $scope.sendingAnswer = false;
+        $scope.patient = null;
+        $scope.acceptance = null;
+        $scope.patientLoaded = false;
         $scope.files = [];
         /* Each file has :
             status:         Preparing, Uploading, Uploded, Error, Aborting, Aborted, Removing, Removed
@@ -3820,84 +4102,66 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             $window.document.removeEventListener("drop", document_OnDrag);
         });
 
-        $scope.person = {};
-        //$scope.person.nationalCode
-        //$scope.person.fullName
-        //$scope.person.mobilePhoneNumber
-        //$scope.person.phoneNumber
-        //$scope.person.extraPhoneNumber
-        //$scope.person.email
+        //$scope.nationalCode
+        //$scope.files
         //$scope.notes
 
-        $scope.vs = new ValidationSystem($scope.person)
+        $scope.vs = new ValidationSystem($scope)
             .field('nationalCode', [
                 ValidationSystem.validators.notEmpty(),
                 ValidationSystem.validators.nationalCode()
-            ])
-            .field('fullName', [
-                ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.minLength(3)
-            ])
-            .field('mobilePhoneNumber', [
-                ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.mobilePhoneNumber()
-            ])
-            .field('phoneNumber', [
-                ValidationSystem.validators.notRequired(),
-                ValidationSystem.validators.phoneNumber()
-            ])
-            .field('extraPhoneNumber', [
-                ValidationSystem.validators.notRequired(),
-                ValidationSystem.validators.phoneNumber()
-            ])
-            .field('email', [
-                ValidationSystem.validators.notRequired(),
-                ValidationSystem.validators.email()
             ]);
 
         var fileId = 0;
 
         function loadPatientInfo() {
-            if (!$scope.vs.see('nationalCode')) return;
-
-            if ($scope.person.fullName && $scope.person.mobilePhoneNumber && $scope.person.phoneNumber &&
-                $scope.person.extraPhoneNumber && $scope.person.email) return;
+            if (!$scope.vs.see('nationalCode')) {
+                $scope.patientLoaded = false;
+                return;
+            }
 
             $scope.sendingAnswer = true;
-            return answerService.patientInfo($scope.person.nationalCode)
-                .then(function(patient) {
-
-                    $scope.person.fullName = $scope.person.fullName || patient.fullName;
-                    $scope.person.mobilePhoneNumber = $scope.person.mobilePhoneNumber || patient.numbers[0];
-                    $scope.person.phoneNumber = $scope.person.phoneNumber || patient.numbers[1];
-                    $scope.person.extraPhoneNumber = $scope.person.extraPhoneNumber || patient.numbers[2];
-                    $scope.person.email = $scope.person.email || patient.email;
-
-                    $scope.vs.check('fullName', 'mobilePhoneNumber', 'phoneNumber', 'extraPhoneNumber', 'email');
-
+            return answerService.patientInfo($scope.nationalCode)
+                .then(function(data) {
+                    $scope.patient = data.patient;
+                    $scope.acceptance = data.acceptance;
                 }, function(code) {
                     $scope.redirectToLoginPageIfRequired(code);
+                    $scope.patient = null;
+                    $scope.acceptance = null;
                 })
                 .then(function() {
                     $scope.sendingAnswer = false;
+                    $scope.patientLoaded = true;
                 });
         }
 
         function sendAnswer() {
             if (!$scope.vs.validate()) return;
+
             if ($scope.files.find(function(file) {
                     return file.status !== 'Uploaded';
-                }))
+                })) {
                 return toastr.warning("همه فایل های انتخاب شده هنوز به درستی ارسال نشده اند",
-                    "خطا در ارسال فایل هل", {
+                    "خطا در ارسال فایل ها", {
                         rtl: true,
                         closeButton: true,
                         timeOut: 5000,
                         extendedTimeOut: 3000,
                     });
+            }
+            if (!$scope.patientLoaded || !$scope.patient || !$scope.acceptance) {
+                return toastr.warning("بیمار با کد ملی وارد شده در این آزمایشگاه پذیرش نشده است",
+                    "خطا در ثبت نتایج", {
+                        rtl: true,
+                        closeButton: true,
+                        timeOut: 5000,
+                        extendedTimeOut: 3000,
+                    });
+            }
 
             $scope.sendingAnswer = true;
-            answerService.send($scope.person, $scope.files, $scope.notes, $scope.vs.dictate)
+            answerService.send($scope.nationalCode, $scope.files, $scope.notes, $scope.vs.dictate)
                 .then(function() {
                     return $scope.refreshUserData();
                 })
@@ -4825,7 +5089,7 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
 
         // Refresh user info every 1 minute
         var refreshUserDataPromise = $interval(refreshUserDataProvider(true), 60000);
-        $scope.$on('$distroy', function() {
+        $scope.$on('$destroy', function() {
             $interval.cancel(refreshUserDataPromise);
         });
 
@@ -5478,7 +5742,7 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 
         // Refresh user info every 1 minute
         var refreshUserDataPromise = $interval(refreshUserDataProvider(true), 60000);
-        $scope.$on('$distroy', function() {
+        $scope.$on('$destroy', function() {
             $interval.cancel(refreshUserDataPromise);
         });
 
@@ -5486,11 +5750,14 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
             goToMainPage: function() {
                 $state.go('panel.home');
             },
-            goToUpdatePatient: function() {
+            goToAcceptPatient: function() {
                 $state.go('panel.patient');
             },
             goToSendResults: function() {
                 $state.go('panel.send');
+            },
+            goToAcceptancesHistory: function() {
+                $state.go('panel.acceptance');
             },
             goToResultsHistory: function() {
                 $state.go('panel.history');
@@ -6114,7 +6381,7 @@ app.filter('emptyCheck', function() {
             return defaultValue || '\u2013';
         else
             return String(input);
-    }
+    };
 });
 
 /*

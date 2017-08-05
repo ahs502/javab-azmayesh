@@ -3,23 +3,28 @@
     <img class="ja-menu-item-icon" ng-src="{{iconJs('home')}}">
 </a>
 
-<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToUpdatePatient(); toggleMenu()">
-    ثبت بیمار
-    <img class="ja-menu-item-icon" ng-src="{{iconJs('patient')}}">
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToAcceptPatient(); toggleMenu()">
+    پذیرش بیمار
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('acceptance')}}">
 </a>
 
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToSendResults(); toggleMenu()">
-    ارسال نتایج
+    ثبت نتایج
     <img class="ja-menu-item-icon" ng-src="{{iconJs('post')}}">
 </a>
 
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToAcceptancesHistory(); toggleMenu()">
+    بیماران پذیرش شده
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('patient')}}">
+</a>
+
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToResultsHistory(); toggleMenu()">
-    سوابق نتایج ثبت شده
+    نتایج ثبت شده
     <img class="ja-menu-item-icon" ng-src="{{iconJs('folder')}}">
 </a>
 
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToChargeAccount(); toggleMenu()">
-    تأمین اعتبار
+    شارژ حساب
     <img class="ja-menu-item-icon" ng-src="{{iconJs('money')}}">
 </a>
 
@@ -42,4 +47,3 @@
     خروج از سامانه
     <img class="ja-menu-item-icon" ng-src="{{iconJs('logout')}}">
 </a>
-

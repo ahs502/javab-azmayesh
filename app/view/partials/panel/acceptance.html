@@ -1,0 +1,63 @@
+<div id="ja-panel-acceptance">
+
+    <div class="ui text menu" id="ja-panel-acceptance-search-menu">
+
+        <div class="right menu">
+
+            <div class="item">
+                <div class="ui input">
+                    <input type="tel" ng-model="nationalCode" class="ja-filter" class="nazanin" ng-class="{'ja-align-left': nationalCode}" accept-persian-numbers placeholder="کد ملی" title="کد ملی">
+                </div>
+            </div>
+
+            <div class="item">
+                <bdi class="nazanin">جستجو:</bdi>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="ja-panel-acceptance-scrolling-container">
+
+        <div ng-if="!(acceptances && acceptances.length)">
+            <p class="nazanin ja-rtl ja-align-right">در حال حاضر بیمار پذیرش شده ای وجود ندارد.</p>
+        </div>
+
+        <div ng-if="acceptances && acceptances.length" class="ui centered grid">
+            <div class="fourteen wide small eight wide tablet six wide computer column">
+
+                <div table-list-container="500px" initialiy-right>
+                    <table class="ja-panel-acceptance-table">
+                        <thead>
+                            <tr>
+                                <th fa c rowspan="2">مبلغ پرداختی</th>
+                                <th fa c colspan="2">درخواست نسخه</th>
+                                <th fa c colspan="3" rowspan="2">پذیرش شده در</th>
+                                <th fa r rowspan="2">کد ملی بیمار</th>
+                            </tr>
+                            <tr>
+                                <th fa c>کاغذی</th>
+                                <th fa c>الکترونیکی</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="acceptance in acceptances | filter: { nationalCode: nationalCode } track by $index" ng-click="acceptanceClicked(acceptance)">
+                                <td fa c>{{ acceptance.payment || null | emptyCheck | toPersianNumber | currencySeparator }}<span ng-show="acceptance.payment"> تومان</span></td>
+                                <td c b><span ng-show="acceptance.request.paperVersion">&#10004;</span><span ng-hide="acceptance.request.paperVersion">&ndash;</span></td>
+                                <td c b><span ng-show="acceptance.request.electronicVersion">&#10004;</span><span ng-hide="acceptance.request.electronicVersion">&ndash;</span></td>
+                                <td fa c>{{ acceptance.timeStamp | toPersianDate: "hh:mm" }}</td>
+                                <td fa c>{{ acceptance.timeStamp | toPersianDate: "dddd" }}</td>
+                                <td fa c>{{ acceptance.timeStamp | toPersianDate: "YYYY/MM/DD" }}</td>
+                                <td fa r b>{{ acceptance.nationalCode | toPersianNumber }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

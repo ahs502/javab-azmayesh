@@ -19,7 +19,7 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 
         // Refresh user info every 1 minute
         var refreshUserDataPromise = $interval(refreshUserDataProvider(true), 60000);
-        $scope.$on('$distroy', function() {
+        $scope.$on('$destroy', function() {
             $interval.cancel(refreshUserDataPromise);
         });
 
@@ -27,11 +27,14 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
             goToMainPage: function() {
                 $state.go('panel.home');
             },
-            goToUpdatePatient: function() {
+            goToAcceptPatient: function() {
                 $state.go('panel.patient');
             },
             goToSendResults: function() {
                 $state.go('panel.send');
+            },
+            goToAcceptancesHistory: function() {
+                $state.go('panel.acceptance');
             },
             goToResultsHistory: function() {
                 $state.go('panel.history');

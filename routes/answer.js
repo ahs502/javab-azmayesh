@@ -1,5 +1,6 @@
 /*global Validator*/
 /*global ValidationSystem*/
+/*global irIran*/
 
 var express = require('express');
 var router = express.Router();
@@ -104,32 +105,52 @@ router.get('/file/download', function(req, res, next) {
 router.post('/patient/info', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;
-    // var username = userInfo.username;
+    var username = userInfo.username;
     var nationalCode = req.body.nationalCode;
     var patientKey = 'patient/' + nationalCode;
-    kfs(patientKey, function(err, patient) {
-        if (err) {
+    var acceptanceKey = 'acceptance/' + username + '/' + nationalCode;
+    Promise.all([kfs(patientKey), kfs(acceptanceKey)])
+        .then(data => {
+            const patient = data[0];
+            const acceptance = data[1];
+            if (!patient) {
+                return utils.resEndByCode(res, 71);
+            }
+            var result = {
+                patient: {
+                    nationalCode: patient.nationalCode,
+                    fullName: patient.fullName,
+                    gender: patient.gender,
+                    birthday: patient.birthday,
+                    numbers: patient.numbers,
+                    email: patient.email,
+                    province: patient.province,
+                    city: patient.city,
+                    address: patient.address,
+                    postalCode: patient.postalCode
+                }
+            };
+            result.acceptance = acceptance ? {
+                request: acceptance.request,
+                payment: acceptance.payment,
+                timeStamp: acceptance.timeStamp
+            } : null;
+            utils.resEndByCode(res, 0, result);
+        }, err => {
             console.error(err);
-            return utils.resEndByCode(res, 5);
-        }
-        if (!patient) {
-            return utils.resEndByCode(res, 71);
-        }
-        utils.resEndByCode(res, 0, {
-            fullName: patient.fullName,
-            numbers: patient.numbers,
-            email: patient.email
+            utils.resEndByCode(res, 5);
         });
-    });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
 
-router.post('/patient/update', function(req, res, next) {
+router.post('/patient/accept', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;
-    // var username = userInfo.username;
+    var username = userInfo.username;
     var person = req.body.person;
+    var request = req.body.request || {};
+    var payment = req.body.payment;
 
     var personValidator = new Validator(person)
         .field('nationalCode', [
@@ -139,6 +160,17 @@ router.post('/patient/update', function(req, res, next) {
         .field('fullName', [
             ValidationSystem.validators.notEmpty(),
             ValidationSystem.validators.minLength(3)
+        ])
+        .field('gender', [
+            ValidationSystem.validators.notEmpty()
+        ])
+        .field('birthday', [
+            function(value) {
+                if (!value || !value[0]) return "وارد کردن سال تولد الزامی است";
+                if (!value || !value[1]) return "وارد کردن ماه تولد الزامی است";
+                if (!value || !value[2]) return "وارد کردن روز تولد الزامی است";
+                return null;
+            }
         ])
         .field('mobilePhoneNumber', [
             ValidationSystem.validators.notEmpty(),
@@ -155,6 +187,26 @@ router.post('/patient/update', function(req, res, next) {
         .field('email', [
             ValidationSystem.validators.notRequired(),
             ValidationSystem.validators.email()
+        ])
+        .field('province', [
+            ValidationSystem.validators.notEmpty()
+        ])
+        .field('city', [
+            ValidationSystem.validators.notEmpty(),
+            function(value) {
+                if ((irIran[person.province] || []).indexOf(value) < 0) {
+                    return "این شهر متعلق به استان " + person.province + " نیست";
+                }
+                else return null;
+            }
+        ])
+        .field('address', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.minLength(10)
+        ])
+        .field('postalCode', [
+            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.postalCode()
         ]);
     if (!personValidator.isValid()) {
         return utils.resEndByCode(res, 80, {
@@ -184,16 +236,62 @@ router.post('/patient/update', function(req, res, next) {
         if (patient.fullNames.indexOf(patient.fullName) >= 0)
             patient.fullNames.splice(patient.fullNames.indexOf(patient.fullName), 1);
         patient.fullNames = [patient.fullName].concat(patient.fullNames);
+        patient.gender = person.gender;
+        patient.birthday = person.birthday;
         patient.email = person.email;
         patient.posts = patient.posts || {};
-        kfs(patientKey, patient, function(err) {
-            if (err) {
-                console.error(err);
-                return utils.resEndByCode(res, 5);
-            }
-            (('telegram/contact/phone/' + patient.numbers[0]) in kfs(), kfs())
-            .then(telegramContactExists => sms.send.updatePatient([patientKey], patient, telegramContactExists));
-            utils.resEndByCode(res, 0);
+        patient.province = person.province;
+        patient.city = person.city;
+        patient.address = person.address;
+        patient.postalCode = person.postalCode;
+        sms.allowanceCheck(patient.numbers, 'acceptpatient').then(function() {
+            const acceptanceKey = 'acceptance/' + username + '/' + patient.nationalCode;
+            const acceptance = {
+                username,
+                nationalCode: patient.nationalCode,
+                request,
+                payment,
+                timeStamp: Date.now()
+            };
+            kfs(patientKey, patient, function(err) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                kfs(acceptanceKey, acceptance, function(err) {
+                    if (err) {
+                        console.error(err);
+                        return utils.resEndByCode(res, 5);
+                    }
+                    (('telegram/contact/phone/' + patient.numbers[0]) in kfs(), kfs())
+                    .then(telegramContactExists => sms.send.acceptPatient([patientKey, acceptanceKey], patient, acceptance, telegramContactExists));
+                    utils.resEndByCode(res, 0);
+                });
+            });
+        }, function() {
+            utils.resEndByCode(res, 120);
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/get/acceptances', function(req, res, next) {
+    var userInfo = access.decodeUserInfo(req, res, 'laboratory');
+    if (!userInfo) return;
+    var username = userInfo.username;
+    kfs('acceptance/' + username + '/', function(err, acceptanceKeys) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        Promise.all(acceptanceKeys.map(a => kfs(a))).then(acceptances => {
+            utils.resEndByCode(res, 0, {
+                acceptances
+            });
+        }).catch(err => {
+            console.error(err);
+            utils.resEndByCode(res, 5);
         });
     });
 });
@@ -204,36 +302,17 @@ router.post('/send', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;
     var username = userInfo.username;
-    var labName = userInfo.labName;
-    var person = req.body.person;
-    var timeStamp = req.body.timeStamp;
+    var nationalCode = req.body.nationalCode;
     var files = req.body.files;
     var notes = req.body.notes;
+    var timeStamp = Date.now();
 
-    var personValidator = new Validator(person)
+    var personValidator = new Validator({
+            nationalCode
+        })
         .field('nationalCode', [
             ValidationSystem.validators.notEmpty(),
             ValidationSystem.validators.nationalCode()
-        ])
-        .field('fullName', [
-            ValidationSystem.validators.notEmpty(),
-            ValidationSystem.validators.minLength(3)
-        ])
-        .field('mobilePhoneNumber', [
-            ValidationSystem.validators.notEmpty(),
-            ValidationSystem.validators.mobilePhoneNumber()
-        ])
-        .field('phoneNumber', [
-            ValidationSystem.validators.notRequired(),
-            ValidationSystem.validators.phoneNumber()
-        ])
-        .field('extraPhoneNumber', [
-            ValidationSystem.validators.notRequired(),
-            ValidationSystem.validators.phoneNumber()
-        ])
-        .field('email', [
-            ValidationSystem.validators.notRequired(),
-            ValidationSystem.validators.email()
         ]);
     if (!personValidator.isValid()) {
         return utils.resEndByCode(res, 80, {
@@ -250,95 +329,103 @@ router.post('/send', function(req, res, next) {
         if (!user) {
             return utils.resEndByCode(res, 51);
         }
-        user.balance = Number(user.balance || 0) - config.post_price;
-        if (user.balance < 0) {
-            return utils.resEndByCode(res, 130);
-        }
-        var nationalCode = person.nationalCode;
-        var jYMD = new Date(timeStamp).jYMD();
         var patientKey = 'patient/' + nationalCode;
         kfs(patientKey, function(err, patient) {
             if (err) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
             }
-            patient = patient || {};
-            patient.numbers = patient.numbers || [];
-            [person.extraPhoneNumber, person.phoneNumber, person.mobilePhoneNumber].forEach(function(num) {
-                if (typeof num !== 'string') return;
-                num = num.toPhoneNumber();
-                if (num === '') return;
-                var index = patient.numbers.indexOf(num);
-                index >= 0 && patient.numbers.splice(index, 1);
-                patient.numbers = [num].concat(patient.numbers);
-            });
-            sms.allowanceCheck(patient.numbers, 'sendans').then(function() {
-                patient.nationalCode = nationalCode;
-                patient.fullName = person.fullName;
-                patient.fullNames = patient.fullNames || [];
-                if (patient.fullNames.indexOf(patient.fullName) >= 0)
-                    patient.fullNames.splice(patient.fullNames.indexOf(patient.fullName), 1);
-                patient.fullNames = [patient.fullName].concat(patient.fullNames);
-                patient.email = person.email;
-                patient.posts = patient.posts || {};
-                var postCode = utils.generateRandomCode(4, Object.keys(patient.posts));
-                utils.generateId('post/' + username + '/' + jYMD[0] + '/' + jYMD[1]).then(function(postId) {
-                    var postKey = 'post/' + username + '/' + jYMD[0] + '/' + jYMD[1] + '/' + postId;
-                    patient.posts[postCode] = postKey;
-                    kfs(patientKey, patient, function(err) {
-                        if (err) {
-                            console.error(err);
-                            return utils.resEndByCode(res, 5);
-                        }
+            if (!patient) {
+                return utils.resEndByCode(res, 76);
+            }
+            var acceptanceKey = 'acceptance/' + username + '/' + nationalCode;
+            kfs(acceptanceKey, function(err, acceptance) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                if (!acceptance) {
+                    return utils.resEndByCode(res, 77);
+                }
+                if (acceptance.payment > 0) {
+                    user.balance = Number(user.balance || 0) - config.post_price;
+                    if (user.balance < 0) {
+                        return utils.resEndByCode(res, 130);
+                    }
+                }
+                sms.allowanceCheck(patient.numbers, 'sendans').then(function() {
+                    patient.posts = patient.posts || {};
+                    var postCode = utils.generateRandomCode(4, Object.keys(patient.posts));
+                    var jYMD = new Date(timeStamp).jYMD();
+                    utils.generateId('post/' + username + '/' + jYMD[0] + '/' + jYMD[1]).then(function(postId) {
+                        var postKey = 'post/' + username + '/' + jYMD[0] + '/' + jYMD[1] + '/' + postId;
                         var post = {
                             postKey: postKey,
                             username: username,
-                            labName: labName,
+                            labName: user.labName,
                             nationalCode: nationalCode,
                             files: files,
                             notes: notes,
                             timeStamp: timeStamp,
-                            postCode: postCode
+                            postCode: postCode,
+                            request: acceptance.request,
+                            payment: acceptance.payment,
+                            acceptanceTimeStamp: acceptance.timeStamp
                         };
                         kfs(postKey, post, function(err) {
                             if (err) {
                                 console.error(err);
                                 return utils.resEndByCode(res, 5);
                             }
-                            kfs(userKey, user, function(err) {
+                            patient.posts[postCode] = postKey;
+                            kfs(patientKey, patient, function(err) {
                                 if (err) {
                                     console.error(err);
                                     return utils.resEndByCode(res, 5);
                                 }
-                                var answerUrl = config.protocol + '://' + config.domain + '/#/answer?p=' + patient.nationalCode + '&n=' + post.postCode;
-                                sms.send.postAnswer([patientKey, postKey], patient, post, answerUrl);
-                                patient.email && email.send(patient.email,
-                                    "نتایج آزمایش شما آماده شدند",
-                                    "باسمه تعالی\n" +
-                                    patient.fullName + " عزیز، سلام!\n" +
-                                    "نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس هستند.\n" +
-                                    "شماره آزمایش: " + post.postCode + "\n" /*+ post.labName*/ +
-                                    "می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:\n" +
-                                    answerUrl,
-                                    "<div style=\"direction: rtl; text-align: -webkit-right !important; text-align: right !important;\">" +
-                                    "<h3>باسمه تعالی</h3>" +
-                                    "<p><strong>" + patient.fullName + "</strong> عزیز، سلام!</p>" +
-                                    "<p>نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس هستند.</p>" +
-                                    "<p>شماره آزمایش: <strong>" + post.postCode + "</strong></p>" /*+ post.labName*/ +
-                                    "<p>می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:</p>" +
-                                    "<a style=\"font-size: 120%;\" href=\"" + answerUrl + "\">نتایج من در سامانه جواب آزمایش</a>" +
-                                    "</div>");
-                                telegram.sendMessage(patient.numbers, 'نتایج آزمایش شما به شماره آزمایش ' +
-                                        post.postCode + ' هم اکنون در سامانه «جواب آزمایش» در دسترس هستند. می توانید از طریق لینک زیر آن را مشاهده کنید:')
-                                    .then(() => telegram.sendMessage(patient.numbers, answerUrl));
-                                utils.resEndByCode(res, 0);
-                                statistics.dailyCount('sendAnswer');
+                                kfs(userKey, user, function(err) {
+                                    if (err) {
+                                        console.error(err);
+                                        return utils.resEndByCode(res, 5);
+                                    }
+                                    new kfs(acceptanceKey, function(err) {
+                                        err && console.error(err);
+                                    });
+                                    if (acceptance.request.electronicVersion) {
+                                        var answerUrl = config.protocol + '://' + config.domain + '/#/answer?p=' + patient.nationalCode + '&n=' + post.postCode;
+                                        sms.send.postAnswer([patientKey, postKey], patient, post, answerUrl);
+                                        patient.email && email.send(patient.email,
+                                            "نتایج آزمایش شما آماده شدند",
+                                            "باسمه تعالی\n" +
+                                            patient.fullName + " عزیز، سلام!\n" +
+                                            "نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس هستند.\n" +
+                                            "شماره آزمایش: " + post.postCode + "\n" /*+ post.labName*/ +
+                                            "می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:\n" +
+                                            answerUrl,
+                                            "<div style=\"direction: rtl; text-align: -webkit-right !important; text-align: right !important;\">" +
+                                            "<h3>باسمه تعالی</h3>" +
+                                            "<p><strong>" + patient.fullName + "</strong> عزیز، سلام!</p>" +
+                                            "<p>نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس هستند.</p>" +
+                                            "<p>شماره آزمایش: <strong>" + post.postCode + "</strong></p>" /*+ post.labName*/ +
+                                            "<p>می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:</p>" +
+                                            "<a style=\"font-size: 120%;\" href=\"" + answerUrl + "\">نتایج من در سامانه جواب آزمایش</a>" +
+                                            "</div>");
+                                        telegram.sendMessage(patient.numbers, 'نتایج آزمایش شما به شماره آزمایش ' +
+                                                post.postCode + ' هم اکنون در سامانه «جواب آزمایش» در دسترس هستند. می توانید از طریق لینک زیر آن را مشاهده کنید:')
+                                            .then(() => telegram.sendMessage(patient.numbers, answerUrl));
+                                    }
+                                    if (acceptance.request.paperVersion) {
+                                        //TODO: What should I do here ?!
+                                    }
+                                    utils.resEndByCode(res, 0);
+                                    statistics.dailyCount('sendAnswer');
+                                });
                             });
                         });
                     });
+                }, function() {
+                    utils.resEndByCode(res, 120);
                 });
-            }, function() {
-                utils.resEndByCode(res, 120);
             });
         });
     });

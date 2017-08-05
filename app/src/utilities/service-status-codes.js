@@ -32,6 +32,8 @@
         73  : Post not found
         74  : User (laboratory) not found
         75  : Patient has reached daily try count limit
+        76  : Patient not found
+        77  : Patient not accepted
         
         80  : Invalid form data
         
@@ -73,6 +75,8 @@
         73: 'پُست ارسال شده یافت نشد',
         74: 'کاربر آزمایشگاه یافت نشد',
         75: 'بیمار به حداکثر تعداد خطاهای روزانه رسیده است',
+        76: 'اطلاعات بیمار در سامانه ثبت نشده است',
+        77: 'بیمار در این آزمایشگاه پذیرش نشده است',
 
         80: 'اطلاعات فرم اشتباه است',
 

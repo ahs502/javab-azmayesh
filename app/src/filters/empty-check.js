@@ -6,5 +6,5 @@ app.filter('emptyCheck', function() {
             return defaultValue || '\u2013';
         else
             return String(input);
-    }
+    };
 });

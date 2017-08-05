@@ -15,6 +15,9 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         $scope.removeFile = removeFile;
 
         $scope.sendingAnswer = false;
+        $scope.patient = null;
+        $scope.acceptance = null;
+        $scope.patientLoaded = false;
         $scope.files = [];
         /* Each file has :
             status:         Preparing, Uploading, Uploded, Error, Aborting, Aborted, Removing, Removed
@@ -49,84 +52,66 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             $window.document.removeEventListener("drop", document_OnDrag);
         });
 
-        $scope.person = {};
-        //$scope.person.nationalCode
-        //$scope.person.fullName
-        //$scope.person.mobilePhoneNumber
-        //$scope.person.phoneNumber
-        //$scope.person.extraPhoneNumber
-        //$scope.person.email
+        //$scope.nationalCode
+        //$scope.files
         //$scope.notes
 
-        $scope.vs = new ValidationSystem($scope.person)
+        $scope.vs = new ValidationSystem($scope)
             .field('nationalCode', [
                 ValidationSystem.validators.notEmpty(),
                 ValidationSystem.validators.nationalCode()
-            ])
-            .field('fullName', [
-                ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.minLength(3)
-            ])
-            .field('mobilePhoneNumber', [
-                ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.mobilePhoneNumber()
-            ])
-            .field('phoneNumber', [
-                ValidationSystem.validators.notRequired(),
-                ValidationSystem.validators.phoneNumber()
-            ])
-            .field('extraPhoneNumber', [
-                ValidationSystem.validators.notRequired(),
-                ValidationSystem.validators.phoneNumber()
-            ])
-            .field('email', [
-                ValidationSystem.validators.notRequired(),
-                ValidationSystem.validators.email()
             ]);
 
         var fileId = 0;
 
         function loadPatientInfo() {
-            if (!$scope.vs.see('nationalCode')) return;
-
-            if ($scope.person.fullName && $scope.person.mobilePhoneNumber && $scope.person.phoneNumber &&
-                $scope.person.extraPhoneNumber && $scope.person.email) return;
+            if (!$scope.vs.see('nationalCode')) {
+                $scope.patientLoaded = false;
+                return;
+            }
 
             $scope.sendingAnswer = true;
-            return answerService.patientInfo($scope.person.nationalCode)
-                .then(function(patient) {
-
-                    $scope.person.fullName = $scope.person.fullName || patient.fullName;
-                    $scope.person.mobilePhoneNumber = $scope.person.mobilePhoneNumber || patient.numbers[0];
-                    $scope.person.phoneNumber = $scope.person.phoneNumber || patient.numbers[1];
-                    $scope.person.extraPhoneNumber = $scope.person.extraPhoneNumber || patient.numbers[2];
-                    $scope.person.email = $scope.person.email || patient.email;
-
-                    $scope.vs.check('fullName', 'mobilePhoneNumber', 'phoneNumber', 'extraPhoneNumber', 'email');
-
+            return answerService.patientInfo($scope.nationalCode)
+                .then(function(data) {
+                    $scope.patient = data.patient;
+                    $scope.acceptance = data.acceptance;
                 }, function(code) {
                     $scope.redirectToLoginPageIfRequired(code);
+                    $scope.patient = null;
+                    $scope.acceptance = null;
                 })
                 .then(function() {
                     $scope.sendingAnswer = false;
+                    $scope.patientLoaded = true;
                 });
         }
 
         function sendAnswer() {
             if (!$scope.vs.validate()) return;
+
             if ($scope.files.find(function(file) {
                     return file.status !== 'Uploaded';
-                }))
+                })) {
                 return toastr.warning("همه فایل های انتخاب شده هنوز به درستی ارسال نشده اند",
-                    "خطا در ارسال فایل هل", {
+                    "خطا در ارسال فایل ها", {
                         rtl: true,
                         closeButton: true,
                         timeOut: 5000,
                         extendedTimeOut: 3000,
                     });
+            }
+            if (!$scope.patientLoaded || !$scope.patient || !$scope.acceptance) {
+                return toastr.warning("بیمار با کد ملی وارد شده در این آزمایشگاه پذیرش نشده است",
+                    "خطا در ثبت نتایج", {
+                        rtl: true,
+                        closeButton: true,
+                        timeOut: 5000,
+                        extendedTimeOut: 3000,
+                    });
+            }
 
             $scope.sendingAnswer = true;
-            answerService.send($scope.person, $scope.files, $scope.notes, $scope.vs.dictate)
+            answerService.send($scope.nationalCode, $scope.files, $scope.notes, $scope.vs.dictate)
                 .then(function() {
                     return $scope.refreshUserData();
                 })

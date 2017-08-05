@@ -4,55 +4,91 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
 
         this.patientInfo = patientInfo;
-        this.updatePatient = updatePatient;
+        this.acceptPatient = acceptPatient;
+        this.getAcceptances = getAcceptances;
         this.send = send;
 
         /////////////////////////////////////////////////////
 
         // May reject by code : 1, 2, 5, 50, 52, 71, 100, 101
-        // Resolves to patient personal information
+        // Resolves to patient personal and acceptance (if exists) information
         function patientInfo(nationalCode) {
             return utils.httpPromiseHandler($http.post('/answer/patient/info', {
                     nationalCode: nationalCode
                 }))
                 .then(function(body) {
-                    return {
-                        fullName: body.fullName,
-                        numbers: body.numbers || [],
-                        email: body.email
+                    var data = {
+                        patient: {
+                            nationalCode: body.patient.nationalCode,
+                            fullName: body.patient.fullName,
+                            gender: body.patient.gender,
+                            birthday: body.patient.birthday,
+                            numbers: body.patient.numbers || [],
+                            email: body.patient.email,
+                            province: body.patient.province,
+                            city: body.patient.city,
+                            address: body.patient.address,
+                            postalCode: body.patient.postalCode
+                        }
                     };
+                    data.acceptance = body.acceptance ? {
+                        request: body.acceptance.request,
+                        payment: body.acceptance.payment,
+                        timeStamp: new Date(body.acceptance.timeStamp)
+                    } : null;
+                    return data;
                 });
         }
 
-        // May reject by code : 1, 2, 5, 50, 52, 80, 100, 101
-        function updatePatient(person, invalidPersonHandler) {
-            return utils.httpPromiseHandler($http.post('/answer/patient/update', {
+        // May reject by code : 1, 2, 5, 50, 52, 80, 100, 101, 120
+        function acceptPatient(person, request, payment, invalidPersonHandler) {
+            return utils.httpPromiseHandler($http.post('/answer/patient/accept', {
                 person: {
                     nationalCode: person.nationalCode,
                     fullName: person.fullName,
+                    gender: person.gender,
+                    birthday: person.birthday,
                     mobilePhoneNumber: person.mobilePhoneNumber,
                     phoneNumber: person.phoneNumber,
                     extraPhoneNumber: person.extraPhoneNumber,
-                    email: person.email
-                }
+                    email: person.email,
+                    province: person.province,
+                    city: person.city,
+                    address: person.address,
+                    postalCode: person.postalCode
+                },
+                request: {
+                    electronicVersion: request.electronicVersion,
+                    paperVersion: request.paperVersion
+                },
+                payment: payment
             }), function(data) {
                 if (invalidPersonHandler)
                     invalidPersonHandler(data.errors || {});
             });
         }
 
-        // May reject by code : 1, 2, 5, 50, 51, 52, 80, 100, 101, 120, 130
-        function send(person, files, notes, invalidPersonHandler) {
+        // May reject by code : 1, 2, 5, 50, 52, 100, 101
+        // Resolves to all the user's current acceptances
+        function getAcceptances() {
+            return utils.httpPromiseHandler($http.post('/answer/get/acceptances', {}))
+                .then(function(body) {
+                    return (body.acceptances || []).map(function(acceptance) {
+                        return {
+                            username: acceptance.username,
+                            nationalCode: acceptance.nationalCode,
+                            request: acceptance.request,
+                            payment: acceptance.payment,
+                            timeStamp: new Date(acceptance.timeStamp)
+                        };
+                    });
+                });
+        }
+
+        // May reject by code : 1, 2, 5, 50, 51, 52, 76, 77, 80, 100, 101, 120, 130
+        function send(nationalCode, files, notes, invalidPersonHandler) {
             return utils.httpPromiseHandler($http.post('/answer/send', {
-                timeStamp: Date.now(),
-                person: {
-                    nationalCode: person.nationalCode,
-                    fullName: person.fullName,
-                    mobilePhoneNumber: person.mobilePhoneNumber,
-                    phoneNumber: person.phoneNumber,
-                    extraPhoneNumber: person.extraPhoneNumber,
-                    email: person.email
-                },
+                nationalCode: nationalCode,
                 files: files.map(function(file) {
                     return {
                         serverName: file.serverName,

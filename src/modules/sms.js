@@ -14,7 +14,7 @@ module.exports = {
         validationCodeForRegisteration,
         validationCodeForUpdatingAccount,
         passwordRecovery,
-        updatePatient,
+        acceptPatient,
         postAnswer,
         deleteAnswer,
         updateAnswer,
@@ -40,6 +40,7 @@ var smsLimits = {
         "otp": [5, 3],
         "vericodeusrupd": 5,
         "passrecovery": [1, 72],
+        "acceptpatient": 3,
     },
     maxCount = 0;
 for (let type in smsLimits) {
@@ -109,10 +110,15 @@ function passwordRecovery(relatedKeys, user) {
     });
 }
 
-function updatePatient(relatedKeys, patient, telegramContactExists) {
+function acceptPatient(relatedKeys, patient, acceptance, telegramContactExists) {
     var numbers = patient.numbers;
     var message = "" + patient.fullName + " عزیز، سلام!\n" +
         "اطلاعات شما در سامانه جواب آزمایش به روز رسانی شدند.";
+    if (acceptance.request.electronicVersion) {
+        message +=
+            "\nمبلغ قابل پرداخت = " + acceptance.payment + " تومان برای دریافت نسخه الکترونیکی" +
+            (acceptance.request.paperVersion ? " و کاغذی" : "") + ".";
+    }
     if (!telegramContactExists) {
         message +=
             "\nدر صورتی که تمایل دارید هنگام آماده شدن جواب آزمایشتان از طریق تلگرام نیز مطلع شوید، به روبات تلگرامی\n" +
@@ -120,9 +126,10 @@ function updatePatient(relatedKeys, patient, telegramContactExists) {
             "برای این منظور می توانید از لینک زیر استفاده کنید:\n" +
             'https://t.me/' + config.telegram_bot_name.slice(1);
     }
-    return sendSms('updatepatient', numbers, message, {
+    return sendSms('acceptpatient', numbers, message, {
         relatedKeys,
-        patient
+        patient,
+        acceptance
     });
 }
 
@@ -251,9 +258,9 @@ var smsTypeDescription = {
     'vericodeusrreg': "کُد اعتبارسنجی برای ثبت نام آزمایشگاه",
     'vericodeusrupd': "کُد اعتبارسنجی برای به روز رسانی اطلاعات آزمایشگاه",
     'passrecovery': "بازیابی کلمه عبور آزمایشگاه",
-    'updatepatient': "اعلام ثبت اطلاعات و پیشنهاد عضویت در تلگرام بیمار",
+    'acceptpatient': "اعلام ثبت اطلاعات و پیشنهاد عضویت در تلگرام بیمار",
     'postans': "ارسال نتیجه آزمایش بیمار",
-    'postans': "حذف نتیجه آزمایش بیمار",
+    'deleteans': "حذف نتیجه آزمایش بیمار",
     'updateans': "به روز رسانی نتیجه آزمایش بیمار",
     'otp': "رمز یک بار مصرف مشاهده سوابق بیمار",
     'approvesignup': "تأیید حساب کاربری آزمایشگاه جدید",

@@ -7,16 +7,16 @@ catch (e) {
 }
 global.global = global;
 
-var clientUtilitiesPath = "../app/src/utilities/";
+const clientUtilitiesPath = "../app/src/utilities/";
+const clientDynamicsPath = "../app/src/dynamics/";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 require(clientUtilitiesPath + "extensions");
-
 require(clientUtilitiesPath + "calendar-converter");
-
 require(clientUtilitiesPath + "persian-number");
-
 require(clientUtilitiesPath + "ValidationSystem");
+
+require(clientDynamicsPath + "iriran-provinces-and-cities");
 
 ////////////////////////////////////////////////////////////////////////////////

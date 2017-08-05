@@ -283,6 +283,17 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                     ]
                 }
             })
+            .state('panel.acceptance', {
+                url: '/acceptance',
+                templateUrl: 'panel/acceptance.html',
+                controller: 'PanelAcceptanceController',
+                data: {
+                    dependencies: [
+                        'dropdown.min.js',
+                        'dropdown.rtl.min.css',
+                    ]
+                }
+            })
             .state('panel.post', {
                 url: '/post',
                 templateUrl: 'panel/post.html',
@@ -297,6 +308,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                         'iriran-provinces-and-cities.js',
                         'dropdown.min.js',
                         'dropdown.rtl.min.css',
+                        'statistic.min.css',
                     ]
                 }
             })
@@ -429,7 +441,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 }
             });
 
-        $urlRouterProvider.otherwise('/home/find');
+        $urlRouterProvider.otherwise('/start');
 
         $locationProvider.hashPrefix('');
         // $locationProvider.html5Mode(true);

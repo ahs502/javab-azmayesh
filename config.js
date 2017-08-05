@@ -19,7 +19,7 @@ var config = {
     /*-------------------------------------*/
     confirmation_expires_after: /*---------*/ 1, // Hours
     user_access_key_expires_after: /*------*/ 1, // Hours
-    long_user_access_key_expires_after: /*-*/ 2, // Hours
+    long_user_access_key_expires_after: /*-*/ 24, // Hours
     /*-------------------------------------*/
     cryptr_key: /*-------------------------*/ "- dev 1234567890 cryptr key -",
     /*-------------------------------------*/
@@ -44,8 +44,8 @@ var config = {
     /*-------------------------------------*/
     zarinpal_merchant_code: /*-------------*/ "7b0be51c-6f9c-11e7-8b69-005056a205be", // Empty to disable
     /*-------------------------------------*/
-    post_price: /*-------------------------*/ 1000, // Tomans
-    paper_post_price: /*-------------------*/ 5000, // Tomans
+    post_price: /*-------------------------*/ 2000, // Tomans
+    paper_post_price: /*-------------------*/ 4000, // Tomans
     /*-------------------------------------*/
     minified_app_sources: /*---------------*/ false,
     developer_modal: /*--------------------*/ true,
@@ -56,6 +56,7 @@ var config = {
         'google_recaptcha',
         'google_recaptcha_public_key',
         'post_price',
+        'paper_post_price',
         'developer_modal',
     ]
 

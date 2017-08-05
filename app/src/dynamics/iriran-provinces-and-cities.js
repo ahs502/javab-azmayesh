@@ -194,5 +194,6 @@
     };
 
     global.irIran = irIran;
+    global.irIranProvinces = Object.keys(irIran);
 
 })(global);

@@ -196,6 +196,23 @@ body {
 .ui.form .field .ui.checkbox label {
   cursor: pointer;
 }
+.ui.form .field .ui.dropdown {
+  width: auto;
+  min-height: 0;
+}
+.ui.form .field .ui.dropdown .text,
+.ui.form .field .ui.dropdown input.search {
+  font-family: BNazanin !important;
+  font-size: 130%;
+  direction: rtl;
+  text-align: -webkit-right !important;
+  text-align: right !important;
+}
+.ui.form .field .ui.dropdown input.search {
+  padding-right: 14px;
+  padding-top: 9px;
+  padding-left: 0;
+}
 .ui.form textarea.nazanin {
   font-size: 120%;
 }
@@ -412,6 +429,17 @@ div[table-list-container] table tbody tr td.nazanin {
 #ja-panel #ja-panel-loading {
   margin-top: 73px;
 }
+#ja-panel #ja-panel-send .ja-error-message {
+  color: red;
+  font-weight: bold;
+}
+#ja-panel #ja-panel-send .ja-info-message {
+  color: gray;
+}
+#ja-panel #ja-panel-send .ja-info-message p {
+  font-size: 90%;
+  margin: 0;
+}
 #ja-panel #ja-panel-send .ja-preview {
   margin: 13px 0;
 }
@@ -514,6 +542,21 @@ div[table-list-container] table tbody tr td.nazanin {
   margin-right: 10px;
   margin-left: 10px;
 }
+#ja-panel #ja-panel-acceptance #ja-panel-acceptance-search-menu {
+  position: fixed;
+  top: 37px;
+  right: 0;
+  left: 0;
+  padding: 4px 15px;
+  z-index: 700000;
+  background-color: white;
+}
+#ja-panel #ja-panel-acceptance #ja-panel-acceptance-search-menu .ja-filter {
+  width: 90px;
+}
+#ja-panel #ja-panel-acceptance #ja-panel-acceptance-scrolling-container {
+  margin-top: 35px;
+}
 #ja-panel #ja-panel-history #ja-panel-history-filter-menu {
   position: fixed;
   top: 37px;
@@ -540,6 +583,16 @@ div[table-list-container] table tbody tr td.nazanin {
 }
 #ja-panel #ja-panel-history #ja-panel-history-scrolling-container {
   margin-top: 35px;
+}
+#ja-panel #ja-panel-patient .ui.dropdown.ja-inline.fluid.search.selection {
+  width: 45px;
+  display: inline-block;
+}
+#ja-panel #ja-panel-patient .ui.dropdown.ja-inline.fluid.search.selection#ja-days-dropdown {
+  right: -190px;
+}
+#ja-panel #ja-panel-patient .ui.dropdown.ja-inline.fluid.search.selection#ja-years-dropdown {
+  right: 190px;
 }
 @media (max-width: 530px) {
   #ja-panel #ja-panel-history .ja-not-small-display {

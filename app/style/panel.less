@@ -4,6 +4,17 @@
         margin-top: 73px;
     }
     #ja-panel-send {
+        .ja-error-message {
+            color: red;
+            font-weight: bold;
+        }
+        .ja-info-message {
+            color: gray;
+            p {
+                font-size: 90%;
+                margin: 0;
+            }
+        }
         .ja-preview {
             margin: 13px 0;
             .ja-preview-image {
@@ -90,6 +101,23 @@
             margin-left: 10px;
         }
     }
+    #ja-panel-acceptance {
+        #ja-panel-acceptance-search-menu {
+            position: fixed;
+            top: 37px;
+            right: 0;
+            left: 0;
+            padding: 4px 15px;
+            z-index: 700000;
+            background-color: white;
+            .ja-filter {
+                width: 90px;
+            }
+        }
+        #ja-panel-acceptance-scrolling-container {
+            margin-top: 35px;
+        }
+    }
     #ja-panel-history {
         // md-virtual-repeat-container {
         // 	height: 100vh;
@@ -131,6 +159,24 @@
         }
         #ja-panel-history-scrolling-container {
             margin-top: 35px;
+        }
+    }
+    #ja-panel-patient {
+        .ui {
+            &.dropdown {
+                &.ja-inline {
+                    &.fluid.search.selection {
+                        width: 45px;
+                        display: inline-block;
+                        &#ja-days-dropdown {
+                            right: -190px;
+                        }
+                        &#ja-years-dropdown {
+                            right: 190px;
+                        }
+                    }
+                }
+            }
         }
     }
 }
