@@ -598,7 +598,7 @@ router.post('/findPatientByNationalCode', function(req, res, next) {
     if (!userInfo) return;
     // var username = userInfo.username;
     var nationalCode = req.body.nationalCode;
-    kfs('patient/' + nationalCode, function(err, patient) {
+    kfs('patient/data/' + nationalCode, function(err, patient) {
         if (err) {
             console.error(err);
             utils.resEndByCode(res, 5);
@@ -686,7 +686,7 @@ router.post('/findAllPhoneNumbers', function(req, res, next) {
                     Promise.all(userKeys.map(userKey => kfs(userKey))))
                 .then(users => users.forEach(user =>
                     (user.userType === 'laboratory') && writer.write(user.mobilePhoneNumber + '\n'))),
-                kfs('patient/').then(patientKeys =>
+                kfs('patient/data/').then(patientKeys =>
                     Promise.all(patientKeys.map(patientKey => kfs(patientKey))))
                 .then(patients => patients.forEach(patient =>
                     patient.numbers.forEach(number =>

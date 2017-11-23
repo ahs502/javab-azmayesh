@@ -9,6 +9,9 @@ app.controller('HomeController', ['$scope', '$rootScope', '$state',
             goToHomeFind: function() {
                 $state.go('home.find');
             },
+            goToHomePatient: function() {
+                $state.go('home.patient');
+            },
             goToHomeOtp: function() {
                 $state.go('home.otp');
             },

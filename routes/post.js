@@ -78,7 +78,7 @@ router.post('/load/one', function(req, res, next) {
     // var username = userInfo.username;
     var nationalCode = req.body.nationalCode;
     var postCode = req.body.postCode;
-    var patientKey = 'patient/' + nationalCode;
+    var patientKey = 'patient/data/' + nationalCode;
     kfs(patientKey, function(err, patient) {
         if (err) {
             console.error(err);
@@ -130,7 +130,7 @@ router.post('/delete/one', function(req, res, next) {
     // var username = userInfo.username;
     var nationalCode = req.body.nationalCode;
     var postCode = req.body.postCode;
-    var patientKey = 'patient/' + nationalCode;
+    var patientKey = 'patient/data/' + nationalCode;
     kfs(patientKey, function(err, patient) {
         if (err) {
             console.error(err);
@@ -187,7 +187,7 @@ router.post('/update/one', function(req, res, next) {
     var nationalCode = req.body.nationalCode;
     var postCode = req.body.postCode;
     var postData = req.body.postData;
-    var patientKey = 'patient/' + nationalCode;
+    var patientKey = 'patient/data/' + nationalCode;
     kfs(patientKey, function(err, patient) {
         if (err) {
             console.error(err);

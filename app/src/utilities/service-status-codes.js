@@ -14,8 +14,8 @@
         10  : Already existing user
         11  : reCAPTCHA verification error
 
-        30  : User is not waiting for confirmation
-        31  : User confirmation has expired
+        30  : Action is not waiting for confirmation
+        31  : Confirmation code has expired
         32  : Wrong validation code
         
         40  : Wrong username or password
@@ -44,6 +44,9 @@
         
         130 : User out of charge
         131 : Zarrinpal is not active
+        132 : Zarrinpal gate openning error
+        
+        140 : Patient has already been registered
     */
 
     var serviceStatusCodes = {
@@ -57,7 +60,7 @@
         10: 'کاربر با این نام در حال حاضر موجود است',
         11: 'عدم تأیید ریکَپچا',
 
-        30: 'کاربر منتظر تأیید شدن وجود ندارد',
+        30: 'عملیات منتظر تأیید شدن وجود ندارد',
         31: 'زمان انقضای درخواست به اتمام رسیده است',
         32: 'کُد اعتبار سنجی اشتباه است',
 
@@ -88,6 +91,8 @@
         130: 'شارژ حساب کاربر به اتمام رسیده است',
         131: 'درگاه پرداخت زرین پال فعال نیست',
         132: 'خطا در باز کردن درگاه پرداخت زرین پال',
+
+        140: 'اطلاعات این بیمار قبلاً در سامانه ثبت شده است. اگر نیاز به اصلاح این اطلاعات در سامانه است، پذیرش آزمایشگاه می تواند به شما کمک کند',
 
     };
 

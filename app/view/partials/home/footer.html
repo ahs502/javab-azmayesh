@@ -1,6 +1,8 @@
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToLabLogin()">آزمایشگاه ها</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('home.find')" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-show="$state.is('home.find')" ng-click="menuHandlers.goToHomePatient()">ثبت اطلاعات</a>
+
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeOtp()">سوابق من</a>
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>

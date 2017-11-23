@@ -34,9 +34,9 @@
         <span class="nazanin">فقط توسعه دهندگان !</span>
     </div>
     <div class="content">
-        
+
         <!-- import:./app/view/partials/developer.html -->
-        
+
     </div>
     <div class="actions">
         <button class="ui blue ok button">
@@ -45,14 +45,14 @@
     </div>
 </div>
 
-<div id="ja-rules-modal" class="ui modal ja-rtl" ng-controller="DeveloperController">
+<div id="ja-rules-modal" class="ui modal ja-rtl">
     <div class="header">
         <span class="nazanin">قوانین و مقررات سامانه</span>
     </div>
     <div class="content">
-        
+
         <!-- import:./app/view/partials/rules.html -->
-        
+
     </div>
     <div class="actions">
         <button class="ui basic blue ok button">
@@ -61,3 +61,27 @@
     </div>
 </div>
 
+<div id="ja-validation-code-modal" class="ui modal ja-rtl">
+    <div class="header">
+        <span class="nazanin">کُد اعتبار سنجی</span>
+    </div>
+    <div class="content">
+
+        <form class="ui form">
+            <div class="field">
+                <label class="nazanin">
+                    لطفاً کُد اعتبارسنجی دریافت شده از طریق پیامک را اینجا وارد کنید:
+                </label>
+                <div class="ui input">
+                    <input type="tel" ng-model="modal.validationCode" class="nazanin" ng-class="{'ja-align-left': modal.validationCode}" accept-persian-numbers placeholder="کُد اعتبار سنجی">
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="actions">
+        <button class="ui green ok button">
+            <span class="nazanin">ثبت کُد اعتبار سنجی</span>
+        </button>
+    </div>
+</div>

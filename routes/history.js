@@ -17,7 +17,7 @@ router.post('/generate/otp', function(req, res, next) {
     var nationalCode = req.body.nationalCode;
     var mobilePhoneNumber = String(req.body.mobilePhoneNumber).toPhoneNumber();
     sms.allowanceCheck(mobilePhoneNumber, 'otp').then(function() {
-        var patientKey = 'patient/' + nationalCode;
+        var patientKey = 'patient/data/' + nationalCode;
         kfs(patientKey, function(err, patient) {
             if (err) {
                 console.error(err);
@@ -81,7 +81,7 @@ router.post('/find/history', function(req, res, next) {
                 console.error(err);
                 return utils.resEndByCode(res, 5);
             }
-            var patientKey = 'patient/' + nationalCode;
+            var patientKey = 'patient/data/' + nationalCode;
             kfs(patientKey, function(err, patient) {
                 if (err) {
                     console.error(err);
@@ -139,7 +139,7 @@ router.post('/load/answer', function(req, res, next) {
         if (patientTryLimit.count >= 3) {
             return utils.resEndByCode(res, 75);
         }
-        var patientKey = 'patient/' + nationalCode;
+        var patientKey = 'patient/data/' + nationalCode;
         kfs(patientKey, function(err, patient) {
             if (err) {
                 console.error(err);

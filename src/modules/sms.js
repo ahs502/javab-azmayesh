@@ -14,6 +14,7 @@ module.exports = {
         validationCodeForRegisteration,
         validationCodeForUpdatingAccount,
         passwordRecovery,
+        registerPatientDraft,
         acceptPatient,
         postAnswer,
         deleteAnswer,
@@ -40,7 +41,8 @@ var smsLimits = {
         "otp": [5, 3],
         "vericodeusrupd": 5,
         "passrecovery": [1, 72],
-        "acceptpatient": 3,
+        "regpatientdraft": 3,
+        "acceptpatient": 2,
     },
     maxCount = 0;
 for (let type in smsLimits) {
@@ -107,6 +109,16 @@ function passwordRecovery(relatedKeys, user) {
     return sendSms('passrecovery', numbers, message, {
         relatedKeys,
         user
+    });
+}
+
+function registerPatientDraft(relatedKeys, patientDraft) {
+    var numbers = [patientDraft.patient.mobilePhoneNumber, patientDraft.patient.phoneNumber];
+    var message = "لطفاً برای تکمیل فرآیند ثبت اطلاعات خود از کد زیر استفاده کنید:\n" +
+        "کد اعتبار سنجی: " + patientDraft.validationCode;
+    return sendSms('regpatientdraft', numbers, message, {
+        relatedKeys,
+        patientDraft
     });
 }
 
@@ -258,6 +270,7 @@ var smsTypeDescription = {
     'vericodeusrreg': "کُد اعتبارسنجی برای ثبت نام آزمایشگاه",
     'vericodeusrupd': "کُد اعتبارسنجی برای به روز رسانی اطلاعات آزمایشگاه",
     'passrecovery': "بازیابی کلمه عبور آزمایشگاه",
+    'regpatientdraft': "ثبت اطلاعات شخصی خود بیمار",
     'acceptpatient': "اعلام ثبت اطلاعات و پیشنهاد عضویت در تلگرام بیمار",
     'postans': "ارسال نتیجه آزمایش بیمار",
     'deleteans': "حذف نتیجه آزمایش بیمار",

@@ -353,6 +353,22 @@ div[table-list-container] table tbody tr td.nazanin {
 	AHS502 : End of 'common.about.less'
 */
 /*
+	AHS502 : Start of 'home.less'
+*/
+#ja-home #ja-home-patient .ui.dropdown.ja-inline.fluid.search.selection {
+  width: 45px;
+  display: inline-block;
+}
+#ja-home #ja-home-patient .ui.dropdown.ja-inline.fluid.search.selection#ja-days-dropdown {
+  right: -190px;
+}
+#ja-home #ja-home-patient .ui.dropdown.ja-inline.fluid.search.selection#ja-years-dropdown {
+  right: 190px;
+}
+/*
+	AHS502 : End of 'home.less'
+*/
+/*
 	AHS502 : Start of 'answer.less'
 */
 #ja-answer .ja-multiline-pre {

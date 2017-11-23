@@ -165,21 +165,21 @@ router.post('/register', function(req, res, next) {
 router.post('/register/confirm', function(req, res, next) {
     var username = String(req.body.username || '').toLowerCase();
     var validationCode = req.body.validationCode;
-    utils.generateId('user').then(function(userId) {
-        kfs('user/confirming/' + username, function(err, data) {
-            if (err) {
-                console.error(err);
-                return utils.resEndByCode(res, 5);
-            }
-            if (!data) {
-                return utils.resEndByCode(res, 30);
-            }
-            if (data.timeStamp > Date.now() + config.confirmation_expires_after * 3600 * 1000) {
-                return utils.resEndByCode(res, 31);
-            }
-            if (validationCode != data.validationCode) {
-                return utils.resEndByCode(res, 32);
-            }
+    kfs('user/confirming/' + username, function(err, data) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        if (!data) {
+            return utils.resEndByCode(res, 30);
+        }
+        if (data.timeStamp > Date.now() + config.confirmation_expires_after * 3600 * 1000) {
+            return utils.resEndByCode(res, 31);
+        }
+        if (validationCode != data.validationCode) {
+            return utils.resEndByCode(res, 32);
+        }
+        utils.generateId('user').then(function(userId) {
             data.user.id = userId;
             data.user.balance = 0;
             data.user.userType = "laboratory";

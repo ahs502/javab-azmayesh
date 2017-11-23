@@ -13,10 +13,12 @@ app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$l
 
         var startupMessage = init.startupMessage;
 
+        var startupState = init.patientIn ? 'home.patient' : (localStorage.startState || 'home.find');
+
         (!startupMessage ? $q.when() :
             $scope.showMessage(startupMessage.title, startupMessage.message, startupMessage.ok))
         .then(function() {
-            $state.go(localStorage.startState || 'home.find');
+            $state.go(startupState);
         });
 
     }

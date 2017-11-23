@@ -59,6 +59,18 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 templateUrl: 'home/history.html',
                 controller: 'HomeHistoryController'
             })
+            .state('home.patient', {
+                url: '/patient',
+                templateUrl: 'home/patient.html',
+                controller: 'HomePatientController',
+                data: {
+                    dependencies: [
+                        'iriran-provinces-and-cities.js',
+                        'dropdown.min.js',
+                        'dropdown.rtl.min.css',
+                    ]
+                }
+            })
             .state('home.about', {
                 url: '/about',
                 templateUrl: 'common/about.html',

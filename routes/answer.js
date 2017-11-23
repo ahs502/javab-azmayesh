@@ -64,7 +64,7 @@ router.get('/file/download', function(req, res, next) {
     if (!nationalCode || !postCode || !serverName) {
         return res.status(400).end();
     }
-    var patientKey = 'patient/' + nationalCode;
+    var patientKey = 'patient/data/' + nationalCode;
     kfs(patientKey, function(err, patient) {
         if (err) {
             console.error(err);
@@ -102,32 +102,176 @@ router.get('/file/download', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.post('/patient/draft/register', function(req, res, next) {
+    var person = req.body.person;
+    var patientKey = 'patient/data/' + person.nationalCode;
+    patientKey in kfs(function(err, patientExists) {
+        if (err) {
+            console.error(err);
+            return utils.resEndByCode(res, 5);
+        }
+        if (patientExists) {
+            return utils.resEndByCode(res, 140);
+        }
+
+        var personValidator = new Validator(person)
+            .field('nationalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.nationalCode()
+            ])
+            .field('fullName', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(3)
+            ])
+            .field('gender', [
+                ValidationSystem.validators.notEmpty()
+            ])
+            .field('birthday', [
+                function(value) {
+                    if (!value || !value[0]) return "وارد کردن سال تولد الزامی است";
+                    if (!value || !value[1]) return "وارد کردن ماه تولد الزامی است";
+                    if (!value || !value[2]) return "وارد کردن روز تولد الزامی است";
+                    return null;
+                }
+            ])
+            .field('mobilePhoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.mobilePhoneNumber()
+            ])
+            .field('phoneNumber', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.phoneNumber()
+            ])
+            .field('extraPhoneNumber', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.phoneNumber()
+            ])
+            .field('email', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.email()
+            ])
+            .field('province', [
+                ValidationSystem.validators.notEmpty()
+            ])
+            .field('city', [
+                ValidationSystem.validators.notEmpty(),
+                function(value) {
+                    if ((irIran[person.province] || []).indexOf(value) < 0) {
+                        return "این شهر متعلق به استان " + person.province + " نیست";
+                    }
+                    else return null;
+                }
+            ])
+            .field('address', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(10)
+            ])
+            .field('postalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.postalCode()
+            ]);
+        if (!personValidator.isValid()) {
+            return utils.resEndByCode(res, 80, {
+                errors: personValidator.getErrors()
+            });
+        }
+
+        sms.allowanceCheck(person.numbers, 'regpatientdraft').then(function() {
+            const patientDraftKey = 'patient/draft/unverified/' + person.nationalCode;
+            const validationCode = utils.generateRandomCode(4);
+            const patientDraft = {
+                patient: person,
+                validationCode,
+                timeStamp: Date.now()
+            };
+            kfs(patientDraftKey, patientDraft, function(err) {
+                if (err) {
+                    console.error(err);
+                    return utils.resEndByCode(res, 5);
+                }
+                sms.send.registerPatientDraft([patientDraftKey], patientDraft);
+                utils.resEndByCode(res, 0);
+            });
+        }, function() {
+            utils.resEndByCode(res, 120);
+        });
+    });
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+router.post('/patient/draft/verify', function(req, res, next) {
+    const nationalCode = req.body.nationalCode;
+    const validationCode = req.body.validationCode;
+    const unverifiedPatientDraftKey = 'patient/draft/unverified/' + nationalCode;
+    kfs(unverifiedPatientDraftKey).then(function(patientDraft) {
+        if (!patientDraft) {
+            return utils.resEndByCode(res, 30);
+        }
+        if (patientDraft.timeStamp > Date.now() + config.confirmation_expires_after * 3600 * 1000) {
+            return utils.resEndByCode(res, 31);
+        }
+        if (validationCode != patientDraft.validationCode) {
+            return utils.resEndByCode(res, 32);
+        }
+        const verifiedPatientDraftKey = 'patient/draft/verified/' + nationalCode;
+        return kfs(verifiedPatientDraftKey, patientDraft.patient).then(function() {
+            return new kfs(unverifiedPatientDraftKey);
+        }).then(function() {
+            utils.resEndByCode(res, 0);
+        });
+    }).catch(function(err) {
+        console.error(err);
+        utils.resEndByCode(res, 5);
+    });
+});
+////////////////////////////////////////////////////////////////////////////////
+
 router.post('/patient/info', function(req, res, next) {
     var userInfo = access.decodeUserInfo(req, res, 'laboratory');
     if (!userInfo) return;
     var username = userInfo.username;
     var nationalCode = req.body.nationalCode;
-    var patientKey = 'patient/' + nationalCode;
+    var patientKey = 'patient/data/' + nationalCode;
+    var patientDraftKey = 'patient/draft/verified/' + nationalCode;
     var acceptanceKey = 'acceptance/' + username + '/' + nationalCode;
-    Promise.all([kfs(patientKey), kfs(acceptanceKey)])
+    Promise.all([kfs(patientKey), kfs(patientDraftKey), kfs(acceptanceKey)])
         .then(data => {
             const patient = data[0];
-            const acceptance = data[1];
-            if (!patient) {
+            var patientDraft = data[1];
+            patientDraft = patientDraft && {
+                nationalCode: patientDraft.nationalCode,
+                fullName: patientDraft.fullName,
+                gender: patientDraft.gender,
+                birthday: patientDraft.birthday,
+                numbers: [
+                    patientDraft.mobilePhoneNumber,
+                    patientDraft.phoneNumber,
+                    patientDraft.extraPhoneNumber
+                ].filter(num => !!num),
+                email: patientDraft.email,
+                province: patientDraft.province,
+                city: patientDraft.city,
+                address: patientDraft.address,
+                postalCode: patientDraft.postalCode
+            };
+            const acceptance = data[2];
+            const patientData = patientDraft || patient;
+            if (!patientData) {
                 return utils.resEndByCode(res, 71);
             }
             var result = {
                 patient: {
-                    nationalCode: patient.nationalCode,
-                    fullName: patient.fullName,
-                    gender: patient.gender,
-                    birthday: patient.birthday,
-                    numbers: patient.numbers,
-                    email: patient.email,
-                    province: patient.province,
-                    city: patient.city,
-                    address: patient.address,
-                    postalCode: patient.postalCode
+                    nationalCode: patientData.nationalCode,
+                    fullName: patientData.fullName,
+                    gender: patientData.gender,
+                    birthday: patientData.birthday,
+                    numbers: patientData.numbers,
+                    email: patientData.email,
+                    province: patientData.province,
+                    city: patientData.city,
+                    address: patientData.address,
+                    postalCode: patientData.postalCode
                 }
             };
             result.acceptance = acceptance ? {
@@ -136,7 +280,7 @@ router.post('/patient/info', function(req, res, next) {
                 timeStamp: acceptance.timeStamp
             } : null;
             utils.resEndByCode(res, 0, result);
-        }, err => {
+        }).catch(err => {
             console.error(err);
             utils.resEndByCode(res, 5);
         });
@@ -214,7 +358,7 @@ router.post('/patient/accept', function(req, res, next) {
         });
     }
 
-    var patientKey = 'patient/' + person.nationalCode;
+    var patientKey = 'patient/data/' + person.nationalCode;
     kfs(patientKey, function(err, patient) {
         if (err) {
             console.error(err);
@@ -253,19 +397,26 @@ router.post('/patient/accept', function(req, res, next) {
                 payment,
                 timeStamp: Date.now()
             };
-            kfs(patientKey, patient, function(err) {
+            var patientDraftKey = 'patient/draft/verified/' + patient.nationalCode;
+            new kfs(patientDraftKey, function(err) {
                 if (err) {
                     console.error(err);
                     return utils.resEndByCode(res, 5);
                 }
-                kfs(acceptanceKey, acceptance, function(err) {
+                kfs(patientKey, patient, function(err) {
                     if (err) {
                         console.error(err);
                         return utils.resEndByCode(res, 5);
                     }
-                    (('telegram/contact/phone/' + patient.numbers[0]) in kfs(), kfs())
-                    .then(telegramContactExists => sms.send.acceptPatient([patientKey, acceptanceKey], patient, acceptance, telegramContactExists));
-                    utils.resEndByCode(res, 0);
+                    kfs(acceptanceKey, acceptance, function(err) {
+                        if (err) {
+                            console.error(err);
+                            return utils.resEndByCode(res, 5);
+                        }
+                        (('telegram/contact/phone/' + patient.numbers[0]) in kfs(), kfs())
+                        .then(telegramContactExists => sms.send.acceptPatient([patientKey, acceptanceKey], patient, acceptance, telegramContactExists));
+                        utils.resEndByCode(res, 0);
+                    });
                 });
             });
         }, function() {
@@ -329,7 +480,7 @@ router.post('/send', function(req, res, next) {
         if (!user) {
             return utils.resEndByCode(res, 51);
         }
-        var patientKey = 'patient/' + nationalCode;
+        var patientKey = 'patient/data/' + nationalCode;
         kfs(patientKey, function(err, patient) {
             if (err) {
                 console.error(err);

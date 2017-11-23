@@ -5,16 +5,14 @@
 /*global irIran*/
 /*global irIranProvinces*/
 
-app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$stateParams',
+app.controller('HomePatientController', ['$scope', '$rootScope', '$state', '$stateParams',
     '$q', '$window', '$timeout', '$http', 'AnswerService', 'Config',
     function($scope, $rootScope, $state, $stateParams,
         $q, $window, $timeout, $http, answerService, config) {
 
-        $scope.loadPatientInfo = loadPatientInfo;
-        $scope.acceptPatient = acceptPatient;
-        $scope.requestChange = requestChange;
+        $scope.registerPatientDraft = registerPatientDraft;
 
-        $scope.updatingPatient = false;
+        $scope.registeringPatientDraft = false;
         var jYMD = (new Date()).jYMD();
         $scope.years = Array.range(jYMD[0], 1300);
         $scope.months = Array.range(1, 12);
@@ -24,17 +22,10 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
         $scope.cities = [];
         $scope.person = {};
         $scope.person.birthday = [];
-        $scope.request = {
-            electronicVersion: true,
-            paperVersion: false
-        };
-        $scope.payment = config.post_price;
 
         $scope.setBackHandler(function() {
-            $state.go('panel.home');
+            $state.go('home.find');
         });
-
-        $scope.setPageTitle('پذیرش بیمار');
 
         //$scope.person.nationalCode
         //$scope.person.fullName
@@ -48,9 +39,6 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
         //$scope.person.city
         //$scope.person.address
         //$scope.person.postalCode
-
-        //$scope.request.electronicVersion
-        //$scope.request.paperVersion
 
         $scope.vs = new ValidationSystem($scope.person)
             .field('nationalCode', [
@@ -169,6 +157,7 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
 
         });
 
+        //TODO: This method is not useful anymore:
         function setDropdown(name, value, text) {
             if (arguments.length < 3) text = value;
             $timeout(function() {
@@ -181,90 +170,28 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
             });
         }
 
-        function loadPatientInfo() {
-            if (!$scope.vs.see('nationalCode')) return;
-
-            if ($scope.person.fullName && $scope.person.mobilePhoneNumber && $scope.person.phoneNumber &&
-                $scope.person.extraPhoneNumber && $scope.person.email) return;
-
-            $scope.updatingPatient = true;
-            return answerService.patientInfo($scope.person.nationalCode)
-                .then(function(data) {
-                    var patient = data.patient;
-                    //TODO: Use data.acceptance here too.
-
-                    $scope.person.fullName = $scope.person.fullName || patient.fullName;
-                    $scope.person.gender = $scope.person.gender || patient.gender;
-                    setDropdown('gender', $scope.person.gender);
-                    $scope.person.birthday = patient.birthday || [];
-                    setDropdown('years', $scope.person.birthday[0]);
-                    setDropdown('months', $scope.person.birthday[1]);
-                    setDropdown('days', $scope.person.birthday[2]);
-                    $scope.person.mobilePhoneNumber = $scope.person.mobilePhoneNumber || patient.numbers[0];
-                    $scope.person.phoneNumber = $scope.person.phoneNumber || patient.numbers[1];
-                    $scope.person.extraPhoneNumber = $scope.person.extraPhoneNumber || patient.numbers[2];
-                    $scope.person.email = $scope.person.email || patient.email;
-                    $scope.person.province = $scope.person.province || patient.province;
-                    setDropdown('provinces', $scope.person.province);
-                    $scope.person.city = $scope.person.city || patient.city;
-                    setDropdown('cities', $scope.person.city);
-                    $scope.person.address = $scope.person.address || patient.address;
-                    $scope.person.postalCode = $scope.person.postalCode || patient.postalCode;
-
-                    $scope.vs.check('fullName', 'mobilePhoneNumber', 'phoneNumber', 'extraPhoneNumber', 'email');
-
-                }, function(code) {
-                    $scope.redirectToLoginPageIfRequired(code);
-                })
-                .then(function() {
-                    $scope.updatingPatient = false;
-                });
-        }
-
-        function acceptPatient() {
+        function registerPatientDraft() {
             if (!$scope.vs.validate()) return;
 
-            var promise = $q.when();
-            if ($scope.payment) {
-                promise = $scope.showConfirmMessage('دریافت هزینه ثبت از بیمار',
-                    'هزینه درخواست های بیمار برابر ' + $scope.payment + ' تومان است.\n' +
-                    'لطفاً این مبلغ را از بیمار دریافت کنید.',
-                    'مبلغ مورد نظر دریافت شد', 'لغو عملیات',
-                    'green', 'basic red');
-            }
-            promise.then(function() {
-                $scope.updatingPatient = true;
-                answerService.acceptPatient($scope.person, $scope.request, $scope.payment, $scope.vs.dictate)
-                    .then(function() {
-                        $scope.updatingPatient = false;
-                        $scope.showMessage('به روز رسانی اطلاعات بیمار',
-                                'اطلاعات بیمار به صورت موفقیت آمیز در سامانه ثبت شدند.')
-                            .then(function() {
-                                $state.go('panel.home');
-                            });
-                    }, function(code) {
-                        $scope.updatingPatient = false;
-                        sscAlert(code);
-                        $scope.redirectToLoginPageIfRequired(code);
-                    });
-            });
-        }
-
-        function requestChange(item) {
-            if (item === 'electronicVersion') {
-                $scope.request.paperVersion = $scope.request.paperVersion && $scope.request.electronicVersion;
-            }
-            if (item === 'paperVersion') {
-                $scope.request.electronicVersion = $scope.request.paperVersion || $scope.request.electronicVersion;
-            }
-
-            //TODO: Remove these temporary lines later:
-            $scope.request.paperVersion && $scope.showMessage('اطلاع رسانی',
-                "متأسفانه این قابلیت در حال حاضر فعال نیست اما به زودی فعال خواهد شد.");
-            $scope.request.paperVersion = false;
-
-            $scope.payment = ($scope.request.electronicVersion ? config.post_price : 0) +
-                ($scope.request.paperVersion ? config.paper_post_price : 0);
+            $scope.registeringPatientDraft = true;
+            answerService.registerPatientDraft($scope.person, $scope.vs.dictate)
+                .then(function() {
+                    return $scope.showValidationCodeModal()
+                        .then(function(validationCode) {
+                            answerService.verifyPatientDraft($scope.person.nationalCode, validationCode)
+                                .then(function() {
+                                    $scope.registeringPatientDraft = false;
+                                    $scope.showMessage('ثبت اطلاعات شخصی',
+                                            'اطلاعات تماس شما به صورت موفقیت آمیز در سامانه ثبت شدند.')
+                                        .then(function() {
+                                            $state.go('home.find');
+                                        });
+                                });
+                        });
+                }, function(code) {
+                    $scope.registeringPatientDraft = false;
+                    sscAlert(code);
+                });
         }
 
     }

@@ -19,6 +19,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
         $scope.showConfirmMessage = showConfirmMessage;
         $scope.showDeveloperModal = showDeveloperModal;
         $scope.showRulesModal = showRulesModal;
+        $scope.showValidationCodeModal = showValidationCodeModal;
 
         $scope.backHandler = undefined;
         $scope.menuHandlers = undefined;
@@ -101,5 +102,19 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
                 .modal('show');
         }
 
+        function showValidationCodeModal() {
+            $scope.modal = {
+                validationCode: null
+            };
+            var defer = $q.defer();
+            angular.element('#ja-validation-code-modal')
+                .modal({
+                    onApprove: function() {
+                        defer.resolve($scope.modal.validationCode);
+                    }
+                })
+                .modal('show');
+            return defer.promise;
+        }
     }
 ]);

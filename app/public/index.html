@@ -201,7 +201,7 @@
         <span class="nazanin">فقط توسعه دهندگان !</span>
     </div>
     <div class="content">
-        
+
         <div id="ja-developer">
 
     <button class="ui green button" ng-click="showEnvironmnetProperties()">
@@ -210,7 +210,7 @@
 
 </div>
 
-        
+
     </div>
     <div class="actions">
         <button class="ui blue ok button">
@@ -219,12 +219,12 @@
     </div>
 </div>
 
-<div id="ja-rules-modal" class="ui modal ja-rtl" ng-controller="DeveloperController">
+<div id="ja-rules-modal" class="ui modal ja-rtl">
     <div class="header">
         <span class="nazanin">قوانین و مقررات سامانه</span>
     </div>
     <div class="content">
-        
+
         <div id="ja-rules">
 
     <div class="nazanin ja-rtl ja-align-justify ja-rules-container">
@@ -327,7 +327,7 @@
 
 </div>
 
-        
+
     </div>
     <div class="actions">
         <button class="ui basic blue ok button">
@@ -336,6 +336,30 @@
     </div>
 </div>
 
+<div id="ja-validation-code-modal" class="ui modal ja-rtl">
+    <div class="header">
+        <span class="nazanin">کُد اعتبار سنجی</span>
+    </div>
+    <div class="content">
+
+        <form class="ui form">
+            <div class="field">
+                <label class="nazanin">
+                    لطفاً کُد اعتبارسنجی دریافت شده از طریق پیامک را اینجا وارد کنید:
+                </label>
+                <div class="ui input">
+                    <input type="tel" ng-model="modal.validationCode" class="nazanin" ng-class="{'ja-align-left': modal.validationCode}" accept-persian-numbers placeholder="کُد اعتبار سنجی">
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="actions">
+        <button class="ui green ok button">
+            <span class="nazanin">ثبت کُد اعتبار سنجی</span>
+        </button>
+    </div>
+</div>
 
 
         <div ng-if="footerHandlers" id="ja-main-content-footer-placeholder" class=" ja-screen"></div>
@@ -460,16 +484,23 @@
     <!--<img class="ui centered image ja-main-image ja-main-image-small" src="/img/about/all-togather.png">-->
 
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        ما یک خانواده خلاق و با نشاط هستیم که مشتاقانه توانایی های گوناگون خود را روی هم گذاشتیم تا با هم بتوانیم راه حل های جدیدی برای مشکلات بسازیم.
+        ما یک خانواده خلاق و با نشاط هستیم که مشتاقانه توانایی های گوناگون
+        خود را روی هم گذاشتیم تا با هم بتوانیم راه حل های جدیدی برای مشکلات بسازیم.
     </div>
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        <strong>هدف ما</strong> ساده کردن کارها و کاهش هزینه ها با کمک گرفتن از ابزار فن آوری اطلاعات است.
+        <strong>هدف ما</strong>
+        ساده کردن کارها و کاهش هزینه ها با کمک گرفتن از ابزار فن آوری اطلاعات است.
     </div>
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        <strong>چشم انداز ما</strong> این است که هیچ انسانی زمان و توان ارزشمند خود را صرف کاری نکند در حالی که یک سامانه کامپیوتری می تواند همان کار را به صورت خودکار، سریع، ارزان و با بهترین کیفیت انجام دهد.
+        <strong>چشم انداز ما</strong>
+        این است که هیچ انسانی زمان و توان ارزشمند خود را صرف کاری نکند در حالی که
+        یک سامانه کامپیوتری می تواند همان کار را به صورت خودکار، سریع، ارزان و با بهترین کیفیت انجام دهد.
     </div>
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        <strong>ارزش های ما</strong> راست گویی، خیرخواهی، تعهد عمیق، سخت کوشی، احترام متقابل و خلاقیت هستند. ما با توکل بر خدا و اعتماد به نفس می خواهیم ارزشی با کیفیت استثنایی برای میهن عزیزمان بسازیم و در این مسیر از هیچ تلاشی فروگزار نخواهیم کرد.
+        <strong>ارزش های ما</strong>
+        راست گویی، خیرخواهی، تعهد عمیق، سخت کوشی، احترام متقابل و خلاقیت هستند. ما
+        با توکل بر خدا و اعتماد به نفس می خواهیم ارزشی با کیفیت استثنایی برای
+        میهن عزیزمان بسازیم و در این مسیر از هیچ تلاشی فروگزار نخواهیم کرد.
     </div>
 
     <img class="ui centered big image ja-key-image" src="/img/about/mahdiar.png">
@@ -477,17 +508,27 @@
         <p class="nazanin ja-rtl ja-align-justify ja-description">
             <span class="highlight">«مهدیار»</span>
             <span>
-                الآن دیگه یک سالشه! یادمه که مامانش قبل از اینکه مهدیار رو به دنیا بیاره، کلی آزمایش های مختلف می داد ولی همیشه براش سخت بود که باید خودش با یک بچه توی شکمش بره اون طرف شهر و جواب آزمایشش رو بگیره. حتی یک بار هم کلی پول داد به یک تاکسی تلفنی که بره و جوابش رو براش بگیره. خوب، آزمایشگاه هایی که ما می رفتیم برای خودشون سایت نداشتند. این شد که ما با خودمون فکر کردیم که:
+                الآن دیگه یک و نیم سالشه! یادمه که مامانش قبل از اینکه مهدیار رو به دنیا بیاره،
+                کلی آزمایش های مختلف می داد ولی همیشه براش سخت بود که
+                باید خودش با یک بچه توی شکمش بره اون طرف شهر و جواب آزمایشش رو
+                بگیره. حتی یک بار هم کلی پول داد به یک تاکسی تلفنی که بره و جوابش رو
+                براش بگیره. خوب، آزمایشگاه هایی که ما می رفتیم برای خودشون سایت
+                نداشتند. این شد که ما با خودمون فکر کردیم که:
             </span>
             <span class="highlight">
-                «چی می شد اگر یک سامانه ارزان قیمت و سریع بود که جواب آزمایش ها رو از همه آزمایشگاه ها می گرفت و به دست بیمارها می رسوند؟ چی می شد اگر من می تونستم همون لحظه ای که جواب آزمایشم حاضره، توی گوشی موبایلم ببینمش و همون جا با پزشک خودم به اشتراک بزارمش؟»
+                «چی می شد اگر یک سامانه ارزان قیمت و سریع بود که جواب آزمایش ها
+                رو از همه آزمایشگاه ها می گرفت و به دست بیمارها می رسوند؟ چی می شد
+                اگر من می تونستم همون لحظه ای که جواب آزمایشم حاضره، توی گوشی موبایلم
+                ببینمش و همون جا با پزشک خودم به اشتراک بزارمش؟»
             </span>
             <span>
                 این شد که ما دست به کار شدیم و سامانه
             </span>
             <span class="highlight">«جواب آزمایش»</span>
             <span>
-                رو برای استفاده همه آزمایشگاه های ایران دُرست کردیم. همه تلاش ما این بوده و هست که بیشترین رضایت رو هم برای آزمایشگاه ها و هم برای بیماران با کم ترین هزینه ممکن به وجود بیاریم. امید ما هم اینه که یک روزی همه ایرانی ها از
+                رو برای استفاده همه آزمایشگاه های ایران دُرست کردیم. همه تلاش ما این
+                بوده و هست که بیشترین رضایت رو هم برای آزمایشگاه ها و هم برای بیماران
+                با کم ترین هزینه ممکن به وجود بیاریم. امید ما هم اینه که یک روزی همه ایرانی ها از
             </span>
             <span class="highlight">«جواب آزمایش»</span>
             <span>
@@ -683,6 +724,11 @@
     <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
 </a>
 
+<a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomePatient(); toggleMenu()">
+    ثبت اطلاعات شخصی
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('acceptance')}}">
+</a>
+
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToHomeOtp(); toggleMenu()">
     سوابق من
     <img class="ja-menu-item-icon" ng-src="{{iconJs('folder')}}">
@@ -708,7 +754,9 @@
 <script type="text/ng-template" id="home/footer.html">
     <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToLabLogin()">آزمایشگاه ها</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('home.find')" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-show="$state.is('home.find')" ng-click="menuHandlers.goToHomePatient()">ثبت اطلاعات</a>
+
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeOtp()">سوابق من</a>
 
 <a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
@@ -848,6 +896,214 @@
                         </button>
                     </div>
                     
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</script>
+
+<script type="text/ng-template" id="home/patient.html">
+    <div id="ja-home-patient">
+
+    <div class="ui grid">
+        <div class="center aligned row">
+            <div class="sixteen wide column">
+
+                <p class="nazanin">
+                    <bdi>لطفاً اطلاعات زیر را با دقت پُر کنید</bdi>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+
+                <form class="ui {{ registeringPatientDraft ? 'loading' : '' }} form">
+
+                    <div class="ui horizontal divider">
+                        <span class="nazanin">مشخصات فردی</span>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('nationalCode')}">
+                        <label class="nazanin ja-required">کد ملی بیمار</label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="person.nationalCode" ng-change="vs.check('nationalCode')" class="nazanin" ng-class="{'ja-align-left': person.nationalCode}" accept-persian-numbers placeholder="کد ملی">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('nationalCode')" ng-bind="vs.error('nationalCode')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('fullName')}">
+                        <label class="nazanin ja-required">نام و نام خانوادگی بیمار</label>
+                        <div class="ui input">
+                            <input class="nazanin ja-rtl" type="text" ng-model="person.fullName" ng-change="vs.check('fullName')" placeholder="نام و نام خانوادگی">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('fullName')" ng-bind="vs.error('fullName')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('gender')}">
+                        <label class="nazanin ja-required">جنسیت</label>
+                        <div id="ja-gender-dropdown" class="ui fluid selection dropdown">
+                            <input type="hidden">
+                            <div class="default text">
+                                انتخاب کنید
+                            </div>
+                            <div class="menu">
+                                <div class="item" data-value="مرد" data-text="مرد">
+                                    <span class="nazanin">مرد</span>
+                                </div>
+                                <div class="item" data-value="زن" data-text="زن">
+                                    <span class="nazanin">زن</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('gender')" ng-bind="vs.error('gender')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('birthday')}">
+                        <label class="nazanin ja-required">تاریخ تولد</label>
+                        <div>
+                            <div id="ja-days-dropdown" class="ui fluid search selection dropdown ja-inline">
+                                <input type="hidden">
+                                <div class="default text">
+                                    روز
+                                </div>
+                                <div class="menu">
+                                    <div class="item" ng-repeat="day in days" data-value="{{day}}" data-text="{{day.toString()}}">
+                                        <span class="nazanin" ng-bind="day | toPersianNumber"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="ja-months-dropdown" class="ui fluid search selection dropdown ja-inline">
+                                <input type="hidden">
+                                <div class="default text">
+                                    ماه
+                                </div>
+                                <div class="menu">
+                                    <div class="item" ng-repeat="month in months" data-value="{{month}}" data-text="{{month.toString()}}">
+                                        <span class="nazanin" ng-bind="month | toPersianNumber"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="ja-years-dropdown" class="ui fluid search selection dropdown ja-inline">
+                                <input type="hidden">
+                                <div class="default text">
+                                    سال
+                                </div>
+                                <div class="menu">
+                                    <div class="item" ng-repeat="year in years" data-value="{{year}}" data-text="{{year.toString()}}">
+                                        <span class="nazanin" ng-bind="year | toPersianNumber"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('birthday')" ng-bind="vs.error('birthday')"></div>
+                    </div>
+
+                    <div class="ui horizontal divider">
+                        <span class="nazanin">اطلاعات تماس</span>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
+                        <label class="nazanin ja-required">شماره تلفن همراه</label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="person.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="nazanin ja-align-left" accept-persian-numbers placeholder="۰۹∗∗∗∗∗∗∗∗∗">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
+                        <label class="nazanin ja-optional">شماره تلفن دوم</label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="person.phoneNumber" ng-change="vs.check('phoneNumber')" class="nazanin" ng-class="{'ja-align-left': person.phoneNumber}" accept-persian-numbers placeholder="تلفن همراه یا ثابت">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('phoneNumber')" ng-bind="vs.error('phoneNumber')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('extraPhoneNumber')}">
+                        <label class="nazanin ja-optional">شماره تلفن سوم </label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="person.extraPhoneNumber" ng-change="vs.check('extraPhoneNumber')" class="nazanin" ng-class="{'ja-align-left': person.extraPhoneNumber}" accept-persian-numbers placeholder="تلفن همراه یا ثابت">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('extraPhoneNumber')" ng-bind="vs.error('extraPhoneNumber')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('email')}">
+                        <label class="nazanin ja-optional">آدرس پست الکترونیک</label>
+                        <div class="ui input">
+                            <input type="email" ng-model="person.email" ng-change="vs.check('email')" class="ja-align-left" placeholder="your@email.com">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('email')" ng-bind="vs.error('email')"></div>
+                    </div>
+
+                    <div class="ui horizontal divider">
+                        <span class="nazanin">آدرس پُستی</span>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('province')}">
+                        <label class="nazanin ja-required">استان</label>
+                        <div id="ja-provinces-dropdown" class="ui fluid search selection dropdown">
+                            <input type="hidden">
+                            <div class="default text">
+                                انتخاب کنید
+                            </div>
+                            <div class="menu">
+                                <div class="item" ng-repeat="province in provinces" data-value="{{province}}" data-text="{{province}}">
+                                    <span class="nazanin" ng-bind="province"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('province')" ng-bind="vs.error('province')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('city')}">
+                        <label class="nazanin ja-required">شهر</label>
+                        <div id="ja-cities-dropdown" class="ui fluid search selection dropdown">
+                            <input type="hidden">
+                            <div class="default text">
+                                انتخاب کنید
+                            </div>
+                            <div class="menu">
+                                <div class="item" ng-repeat="city in cities" data-value="{{city}}" data-text="{{city}}">
+                                    <span class="nazanin" ng-bind="city"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('city')" ng-bind="vs.error('city')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('address')}">
+                        <label class="nazanin ja-required">آدرس دقیق پُستی</label>
+                        <div class="ui input">
+                            <input class="nazanin ja-rtl" type="text" ng-model="person.address" ng-change="vs.check('address')" placeholder="خیابان، کوچه، پلاک، واحد، ...">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('address')" ng-bind="vs.error('address')"></div>
+                    </div>
+
+                    <div class="field" ng-class="{'error': vs.error('postalCode')}">
+                        <label class="nazanin ja-required">کد پُستی</label>
+                        <div class="ui input">
+                            <input type="tel" ng-model="person.postalCode" ng-change="vs.check('postalCode')" class="nazanin" ng-class="{'ja-align-left': person.postalCode}" accept-persian-numbers placeholder="کد پُستی">
+                        </div>
+                        <div class="ui pointing red basic label nazanin" ng-if="vs.error('postalCode')" ng-bind="vs.error('postalCode')"></div>
+                    </div>
+
+                    <div class="ui horizontal divider">
+                        <span class="nazanin">ثبت اطلاعات</span>
+                    </div>
+
+                    <div class="field">
+                        <button class="fluid ui blue button" type="submit" ng-click="registerPatientDraft()">
+                            <span class="nazanin">ثبت اطلاعات</span>
+                        </button>
+                    </div>
+
                 </form>
 
             </div>
@@ -1308,16 +1564,23 @@
     <!--<img class="ui centered image ja-main-image ja-main-image-small" src="/img/about/all-togather.png">-->
 
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        ما یک خانواده خلاق و با نشاط هستیم که مشتاقانه توانایی های گوناگون خود را روی هم گذاشتیم تا با هم بتوانیم راه حل های جدیدی برای مشکلات بسازیم.
+        ما یک خانواده خلاق و با نشاط هستیم که مشتاقانه توانایی های گوناگون
+        خود را روی هم گذاشتیم تا با هم بتوانیم راه حل های جدیدی برای مشکلات بسازیم.
     </div>
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        <strong>هدف ما</strong> ساده کردن کارها و کاهش هزینه ها با کمک گرفتن از ابزار فن آوری اطلاعات است.
+        <strong>هدف ما</strong>
+        ساده کردن کارها و کاهش هزینه ها با کمک گرفتن از ابزار فن آوری اطلاعات است.
     </div>
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        <strong>چشم انداز ما</strong> این است که هیچ انسانی زمان و توان ارزشمند خود را صرف کاری نکند در حالی که یک سامانه کامپیوتری می تواند همان کار را به صورت خودکار، سریع، ارزان و با بهترین کیفیت انجام دهد.
+        <strong>چشم انداز ما</strong>
+        این است که هیچ انسانی زمان و توان ارزشمند خود را صرف کاری نکند در حالی که
+        یک سامانه کامپیوتری می تواند همان کار را به صورت خودکار، سریع، ارزان و با بهترین کیفیت انجام دهد.
     </div>
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        <strong>ارزش های ما</strong> راست گویی، خیرخواهی، تعهد عمیق، سخت کوشی، احترام متقابل و خلاقیت هستند. ما با توکل بر خدا و اعتماد به نفس می خواهیم ارزشی با کیفیت استثنایی برای میهن عزیزمان بسازیم و در این مسیر از هیچ تلاشی فروگزار نخواهیم کرد.
+        <strong>ارزش های ما</strong>
+        راست گویی، خیرخواهی، تعهد عمیق، سخت کوشی، احترام متقابل و خلاقیت هستند. ما
+        با توکل بر خدا و اعتماد به نفس می خواهیم ارزشی با کیفیت استثنایی برای
+        میهن عزیزمان بسازیم و در این مسیر از هیچ تلاشی فروگزار نخواهیم کرد.
     </div>
 
     <img class="ui centered big image ja-key-image" src="/img/about/mahdiar.png">
@@ -1325,17 +1588,27 @@
         <p class="nazanin ja-rtl ja-align-justify ja-description">
             <span class="highlight">«مهدیار»</span>
             <span>
-                الآن دیگه یک سالشه! یادمه که مامانش قبل از اینکه مهدیار رو به دنیا بیاره، کلی آزمایش های مختلف می داد ولی همیشه براش سخت بود که باید خودش با یک بچه توی شکمش بره اون طرف شهر و جواب آزمایشش رو بگیره. حتی یک بار هم کلی پول داد به یک تاکسی تلفنی که بره و جوابش رو براش بگیره. خوب، آزمایشگاه هایی که ما می رفتیم برای خودشون سایت نداشتند. این شد که ما با خودمون فکر کردیم که:
+                الآن دیگه یک و نیم سالشه! یادمه که مامانش قبل از اینکه مهدیار رو به دنیا بیاره،
+                کلی آزمایش های مختلف می داد ولی همیشه براش سخت بود که
+                باید خودش با یک بچه توی شکمش بره اون طرف شهر و جواب آزمایشش رو
+                بگیره. حتی یک بار هم کلی پول داد به یک تاکسی تلفنی که بره و جوابش رو
+                براش بگیره. خوب، آزمایشگاه هایی که ما می رفتیم برای خودشون سایت
+                نداشتند. این شد که ما با خودمون فکر کردیم که:
             </span>
             <span class="highlight">
-                «چی می شد اگر یک سامانه ارزان قیمت و سریع بود که جواب آزمایش ها رو از همه آزمایشگاه ها می گرفت و به دست بیمارها می رسوند؟ چی می شد اگر من می تونستم همون لحظه ای که جواب آزمایشم حاضره، توی گوشی موبایلم ببینمش و همون جا با پزشک خودم به اشتراک بزارمش؟»
+                «چی می شد اگر یک سامانه ارزان قیمت و سریع بود که جواب آزمایش ها
+                رو از همه آزمایشگاه ها می گرفت و به دست بیمارها می رسوند؟ چی می شد
+                اگر من می تونستم همون لحظه ای که جواب آزمایشم حاضره، توی گوشی موبایلم
+                ببینمش و همون جا با پزشک خودم به اشتراک بزارمش؟»
             </span>
             <span>
                 این شد که ما دست به کار شدیم و سامانه
             </span>
             <span class="highlight">«جواب آزمایش»</span>
             <span>
-                رو برای استفاده همه آزمایشگاه های ایران دُرست کردیم. همه تلاش ما این بوده و هست که بیشترین رضایت رو هم برای آزمایشگاه ها و هم برای بیماران با کم ترین هزینه ممکن به وجود بیاریم. امید ما هم اینه که یک روزی همه ایرانی ها از
+                رو برای استفاده همه آزمایشگاه های ایران دُرست کردیم. همه تلاش ما این
+                بوده و هست که بیشترین رضایت رو هم برای آزمایشگاه ها و هم برای بیماران
+                با کم ترین هزینه ممکن به وجود بیاریم. امید ما هم اینه که یک روزی همه ایرانی ها از
             </span>
             <span class="highlight">«جواب آزمایش»</span>
             <span>
@@ -3178,16 +3451,23 @@
     <!--<img class="ui centered image ja-main-image ja-main-image-small" src="/img/about/all-togather.png">-->
 
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        ما یک خانواده خلاق و با نشاط هستیم که مشتاقانه توانایی های گوناگون خود را روی هم گذاشتیم تا با هم بتوانیم راه حل های جدیدی برای مشکلات بسازیم.
+        ما یک خانواده خلاق و با نشاط هستیم که مشتاقانه توانایی های گوناگون
+        خود را روی هم گذاشتیم تا با هم بتوانیم راه حل های جدیدی برای مشکلات بسازیم.
     </div>
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        <strong>هدف ما</strong> ساده کردن کارها و کاهش هزینه ها با کمک گرفتن از ابزار فن آوری اطلاعات است.
+        <strong>هدف ما</strong>
+        ساده کردن کارها و کاهش هزینه ها با کمک گرفتن از ابزار فن آوری اطلاعات است.
     </div>
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        <strong>چشم انداز ما</strong> این است که هیچ انسانی زمان و توان ارزشمند خود را صرف کاری نکند در حالی که یک سامانه کامپیوتری می تواند همان کار را به صورت خودکار، سریع، ارزان و با بهترین کیفیت انجام دهد.
+        <strong>چشم انداز ما</strong>
+        این است که هیچ انسانی زمان و توان ارزشمند خود را صرف کاری نکند در حالی که
+        یک سامانه کامپیوتری می تواند همان کار را به صورت خودکار، سریع، ارزان و با بهترین کیفیت انجام دهد.
     </div>
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
-        <strong>ارزش های ما</strong> راست گویی، خیرخواهی، تعهد عمیق، سخت کوشی، احترام متقابل و خلاقیت هستند. ما با توکل بر خدا و اعتماد به نفس می خواهیم ارزشی با کیفیت استثنایی برای میهن عزیزمان بسازیم و در این مسیر از هیچ تلاشی فروگزار نخواهیم کرد.
+        <strong>ارزش های ما</strong>
+        راست گویی، خیرخواهی، تعهد عمیق، سخت کوشی، احترام متقابل و خلاقیت هستند. ما
+        با توکل بر خدا و اعتماد به نفس می خواهیم ارزشی با کیفیت استثنایی برای
+        میهن عزیزمان بسازیم و در این مسیر از هیچ تلاشی فروگزار نخواهیم کرد.
     </div>
 
     <img class="ui centered big image ja-key-image" src="/img/about/mahdiar.png">
@@ -3195,17 +3475,27 @@
         <p class="nazanin ja-rtl ja-align-justify ja-description">
             <span class="highlight">«مهدیار»</span>
             <span>
-                الآن دیگه یک سالشه! یادمه که مامانش قبل از اینکه مهدیار رو به دنیا بیاره، کلی آزمایش های مختلف می داد ولی همیشه براش سخت بود که باید خودش با یک بچه توی شکمش بره اون طرف شهر و جواب آزمایشش رو بگیره. حتی یک بار هم کلی پول داد به یک تاکسی تلفنی که بره و جوابش رو براش بگیره. خوب، آزمایشگاه هایی که ما می رفتیم برای خودشون سایت نداشتند. این شد که ما با خودمون فکر کردیم که:
+                الآن دیگه یک و نیم سالشه! یادمه که مامانش قبل از اینکه مهدیار رو به دنیا بیاره،
+                کلی آزمایش های مختلف می داد ولی همیشه براش سخت بود که
+                باید خودش با یک بچه توی شکمش بره اون طرف شهر و جواب آزمایشش رو
+                بگیره. حتی یک بار هم کلی پول داد به یک تاکسی تلفنی که بره و جوابش رو
+                براش بگیره. خوب، آزمایشگاه هایی که ما می رفتیم برای خودشون سایت
+                نداشتند. این شد که ما با خودمون فکر کردیم که:
             </span>
             <span class="highlight">
-                «چی می شد اگر یک سامانه ارزان قیمت و سریع بود که جواب آزمایش ها رو از همه آزمایشگاه ها می گرفت و به دست بیمارها می رسوند؟ چی می شد اگر من می تونستم همون لحظه ای که جواب آزمایشم حاضره، توی گوشی موبایلم ببینمش و همون جا با پزشک خودم به اشتراک بزارمش؟»
+                «چی می شد اگر یک سامانه ارزان قیمت و سریع بود که جواب آزمایش ها
+                رو از همه آزمایشگاه ها می گرفت و به دست بیمارها می رسوند؟ چی می شد
+                اگر من می تونستم همون لحظه ای که جواب آزمایشم حاضره، توی گوشی موبایلم
+                ببینمش و همون جا با پزشک خودم به اشتراک بزارمش؟»
             </span>
             <span>
                 این شد که ما دست به کار شدیم و سامانه
             </span>
             <span class="highlight">«جواب آزمایش»</span>
             <span>
-                رو برای استفاده همه آزمایشگاه های ایران دُرست کردیم. همه تلاش ما این بوده و هست که بیشترین رضایت رو هم برای آزمایشگاه ها و هم برای بیماران با کم ترین هزینه ممکن به وجود بیاریم. امید ما هم اینه که یک روزی همه ایرانی ها از
+                رو برای استفاده همه آزمایشگاه های ایران دُرست کردیم. همه تلاش ما این
+                بوده و هست که بیشترین رضایت رو هم برای آزمایشگاه ها و هم برای بیماران
+                با کم ترین هزینه ممکن به وجود بیاریم. امید ما هم اینه که یک روزی همه ایرانی ها از
             </span>
             <span class="highlight">«جواب آزمایش»</span>
             <span>

@@ -3,12 +3,45 @@
 app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
 
+        this.registerPatientDraft = registerPatientDraft;
+        this.verifyPatientDraft = verifyPatientDraft;
         this.patientInfo = patientInfo;
         this.acceptPatient = acceptPatient;
         this.getAcceptances = getAcceptances;
         this.send = send;
 
         /////////////////////////////////////////////////////
+
+        // May reject by code : 1, 2, 5, 80, 120, 140
+        function registerPatientDraft(person, invalidPersonHandler) {
+            return utils.httpPromiseHandler($http.post('/answer/patient/draft/register', {
+                person: {
+                    nationalCode: person.nationalCode,
+                    fullName: person.fullName,
+                    gender: person.gender,
+                    birthday: person.birthday,
+                    mobilePhoneNumber: person.mobilePhoneNumber,
+                    phoneNumber: person.phoneNumber,
+                    extraPhoneNumber: person.extraPhoneNumber,
+                    email: person.email,
+                    province: person.province,
+                    city: person.city,
+                    address: person.address,
+                    postalCode: person.postalCode
+                }
+            }), function(data) {
+                if (invalidPersonHandler)
+                    invalidPersonHandler(data.errors || {});
+            });
+        }
+
+        // May reject by code : 1, 2, 5, 30, 31, 32
+        function verifyPatientDraft(nationalCode, validationCode) {
+            return utils.httpPromiseHandler($http.post('/answer/patient/draft/verify', {
+                nationalCode: nationalCode,
+                validationCode: validationCode
+            }));
+        }
 
         // May reject by code : 1, 2, 5, 50, 52, 71, 100, 101
         // Resolves to patient personal and acceptance (if exists) information

@@ -826,8 +826,8 @@ global.global = global;
         10  : Already existing user
         11  : reCAPTCHA verification error
 
-        30  : User is not waiting for confirmation
-        31  : User confirmation has expired
+        30  : Action is not waiting for confirmation
+        31  : Confirmation code has expired
         32  : Wrong validation code
         
         40  : Wrong username or password
@@ -856,6 +856,9 @@ global.global = global;
         
         130 : User out of charge
         131 : Zarrinpal is not active
+        132 : Zarrinpal gate openning error
+        
+        140 : Patient has already been registered
     */
 
     var serviceStatusCodes = {
@@ -869,7 +872,7 @@ global.global = global;
         10: 'کاربر با این نام در حال حاضر موجود است',
         11: 'عدم تأیید ریکَپچا',
 
-        30: 'کاربر منتظر تأیید شدن وجود ندارد',
+        30: 'عملیات منتظر تأیید شدن وجود ندارد',
         31: 'زمان انقضای درخواست به اتمام رسیده است',
         32: 'کُد اعتبار سنجی اشتباه است',
 
@@ -900,6 +903,8 @@ global.global = global;
         130: 'شارژ حساب کاربر به اتمام رسیده است',
         131: 'درگاه پرداخت زرین پال فعال نیست',
         132: 'خطا در باز کردن درگاه پرداخت زرین پال',
+
+        140: 'اطلاعات این بیمار قبلاً در سامانه ثبت شده است. اگر نیاز به اصلاح این اطلاعات در سامانه است، پذیرش آزمایشگاه می تواند به شما کمک کند',
 
     };
 
@@ -1005,6 +1010,18 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                 },
                 templateUrl: 'home/history.html',
                 controller: 'HomeHistoryController'
+            })
+            .state('home.patient', {
+                url: '/patient',
+                templateUrl: 'home/patient.html',
+                controller: 'HomePatientController',
+                data: {
+                    dependencies: [
+                        'iriran-provinces-and-cities.js',
+                        'dropdown.min.js',
+                        'dropdown.rtl.min.css',
+                    ]
+                }
             })
             .state('home.about', {
                 url: '/about',
@@ -1821,12 +1838,45 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
 app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
 
+        this.registerPatientDraft = registerPatientDraft;
+        this.verifyPatientDraft = verifyPatientDraft;
         this.patientInfo = patientInfo;
         this.acceptPatient = acceptPatient;
         this.getAcceptances = getAcceptances;
         this.send = send;
 
         /////////////////////////////////////////////////////
+
+        // May reject by code : 1, 2, 5, 80, 120, 140
+        function registerPatientDraft(person, invalidPersonHandler) {
+            return utils.httpPromiseHandler($http.post('/answer/patient/draft/register', {
+                person: {
+                    nationalCode: person.nationalCode,
+                    fullName: person.fullName,
+                    gender: person.gender,
+                    birthday: person.birthday,
+                    mobilePhoneNumber: person.mobilePhoneNumber,
+                    phoneNumber: person.phoneNumber,
+                    extraPhoneNumber: person.extraPhoneNumber,
+                    email: person.email,
+                    province: person.province,
+                    city: person.city,
+                    address: person.address,
+                    postalCode: person.postalCode
+                }
+            }), function(data) {
+                if (invalidPersonHandler)
+                    invalidPersonHandler(data.errors || {});
+            });
+        }
+
+        // May reject by code : 1, 2, 5, 30, 31, 32
+        function verifyPatientDraft(nationalCode, validationCode) {
+            return utils.httpPromiseHandler($http.post('/answer/patient/draft/verify', {
+                nationalCode: nationalCode,
+                validationCode: validationCode
+            }));
+        }
 
         // May reject by code : 1, 2, 5, 50, 52, 71, 100, 101
         // Resolves to patient personal and acceptance (if exists) information
@@ -2987,6 +3037,215 @@ app.controller('HomeOtpController', ['$rootScope', '$scope', '$state', '$timeout
 
 
 /*
+	AHS502 : Start of 'home/patient-controller.js'
+*/
+
+/*global app*/
+/*global $*/
+/*global ValidationSystem*/
+/*global sscAlert*/
+/*global irIran*/
+/*global irIranProvinces*/
+
+app.controller('HomePatientController', ['$scope', '$rootScope', '$state', '$stateParams',
+    '$q', '$window', '$timeout', '$http', 'AnswerService', 'Config',
+    function($scope, $rootScope, $state, $stateParams,
+        $q, $window, $timeout, $http, answerService, config) {
+
+        $scope.registerPatientDraft = registerPatientDraft;
+
+        $scope.registeringPatientDraft = false;
+        var jYMD = (new Date()).jYMD();
+        $scope.years = Array.range(jYMD[0], 1300);
+        $scope.months = Array.range(1, 12);
+        $scope.days = Array.range(1, 31);
+        $scope.irIran = irIran;
+        $scope.provinces = irIranProvinces;
+        $scope.cities = [];
+        $scope.person = {};
+        $scope.person.birthday = [];
+
+        $scope.setBackHandler(function() {
+            $state.go('home.find');
+        });
+
+        //$scope.person.nationalCode
+        //$scope.person.fullName
+        //$scope.person.gender
+        //$scope.person.birthday
+        //$scope.person.mobilePhoneNumber
+        //$scope.person.phoneNumber
+        //$scope.person.extraPhoneNumber
+        //$scope.person.email
+        //$scope.person.province
+        //$scope.person.city
+        //$scope.person.address
+        //$scope.person.postalCode
+
+        $scope.vs = new ValidationSystem($scope.person)
+            .field('nationalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.nationalCode()
+            ])
+            .field('fullName', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(3)
+            ])
+            .field('gender', [
+                ValidationSystem.validators.notEmpty()
+            ])
+            .field('birthday', [
+                function(value) {
+                    if (!value || !value[0]) return "وارد کردن سال تولد الزامی است";
+                    if (!value || !value[1]) return "وارد کردن ماه تولد الزامی است";
+                    if (!value || !value[2]) return "وارد کردن روز تولد الزامی است";
+                    return null;
+                }
+            ])
+            .field('mobilePhoneNumber', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.mobilePhoneNumber()
+            ])
+            .field('phoneNumber', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.phoneNumber()
+            ])
+            .field('extraPhoneNumber', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.phoneNumber()
+            ])
+            .field('email', [
+                ValidationSystem.validators.notRequired(),
+                ValidationSystem.validators.email()
+            ])
+            .field('province', [
+                ValidationSystem.validators.notEmpty()
+            ])
+            .field('city', [
+                ValidationSystem.validators.notEmpty(),
+                function(value) {
+                    if (($scope.irIran[$scope.person.province] || []).indexOf(value) < 0) {
+                        return "این شهر متعلق به استان " + $scope.person.province + " نیست";
+                    }
+                    else return null;
+                }
+            ])
+            .field('address', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.minLength(10)
+            ])
+            .field('postalCode', [
+                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.postalCode()
+            ]);
+
+        $timeout(function() {
+
+            $('#ja-gender-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.gender = value;
+                        $scope.vs.check('gender');
+                    });
+                }
+            });
+
+            $('#ja-years-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.birthday[0] = Number(value);
+                        $scope.vs.check('birthday');
+                    });
+                }
+            });
+            $('#ja-months-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.birthday[1] = Number(value);
+                        $scope.vs.check('birthday');
+                    });
+                }
+            });
+            $('#ja-days-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.birthday[2] = Number(value);
+                        $scope.vs.check('birthday');
+                    });
+                }
+            });
+
+            $('#ja-provinces-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.province = value;
+                        $scope.cities = irIran[$scope.person.province];
+                        if ($scope.cities.indexOf($scope.person.city) < 0) {
+                            setDropdown('cities');
+                        }
+                        $scope.vs.check('province');
+                        $scope.vs.check('city');
+                    });
+                }
+            });
+            $('#ja-cities-dropdown').dropdown({
+                onChange: function(value, text, selectedItem) {
+                    $timeout(function() {
+                        $scope.person.city = value;
+                        $scope.vs.check('city');
+                    });
+                }
+            });
+
+        });
+
+        //TODO: This method is not useful anymore:
+        function setDropdown(name, value, text) {
+            if (arguments.length < 3) text = value;
+            $timeout(function() {
+                var element = $('#ja-' + name + '-dropdown');
+                if (value) element
+                    .dropdown('set value', value)
+                    .dropdown('set text', text);
+                else
+                    element.dropdown('clear');
+            });
+        }
+
+        function registerPatientDraft() {
+            if (!$scope.vs.validate()) return;
+
+            $scope.registeringPatientDraft = true;
+            answerService.registerPatientDraft($scope.person, $scope.vs.dictate)
+                .then(function() {
+                    return $scope.showValidationCodeModal()
+                        .then(function(validationCode) {
+                            answerService.verifyPatientDraft($scope.person.nationalCode, validationCode)
+                                .then(function() {
+                                    $scope.registeringPatientDraft = false;
+                                    $scope.showMessage('ثبت اطلاعات شخصی',
+                                            'اطلاعات تماس شما به صورت موفقیت آمیز در سامانه ثبت شدند.')
+                                        .then(function() {
+                                            $state.go('home.find');
+                                        });
+                                });
+                        });
+                }, function(code) {
+                    $scope.registeringPatientDraft = false;
+                    sscAlert(code);
+                });
+        }
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'home/patient-controller.js'
+*/
+
+
+/*
 	AHS502 : Start of 'lab/forget-controller.js'
 */
 
@@ -3659,13 +3918,6 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
         $scope.requestChange = requestChange;
 
         $scope.updatingPatient = false;
-        $scope.person = {};
-        $scope.person.birthday = [];
-        $scope.request = {
-            electronicVersion: true,
-            paperVersion: false
-        };
-        $scope.payment = config.post_price;
         var jYMD = (new Date()).jYMD();
         $scope.years = Array.range(jYMD[0], 1300);
         $scope.months = Array.range(1, 12);
@@ -3673,6 +3925,13 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
         $scope.irIran = irIran;
         $scope.provinces = irIranProvinces;
         $scope.cities = [];
+        $scope.person = {};
+        $scope.person.birthday = [];
+        $scope.request = {
+            electronicVersion: true,
+            paperVersion: false
+        };
+        $scope.payment = config.post_price;
 
         $scope.setBackHandler(function() {
             $state.go('panel.home');
@@ -5532,6 +5791,9 @@ app.controller('HomeController', ['$scope', '$rootScope', '$state',
             goToHomeFind: function() {
                 $state.go('home.find');
             },
+            goToHomePatient: function() {
+                $state.go('home.patient');
+            },
             goToHomeOtp: function() {
                 $state.go('home.otp');
             },
@@ -5626,6 +5888,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
         $scope.showConfirmMessage = showConfirmMessage;
         $scope.showDeveloperModal = showDeveloperModal;
         $scope.showRulesModal = showRulesModal;
+        $scope.showValidationCodeModal = showValidationCodeModal;
 
         $scope.backHandler = undefined;
         $scope.menuHandlers = undefined;
@@ -5708,6 +5971,20 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
                 .modal('show');
         }
 
+        function showValidationCodeModal() {
+            $scope.modal = {
+                validationCode: null
+            };
+            var defer = $q.defer();
+            angular.element('#ja-validation-code-modal')
+                .modal({
+                    onApprove: function() {
+                        defer.resolve($scope.modal.validationCode);
+                    }
+                })
+                .modal('show');
+            return defer.promise;
+        }
     }
 ]);
 
@@ -5857,10 +6134,12 @@ app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$l
 
         var startupMessage = init.startupMessage;
 
+        var startupState = init.patientIn ? 'home.patient' : (localStorage.startState || 'home.find');
+
         (!startupMessage ? $q.when() :
             $scope.showMessage(startupMessage.title, startupMessage.message, startupMessage.ok))
         .then(function() {
-            $state.go(localStorage.startState || 'home.find');
+            $state.go(startupState);
         });
 
     }

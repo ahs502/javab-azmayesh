@@ -25,6 +25,7 @@ module.exports = {
         "./app/style/main.print.less",
         "./app/style/directive.table-list-container.less",
         "./app/style/common.about.less",
+        "./app/style/home.less",
         "./app/style/answer.less",
         "./app/style/panel.less",
         "./app/style/admin.less",
