@@ -163,6 +163,9 @@ body {
   direction: rtl;
   text-align: justify !important;
 }
+.ja-after-form-space {
+  min-height: 50vh;
+}
 /*
 	AHS502 : End of 'main.less'
 */

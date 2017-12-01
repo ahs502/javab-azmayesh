@@ -124,8 +124,7 @@ function registerPatientDraft(relatedKeys, patientDraft) {
 
 function acceptPatient(relatedKeys, patient, acceptance, telegramContactExists) {
     var numbers = patient.numbers;
-    var message = "" + patient.fullName + " عزیز، سلام!\n" +
-        "اطلاعات شما در سامانه جواب آزمایش به روز رسانی شدند.";
+    var message = "" + patient.fullName + " عزیز، سلام!";
     if (acceptance.request.electronicVersion) {
         message +=
             "\nمبلغ قابل پرداخت = " + acceptance.payment + " تومان برای دریافت نسخه الکترونیکی" +

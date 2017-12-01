@@ -76,7 +76,7 @@
                                     <span ng-if="post.filesCount">فایل</span>
                                     <bdi><strong>{{ (post.filesCount || null) | emptyCheck | toPersianNumber }}</strong></bdi>
                                 </td>
-                                <td fa c>{{ post.postDate | toPersianDate: "hh:mm" }}</td>
+                                <td fa c>{{ post.postDate | toPersianDate: "HH:mm" }}</td>
                                 <td fa c>{{ post.postDate | toPersianDate: "dddd" }}</td>
                                 <td fa c>{{ post.postDate | toPersianDate: "YYYY/MM/DD" }}</td>
                                 <td fa r b>{{ post.nationalCode | toPersianNumber }}</td>

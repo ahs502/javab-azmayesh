@@ -757,7 +757,7 @@ global.global = global;
     global.toLatinNumber = toLatinNumber;
 
     var persianDigitConvertions = {
-        0: '۰',
+        0: '۰', // \u06F0 Farsi
         1: '۱',
         2: '۲',
         3: '۳',
@@ -770,7 +770,7 @@ global.global = global;
     };
 
     var latinDigitConvertions = {
-        '۰': '0',
+        '۰': '0', // \u06F0 Farsi
         '۱': '1',
         '۲': '2',
         '۳': '3',
@@ -779,7 +779,17 @@ global.global = global;
         '۶': '6',
         '۷': '7',
         '۸': '8',
-        '۹': '9'
+        '۹': '9',
+        '٠': '0', // \u0660 Arabic (iPhone)
+        '١': '1',
+        '٢': '2',
+        '٣': '3',
+        '٤': '4',
+        '٥': '5',
+        '٦': '6',
+        '٧': '7',
+        '٨': '8',
+        '٩': '9'
     };
 
     function toPersianNumber(text) {
@@ -2903,7 +2913,7 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
 
         function seeAnswer() {
             if (!$scope.vs.validate()) return;
-            
+
             $state.go('answer', {
                 p: $scope.nationalCode,
                 n: $scope.postCode,
@@ -5869,6 +5879,7 @@ app.controller('LabController', ['$scope', '$rootScope', '$state',
 
 /*global app*/
 /*global angular*/
+/*global getEnvironmentProperties*/
 
 app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$timeout', 'Config',
     function($scope, $rootScope, $q, $window, $timeout, config) {
@@ -5896,6 +5907,8 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
         $scope.footerHandlers = undefined;
 
         $scope.iconJs = $window.iconJs;
+
+        $scope.showAfterFormSpace = getEnvironmentProperties().mobile;
 
         function setBackHandler(handler) {
             $scope.backHandler = handler;
@@ -5952,7 +5965,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
                     onApprove: function() {
                         defer.resolve();
                     },
-                    onDecline: function() {
+                    onDeny: function() {
                         defer.reject();
                     }
                 })
@@ -6134,12 +6147,22 @@ app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$l
 
         var startupMessage = init.startupMessage;
 
-        var startupState = init.patientIn ? 'home.patient' : (localStorage.startState || 'home.find');
-
         (!startupMessage ? $q.when() :
             $scope.showMessage(startupMessage.title, startupMessage.message, startupMessage.ok))
         .then(function() {
-            $state.go(startupState);
+            var startupState = init.patientIn ? 'home.patient' : localStorage.startState;
+            return (startupState ? $q.when(startupState) :
+                $scope.showConfirmMessage("انتخاب نوع کاربری از سامانه",
+                    "آیا شما می خواهید به عنوان آزمایشگاه به سامانه وارد شوید یا به عنوان آزمایش دهنده؟",
+                    "آزمایش دهنده", "آزمایشگاه",
+                    'green', 'green')
+                .then(function() {
+                    return 'home.find';
+                }).catch(function() {
+                    return 'lab.login';
+                }));
+        }).then(function(state) {
+            $state.go(state);
         });
 
     }

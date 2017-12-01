@@ -46,7 +46,7 @@
                                 <td fa c>{{ acceptance.payment || null | emptyCheck | toPersianNumber | currencySeparator }}<span ng-show="acceptance.payment"> تومان</span></td>
                                 <td c b><span ng-show="acceptance.request.paperVersion">&#10004;</span><span ng-hide="acceptance.request.paperVersion">&ndash;</span></td>
                                 <td c b><span ng-show="acceptance.request.electronicVersion">&#10004;</span><span ng-hide="acceptance.request.electronicVersion">&ndash;</span></td>
-                                <td fa c>{{ acceptance.timeStamp | toPersianDate: "hh:mm" }}</td>
+                                <td fa c>{{ acceptance.timeStamp | toPersianDate: "HH:mm" }}</td>
                                 <td fa c>{{ acceptance.timeStamp | toPersianDate: "dddd" }}</td>
                                 <td fa c>{{ acceptance.timeStamp | toPersianDate: "YYYY/MM/DD" }}</td>
                                 <td fa r b>{{ acceptance.nationalCode | toPersianNumber }}</td>

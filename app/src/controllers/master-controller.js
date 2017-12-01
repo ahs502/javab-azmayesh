@@ -1,5 +1,6 @@
 /*global app*/
 /*global angular*/
+/*global getEnvironmentProperties*/
 
 app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$timeout', 'Config',
     function($scope, $rootScope, $q, $window, $timeout, config) {
@@ -27,6 +28,8 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
         $scope.footerHandlers = undefined;
 
         $scope.iconJs = $window.iconJs;
+
+        $scope.showAfterFormSpace = getEnvironmentProperties().mobile;
 
         function setBackHandler(handler) {
             $scope.backHandler = handler;
@@ -83,7 +86,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
                     onApprove: function() {
                         defer.resolve();
                     },
-                    onDecline: function() {
+                    onDeny: function() {
                         defer.reject();
                     }
                 })

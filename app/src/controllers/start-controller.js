@@ -13,12 +13,22 @@ app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$l
 
         var startupMessage = init.startupMessage;
 
-        var startupState = init.patientIn ? 'home.patient' : (localStorage.startState || 'home.find');
-
         (!startupMessage ? $q.when() :
             $scope.showMessage(startupMessage.title, startupMessage.message, startupMessage.ok))
         .then(function() {
-            $state.go(startupState);
+            var startupState = init.patientIn ? 'home.patient' : localStorage.startState;
+            return (startupState ? $q.when(startupState) :
+                $scope.showConfirmMessage("انتخاب نوع کاربری از سامانه",
+                    "آیا شما می خواهید به عنوان آزمایشگاه به سامانه وارد شوید یا به عنوان آزمایش دهنده؟",
+                    "آزمایش دهنده", "آزمایشگاه",
+                    'green', 'green')
+                .then(function() {
+                    return 'home.find';
+                }).catch(function() {
+                    return 'lab.login';
+                }));
+        }).then(function(state) {
+            $state.go(state);
         });
 
     }

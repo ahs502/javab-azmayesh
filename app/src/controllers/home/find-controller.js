@@ -28,7 +28,7 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
 
         function seeAnswer() {
             if (!$scope.vs.validate()) return;
-            
+
             $state.go('answer', {
                 p: $scope.nationalCode,
                 n: $scope.postCode,

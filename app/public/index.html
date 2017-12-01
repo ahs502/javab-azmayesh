@@ -690,6 +690,8 @@
 
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
@@ -801,6 +803,8 @@
                     </div>
 
                 </form>
+                
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
 
             </div>
         </div>
@@ -854,6 +858,8 @@
                     
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
@@ -881,7 +887,7 @@
             <div class="center aligned row">
 
                 <form class="ui {{ findingHistory ? 'loading' : '' }} form">
-                    
+
                     <div class="field" ng-class="{'error': vs.error('otp')}">
                         <!--<label class="nazanin">رمز یک بار مصرف</label>-->
                         <div class="ui input">
@@ -889,14 +895,16 @@
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('otp')" ng-bind="vs.error('otp')"></div>
                     </div>
-                    
+
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="findHistory()">
                             <span class="nazanin">مشاهده سوابق آزمایشگاهی</span>
                         </button>
                     </div>
-                    
+
                 </form>
+
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
 
             </div>
         </div>
@@ -1105,6 +1113,8 @@
                     </div>
 
                 </form>
+
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
 
             </div>
         </div>
@@ -1786,6 +1796,8 @@
 
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
@@ -1908,6 +1920,8 @@
 
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
@@ -1936,7 +1950,7 @@
             <div class="center aligned row">
 
                 <form class="ui {{ restoringPassword ? 'loading' : '' }} form">
-                    
+
                     <div class="field" ng-class="{'error': vs.error('username')}">
                         <label class="nazanin ja-required">نام کاربری</label>
                         <div class="ui input">
@@ -1944,7 +1958,7 @@
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>
-                    
+
                     <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
                         <label class="nazanin ja-required">شماره تلفن همراه</label>
                         <div class="ui input">
@@ -1952,20 +1966,23 @@
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
                     </div>
-                    
+
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="restorePassword()">
                             <span class="nazanin">دریافت رمز</span>
                         </button>
                     </div>
-                    
+
                 </form>
+
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
 
             </div>
         </div>
     </div>
 
 </div>
+
 </script>
 
 <script type="text/ng-template" id="lab/password.html">
@@ -1994,6 +2011,8 @@
                         </button>
                     </div>
                 </form>
+
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
 
             </div>
         </div>
@@ -2126,6 +2145,8 @@
 
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
@@ -2154,7 +2175,7 @@
             <div class="center aligned row">
 
                 <form class="ui {{ confirmingRegisteration ? 'loading' : '' }} form">
-                    
+
                     <div class="field" ng-class="{'error': vs.error('validationCode')}">
                         <!--<label class="nazanin">کد اعتبار سنجی</label>-->
                         <div class="ui input">
@@ -2162,14 +2183,16 @@
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('validationCode')" ng-bind="vs.error('validationCode')"></div>
                     </div>
-                    
+
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="confirmRegisteration()">
                             <span class="nazanin">ثبت نام</span>
                         </button>
                     </div>
-                    
+
                 </form>
+
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
 
             </div>
         </div>
@@ -2206,11 +2229,14 @@
                     </div>
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
 
 </div>
+
 </script>
 
 <script type="text/ng-template" id="panel.html">
@@ -2542,7 +2568,7 @@
                                     <span ng-if="post.filesCount">فایل</span>
                                     <bdi><strong>{{ (post.filesCount || null) | emptyCheck | toPersianNumber }}</strong></bdi>
                                 </td>
-                                <td fa c>{{ post.postDate | toPersianDate: "hh:mm" }}</td>
+                                <td fa c>{{ post.postDate | toPersianDate: "HH:mm" }}</td>
                                 <td fa c>{{ post.postDate | toPersianDate: "dddd" }}</td>
                                 <td fa c>{{ post.postDate | toPersianDate: "YYYY/MM/DD" }}</td>
                                 <td fa r b>{{ post.nationalCode | toPersianNumber }}</td>
@@ -2621,7 +2647,7 @@
                                 <td fa c>{{ acceptance.payment || null | emptyCheck | toPersianNumber | currencySeparator }}<span ng-show="acceptance.payment"> تومان</span></td>
                                 <td c b><span ng-show="acceptance.request.paperVersion">&#10004;</span><span ng-hide="acceptance.request.paperVersion">&ndash;</span></td>
                                 <td c b><span ng-show="acceptance.request.electronicVersion">&#10004;</span><span ng-hide="acceptance.request.electronicVersion">&ndash;</span></td>
-                                <td fa c>{{ acceptance.timeStamp | toPersianDate: "hh:mm" }}</td>
+                                <td fa c>{{ acceptance.timeStamp | toPersianDate: "HH:mm" }}</td>
                                 <td fa c>{{ acceptance.timeStamp | toPersianDate: "dddd" }}</td>
                                 <td fa c>{{ acceptance.timeStamp | toPersianDate: "YYYY/MM/DD" }}</td>
                                 <td fa r b>{{ acceptance.nationalCode | toPersianNumber }}</td>
@@ -2880,6 +2906,8 @@
 
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
@@ -2948,6 +2976,8 @@
                     </div>
 
                 </form>
+
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
 
             </div>
         </div>
@@ -3076,6 +3106,8 @@
 
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
@@ -3182,6 +3214,8 @@
 
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
@@ -3234,11 +3268,14 @@
 
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
 
 </div>
+
 </script>
 
 <script type="text/ng-template" id="panel/account/edit.html">
@@ -3318,11 +3355,14 @@
 
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
 
 </div>
+
 </script>
 
 <script type="text/ng-template" id="panel/account/password.html">
@@ -3345,7 +3385,7 @@
             <div class="fourteen wide small eight wide tablet six wide computer column">
 
                 <form class="ui {{ changingPassword ? 'loading' : '' }} form">
-                    
+
                     <div class="field" ng-class="{'error': vs.error('oldPassword')}">
                         <label class="nazanin ja-required">کلمه عبور قدیمی</label>
                         <div class="ui input">
@@ -3353,7 +3393,7 @@
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('oldPassword')" ng-bind="vs.error('oldPassword')"></div>
                     </div>
-                    
+
                     <div class="field" ng-class="{'error': vs.error('newPassword')}">
                         <label class="nazanin ja-required">کلمه عبور جدید</label>
                         <div class="ui input">
@@ -3361,7 +3401,7 @@
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('newPassword')" ng-bind="vs.error('newPassword')"></div>
                     </div>
-                    
+
                     <div class="field" ng-class="{'error': vs.error('newPasswordAgain')}">
                         <label class="nazanin ja-required">تکرار کلمه عبور جدید</label>
                         <div class="ui input">
@@ -3369,14 +3409,16 @@
                         </div>
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('newPasswordAgain')" ng-bind="vs.error('newPasswordAgain')"></div>
                     </div>
-                    
+
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="changePassword()">
                             <span class="nazanin">تغییر کلمه عبور</span>
                         </button>
                     </div>
-                    
+
                 </form>
+
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
 
             </div>
         </div>
@@ -3422,6 +3464,8 @@
                     </div>
 
                 </form>
+
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
 
             </div>
         </div>
@@ -3673,6 +3717,8 @@
 
                 </form>
 
+                <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
             </div>
         </div>
     </div>
@@ -3891,6 +3937,9 @@
             </form>
 
         </div>
+
+        <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
     </div>
 
 </div>
@@ -4023,6 +4072,9 @@
             </form>
 
         </div>
+
+        <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
     </div>
 
 </div>
@@ -4475,6 +4527,8 @@
                         </button>
                     </div>
 
+                    <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
                 </form>
 
                 <!-- Submenu: 2 -->
@@ -4493,6 +4547,8 @@
                         </button>
                     </div>
 
+                    <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
+
                 </form>
 
                 <!-- Submenu: 3 -->
@@ -4503,7 +4559,7 @@
                             <span class="nazanin">یافتن تمام شماره تلفن های همراه</span>
                         </button>
                     </div>
-                    
+
                     <a class="nazanin ja-rtl ja-align-right ja-phone-number-link" ng-show="areAllPhoneNumbersReady" ng-href="/admin/allPhoneNumbers" target="_blank">دانلود فایل شماره تلفن های همراه</a>
 
                 </form>
