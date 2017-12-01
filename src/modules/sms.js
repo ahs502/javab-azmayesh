@@ -26,6 +26,7 @@ module.exports = {
         c2cReceiptCodeDeclined,
         accountCharged,
         respondFeedback,
+        registerPhoneNumberTelegram,
     },
     simplySendSms,
     status
@@ -43,6 +44,7 @@ var smsLimits = {
         "passrecovery": [1, 72],
         "regpatientdraft": 3,
         "acceptpatient": 2,
+        "telegregnumber": 3
     },
     maxCount = 0;
 for (let type in smsLimits) {
@@ -263,6 +265,18 @@ function respondFeedback(relatedKeys, feedback, message) {
     });
 }
 
+function registerPhoneNumberTelegram(relatedKeys, contactInfo, validationCode) {
+    var numbers = [contactInfo.mobilePhoneNumber];
+    var message = "" + contactInfo.firstName + " " + contactInfo.lastName + "\nسلام!\n" +
+        "به روبات تلگرامی سامانه جواب آزمایش خوش آمدید.\n" +
+        "کد اعتبار سنجی: " + validationCode;
+    return sendSms('telegregnumber', numbers, message, {
+        relatedKeys,
+        contactInfo,
+        validationCode
+    });
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 var smsTypeDescription = {
@@ -281,6 +295,7 @@ var smsTypeDescription = {
     'declinec2c': "عدم تأیید کُد رهگیری پرداخت کارت به کارت آزمایشگاه",
     'usercharged': "تأیید پرداخت و شارژ حساب آزمایشگاه",
     'respondfeedback': "پاسخ به بازخورد ثبت شده",
+    'telegregnumber': "اعتبار سنجی تلفن همراه ثبت شده تلگرام بیمار",
 };
 
 function sendSms(type, numbers, message, data) {

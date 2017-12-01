@@ -1,6 +1,8 @@
 var config = require("../../config");
 
 var kfs = require("./kfs");
+var sms = require("./sms");
+var utils = require("./utils");
 
 const TeleBot = require('telebot');
 const bot = new TeleBot(config.telegram_bot_api_token);
@@ -14,6 +16,8 @@ module.exports = {
 ////////////////////////////////////////////////////////////////////////////////
 
 //bot.on('text', (msg) => msg.reply.text(msg.text));
+
+////////////////////////////////////////////////////////////////////////////////
 
 bot.on('/start', msg => {
     var fromId = msg.from.id;
@@ -36,7 +40,10 @@ bot.on('/start', msg => {
         .then(() => bot.sendMessage(fromId,
             'برای این منظور لازم است اطلاعات تماس خود را در اختیار سامانه «جواب آزمایش» قرار دهید.'))
         .then(() => bot.sendMessage(fromId,
-            'لطفاً با فشردن دکمه (ارسال اطلاعات تماس من) و پس از آن دکمه (OK) یا (SHARE) اطلاعات تماس خود را با ما به اشتراک بگذارید:', {
+            'لطفاً شماره تلفن همراه خود را که در آزمایشگاه ثبت کرده اید، وارد و ارسال کنید.\n' +
+            'اگر با همان شماره به تلگرام متصل شده اید، می توانید ' +
+            'با فشردن دکمه (ارسال اطلاعات تماس من) و پس از آن دکمه ' +
+            '(OK) یا (SHARE) اطلاعات تماس خود را با ما به اشتراک بگذارید:', {
                 replyMarkup: shareContactKeyboard
             }));
 });
@@ -74,7 +81,8 @@ bot.on('contact', contact => {
         lastName: contactData.last_name,
         userId: contactData.user_id
     };
-    return kfs('telegram/contact/phone/' + contactInfo.mobilePhoneNumber, contactInfo, function(err) {
+    var contactKey = 'telegram/contact/phone/' + contactInfo.mobilePhoneNumber;
+    return kfs(contactKey, contactInfo, function(err) {
         if (err) {
             console.error(err);
             return bot.sendMessage(contactInfo.userId,
@@ -116,6 +124,80 @@ bot.on('text', msg => {
         "reply": {}
     }
     */
+    var fromId = msg.from.id;
+    var phoneNumber = String(msg.text || '');
+    if (!phoneNumber.isMobileNumber()) {
+        if (!/^\d+$/.test(phoneNumber)) return;
+        if (phoneNumber.length > 4) {
+            return bot.sendMessage(fromId,
+                'شماره تلفن همراه وارد شده نادرست است. لطفاً دوباره تلاش کنید.');
+        }
+        var telegramConfirmingKey = 'telegram/confirming/' + fromId;
+        return kfs(telegramConfirmingKey, function(err, telegramConfirmingData) {
+            if (err) {
+                console.error(err);
+                return bot.sendMessage(fromId,
+                    'متأسفانه عملیات اعتبارسنجی شما با خطا مواجه شد. لطفاً مجدداً تلاش کنید.');
+            }
+            if (!telegramConfirmingData) {
+                return bot.sendMessage(fromId,
+                    'شماره تلفن همراه وارد شده نادرست است. لطفاً دوباره تلاش کنید.');
+            }
+            if (telegramConfirmingData.timeStamp > Date.now() + config.confirmation_expires_after * 3600 * 1000) {
+                return bot.sendMessage(fromId,
+                    'متأسفانه کُد اعتبارسنجی شما منقضی شده است. لطفاً مجدداً تلاش کنید.');
+            }
+            var validationCode = phoneNumber;
+            if (telegramConfirmingData.validationCode != validationCode) {
+                return bot.sendMessage(fromId,
+                    'کُد اعتبار سنجی وارد شده اشتباه است.');
+            }
+            var contactInfo = telegramConfirmingData.contactInfo;
+            var contactKey = 'telegram/contact/phone/' + contactInfo.mobilePhoneNumber;
+            return kfs(contactKey, contactInfo, function(err) {
+                if (err) {
+                    console.error(err);
+                    return bot.sendMessage(contactInfo.userId,
+                        'متأسفانه عملیات ثبت اطلاعات تماس شما با خطا مواجه شد. لطفاً مجدداً تلاش کنید.');
+                }
+                return bot.sendMessage(contactInfo.userId,
+                        'اطلاعات تماس شما به صورت موفقیت آمیز ثبت شدند!')
+                    .then(() => bot.sendMessage(contactInfo.userId,
+                        'اکنون کافی است منتظر آماده شدن جواب آزمایش خود باشید، ' +
+                        'شما از طریق همین روبات از آماده شدن جواب آزمایشتان مطلع خواهید شد.'));
+            });
+
+        });
+    }
+    var contactInfo = {
+        mobilePhoneNumber: phoneNumber,
+        firstName: msg.from.first_name,
+        lastName: msg.from.last_name,
+        userId: fromId
+    };
+    return sms.allowanceCheck(phoneNumber, 'telegregnumber').then(() => {
+        var validationCode = utils.generateRandomCode(4);
+        var telegramConfirmingKey = 'telegram/confirming/' + fromId;
+        var telegramConfirmingData = {
+            contactInfo,
+            validationCode,
+            timeStamp: Date.now()
+        };
+        return kfs(telegramConfirmingKey, telegramConfirmingData, function(err) {
+            if (err) {
+                console.error(err);
+                return bot.sendMessage(fromId,
+                    'متأسفانه عملیات ثبت اطلاعات تماس شما با خطا مواجه شد. لطفاً مجدداً تلاش کنید.');
+            }
+            sms.send.registerPhoneNumberTelegram([telegramConfirmingKey], contactInfo, validationCode);
+            return bot.sendMessage(fromId,
+                'لطفاً کد اعتبارسنجی دریافت شده از طریق پیامک را اینجا وارد کنید:');
+        });
+    }).catch(() => {
+        return bot.sendMessage(fromId,
+            'به دلیل رسیدن به حداکثر تعداد پیامک های ارسالی روزانه، امکان تکمیل فرآیند ثبت شماره تلفن وجود ندارد.' +
+            'لطفاً فردا مجدداً تلاش کنید.');
+    });
 });
 
 bot.start();
