@@ -1140,7 +1140,7 @@
                         <div class="content">
                             <div class="header nazanin" ng-bind="post.labName"></div>
                             <div class="meta">
-                                <span class="category nazanin">{{ post.timeStamp | toPersianDate: "روز dddd YYYY/MM/DD ساعت hh:mm" }}</span>
+                                <span class="category nazanin">{{ post.timeStamp | toPersianDate: "روز dddd YYYY/MM/DD ساعت HH:mm" }}</span>
                             </div>
                             <div class="description">
                                 <p>
@@ -1468,51 +1468,56 @@
             </div>
         </div>
     </div>
-    
+
     <br />
 
-    <div class="ui horizontal divider">
-        <span class="nazanin">موبایل</span>
-    </div>
+    <div ng-if="showMobileShareOptions">
 
-    <div class="ui basic segment">
+        <div class="ui horizontal divider">
+            <span class="nazanin">موبایل</span>
+        </div>
 
-        <p class="ja-rtl ja-align-right nazanin">
-            روی دستگاه موبایل می توانید از دکمه های زیر استفاده کنید:
-        </p>
+        <div class="ui basic segment">
 
-    </div>
+            <p class="ja-rtl ja-align-right nazanin">
+                روی دستگاه موبایل می توانید از دکمه های زیر استفاده کنید:
+            </p>
 
-    <div class="ui centered grid">
-        <div class="fourteen wide small eight wide tablet six wide computer column">
-            <div class="center aligned row">
+        </div>
 
-                <a class="--circular ui teal button ja-share-button" ng-href="{{sharingViaTelegram}}">
-                    <img class="ja-share-icon" ng-src="{{iconJs('telegram white')}}">
-                    <p class="nazanin">
-                        تلگرام
-                    </p>
-                </a>
+        <div class="ui centered grid">
+            <div class="fourteen wide small eight wide tablet six wide computer column">
+                <div class="center aligned row">
 
-                <a class="--circular ui red button ja-share-button" ng-href="{{sharingViaEmail}}">
-                    <img class="ja-share-icon" ng-src="{{iconJs('email white')}}">
-                    <p class="nazanin">
-                        پست الکترونیکی
-                    </p>
-                </a>
+                    <a class="--circular ui teal button ja-share-button" ng-href="{{sharingViaTelegram}}">
+                        <img class="ja-share-icon" ng-src="{{iconJs('telegram white')}}">
+                        <p class="nazanin">
+                            تلگرام
+                        </p>
+                    </a>
 
-                <a class="--circular ui green button ja-share-button" ng-href="{{sharingViaSms}}">
-                    <img class="ja-share-icon" ng-src="{{iconJs('sms white')}}">
-                    <p class="nazanin">
-                        پیام کوتاه
-                    </p>
-                </a>
+                    <a class="--circular ui red button ja-share-button" ng-href="{{sharingViaEmail}}">
+                        <img class="ja-share-icon" ng-src="{{iconJs('email white')}}">
+                        <p class="nazanin">
+                            پست الکترونیکی
+                        </p>
+                    </a>
 
+                    <a class="--circular ui green button ja-share-button" ng-href="{{sharingViaSms}}">
+                        <img class="ja-share-icon" ng-src="{{iconJs('sms white')}}">
+                        <p class="nazanin">
+                            پیام کوتاه
+                        </p>
+                    </a>
+
+                </div>
             </div>
         </div>
+
     </div>
 
 </div>
+
 </script>
 
 <script type="text/ng-template" id="answer/laboratory.html">

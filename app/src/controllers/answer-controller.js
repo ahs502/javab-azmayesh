@@ -4,6 +4,7 @@
 /*global Clipboard*/
 /*global simpleQueryString*/
 /*global sscAlert*/
+/*global getEnvironmentProperties*/
 
 app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService', 'UserService',
     function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService, userService) {
@@ -58,7 +59,9 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
             shareFile: function() {
                 clipboard = undefined;
                 $scope.sharedUrl = url;
-                $scope.sharingViaSms = 'sms:;?&' + simpleQueryString.stringify({
+                var env = getEnvironmentProperties();
+                $scope.showMobileShareOptions = !env.desktop;
+                $scope.sharingViaSms = 'sms:' + (env.iOS ? '&' : '?') + simpleQueryString.stringify({
                     body: 'سلام!\n' + 'نتایج آزمایش ' + $scope.answer.patientName + ' در لینک زیر:\n\n' + url
                 });
                 $scope.sharingViaEmail = 'mailto:?&' + simpleQueryString.stringify({

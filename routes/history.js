@@ -29,7 +29,7 @@ router.post('/generate/otp', function(req, res, next) {
             if (patient.numbers.indexOf(mobilePhoneNumber) < 0) {
                 return utils.resEndByCode(res, 60);
             }
-            var otp = utils.generateRandomCode(6);
+            var otp = utils.generateRandomCode(4);
             var requestCode = utils.generateRandomCode(10);
             utils.generateId('otp').then(otpId => {
                 var otpKey = 'otp/' + otpId;

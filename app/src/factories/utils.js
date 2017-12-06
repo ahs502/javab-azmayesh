@@ -19,7 +19,7 @@ app.factory('Utils', ['$q', '$http', '$window',
                 }
                 if (response.data.code !== 0) {
                     if (typeof rejectionDataProcessor === 'function') {
-                        rejectionDataProcessor(response.data);
+                        return rejectionDataProcessor(response.data);
                     }
                     return $q.reject(response.data.code || 1);
                 }

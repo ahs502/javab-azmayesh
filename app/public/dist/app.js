@@ -1611,7 +1611,7 @@ app.factory('Utils', ['$q', '$http', '$window',
                 }
                 if (response.data.code !== 0) {
                     if (typeof rejectionDataProcessor === 'function') {
-                        rejectionDataProcessor(response.data);
+                        return rejectionDataProcessor(response.data);
                     }
                     return $q.reject(response.data.code || 1);
                 }
@@ -2959,7 +2959,7 @@ app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$sta
         $scope.vs = new ValidationSystem($scope)
             .field('otp', [
                 ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.numberCode(6)
+                ValidationSystem.validators.numberCode(4)
             ]);
 
         function findHistory() {
@@ -5435,6 +5435,7 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
 /*global Clipboard*/
 /*global simpleQueryString*/
 /*global sscAlert*/
+/*global getEnvironmentProperties*/
 
 app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window', '$location', '$state', '$stateParams', 'HistoryService', 'UserService',
     function($rootScope, $scope, $timeout, $window, $location, $state, $stateParams, historyService, userService) {
@@ -5489,7 +5490,9 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
             shareFile: function() {
                 clipboard = undefined;
                 $scope.sharedUrl = url;
-                $scope.sharingViaSms = 'sms:;?&' + simpleQueryString.stringify({
+                var env = getEnvironmentProperties();
+                $scope.showMobileShareOptions = !env.desktop;
+                $scope.sharingViaSms = 'sms:' + (env.iOS ? '&' : '?') + simpleQueryString.stringify({
                     body: 'سلام!\n' + 'نتایج آزمایش ' + $scope.answer.patientName + ' در لینک زیر:\n\n' + url
                 });
                 $scope.sharingViaEmail = 'mailto:?&' + simpleQueryString.stringify({

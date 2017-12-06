@@ -22,7 +22,7 @@ app.controller('HomeHistoryController', ['$rootScope', '$scope', '$state', '$sta
         $scope.vs = new ValidationSystem($scope)
             .field('otp', [
                 ValidationSystem.validators.notEmpty(),
-                ValidationSystem.validators.numberCode(6)
+                ValidationSystem.validators.numberCode(4)
             ]);
 
         function findHistory() {

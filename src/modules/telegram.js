@@ -1,3 +1,5 @@
+/*global toLatinNumber*/
+
 var config = require("../../config");
 
 var kfs = require("./kfs");
@@ -125,10 +127,11 @@ bot.on('text', msg => {
     }
     */
     var fromId = msg.from.id;
-    var phoneNumber = String(msg.text || '');
+    var text = toLatinNumber(String(msg.text || ''));
+    var phoneNumber = text.toPhoneNumber();
     if (!phoneNumber.isMobileNumber()) {
-        if (!/^\d+$/.test(phoneNumber)) return;
-        if (phoneNumber.length > 4) {
+        if (!/^\d+$/.test(text)) return;
+        if (text.length > 4) {
             return bot.sendMessage(fromId,
                 'شماره تلفن همراه وارد شده نادرست است. لطفاً دوباره تلاش کنید.');
         }
@@ -147,7 +150,7 @@ bot.on('text', msg => {
                 return bot.sendMessage(fromId,
                     'متأسفانه کُد اعتبارسنجی شما منقضی شده است. لطفاً مجدداً تلاش کنید.');
             }
-            var validationCode = phoneNumber;
+            var validationCode = text;
             if (telegramConfirmingData.validationCode != validationCode) {
                 return bot.sendMessage(fromId,
                     'کُد اعتبار سنجی وارد شده اشتباه است.');

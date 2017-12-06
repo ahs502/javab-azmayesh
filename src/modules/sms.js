@@ -83,7 +83,7 @@ function validationCodeForRegisteration(relatedKeys, user, validationCode) {
     var numbers = [user.mobilePhoneNumber, user.phoneNumber];
     var message = "" + user.labName + "\nسلام!\n" +
         "به سامانه جواب آزمایش خوش آمدید.\n" +
-        "کد اعتبار سنجی: " + validationCode;
+        "کد اعتبار سنجی: " + toPersianNumber(validationCode);
     return sendSms('vericodeusrreg', numbers, message, {
         relatedKeys,
         user,
@@ -95,7 +95,7 @@ function validationCodeForUpdatingAccount(relatedKeys, newUser, validationCode) 
     var numbers = [newUser.mobilePhoneNumber, newUser.phoneNumber];
     var message = "کاربر گرامی " + newUser.username + "\nسلام!\n" +
         "برای تکمیل فرآیند بروزرسانی اطلاعات خود از کد زیر استفاده کنید:\n" +
-        "کد اعتبار سنجی: " + validationCode;
+        "کد اعتبار سنجی: " + toPersianNumber(validationCode);
     return sendSms('vericodeusrupd', numbers, message, {
         relatedKeys,
         newUser,
@@ -117,7 +117,7 @@ function passwordRecovery(relatedKeys, user) {
 function registerPatientDraft(relatedKeys, patientDraft) {
     var numbers = [patientDraft.patient.mobilePhoneNumber, patientDraft.patient.phoneNumber];
     var message = "لطفاً برای تکمیل فرآیند ثبت اطلاعات خود از کد زیر استفاده کنید:\n" +
-        "کد اعتبار سنجی: " + patientDraft.validationCode;
+        "کد اعتبار سنجی: " + toPersianNumber(patientDraft.validationCode);
     return sendSms('regpatientdraft', numbers, message, {
         relatedKeys,
         patientDraft
@@ -129,7 +129,7 @@ function acceptPatient(relatedKeys, patient, acceptance, telegramContactExists) 
     var message = "" + patient.fullName + " عزیز، سلام!";
     if (acceptance.request.electronicVersion) {
         message +=
-            "\nمبلغ قابل پرداخت = " + acceptance.payment + " تومان برای دریافت نسخه الکترونیکی" +
+            "\nمبلغ قابل پرداخت = " + toPersianNumber(acceptance.payment) + " تومان برای دریافت نسخه الکترونیکی" +
             (acceptance.request.paperVersion ? " و کاغذی" : "") + ".";
     }
     if (!telegramContactExists) {
@@ -150,7 +150,7 @@ function postAnswer(relatedKeys, patient, post, url) {
     var numbers = patient.numbers;
     var message = "" + patient.fullName + " عزیز، سلام!\n" +
         "نتایج آزمایش شما هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس هستند.\n" +
-        "شماره آزمایش: " + post.postCode + "\n" /*+ post.labName*/ +
+        "شماره آزمایش: " + toPersianNumber(post.postCode) + "\n" /*+ post.labName*/ +
         "می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:\n" + url;
     return sendSms('postans', numbers, message, {
         relatedKeys,
@@ -163,7 +163,7 @@ function postAnswer(relatedKeys, patient, post, url) {
 function deleteAnswer(relatedKeys, patient, postCode) {
     var numbers = patient.numbers;
     var message = "" + patient.fullName + " عزیز، سلام!\n" +
-        "نتایج آزمایش شما به شماره آزمایش " + postCode + " توسط آزمایشگاه از سامانه حذف شدند.";
+        "نتایج آزمایش شما به شماره آزمایش " + toPersianNumber(postCode) + " توسط آزمایشگاه از سامانه حذف شدند.";
     return sendSms('deleteans', numbers, message, {
         relatedKeys,
         patient,
@@ -175,7 +175,7 @@ function updateAnswer(relatedKeys, patient, post, url) {
     var numbers = patient.numbers;
     var message = "" + patient.fullName + " عزیز، سلام!\n" +
         "نتایج آزمایش شما به روز رسانی شدند و هم اکنون در سامانه جواب آزمایش به آدرس javabazmayesh.ir در دسترس هستند.\n" +
-        "شماره آزمایش: " + post.postCode + "\n" /*+ post.labName*/ +
+        "شماره آزمایش: " + toPersianNumber(post.postCode) + "\n" /*+ post.labName*/ +
         "می توانید از طریق لینک زیر نتایج آزمایش خود را مشاهده کنید:\n" + url;
     return sendSms('updateans', numbers, message, {
         relatedKeys,
@@ -188,7 +188,7 @@ function updateAnswer(relatedKeys, patient, post, url) {
 function otpGenerated(relatedKeys, otp, patient) {
     var numbers = [otp.mobilePhoneNumber].concat(patient.numbers);
     var message = "" + patient.fullName + " عزیز، سلام!\n" +
-        "رمز یکبار مصرف: " + otp.otp;
+        "رمز یکبار مصرف: " + toPersianNumber(otp.otp);
     return sendSms('otp', numbers, message, {
         relatedKeys,
         otp,
@@ -269,7 +269,7 @@ function registerPhoneNumberTelegram(relatedKeys, contactInfo, validationCode) {
     var numbers = [contactInfo.mobilePhoneNumber];
     var message = "" + contactInfo.firstName + " " + contactInfo.lastName + "\nسلام!\n" +
         "به روبات تلگرامی سامانه جواب آزمایش خوش آمدید.\n" +
-        "کد اعتبار سنجی: " + validationCode;
+        "کد اعتبار سنجی: " + toPersianNumber(validationCode);
     return sendSms('telegregnumber', numbers, message, {
         relatedKeys,
         contactInfo,
