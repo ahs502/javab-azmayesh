@@ -15,6 +15,9 @@ app.controller('HomeController', ['$scope', '$rootScope', '$state',
             goToHomeOtp: function() {
                 $state.go('home.otp');
             },
+            goToHomeHint: function() {
+                $state.go('home.hint');
+            },
             goToLabLogin: function() {
                 $state.go('lab.login');
             },

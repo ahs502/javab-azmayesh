@@ -368,6 +368,15 @@ div[table-list-container] table tbody tr td.nazanin {
 #ja-home #ja-home-patient .ui.dropdown.ja-inline.fluid.search.selection#ja-years-dropdown {
   right: 190px;
 }
+#ja-home #ja-home-hint .ui.container.ja-para {
+  font-size: 21px;
+  line-height: 31.5px;
+  margin: 16px 0 19px 0;
+  padding: 11px;
+}
+#ja-home #ja-home-hint .ui.container.ja-para strong {
+  color: #0070ff;
+}
 /*
 	AHS502 : End of 'home.less'
 */

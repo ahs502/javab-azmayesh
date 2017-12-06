@@ -8,6 +8,7 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
         $scope.seeAnswer = seeAnswer;
 
         $scope.findingAnswer = false; // No need to!
+        $scope.showLabGate = false;
 
         localStorage.startState = "home.find";
 
@@ -27,7 +28,10 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
             ]);
 
         function seeAnswer() {
-            if (!$scope.vs.validate()) return;
+            if (!$scope.vs.validate()) {
+                $scope.showLabGate = true;
+                return;
+            }
 
             $state.go('answer', {
                 p: $scope.nationalCode,

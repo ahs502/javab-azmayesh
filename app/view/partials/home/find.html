@@ -28,8 +28,13 @@
                         </button>
                     </div>
                     <div class="field">
-                        <button class="fluid ui basic blue button" ng-click="$state.go('home.otp')">
+                        <button class="fluid ui basic blue button" ng-click="$state.go('home.hint')">
                             <span class="nazanin">شماره آزمایش خود را فراموش کرده ام</span>
+                        </button>
+                    </div>
+                    <div class="field" ng-if="showLabGate">
+                        <button class="fluid ui teal button" ng-click="$state.go('lab.login')">
+                            <span class="nazanin">درگاه ورودی آزمایشگاه ها</span>
                         </button>
                     </div>
 

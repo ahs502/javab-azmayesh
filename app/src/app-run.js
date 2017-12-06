@@ -80,6 +80,10 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$location', '$timeo
 
                 $window.scrollTo(0, 0);
 
+                if (typeof $rootScope.hideMenu === 'function') {
+                    $rootScope.hideMenu();
+                }
+
             });
 
         $rootScope.$on('$stateChangeError',

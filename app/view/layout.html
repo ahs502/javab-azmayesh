@@ -17,14 +17,14 @@
     <!-- Main site contents -->
 
     <!-- Back arrow and menu bars icon (when no header, outside of it) -->
-    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left ja-screen" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="backHandler()"></img>
+    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left ja-screen" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="hideMenu(); backHandler()"></img>
     <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-clickable ja-right ja-screen" ng-src="{{iconJs('menu bars')}}" alt="Menu" ng-click="toggleMenu()"></img>
 
     <!-- Header -->
     <div ng-if="headerHandlers" id="ja-header" class="ui fixed top sticky segment ja-screen">
 
         <!-- Back arrow and menu bars icon (when header, inside of it) -->
-        <img ng-if="backHandler" class="ja-item ja-icon ja-hoverable ja-clickable ja-left" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="backHandler()"></img>
+        <img ng-if="backHandler" class="ja-item ja-icon ja-hoverable ja-clickable ja-left" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="hideMenu(); backHandler()"></img>
         <img ng-if="menuHandlers" class="ja-item ja-icon ja-hoverable ja-clickable ja-right" ng-src="{{iconJs('menu bars')}}" alt="Menu" ng-click="toggleMenu()"></img>
 
         <div ui-view="header">

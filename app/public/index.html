@@ -135,14 +135,14 @@
     <!-- Main site contents -->
 
     <!-- Back arrow and menu bars icon (when no header, outside of it) -->
-    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left ja-screen" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="backHandler()"></img>
+    <img ng-if="backHandler && !headerHandlers" id="ja-free-back-arrow" class="ja-item ja-icon ja-clickable ja-left ja-screen" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="hideMenu(); backHandler()"></img>
     <img ng-if="menuHandlers && !headerHandlers" id="ja-free-menu-bars" class="ja-item ja-icon ja-clickable ja-right ja-screen" ng-src="{{iconJs('menu bars')}}" alt="Menu" ng-click="toggleMenu()"></img>
 
     <!-- Header -->
     <div ng-if="headerHandlers" id="ja-header" class="ui fixed top sticky segment ja-screen">
 
         <!-- Back arrow and menu bars icon (when header, inside of it) -->
-        <img ng-if="backHandler" class="ja-item ja-icon ja-hoverable ja-clickable ja-left" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="backHandler()"></img>
+        <img ng-if="backHandler" class="ja-item ja-icon ja-hoverable ja-clickable ja-left" ng-src="{{iconJs('left arrow')}}" alt="<- Back" ng-click="hideMenu(); backHandler()"></img>
         <img ng-if="menuHandlers" class="ja-item ja-icon ja-hoverable ja-clickable ja-right" ng-src="{{iconJs('menu bars')}}" alt="Menu" ng-click="toggleMenu()"></img>
 
         <div ui-view="header">
@@ -459,6 +459,7 @@
         // Do NOT load JS files dynamically
         // resourceLoader('/dist/lib.min.js');
         // resourceLoader('/dist/app__APP_SOURCES_MINIFIED_INDICATOR__.js');
+        // resourceLoader.js('/config');
     </script>
 
     <!-- JS files will NOT be loaded dynamically -->
@@ -736,6 +737,13 @@
     <img class="ja-menu-item-icon" ng-src="{{iconJs('folder')}}">
 </a>
 
+<a class="item nazanin ja-align-right ja-rtl" ng-click="menuHandlers.goToHomeHint(); toggleMenu()">
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('question')}}">
+    <bdi>
+        مشکل دارم ... !
+    </bdi>
+</a>
+
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.goToLabLogin(); toggleMenu()">
     آزمایشگاه ها
     <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
@@ -797,8 +805,13 @@
                         </button>
                     </div>
                     <div class="field">
-                        <button class="fluid ui basic blue button" ng-click="$state.go('home.otp')">
+                        <button class="fluid ui basic blue button" ng-click="$state.go('home.hint')">
                             <span class="nazanin">شماره آزمایش خود را فراموش کرده ام</span>
+                        </button>
+                    </div>
+                    <div class="field" ng-if="showLabGate">
+                        <button class="fluid ui teal button" ng-click="$state.go('lab.login')">
+                            <span class="nazanin">درگاه ورودی آزمایشگاه ها</span>
                         </button>
                     </div>
 
@@ -853,6 +866,11 @@
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="sendOtp()">
                             <span class="nazanin">دریافت رمز یک بار مصرف</span>
+                        </button>
+                    </div>
+                    <div class="field">
+                        <button class="fluid ui basic blue button" ng-click="$state.go('home.hint')">
+                            <span class="nazanin">در دریافت رمز یک بار مصرف مشکل دارم</span>
                         </button>
                     </div>
                     
@@ -1116,6 +1134,58 @@
 
                 <div class="ja-after-form-space" ng-show="showAfterFormSpace"></div>
 
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</script>
+
+<script type="text/ng-template" id="home/hint.html">
+    <div id="ja-home-hint">
+
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        برای مشاهده جواب آزمایشتان باید شماره آزمایش چهار رقمی آن را در کنار کُد ملی خودتان وارد کنید. شماره آزمایش شما هم زمان با ارسال جواب آزمایشتان در پیام های اطلاع رسانی برای شما ارسال می شود. اگر در حال حاضر به شماره آزمایشتان دسترسی ندارید، می توانید
+        از طریق منوی <strong>سوابق من</strong> به تمام آزمایش های ثبت شده خود در این سامانه دسترسی پیدا کنید.
+    </div>
+
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        برای اینکه بتوانید سوابق آزمایش های خودتان را مشاهده کنید، هر بار لازم است ابتدا یک رمز یک بار مصرف تهیه کنید. جهت تهیه رمز یک بار مصرف نیز باید کُد ملی خود را به همراه یکی از شماره تلفن های همراهتان که در پذیرش های قبلی تان در آزمایشگاه ها ثبت کرده اید،
+        در سامانه وارد کنید تا رمز یک بار مصرف از طریق پیامک برایتان ارسال شود:
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+                <div class="field">
+                    <button class="fluid ui blue button" ng-click="goToHomeOtp()">
+                        <span class="nazanin">مشاهده سوابق آزمایشگاهی</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        <h3 class="nazanin">
+            نکته مهم:
+        </h3>
+    </div>
+
+    <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
+        در موارد خاص که شماره تلفن همراه شما تغییر کرده است و یا کُد ملی شما اشتباهاً در هنگام پذیرش ثبت شده است و یا به هر عنوان دیگری به سوابق خود دسترسی ندارید، می توانید از طریق صفحه ی <strong>تماس با ما</strong> و ثبت یک پیغام با شماره تلفن همراه
+        جدیدتان، موضوع را با کمک اُپراتورهای ما پیگیری کرده و برای اصلاح اطلاعات خودتان در سامانه اقدام کنید:
+    </div>
+
+    <div class="ui centered grid">
+        <div class="fourteen wide small eight wide tablet six wide computer column">
+            <div class="center aligned row">
+                <div class="field">
+                    <button class="fluid ui basic blue button" ng-click="goToHomeContact()">
+                        <span class="nazanin">صفحه تماس با ما</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1908,11 +1978,11 @@
 
                     <div class="field">
                         <div class="two ui buttons">
-                            <button class="fluid ui blue button" type="submit" ng-click="login()">
+                            <button class="fluid ui green button" ng-click="login()">
                                 <span class="nazanin">ورود</span>
                             </button>
                             <div class="or nazanin" data-text="یا"></div>
-                            <button class="fluid ui green button" ng-click="$state.go('lab.register')">
+                            <button class="fluid ui blue button" ng-click="$state.go('lab.register')">
                                 <span class="nazanin">ثبت نام</span>
                             </button>
                         </div>

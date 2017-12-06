@@ -1033,6 +1033,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                     ]
                 }
             })
+            .state('home.hint', {
+                url: '/hint',
+                templateUrl: 'home/hint.html',
+                controller: 'HomeHintController'
+            })
             .state('home.about', {
                 url: '/about',
                 templateUrl: 'common/about.html',
@@ -1516,6 +1521,10 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$location', '$timeo
             function(event, toState, toParams, fromState, fromParams) {
 
                 $window.scrollTo(0, 0);
+
+                if (typeof $rootScope.hideMenu === 'function') {
+                    $rootScope.hideMenu();
+                }
 
             });
 
@@ -2893,6 +2902,7 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
         $scope.seeAnswer = seeAnswer;
 
         $scope.findingAnswer = false; // No need to!
+        $scope.showLabGate = false;
 
         localStorage.startState = "home.find";
 
@@ -2912,7 +2922,10 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
             ]);
 
         function seeAnswer() {
-            if (!$scope.vs.validate()) return;
+            if (!$scope.vs.validate()) {
+                $scope.showLabGate = true;
+                return;
+            }
 
             $state.go('answer', {
                 p: $scope.nationalCode,
@@ -2928,6 +2941,28 @@ app.controller('HomeFindController', ['$rootScope', '$scope', '$state', '$timeou
 
 /*
 	AHS502 : End of 'home/find-controller.js'
+*/
+
+
+/*
+	AHS502 : Start of 'home/hint-controller.js'
+*/
+
+/*global app*/
+
+app.controller('HomeHintController', ['$scope', '$state',
+    function($scope, $state) {
+
+        $scope.setBackHandler(function() {
+            $state.go('home.find');
+        });
+
+    }
+]);
+
+
+/*
+	AHS502 : End of 'home/hint-controller.js'
 */
 
 
@@ -5810,6 +5845,9 @@ app.controller('HomeController', ['$scope', '$rootScope', '$state',
             goToHomeOtp: function() {
                 $state.go('home.otp');
             },
+            goToHomeHint: function() {
+                $state.go('home.hint');
+            },
             goToLabLogin: function() {
                 $state.go('lab.login');
             },
@@ -5897,6 +5935,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
         $scope.setFooterHandlers = setFooterHandlers;
 
         $scope.toggleMenu = toggleMenu;
+        $rootScope.hideMenu = hideMenu;
 
         $scope.showMessage = showMessage;
         $scope.showConfirmMessage = showConfirmMessage;
@@ -5934,6 +5973,13 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
                 .sidebar('setting', 'transition', 'overlay')
                 .sidebar('setting', 'mobileTransition', 'overlay')
                 .sidebar('toggle');
+        }
+
+        function hideMenu() {
+            angular.element('#ja-sidebar-menu')
+                .sidebar('setting', 'transition', 'overlay')
+                .sidebar('setting', 'mobileTransition', 'overlay')
+                .sidebar('hide');
         }
 
         function showMessage(title, message, ok) {
@@ -6138,8 +6184,8 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
 /*global app*/
 /*global localStorage*/
 
-app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$location',
-    function($q, $scope, $state, $stateParams, $location) {
+app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$location', '$timeout',
+    function($q, $scope, $state, $stateParams, $location, $timeout) {
 
         var init, initCoded = $stateParams.init;
         try {
@@ -6151,15 +6197,18 @@ app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$l
         var startupMessage = init.startupMessage;
 
         (!startupMessage ? $q.when() :
-            $scope.showMessage(startupMessage.title, startupMessage.message, startupMessage.ok))
+            initiateDelay().then(function() {
+                return $scope.showMessage(startupMessage.title, startupMessage.message, startupMessage.ok);
+            }))
         .then(function() {
             var startupState = init.patientIn ? 'home.patient' : localStorage.startState;
             return (startupState ? $q.when(startupState) :
-                $scope.showConfirmMessage("انتخاب نوع کاربری از سامانه",
-                    "آیا شما می خواهید به عنوان آزمایشگاه به سامانه وارد شوید یا به عنوان آزمایش دهنده؟",
-                    "آزمایش دهنده", "آزمایشگاه",
-                    'green', 'green')
-                .then(function() {
+                initiateDelay().then(function() {
+                    return $scope.showConfirmMessage("انتخاب نوع کاربری از سامانه",
+                        "آیا شما می خواهید به عنوان آزمایشگاه به سامانه وارد شوید یا به عنوان آزمایش دهنده؟",
+                        "آزمایش دهنده", "آزمایشگاه",
+                        'green', 'green');
+                }).then(function() {
                     return 'home.find';
                 }).catch(function() {
                     return 'lab.login';
@@ -6167,6 +6216,17 @@ app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$l
         }).then(function(state) {
             $state.go(state);
         });
+
+        var delayIsInitiated = false;
+
+        //TODO: Do something else instead:
+        function initiateDelay() {
+            if (delayIsInitiated) return $q.when();
+            delayIsInitiated = true;
+            return $timeout(function() {
+                console.log(99);
+            }, 500);
+        }
 
     }
 ]);

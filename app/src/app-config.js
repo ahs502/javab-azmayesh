@@ -71,6 +71,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                     ]
                 }
             })
+            .state('home.hint', {
+                url: '/hint',
+                templateUrl: 'home/hint.html',
+                controller: 'HomeHintController'
+            })
             .state('home.about', {
                 url: '/about',
                 templateUrl: 'common/about.html',

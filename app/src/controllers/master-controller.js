@@ -15,6 +15,7 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
         $scope.setFooterHandlers = setFooterHandlers;
 
         $scope.toggleMenu = toggleMenu;
+        $rootScope.hideMenu = hideMenu;
 
         $scope.showMessage = showMessage;
         $scope.showConfirmMessage = showConfirmMessage;
@@ -52,6 +53,13 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
                 .sidebar('setting', 'transition', 'overlay')
                 .sidebar('setting', 'mobileTransition', 'overlay')
                 .sidebar('toggle');
+        }
+
+        function hideMenu() {
+            angular.element('#ja-sidebar-menu')
+                .sidebar('setting', 'transition', 'overlay')
+                .sidebar('setting', 'mobileTransition', 'overlay')
+                .sidebar('hide');
         }
 
         function showMessage(title, message, ok) {
