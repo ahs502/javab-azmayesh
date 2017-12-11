@@ -32,6 +32,12 @@ app.controller('MasterController', ['$scope', '$rootScope', '$q', '$window', '$t
 
         $scope.showAfterFormSpace = getEnvironmentProperties().mobile;
 
+        $window.addEventListener('scroll', function(event) {
+            if (typeof $rootScope.hideMenu === 'function') {
+                $rootScope.hideMenu();
+            }
+        });
+
         function setBackHandler(handler) {
             $scope.backHandler = handler;
         }

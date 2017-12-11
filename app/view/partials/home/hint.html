@@ -14,13 +14,15 @@
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
                 <div class="field">
-                    <button class="fluid ui blue button" ng-click="goToHomeOtp()">
+                    <button class="fluid ui blue button" ng-click="$state.go('home.otp')">
                         <span class="nazanin">مشاهده سوابق آزمایشگاهی</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
+    
+    <br />
 
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
         <h3 class="nazanin">
@@ -37,12 +39,14 @@
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
                 <div class="field">
-                    <button class="fluid ui basic blue button" ng-click="goToHomeContact()">
+                    <button class="fluid ui basic blue button" ng-click="$state.go('home.contact')">
                         <span class="nazanin">صفحه تماس با ما</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <br />
 
 </div>

@@ -21,7 +21,7 @@ app.controller('AdminPatientController', ['$scope', '$rootScope', '$state',
             $scope.showResult == false;
             adminService.findPatientByNationalCode($scope.nationalCode)
                 .then(function(patient) {
-                    $scope.patient = patient;
+                    $scope.patients = [patient];
                     $scope.showResult = true;
                 }, function(code) {
                     $scope.showResult = false;

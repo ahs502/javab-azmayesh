@@ -1,9 +1,29 @@
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToLabLogin()">آزمایشگاه ها</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToLabLogin()">
+    آزمایشگاه ها
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
+</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('home.find')" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-show="$state.is('home.find')" ng-click="menuHandlers.goToHomePatient()">ثبت اطلاعات</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('home.find')" ng-click="menuHandlers.goToHomeFind()">
+    جواب آزمایش
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
+</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeOtp()">سوابق من</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-show="$state.is('home.find')" ng-click="menuHandlers.goToHomePatient()">
+    ثبت اطلاعات
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('acceptance')}}">
+</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-more-than-360" ng-click="menuHandlers.goToHomeOtp()">
+    سوابق من
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('folder')}}">
+</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-more-than-570" ng-click="menuHandlers.goToHomeAbout()">
+    درباره ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('about us')}}">
+</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-more-than-470" ng-click="menuHandlers.goToHomeContact()">
+    تماس با ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('contact us')}}">
+</a>

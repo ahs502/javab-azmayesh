@@ -1,4 +1,5 @@
 <a class="ja-item ja-text ja-left" title="شماره آزمایش">
+    شماره آزمایش
     <strong class="nazanin" ng-bind="footerHandlers.postCodeGetter()"></strong>
 </a>
 <!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.postCodeGetter()" id="answer-test-number"></a>-->
@@ -7,14 +8,25 @@
 <!--    <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>-->
 <!--</div>-->
 
-<a class="ja-item ja-text ja-left nazanin ja-more-than-480" ng-bind="footerHandlers.postDateGetter()" title="تاریخ ارسال نتایج"></a>
-
-
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('answer.post')" ng-click="$state.go('answer.post')">
-    <span>مشاهده نتایج آزمایش</span>
+<a class="ja-item ja-text ja-left nazanin ja-more-than-480" title="تاریخ ارسال نتایج">
+    ارسال
+    <strong ng-bind="footerHandlers.postDateGetter()"></strong>
 </a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-show="$state.is('answer.post')" ng-click="menuHandlers.goToLaboratory()">
+<!--TODO: Implement it: -->
+<!--<a class="ja-item ja-text ja-left nazanin ja-more-than-480" title="تاریخ پذیرش بیمار">-->
+<!--    پذیرش-->
+<!--    <span ng-bind="footerHandlers.acceptanceDateGetter()"></span>-->
+<!--</a>-->
+
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-more-than-350" ng-hide="$state.is('answer.post')" ng-click="$state.go('answer.post')">
+    مشاهده نتایج آزمایش
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
+</a>
+
+<a class="ja-item ja-text ja-name ja-rtl ja-hoverable ja-clickable ja-right nazanin ja-more-than-350" ng-show="$state.is('answer.post')" ng-click="menuHandlers.goToLaboratory()">
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
     <span ng-bind="menuHandlers.labGetter().name || ' '"></span>
 </a>
 <!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="answer-laboratory-name" data-position="top right" ng-click="menuHandlers.goToLaboratory()">-->

@@ -7,7 +7,7 @@
     "short_name": "جواب آزمایش",
     "display": "fullscreen",
     "icons": [{
-        "src": "/img/Logo/Icon - 144.png",
+        "src": "/img/Logo/Logo - 144.png",
         "sizes": "144x144",
         "type": "image/png"
     },{

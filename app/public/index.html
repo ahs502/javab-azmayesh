@@ -762,15 +762,35 @@
 </script>
 
 <script type="text/ng-template" id="home/footer.html">
-    <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToLabLogin()">آزمایشگاه ها</a>
+    <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToLabLogin()">
+    آزمایشگاه ها
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
+</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('home.find')" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-show="$state.is('home.find')" ng-click="menuHandlers.goToHomePatient()">ثبت اطلاعات</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('home.find')" ng-click="menuHandlers.goToHomeFind()">
+    جواب آزمایش
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
+</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToHomeOtp()">سوابق من</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-show="$state.is('home.find')" ng-click="menuHandlers.goToHomePatient()">
+    ثبت اطلاعات
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('acceptance')}}">
+</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToHomeAbout()">درباره ما</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToHomeContact()">تماس با ما</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-more-than-360" ng-click="menuHandlers.goToHomeOtp()">
+    سوابق من
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('folder')}}">
+</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-more-than-570" ng-click="menuHandlers.goToHomeAbout()">
+    درباره ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('about us')}}">
+</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-more-than-470" ng-click="menuHandlers.goToHomeContact()">
+    تماس با ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('contact us')}}">
+</a>
 
 </script>
 
@@ -1159,13 +1179,15 @@
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
                 <div class="field">
-                    <button class="fluid ui blue button" ng-click="goToHomeOtp()">
+                    <button class="fluid ui blue button" ng-click="$state.go('home.otp')">
                         <span class="nazanin">مشاهده سوابق آزمایشگاهی</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
+    
+    <br />
 
     <div class="ui justified text container nazanin ja-rtl ja-align-justify ja-para">
         <h3 class="nazanin">
@@ -1182,13 +1204,15 @@
         <div class="fourteen wide small eight wide tablet six wide computer column">
             <div class="center aligned row">
                 <div class="field">
-                    <button class="fluid ui basic blue button" ng-click="goToHomeContact()">
+                    <button class="fluid ui basic blue button" ng-click="$state.go('home.contact')">
                         <span class="nazanin">صفحه تماس با ما</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <br />
 
 </div>
 
@@ -1364,14 +1388,14 @@
 </script>
 
 <script type="text/ng-template" id="answer/header.html">
-    <a class="ja-item ja-text ja-left nazanin" ng-bind="headerHandlers.paitentNameGetter()" title="نام بیمار"></a>
+    <a class="ja-item ja-text ja-rtl ja-align-left ja-name ja-left nazanin ja-more-than-319" ng-bind="headerHandlers.paitentNameGetter()" title="نام بیمار"></a>
 
-<img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.post') }" ng-src="{{iconJs('reader')}}" ng-click="menuHandlers.viewFile()" alt="مشاهده آنلاین" title="مشاهده آنلاین">
+<img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-480" ng-class="{ 'ja-selected': $state.is('answer.post') }" ng-src="{{iconJs('reader')}}" ng-click="menuHandlers.viewFile()" alt="مشاهده آنلاین" title="مشاهده آنلاین">
 
-<img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.download') }" ng-src="{{iconJs('download')}}" ng-click="menuHandlers.saveFile()" ng-show="menuHandlers.getAsnwerLoadedStatus()"
+<img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-380" ng-class="{ 'ja-selected': $state.is('answer.download') }" ng-src="{{iconJs('download')}}" ng-click="menuHandlers.saveFile()" ng-show="menuHandlers.getAsnwerLoadedStatus()"
     alt="ذخیره فایل ها" title="ذخیره فایل ها">
 
-<img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.share') }" ng-src="{{iconJs('share')}}" ng-click="menuHandlers.shareFile()" ng-show="menuHandlers.getAsnwerLoadedStatus()" alt="به اشتراک گذاری"
+<img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-430" ng-class="{ 'ja-selected': $state.is('answer.share') }" ng-src="{{iconJs('share')}}" ng-click="menuHandlers.shareFile()" ng-show="menuHandlers.getAsnwerLoadedStatus()" alt="به اشتراک گذاری"
     title="به اشتراک گذاری">
 
 <img class="ja-item ja-icon ja-hoverable ja-clickable ja-right ja-more-than-530" ng-class="{ 'ja-selected': $state.is('answer.print') }" ng-src="{{iconJs('print')}}" ng-click="menuHandlers.printFile()" ng-if="!menuHandlers.getPrintingStatus()" ng-show="menuHandlers.getAsnwerLoadedStatus()"
@@ -1381,6 +1405,7 @@
 
 <script type="text/ng-template" id="answer/footer.html">
     <a class="ja-item ja-text ja-left" title="شماره آزمایش">
+    شماره آزمایش
     <strong class="nazanin" ng-bind="footerHandlers.postCodeGetter()"></strong>
 </a>
 <!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-bind="footerHandlers.postCodeGetter()" id="answer-test-number"></a>-->
@@ -1389,14 +1414,25 @@
 <!--    <div class="nazanin">برای دسترسی به این آزمایش در آینده می توانید از این شماره استفاده کنید</div>-->
 <!--</div>-->
 
-<a class="ja-item ja-text ja-left nazanin ja-more-than-480" ng-bind="footerHandlers.postDateGetter()" title="تاریخ ارسال نتایج"></a>
-
-
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('answer.post')" ng-click="$state.go('answer.post')">
-    <span>مشاهده نتایج آزمایش</span>
+<a class="ja-item ja-text ja-left nazanin ja-more-than-480" title="تاریخ ارسال نتایج">
+    ارسال
+    <strong ng-bind="footerHandlers.postDateGetter()"></strong>
 </a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-show="$state.is('answer.post')" ng-click="menuHandlers.goToLaboratory()">
+<!--TODO: Implement it: -->
+<!--<a class="ja-item ja-text ja-left nazanin ja-more-than-480" title="تاریخ پذیرش بیمار">-->
+<!--    پذیرش-->
+<!--    <span ng-bind="footerHandlers.acceptanceDateGetter()"></span>-->
+<!--</a>-->
+
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-more-than-350" ng-hide="$state.is('answer.post')" ng-click="$state.go('answer.post')">
+    مشاهده نتایج آزمایش
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
+</a>
+
+<a class="ja-item ja-text ja-name ja-rtl ja-hoverable ja-clickable ja-right nazanin ja-more-than-350" ng-show="$state.is('answer.post')" ng-click="menuHandlers.goToLaboratory()">
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('laboratory')}}">
     <span ng-bind="menuHandlers.labGetter().name || ' '"></span>
 </a>
 <!--<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" id="answer-laboratory-name" data-position="top right" ng-click="menuHandlers.goToLaboratory()">-->
@@ -1934,13 +1970,30 @@
 </script>
 
 <script type="text/ng-template" id="lab/footer.html">
-    <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToHomeFind()">جواب آزمایش</a>
+    <a class="ja-item ja-text ja-hoverable ja-clickable ja-left nazanin" ng-click="menuHandlers.goToHomeFind()">
+    جواب آزمایش
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
+</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabLogin()">ورود مشترکین</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-click="menuHandlers.goToLabRegister()">ثبت نام</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-hide="$state.is('lab.login')" ng-click="menuHandlers.goToLabLogin()">
+    ورود مشترکین
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('login')}}">
+</a>
 
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToLabAbout()">درباره ما</a>
-<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-not-small-display" ng-click="menuHandlers.goToLabContact()">تماس با ما</a>
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin" ng-show="$state.is('lab.login')" ng-click="menuHandlers.goToLabRegister()">
+    ثبت نام
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('register')}}">
+</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-more-than-470" ng-click="menuHandlers.goToLabAbout()">
+    درباره ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('about us')}}">
+</a>
+
+<a class="ja-item ja-text ja-hoverable ja-clickable ja-right nazanin ja-more-than-380" ng-click="menuHandlers.goToLabContact()">
+    تماس با ما
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('contact us')}}">
+</a>
 
 </script>
 
@@ -2569,13 +2622,13 @@
 
     <div class="ui text menu" id="ja-panel-history-filter-menu">
 
-        <div class="item ja-not-small-display">
+        <div class="item ja-more-than-430">
             <div class="ui input">
                 <input type="tel" ng-model="nationalCode" class="ja-filter" class="nazanin" ng-class="{'ja-align-left': nationalCode}" accept-persian-numbers placeholder="کد ملی" title="کد ملی">
             </div>
         </div>
 
-        <div class="item ja-not-small-display">
+        <div class="item ja-more-than-430">
             <bdi class="nazanin">جستجو:</bdi>
         </div>
 
@@ -4511,18 +4564,33 @@
                         </div>
                     </div>
 
+                    <!--<div class="field">-->
+                    <!--    <label class="nazanin">کد ملی</label>-->
+                    <!--    <div class="ui input">-->
+                    <!--        <input type="tel" ng-model="nationalCode" ng-class="{ 'ja-align-right': !nationalCode, 'ja-align-left': nationalCode }" placeholder="کد ملی" title="کد ملی">-->
+                    <!--    </div>-->
+                    <!--</div>-->
+
                     <div class="field">
                         <button class="fluid ui blue button" type="submit" ng-click="findPatientByNationalCode()">
                             <span class="nazanin">جستجو بیمار</span>
                         </button>
                     </div>
 
-                    <p class="nazanin ja-rtl ja-align-right" ng-if="showResult && !patient">
+                    <p class="nazanin ja-rtl ja-align-right" ng-if="showResult && !(patients || patients.length)">
                         بیماری با کُد ملی مورد نظر یافت نشد.
                     </p>
 
-                    <div class="field" ng-if="showResult && patient">
-                        <p class="ja-ltr ja-align-left ja-code" ng-bind="patient | json"></p>
+                    <div ng-if="showResult && (patients || patients.length)">
+
+                        <p class="nazanin ja-rtl ja-align-right">
+                            <strong>{{ patients.length | toPersianNumber }}</strong> نفر بیمار یافت شد:
+                        </p>
+
+                        <div class="field" ng-repeat="patient in patients">
+                            <p class="ja-ltr ja-align-left ja-code" ng-bind="patient | json"></p>
+                        </div>
+
                     </div>
 
                 </form>
