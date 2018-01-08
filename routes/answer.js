@@ -414,7 +414,12 @@ router.post('/patient/accept', function(req, res, next) {
                             return utils.resEndByCode(res, 5);
                         }
                         (('telegram/contact/phone/' + patient.numbers[0]) in kfs(), kfs())
-                        .then(telegramContactExists => sms.send.acceptPatient([patientKey, acceptanceKey], patient, acceptance, telegramContactExists));
+                        .then(telegramContactExists => {
+                            sms.send.acceptPatient([patientKey, acceptanceKey], patient, acceptance);
+                            telegramContactExists || setTimeout(function() {
+                                sms.send.telegramBotInvitation([patientKey], patient);
+                            }, 60 * 1000);
+                        });
                         utils.resEndByCode(res, 0);
                     });
                 });

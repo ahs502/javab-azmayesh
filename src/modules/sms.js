@@ -16,6 +16,7 @@ module.exports = {
         passwordRecovery,
         registerPatientDraft,
         acceptPatient,
+        telegramBotInvitation,
         postAnswer,
         deleteAnswer,
         updateAnswer,
@@ -124,25 +125,33 @@ function registerPatientDraft(relatedKeys, patientDraft) {
     });
 }
 
-function acceptPatient(relatedKeys, patient, acceptance, telegramContactExists) {
+function acceptPatient(relatedKeys, patient, acceptance) {
     var numbers = patient.numbers;
-    var message = "" + patient.fullName + " عزیز، سلام!";
+    var message = "" + patient.fullName + " عزیز، سلام!\n" +
+        "به سامانه جواب آزمایش خوش آمدید.\n" +
+        "کد ملی " + toPersianNumber(patient.nationalCode) + " برای شما ثبت شده است.";
     if (acceptance.request.electronicVersion) {
         message +=
             "\nمبلغ قابل پرداخت = " + toPersianNumber(acceptance.payment) + " تومان برای دریافت نسخه الکترونیکی" +
             (acceptance.request.paperVersion ? " و کاغذی" : "") + ".";
-    }
-    if (!telegramContactExists) {
-        message +=
-            "\nدر صورتی که تمایل دارید هنگام آماده شدن جواب آزمایشتان از طریق تلگرام نیز مطلع شوید، به روبات تلگرامی\n" +
-            config.telegram_bot_name + "\n متصل شوید و دکمه Start را بزنید.\n" +
-            "برای این منظور می توانید از لینک زیر استفاده کنید:\n" +
-            'https://t.me/' + config.telegram_bot_name.slice(1);
+        message += "\nما به محض آماده شدن جواب آزمایشتان شما را مطلع خواهیم کرد.";
     }
     return sendSms('acceptpatient', numbers, message, {
         relatedKeys,
         patient,
         acceptance
+    });
+}
+
+function telegramBotInvitation(relatedKeys, patient) {
+    var numbers = patient.numbers;
+    var message = "در صورتی که تمایل دارید هنگام آماده شدن جواب آزمایشتان از طریق تلگرام نیز مطلع شوید، به روبات تلگرامی\n" +
+        config.telegram_bot_name + "\n متصل شوید و دکمه Start را بزنید.\n" +
+        "برای این منظور می توانید از لینک زیر استفاده کنید:\n" +
+        'https://t.me/' + config.telegram_bot_name.slice(1);
+    return sendSms('invitetelegbot', numbers, message, {
+        relatedKeys,
+        patient
     });
 }
 
@@ -285,6 +294,7 @@ var smsTypeDescription = {
     'passrecovery': "بازیابی کلمه عبور آزمایشگاه",
     'regpatientdraft': "ثبت اطلاعات شخصی خود بیمار",
     'acceptpatient': "اعلام ثبت اطلاعات و پیشنهاد عضویت در تلگرام بیمار",
+    'invitetelegbot': "دعوت به اتصال به روبات تلگرامی بیمار",
     'postans': "ارسال نتیجه آزمایش بیمار",
     'deleteans': "حذف نتیجه آزمایش بیمار",
     'updateans': "به روز رسانی نتیجه آزمایش بیمار",

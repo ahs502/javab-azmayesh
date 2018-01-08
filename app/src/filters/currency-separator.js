@@ -11,5 +11,5 @@ app.filter('currencySeparator', function() {
             if (input.length) output = seperator + output;
         }
         return output;
-    }
+    };
 });

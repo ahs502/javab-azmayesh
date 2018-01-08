@@ -2957,6 +2957,13 @@ app.controller('HomeHintController', ['$scope', '$state',
             $state.go('home.find');
         });
 
+        $scope.showConfirmMessage("انتخاب نوع کاربری از سامانه",
+            "آیا شما می خواهید به عنوان آزمایشگاه به سامانه وارد شوید یا به عنوان آزمایش دهنده؟",
+            "آزمایش دهنده", "آزمایشگاه",
+            'green', 'green').catch(function() {
+            $state.go('lab.login');
+        });
+
     }
 ]);
 
@@ -6208,17 +6215,18 @@ app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$l
             }))
         .then(function() {
             var startupState = init.patientIn ? 'home.patient' : localStorage.startState;
-            return (startupState ? $q.when(startupState) :
-                initiateDelay().then(function() {
-                    return $scope.showConfirmMessage("انتخاب نوع کاربری از سامانه",
-                        "آیا شما می خواهید به عنوان آزمایشگاه به سامانه وارد شوید یا به عنوان آزمایش دهنده؟",
-                        "آزمایش دهنده", "آزمایشگاه",
-                        'green', 'green');
-                }).then(function() {
-                    return 'home.find';
-                }).catch(function() {
-                    return 'lab.login';
-                }));
+            // return (startupState ? $q.when(startupState) :
+            //     initiateDelay().then(function() {
+            //         return $scope.showConfirmMessage("انتخاب نوع کاربری از سامانه",
+            //             "آیا شما می خواهید به عنوان آزمایشگاه به سامانه وارد شوید یا به عنوان آزمایش دهنده؟",
+            //             "آزمایش دهنده", "آزمایشگاه",
+            //             'green', 'green');
+            //     }).then(function() {
+            //         return 'home.find';
+            //     }).catch(function() {
+            //         return 'lab.login';
+            //     }));
+            return startupState || 'home.find';
         }).then(function(state) {
             $state.go(state);
         });
@@ -6229,9 +6237,7 @@ app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$l
         function initiateDelay() {
             if (delayIsInitiated) return $q.when();
             delayIsInitiated = true;
-            return $timeout(function() {
-                console.log(99);
-            }, 500);
+            return $timeout(function() {}, 500);
         }
 
     }
@@ -6731,7 +6737,7 @@ app.filter('currencySeparator', function() {
             if (input.length) output = seperator + output;
         }
         return output;
-    }
+    };
 });
 
 
