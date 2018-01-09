@@ -39,7 +39,10 @@
                         </div>
 
                         <div ng-if="patient && acceptance" class="nazanin ja-rtl ja-align-right ja-info-message">
-                            <p>{{patient.fullName}} ({{patient.gender}})</p>
+                            <p>
+                                {{patient.fullName}}
+                                <span ng-if="patient.gender">({{patient.gender}})</span>
+                            </p>
                             <p>{{patient.province}}، {{patient.city}}، {{patient.address}}</p>
                             <p>پذیرش شده در روز {{ acceptance.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm" }}</p>
                         </div>

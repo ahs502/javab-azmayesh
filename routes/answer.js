@@ -306,13 +306,13 @@ router.post('/patient/accept', function(req, res, next) {
             ValidationSystem.validators.minLength(3)
         ])
         .field('gender', [
-            ValidationSystem.validators.notEmpty()
+            ValidationSystem.validators.notRequired()
         ])
         .field('birthday', [
             function(value) {
-                if (!value || !value[0]) return "وارد کردن سال تولد الزامی است";
-                if (!value || !value[1]) return "وارد کردن ماه تولد الزامی است";
-                if (!value || !value[2]) return "وارد کردن روز تولد الزامی است";
+                // if (!value || !value[0]) return "وارد کردن سال تولد الزامی است";
+                // if (!value || !value[1]) return "وارد کردن ماه تولد الزامی است";
+                // if (!value || !value[2]) return "وارد کردن روز تولد الزامی است";
                 return null;
             }
         ])
@@ -333,11 +333,16 @@ router.post('/patient/accept', function(req, res, next) {
             ValidationSystem.validators.email()
         ])
         .field('province', [
-            ValidationSystem.validators.notEmpty()
+            ValidationSystem.validators.notEmptyIf(function() {
+                return request.paperVersion;
+            })
         ])
         .field('city', [
-            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.notEmptyIf(function() {
+                return request.paperVersion;
+            }),
             function(value) {
+                if (!person.province) return true;
                 if ((irIran[person.province] || []).indexOf(value) < 0) {
                     return "این شهر متعلق به استان " + person.province + " نیست";
                 }
@@ -345,11 +350,15 @@ router.post('/patient/accept', function(req, res, next) {
             }
         ])
         .field('address', [
-            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.notEmptyIf(function() {
+                return request.paperVersion;
+            }),
             ValidationSystem.validators.minLength(10)
         ])
         .field('postalCode', [
-            ValidationSystem.validators.notEmpty(),
+            ValidationSystem.validators.notEmptyIf(function() {
+                return request.paperVersion;
+            }),
             ValidationSystem.validators.postalCode()
         ]);
     if (!personValidator.isValid()) {

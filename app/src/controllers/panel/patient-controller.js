@@ -62,13 +62,13 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                 ValidationSystem.validators.minLength(3)
             ])
             .field('gender', [
-                ValidationSystem.validators.notEmpty()
+                ValidationSystem.validators.notRequired()
             ])
             .field('birthday', [
                 function(value) {
-                    if (!value || !value[0]) return "وارد کردن سال تولد الزامی است";
-                    if (!value || !value[1]) return "وارد کردن ماه تولد الزامی است";
-                    if (!value || !value[2]) return "وارد کردن روز تولد الزامی است";
+                    // if (!value || !value[0]) return "وارد کردن سال تولد الزامی است";
+                    // if (!value || !value[1]) return "وارد کردن ماه تولد الزامی است";
+                    // if (!value || !value[2]) return "وارد کردن روز تولد الزامی است";
                     return null;
                 }
             ])
@@ -89,11 +89,16 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                 ValidationSystem.validators.email()
             ])
             .field('province', [
-                ValidationSystem.validators.notEmpty()
+                ValidationSystem.validators.notEmptyIf(function() {
+                    return $scope.request.paperVersion;
+                })
             ])
             .field('city', [
-                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.notEmptyIf(function() {
+                    return $scope.request.paperVersion;
+                }),
                 function(value) {
+                    if (!$scope.person.province) return true;
                     if (($scope.irIran[$scope.person.province] || []).indexOf(value) < 0) {
                         return "این شهر متعلق به استان " + $scope.person.province + " نیست";
                     }
@@ -101,11 +106,15 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                 }
             ])
             .field('address', [
-                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.notEmptyIf(function() {
+                    return $scope.request.paperVersion;
+                }),
                 ValidationSystem.validators.minLength(10)
             ])
             .field('postalCode', [
-                ValidationSystem.validators.notEmpty(),
+                ValidationSystem.validators.notEmptyIf(function() {
+                    return $scope.request.paperVersion;
+                }),
                 ValidationSystem.validators.postalCode()
             ]);
 
@@ -195,19 +204,19 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
 
                     $scope.person.fullName = $scope.person.fullName || patient.fullName;
                     $scope.person.gender = $scope.person.gender || patient.gender;
-                    setDropdown('gender', $scope.person.gender);
+                    $scope.person.gender && setDropdown('gender', $scope.person.gender);
                     $scope.person.birthday = patient.birthday || [];
-                    setDropdown('years', $scope.person.birthday[0]);
-                    setDropdown('months', $scope.person.birthday[1]);
-                    setDropdown('days', $scope.person.birthday[2]);
+                    $scope.person.birthday[0] && setDropdown('years', $scope.person.birthday[0]);
+                    $scope.person.birthday[1] && setDropdown('months', $scope.person.birthday[1]);
+                    $scope.person.birthday[2] && setDropdown('days', $scope.person.birthday[2]);
                     $scope.person.mobilePhoneNumber = $scope.person.mobilePhoneNumber || patient.numbers[0];
                     $scope.person.phoneNumber = $scope.person.phoneNumber || patient.numbers[1];
                     $scope.person.extraPhoneNumber = $scope.person.extraPhoneNumber || patient.numbers[2];
                     $scope.person.email = $scope.person.email || patient.email;
                     $scope.person.province = $scope.person.province || patient.province;
-                    setDropdown('provinces', $scope.person.province);
+                    $scope.person.province && setDropdown('provinces', $scope.person.province);
                     $scope.person.city = $scope.person.city || patient.city;
-                    setDropdown('cities', $scope.person.city);
+                    $scope.person.city && setDropdown('cities', $scope.person.city);
                     $scope.person.address = $scope.person.address || patient.address;
                     $scope.person.postalCode = $scope.person.postalCode || patient.postalCode;
 

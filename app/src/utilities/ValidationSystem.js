@@ -112,6 +112,7 @@
 
     ValidationSystem.validators = {
         notEmpty: notEmptyValidator,
+        notEmptyIf: notEmptyIfValidator,
         notRequired: notRequiredValidator,
         nationalCode: nationalCodeValidator,
         postalCode: postalCodeValidator,
@@ -135,9 +136,18 @@
         };
     }
 
+    function notEmptyIfValidator(condition, message) {
+        message = message || 'پُر کردن این فیلد الزامی است';
+        return function(value) {
+            while (typeof condition === 'function') condition = condition();
+            if (!condition) return true;
+            return value ? null : message;
+        };
+    }
+
     function notRequiredValidator() {
         return function(value) {
-            return !value;
+            return value === undefined || value === null;
         };
     }
 
