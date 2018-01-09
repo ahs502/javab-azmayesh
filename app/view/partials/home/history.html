@@ -18,7 +18,7 @@
 
                 <form class="ui {{ findingHistory ? 'loading' : '' }} form">
 
-                    <div class="field" ng-class="{'error': vs.error('otp')}">
+                    <div id=otp class="field" ng-class="{'error': vs.error('otp')}">
                         <!--<label class="nazanin">رمز یک بار مصرف</label>-->
                         <div class="ui input">
                             <input type="tel" ng-model="otp" ng-change="vs.check('otp')" class="nazanin" ng-class="{'ja-align-left': otp}" accept-persian-numbers placeholder="رمز یک بار مصرف">

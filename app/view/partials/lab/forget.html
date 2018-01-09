@@ -18,7 +18,7 @@
 
                 <form class="ui {{ restoringPassword ? 'loading' : '' }} form">
 
-                    <div class="field" ng-class="{'error': vs.error('username')}">
+                    <div id=username class="field" ng-class="{'error': vs.error('username')}">
                         <label class="nazanin ja-required">نام کاربری</label>
                         <div class="ui input">
                             <input class="lowercase" type="text" ng-model="username" ng-change="vs.check('username')" ng-class="{'ja-align-left': username, 'nazanin': !username}" placeholder="نام کاربری">
@@ -26,7 +26,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
+                    <div id=mobilePhoneNumber class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
                         <label class="nazanin ja-required">شماره تلفن همراه</label>
                         <div class="ui input">
                             <input type="tel" ng-model="mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="nazanin ja-align-left" accept-persian-numbers placeholder="۰۹∗∗∗∗∗∗∗∗∗">

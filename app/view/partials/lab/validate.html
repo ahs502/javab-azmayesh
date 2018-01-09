@@ -18,7 +18,7 @@
 
                 <form class="ui {{ confirmingRegisteration ? 'loading' : '' }} form">
 
-                    <div class="field" ng-class="{'error': vs.error('validationCode')}">
+                    <div id=validationCode class="field" ng-class="{'error': vs.error('validationCode')}">
                         <!--<label class="nazanin">کد اعتبار سنجی</label>-->
                         <div class="ui input">
                             <input type="tel" ng-model="validationCode" ng-change="vs.check('validationCode')" class="nazanin" ng-class="{'ja-align-left': validationCode}" accept-persian-numbers placeholder="کد اعتبار سنجی">

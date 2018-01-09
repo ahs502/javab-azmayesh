@@ -464,12 +464,12 @@ div[table-list-container] table tbody tr td.nazanin {
 #ja-panel {
   padding-top: 13px;
 }
-#ja-panel #ja-panel-loading {
-  margin-top: 73px;
-}
-#ja-panel #ja-panel-send .ja-error-message {
+#ja-panel .ja-error-message {
   color: red;
   font-weight: bold;
+}
+#ja-panel #ja-panel-loading {
+  margin-top: 73px;
 }
 #ja-panel #ja-panel-send .ja-info-message {
   color: gray;

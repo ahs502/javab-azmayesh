@@ -22,7 +22,7 @@
                         <span class="nazanin">مشخصات فردی</span>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('nationalCode')}">
+                    <div id=nationalCode class="field" ng-class="{'error': vs.error('nationalCode')}">
                         <label class="nazanin ja-required">کد ملی بیمار</label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.nationalCode" ng-change="vs.check('nationalCode')" class="nazanin" ng-class="{'ja-align-left': person.nationalCode}" accept-persian-numbers placeholder="کد ملی">
@@ -30,7 +30,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('nationalCode')" ng-bind="vs.error('nationalCode')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('fullName')}">
+                    <div id=fullName class="field" ng-class="{'error': vs.error('fullName')}">
                         <label class="nazanin ja-required">نام و نام خانوادگی بیمار</label>
                         <div class="ui input">
                             <input class="nazanin ja-rtl" type="text" ng-model="person.fullName" ng-change="vs.check('fullName')" placeholder="نام و نام خانوادگی">
@@ -38,7 +38,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('fullName')" ng-bind="vs.error('fullName')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('gender')}">
+                    <div id=gender class="field" ng-class="{'error': vs.error('gender')}">
                         <label class="nazanin ja-required">جنسیت</label>
                         <div id="ja-gender-dropdown" class="ui fluid selection dropdown">
                             <input type="hidden">
@@ -57,7 +57,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('gender')" ng-bind="vs.error('gender')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('birthday')}">
+                    <div id=birthday class="field" ng-class="{'error': vs.error('birthday')}">
                         <label class="nazanin ja-required">تاریخ تولد</label>
                         <div>
                             <div id="ja-days-dropdown" class="ui fluid search selection dropdown ja-inline">
@@ -101,7 +101,7 @@
                         <span class="nazanin">اطلاعات تماس</span>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
+                    <div id=mobilePhoneNumber class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
                         <label class="nazanin ja-required">شماره تلفن همراه</label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="nazanin ja-align-left" accept-persian-numbers placeholder="۰۹∗∗∗∗∗∗∗∗∗">
@@ -109,7 +109,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('phoneNumber')}">
+                    <div id=phoneNumber class="field" ng-class="{'error': vs.error('phoneNumber')}">
                         <label class="nazanin ja-optional">شماره تلفن دوم</label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.phoneNumber" ng-change="vs.check('phoneNumber')" class="nazanin" ng-class="{'ja-align-left': person.phoneNumber}" accept-persian-numbers placeholder="تلفن همراه یا ثابت">
@@ -117,7 +117,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('phoneNumber')" ng-bind="vs.error('phoneNumber')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('extraPhoneNumber')}">
+                    <div id=extraPhoneNumber class="field" ng-class="{'error': vs.error('extraPhoneNumber')}">
                         <label class="nazanin ja-optional">شماره تلفن سوم </label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.extraPhoneNumber" ng-change="vs.check('extraPhoneNumber')" class="nazanin" ng-class="{'ja-align-left': person.extraPhoneNumber}" accept-persian-numbers placeholder="تلفن همراه یا ثابت">
@@ -125,7 +125,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('extraPhoneNumber')" ng-bind="vs.error('extraPhoneNumber')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('email')}">
+                    <div id=email class="field" ng-class="{'error': vs.error('email')}">
                         <label class="nazanin ja-optional">آدرس پست الکترونیک</label>
                         <div class="ui input">
                             <input type="email" ng-model="person.email" ng-change="vs.check('email')" class="ja-align-left" placeholder="your@email.com">
@@ -137,7 +137,7 @@
                         <span class="nazanin">آدرس پُستی</span>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('province')}">
+                    <div id=province class="field" ng-class="{'error': vs.error('province')}">
                         <label class="nazanin ja-required">استان</label>
                         <div id="ja-provinces-dropdown" class="ui fluid search selection dropdown">
                             <input type="hidden">
@@ -153,7 +153,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('province')" ng-bind="vs.error('province')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('city')}">
+                    <div id=city class="field" ng-class="{'error': vs.error('city')}">
                         <label class="nazanin ja-required">شهر</label>
                         <div id="ja-cities-dropdown" class="ui fluid search selection dropdown">
                             <input type="hidden">
@@ -169,7 +169,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('city')" ng-bind="vs.error('city')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('address')}">
+                    <div id=address class="field" ng-class="{'error': vs.error('address')}">
                         <label class="nazanin ja-required">آدرس دقیق پُستی</label>
                         <div class="ui input">
                             <input class="nazanin ja-rtl" type="text" ng-model="person.address" ng-change="vs.check('address')" placeholder="خیابان، کوچه، پلاک، واحد، ...">
@@ -177,7 +177,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('address')" ng-bind="vs.error('address')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('postalCode')}">
+                    <div id=postalCode class="field" ng-class="{'error': vs.error('postalCode')}">
                         <label class="nazanin ja-required">کد پُستی</label>
                         <div class="ui input">
                             <input type="tel" ng-model="person.postalCode" ng-change="vs.check('postalCode')" class="nazanin" ng-class="{'ja-align-left': person.postalCode}" accept-persian-numbers placeholder="کد پُستی">

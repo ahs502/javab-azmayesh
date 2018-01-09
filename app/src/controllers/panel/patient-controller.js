@@ -4,6 +4,7 @@
 /*global sscAlert*/
 /*global irIran*/
 /*global irIranProvinces*/
+/*global toPersianNumber*/
 
 app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$stateParams',
     '$q', '$window', '$timeout', '$http', 'AnswerService', 'Config',
@@ -236,7 +237,7 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
             var promise = $q.when();
             if ($scope.payment) {
                 promise = $scope.showConfirmMessage('دریافت هزینه ثبت از بیمار',
-                    'هزینه درخواست های بیمار برابر ' + $scope.payment + ' تومان است.\n' +
+                    'هزینه درخواست های بیمار برابر ' + toPersianNumber($scope.payment) + ' تومان است.\n' +
                     'لطفاً این مبلغ را از بیمار دریافت کنید.',
                     'مبلغ مورد نظر دریافت شد', 'لغو عملیات',
                     'green', 'basic red');

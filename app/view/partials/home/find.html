@@ -6,7 +6,7 @@
 
                 <form class="ui {{ findingAnswer ? 'loading' : '' }} form">
 
-                    <div class="field" ng-class="{'error': vs.error('nationalCode')}">
+                    <div id=nationalCode class="field" ng-class="{'error': vs.error('nationalCode')}">
                         <!--<label class="nazanin">کد ملی</label>-->
                         <div class="ui input">
                             <input type="tel" ng-model="nationalCode" ng-change="vs.check('nationalCode')" class="nazanin" ng-class="{'ja-align-left': nationalCode}" accept-persian-numbers placeholder="کد ملی" title="کد ملی">
@@ -14,7 +14,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('nationalCode')" ng-bind="vs.error('nationalCode')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('postCode')}">
+                    <div id=postCode class="field" ng-class="{'error': vs.error('postCode')}">
                         <!--<label class="nazanin">شماره آزمایش</label>-->
                         <div class="ui input">
                             <input type="tel" ng-model="postCode" ng-change="vs.check('postCode')" class="nazanin" ng-class="{'ja-align-left': postCode}" accept-persian-numbers placeholder="شماره آزمایش" title="شماره آزمایش">

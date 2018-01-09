@@ -46,7 +46,7 @@
                         <bdi>پرداخت از طریق درگاه پرداخت الکترونیکی <strong>زرین پال</strong>:</bdi>
                     </p>
 
-                    <div class="field" ng-class="{'error': vs.error('zpChargeAmount')}">
+                    <div id=zpChargeAmount class="field" ng-class="{'error': vs.error('zpChargeAmount')}">
                         <label class="nazanin"><bdi>مبلغ مورد نظر (تومان)</bdi></label>
                         <div class="ui input">
                             <input type="tel" ng-model="zpChargeAmount" ng-change="vs.check('zpChargeAmount')" class="nazanin" ng-class="{ 'ja-align-left': zpChargeAmount, 'ja-align-right': !zpChargeAmount }" accept-persian-numbers placeholder="مبلغ شارژ به تومان">
@@ -79,7 +79,7 @@
                     <!--    <bdi>به نام: <strong>حسام الدین امین شکروی</strong></bdi>-->
                     <!--</p>-->
 
-                    <!--<div class="field" ng-class="{'error': vs.error('c2cReceiptCode')}">-->
+                    <!--<div id=c2cReceiptCode class="field" ng-class="{'error': vs.error('c2cReceiptCode')}">-->
                     <!--    <label class="nazanin">کد پیگیری پرداخت</label>-->
                     <!--    <div class="ui input">-->
                     <!--        <input type="tel" ng-model="c2cReceiptCode" ng-change="vs.check('c2cReceiptCode')" class="nazanin ja-align-left" accept-persian-numbers placeholder="۱۲۳۴۵">-->

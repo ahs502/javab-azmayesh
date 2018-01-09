@@ -74,7 +74,7 @@
 
                 <form class="ui {{ sendingFeedback ? 'loading' : '' }} form">
 
-                    <div class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
+                    <div id=mobilePhoneNumber class="field" ng-class="{'error': vs.error('mobilePhoneNumber')}">
                         <label class="nazanin ja-required">تلفن همراه ارتباطی</label>
                         <div class="ui input">
                             <input type="tel" ng-model="mobilePhoneNumber" ng-change="vs.check('mobilePhoneNumber')" class="nazanin ja-align-left" accept-persian-numbers placeholder="۰۹∗∗∗∗∗∗∗∗∗">
@@ -82,7 +82,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('mobilePhoneNumber')" ng-bind="vs.error('mobilePhoneNumber')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('message')}">
+                    <div id=message class="field" ng-class="{'error': vs.error('message')}">
                         <label class="nazanin ja-required">متن پیغام</label>
                         <div class="ui input">
                             <textarea class="nazanin ja-rtl" ng-model="message" ng-change="vs.check('message')" rows=6 maxlength=10000 placeholder=""></textarea>

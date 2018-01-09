@@ -22,7 +22,7 @@
                         <span class="nazanin">گیرنده نتایج</span>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('nationalCode')}">
+                    <div id=nationalCode class="field" ng-class="{'error': vs.error('nationalCode')}">
                         <label class="nazanin ja-required">کد ملی بیمار</label>
                         <div class="ui input">
                             <input type="tel" ng-model="nationalCode" ng-change="vs.check('nationalCode'); loadPatientInfo()" class="nazanin" ng-class="{'ja-align-left': nationalCode}" accept-persian-numbers placeholder="کد ملی">

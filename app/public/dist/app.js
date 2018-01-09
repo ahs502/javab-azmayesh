@@ -134,6 +134,7 @@ global.global = global;
 */
 
 /*global toPersianNumber*/
+/*global $*/
 
 (function(global) {
 
@@ -153,6 +154,7 @@ global.global = global;
         this.validate = validate; // Checks some or all fields validity status and updates their error messages => summary of those fields validity
         this.status = status; // Summarize some of all fields validity status without checking or updating their error messages => summary of those fields validity
         this.dictate = dictate; // Forces all fields error messages according to the errors object provided => nothing!
+        this.gotoFirstErroredField = gotoFirstErroredField; // Scrolls the view to the first errored field
 
         function field(fieldName, validators) {
             fields[fieldName] = {
@@ -201,6 +203,9 @@ global.global = global;
                 fieldData.error = run(fieldName, fieldData.validators);
                 if (fieldData.error) valid = false;
             });
+            if (!arguments.length) {
+                gotoFirstErroredField();
+            }
             return valid;
         }
 
@@ -241,6 +246,16 @@ global.global = global;
             return null;
         }
 
+        function gotoFirstErroredField() {
+            var erroredFieldNames = Object.keys(fields).filter(function(fieldName) {
+                return !!fields[fieldName].error;
+            });
+            if (!erroredFieldNames.length) return;
+            var fieldElement = document.getElementById(erroredFieldNames[0]);
+            fieldElement && typeof fieldElement.scrollIntoView === 'function' && fieldElement.scrollIntoView();
+            window.scrollTo(window.scrollX, Math.max(0, window.scrollY - 65));
+        }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -267,7 +282,7 @@ global.global = global;
     function notEmptyValidator(message) {
         message = message || 'پُر کردن این فیلد الزامی است';
         return function(value) {
-            return value ? null : message;
+            return valueIsEmpty(value) ? message : null;
         };
     }
 
@@ -275,14 +290,14 @@ global.global = global;
         message = message || 'پُر کردن این فیلد الزامی است';
         return function(value) {
             while (typeof condition === 'function') condition = condition();
-            if (!condition) return true;
-            return value ? null : message;
+            if (!condition && valueIsEmpty(value)) return true;
+            return valueIsEmpty(value) ? message : null;
         };
     }
 
     function notRequiredValidator() {
         return function(value) {
-            return value === undefined || value === null;
+            return valueIsEmpty(value);
         };
     }
 
@@ -361,6 +376,12 @@ global.global = global;
         return function(value) {
             return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(value) ? null : message;
         };
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    function valueIsEmpty(value) {
+        return value === undefined || value === null || value === '';
     }
 
 })(global);
@@ -3969,6 +3990,7 @@ app.controller('PanelHomeController', ['$scope', '$rootScope', '$state', '$state
 /*global sscAlert*/
 /*global irIran*/
 /*global irIranProvinces*/
+/*global toPersianNumber*/
 
 app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$stateParams',
     '$q', '$window', '$timeout', '$http', 'AnswerService', 'Config',
@@ -4201,7 +4223,7 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
             var promise = $q.when();
             if ($scope.payment) {
                 promise = $scope.showConfirmMessage('دریافت هزینه ثبت از بیمار',
-                    'هزینه درخواست های بیمار برابر ' + $scope.payment + ' تومان است.\n' +
+                    'هزینه درخواست های بیمار برابر ' + toPersianNumber($scope.payment) + ' تومان است.\n' +
                     'لطفاً این مبلغ را از بیمار دریافت کنید.',
                     'مبلغ مورد نظر دریافت شد', 'لغو عملیات',
                     'green', 'basic red');

@@ -6,7 +6,7 @@
 
                 <form class="ui {{ loggingIn ? 'loading' : '' }} form">
 
-                    <div class="field" ng-class="{'error': vs.error('username')}">
+                    <div id=username class="field" ng-class="{'error': vs.error('username')}">
                         <label class="nazanin ja-required">نام کاربری</label>
                         <div class="ui input">
                             <input class="lowercase" type="text" ng-model="username" ng-change="vs.check('username')" ng-class="{'ja-align-left': username, 'nazanin': !username}" placeholder="نام کاربری">
@@ -14,7 +14,7 @@
                         <div class="ui pointing red basic label nazanin" ng-if="vs.error('username')" ng-bind="vs.error('username')"></div>
                     </div>
 
-                    <div class="field" ng-class="{'error': vs.error('password')}">
+                    <div id=password class="field" ng-class="{'error': vs.error('password')}">
                         <label class="nazanin ja-required">کلمه عبور</label>
                         <div class="ui input">
                             <input type="password" ng-model="password" ng-change="vs.check('password')" ng-class="{'ja-align-left': password, 'nazanin': !password}" placeholder="کلمه عبور">
