@@ -564,6 +564,15 @@ router.post('/editLaboratory', function(req, res, next) {
         user.postalCode = labData.postalCode;
         user.websiteAddress = labData.websiteAddress;
         user.balance = labData.balance;
+        if (user.balance >= 0) {
+            delete user.chargeDeadlineTimeStamp;
+        }
+        if (labData.freeIntervalTimeStamp) {
+            user.freeIntervalTimeStamp = labData.freeIntervalTimeStamp;
+        }
+        else {
+            delete user.freeIntervalTimeStamp;
+        }
         kfs(userKey, user, function(err) {
             if (err) {
                 console.error(err);

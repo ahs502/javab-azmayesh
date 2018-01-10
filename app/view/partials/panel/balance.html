@@ -2,7 +2,7 @@
 
     <div class="ui centered grid">
         <div class="twelve wide small eight wide tablet six wide computer column">
-            <div class="center aligned row ltr">
+            <div class="centered row">
 
                 <div class="ui right floated {{balanceColor}} tiny statistic">
                     <div class="label">
@@ -25,6 +25,38 @@
                     </div>
                     <div class="label">
                         <span class="nazanin">آزمایش</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ui centered grid" ng-show="data.labData.freeInterval || data.labData.chargeDeadline">
+        <div class="twelve wide small eight wide tablet six wide computer column">
+            <div class="centered row">
+
+                <div class="ui right floated green tiny statistic" ng-if="data.labData.freeInterval">
+                    <div class="label">
+                        <span class="nazanin">بازه رایگان تا</span>
+                    </div>
+                    <div class="value">
+                        <bdi><span class="nazanin" ng-bind="data.labData.freeInterval | toPersianDate"></span></bdi>
+                    </div>
+                    <div class="label">
+                        <span class="nazanin">برای ارسال الکترونیکی</span>
+                    </div>
+                </div>
+
+                <div class="ui left floated red tiny statistic" ng-if="data.labData.chargeDeadline">
+                    <div class="label">
+                        <span class="nazanin">برای مثبت کردن شارژ تا</span>
+                    </div>
+                    <div class="value">
+                        <bdi><span class="nazanin" ng-bind="data.labData.chargeDeadline | toPersianDate"></span></bdi>
+                    </div>
+                    <div class="label">
+                        <span class="nazanin">فرصت دارید</span>
                     </div>
                 </div>
 

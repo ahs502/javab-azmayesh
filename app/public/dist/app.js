@@ -1884,6 +1884,7 @@ app.service('AdminService', ['$q', '$http', '$window', 'Utils',
 */
 
 /*global app*/
+/*global angular*/
 
 app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
@@ -1915,8 +1916,10 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                     postalCode: person.postalCode
                 }
             }), function(data) {
-                if (invalidPersonHandler)
+                if (angular.isFunction(invalidPersonHandler) && data.code === 80) {
                     invalidPersonHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -1981,8 +1984,10 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                 },
                 payment: payment
             }), function(data) {
-                if (invalidPersonHandler)
+                if (angular.isFunction(invalidPersonHandler) && data.code === 80) {
                     invalidPersonHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -2017,8 +2022,10 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                 }),
                 notes: notes
             }), function(data) {
-                if (invalidPersonHandler)
+                if (angular.isFunction(invalidPersonHandler) && data.code === 80) {
                     invalidPersonHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -2038,6 +2045,7 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
 */
 
 /*global app*/
+/*global angular*/
 
 app.service('BalanceService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
@@ -2051,8 +2059,10 @@ app.service('BalanceService', ['$q', '$http', '$window', 'Utils',
             return utils.httpPromiseHandler($http.post('/balance/submit/c2cReceiptCode', {
                 c2cReceiptCode: c2cReceiptCode
             }), function(data) {
-                if (invalidModelHandler)
+                if (angular.isFunction(invalidModelHandler) && data.code === 80) {
                     invalidModelHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -2158,6 +2168,7 @@ app.service('HistoryService', ['$http', 'Utils',
 */
 
 /*global app*/
+/*global angular*/
 
 app.service('MasterService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
@@ -2172,8 +2183,10 @@ app.service('MasterService', ['$q', '$http', '$window', 'Utils',
                 mobilePhoneNumber: mobilePhoneNumber,
                 message: message
             }), function(data) {
-                if (invalidModelHandler)
+                if (angular.isFunction(invalidModelHandler) && data.code === 80) {
                     invalidModelHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -2283,6 +2296,7 @@ app.service('PostService', ['$q', '$http', 'Utils',
 */
 
 /*global app*/
+/*global angular*/
 
 app.service('UserService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
@@ -2321,8 +2335,10 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 },
                 recaptcha: model.response
             }), function(data) {
-                if (invalidModelHandler)
+                if (angular.isFunction(invalidModelHandler) && data.code === 80) {
                     invalidModelHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -2346,8 +2362,10 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                     websiteAddress: newAccount.websiteAddress,
                 }
             }), function(data) {
-                if (invalidNewAccountHandler)
+                if (angular.isFunction(invalidNewAccountHandler) && data.code === 80) {
                     invalidNewAccountHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -2357,8 +2375,10 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 oldPassword: oldPassword,
                 newPassword: newPassword
             }), function(data) {
-                if (invalidNewPasswordHandler)
+                if (angular.isFunction(invalidNewPasswordHandler) && data.code === 80) {
                     invalidNewPasswordHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -2498,6 +2518,13 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             if (userInfo) {
                 userInfo.subscriptionDate = new Date(userInfo.timeStamp);
                 // delete userInfo.timeStamp; // DO NOT ACTIVATE THIS LINE EVER AGAIN!
+
+                if (userInfo.chargeDeadlineTimeStamp) {
+                    userInfo.chargeDeadline = new Date(userInfo.chargeDeadlineTimeStamp);
+                }
+                if (userInfo.freeIntervalTimeStamp) {
+                    userInfo.freeInterval = new Date(userInfo.freeIntervalTimeStamp);
+                }
             }
             return userInfo;
         }
@@ -2579,6 +2606,7 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
 
         $scope.selectLab = selectLab;
         $scope.chargeLab = chargeLab;
+        $scope.freeIntervalLab = freeIntervalLab;
         $scope.removeLab = removeLab;
 
         $scope.laboratories = [];
@@ -2623,10 +2651,23 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
         }
 
         function chargeLab() {
-            var amount = Number($scope.charge || '');
+            var amount = Number($scope.charge || '0');
             if (!amount) return;
             $scope.editingLab.balance = Number($scope.editingLab.balance) + amount;
             $scope.charge = '';
+        }
+
+        function freeIntervalLab() {
+            var freeIntervalMonths = Number($scope.freeIntervalMonths || '0') || 0;
+            if (freeIntervalMonths) {
+                var freeInterval = new Date;
+                freeInterval.setMonth(freeInterval.getMonth() + freeIntervalMonths);
+                $scope.editingLab.freeIntervalTimeStamp = freeInterval.getTime();
+            }
+            else {
+                delete $scope.editingLab.freeIntervalTimeStamp;
+            }
+            $scope.freeIntervalMonths = '';
         }
 
         function removeLab() {
@@ -3754,7 +3795,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
                 ValidationSystem.validators.integer()
             ]);
 
-        $scope.testCount = Math.floor($scope.balance / config.post_price);
+        $scope.testCount = Math.floor($scope.balance / 1000 /*TODO: Get cost from config*/ );
 
         $scope.balanceForDisplay = toPersianNumber($scope.balance);
         $scope.testCountForDisplay = $scope.testCount > 0 ?
@@ -4015,7 +4056,7 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
             electronicVersion: true,
             paperVersion: false
         };
-        $scope.payment = config.post_price;
+        $scope.payment = 2000 /*TODO: Get cost from config*/ ;
 
         $scope.setBackHandler(function() {
             $state.go('panel.home');
@@ -4259,8 +4300,8 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                 "متأسفانه این قابلیت در حال حاضر فعال نیست اما به زودی فعال خواهد شد.");
             $scope.request.paperVersion = false;
 
-            $scope.payment = ($scope.request.electronicVersion ? config.post_price : 0) +
-                ($scope.request.paperVersion ? config.paper_post_price : 0);
+            $scope.payment = ($scope.request.electronicVersion ? 2000 /*TODO: Get cost from config*/ : 0) +
+                ($scope.request.paperVersion ? 5000 /*TODO: Get cost from config*/ : 0);
         }
 
     }
@@ -4888,7 +4929,7 @@ app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '
         $scope.closeSelectedLab = closeSelectedLab;
         $scope.approveLab = approveLab;
         $scope.declineLab = declineLab;
-        
+
         getNotActivatedLabs();
 
         function getNotActivatedLabs() {
@@ -4926,6 +4967,12 @@ app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '
                     'green', 'basic gray')
                 .then(function() {
                     $scope.updating = true;
+                    if ($scope.selectedLab.freeIntervalMonths) {
+                        var freeInterval = new Date;
+                        freeInterval.setMonth(freeInterval.getMonth() + (Number($scope.selectedLab.freeIntervalMonths || '0') || 0));
+                        $scope.selectedLab.freeIntervalTimeStamp = freeInterval.getTime();
+                    }
+                    delete $scope.selectedLab.freeIntervalMonths;
                     adminService.approveInactiveLab($scope.selectedLab)
                         .then(function() {
                             $scope.inactiveLabs.splice($scope.selectedLabIndex, 1);

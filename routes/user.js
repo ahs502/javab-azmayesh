@@ -317,6 +317,7 @@ router.post('/edit/:action', function(req, res, next) {
             newUser.balance = user.balance;
             newUser.userType = user.userType;
             newUser.timeStamp = user.timeStamp;
+            newUser.chargeDeadlineTimeStamp = user.chargeDeadlineTimeStamp;
         }
         else if (action === 'password') {
             var oldPassword = req.body.oldPassword;
@@ -445,6 +446,8 @@ function getUserInfo(user) {
             websiteAddress: user.websiteAddress,
             balance: user.balance,
             timeStamp: user.timeStamp,
+            chargeDeadlineTimeStamp: user.chargeDeadlineTimeStamp,
+            freeIntervalTimeStamp: user.freeIntervalTimeStamp,
         };
     }
     else if (user.userType === 'administrator') {

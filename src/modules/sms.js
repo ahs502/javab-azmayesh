@@ -208,8 +208,15 @@ function otpGenerated(relatedKeys, otp, patient) {
 function newUserApproved(relatedKeys, user) {
     var numbers = [user.mobilePhoneNumber];
     var message = user.labName + "،\nحساب کاربری شما تأیید و فعال شد!";
+    if (user.freeIntervalTimeStamp) {
+        message += "\nکاربری شما تا " +
+            Math.ceil((user.freeIntervalTimeStamp - Date.now()) / (24 * 3600 * 1000)).toString() +
+            " روز به صورت رایگان خواهد بود.";
+    }
     if (user.balance) {
-        message += "\nبرای حساب شما " + toPersianNumber(user.balance) + " تومان شارژ اولیه در نظر گرفته شده است.";
+        message += "\n";
+        if (user.freeIntervalTimeStamp) message += "همچنین ";
+        message += "برای حساب شما " + toPersianNumber(user.balance) + " تومان شارژ اولیه در نظر گرفته شده است.";
     }
     return sendSms('approvesignup', numbers, message, {
         relatedKeys,

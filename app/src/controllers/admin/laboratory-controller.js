@@ -14,6 +14,7 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
 
         $scope.selectLab = selectLab;
         $scope.chargeLab = chargeLab;
+        $scope.freeIntervalLab = freeIntervalLab;
         $scope.removeLab = removeLab;
 
         $scope.laboratories = [];
@@ -58,10 +59,23 @@ app.controller('AdminLaboratoryController', ['$scope', '$rootScope', '$state',
         }
 
         function chargeLab() {
-            var amount = Number($scope.charge || '');
+            var amount = Number($scope.charge || '0');
             if (!amount) return;
             $scope.editingLab.balance = Number($scope.editingLab.balance) + amount;
             $scope.charge = '';
+        }
+
+        function freeIntervalLab() {
+            var freeIntervalMonths = Number($scope.freeIntervalMonths || '0') || 0;
+            if (freeIntervalMonths) {
+                var freeInterval = new Date;
+                freeInterval.setMonth(freeInterval.getMonth() + freeIntervalMonths);
+                $scope.editingLab.freeIntervalTimeStamp = freeInterval.getTime();
+            }
+            else {
+                delete $scope.editingLab.freeIntervalTimeStamp;
+            }
+            $scope.freeIntervalMonths = '';
         }
 
         function removeLab() {

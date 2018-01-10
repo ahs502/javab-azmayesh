@@ -33,7 +33,7 @@ app.controller('PanelBalanceController', ['$scope', '$rootScope', '$state', '$st
                 ValidationSystem.validators.integer()
             ]);
 
-        $scope.testCount = Math.floor($scope.balance / config.post_price);
+        $scope.testCount = Math.floor($scope.balance / 1000 /*TODO: Get cost from config*/ );
 
         $scope.balanceForDisplay = toPersianNumber($scope.balance);
         $scope.testCountForDisplay = $scope.testCount > 0 ?

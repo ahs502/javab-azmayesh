@@ -44,8 +44,9 @@ var config = {
     /*-------------------------------------*/
     zarinpal_merchant_code: /*-------------*/ "7b0be51c-6f9c-11e7-8b69-005056a205be", // Empty to disable
     /*-------------------------------------*/
-    post_price: /*-------------------------*/ 2000, // Tomans
-    paper_post_price: /*-------------------*/ 4000, // Tomans
+    cost_profiles: /*----------------------*/ [0, 1000, 2000, 3000], // What the patient pays in tomans
+    cost_minimum_charge: /*----------------*/ 1000, // Tomans
+    cost_paper_delivery: /*----------------*/ 5000, // Tomans
     /*-------------------------------------*/
     minified_app_sources: /*---------------*/ false,
     developer_modal: /*--------------------*/ true,
@@ -55,8 +56,9 @@ var config = {
         'env',
         'google_recaptcha',
         'google_recaptcha_public_key',
-        'post_price',
-        'paper_post_price',
+        'cost_profiles',
+        'cost_minimum_charge',
+        'cost_paper_delivery',
         'developer_modal',
     ]
 

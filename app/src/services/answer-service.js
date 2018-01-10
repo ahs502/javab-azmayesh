@@ -1,4 +1,5 @@
 /*global app*/
+/*global angular*/
 
 app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
@@ -30,8 +31,10 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                     postalCode: person.postalCode
                 }
             }), function(data) {
-                if (invalidPersonHandler)
+                if (angular.isFunction(invalidPersonHandler) && data.code === 80) {
                     invalidPersonHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -96,8 +99,10 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                 },
                 payment: payment
             }), function(data) {
-                if (invalidPersonHandler)
+                if (angular.isFunction(invalidPersonHandler) && data.code === 80) {
                     invalidPersonHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -132,8 +137,10 @@ app.service('AnswerService', ['$q', '$http', '$window', 'Utils',
                 }),
                 notes: notes
             }), function(data) {
-                if (invalidPersonHandler)
+                if (angular.isFunction(invalidPersonHandler) && data.code === 80) {
                     invalidPersonHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 

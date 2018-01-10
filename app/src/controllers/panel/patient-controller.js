@@ -29,7 +29,7 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
             electronicVersion: true,
             paperVersion: false
         };
-        $scope.payment = config.post_price;
+        $scope.payment = 2000 /*TODO: Get cost from config*/ ;
 
         $scope.setBackHandler(function() {
             $state.go('panel.home');
@@ -273,8 +273,8 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                 "متأسفانه این قابلیت در حال حاضر فعال نیست اما به زودی فعال خواهد شد.");
             $scope.request.paperVersion = false;
 
-            $scope.payment = ($scope.request.electronicVersion ? config.post_price : 0) +
-                ($scope.request.paperVersion ? config.paper_post_price : 0);
+            $scope.payment = ($scope.request.electronicVersion ? 2000 /*TODO: Get cost from config*/ : 0) +
+                ($scope.request.paperVersion ? 5000 /*TODO: Get cost from config*/ : 0);
         }
 
     }

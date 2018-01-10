@@ -1,4 +1,5 @@
 /*global app*/
+/*global angular*/
 
 app.service('MasterService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
@@ -13,8 +14,10 @@ app.service('MasterService', ['$q', '$http', '$window', 'Utils',
                 mobilePhoneNumber: mobilePhoneNumber,
                 message: message
             }), function(data) {
-                if (invalidModelHandler)
+                if (angular.isFunction(invalidModelHandler) && data.code === 80) {
                     invalidModelHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 

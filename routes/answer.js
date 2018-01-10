@@ -513,9 +513,19 @@ router.post('/send', function(req, res, next) {
                     return utils.resEndByCode(res, 77);
                 }
                 if (acceptance.payment > 0) {
-                    user.balance = Number(user.balance || 0) - config.post_price;
+                    user.balance = Number(user.balance || 0) - acceptance.payment + 1000 /*TODO: Get cost from config*/ ;
+                    if (user.freeIntervalTimeStamp && user.freeIntervalTimeStamp >= Date.now()) {
+                        user.balance += 1000 /*TODO: Get cost from config*/ ;
+                    }
                     if (user.balance < 0) {
-                        return utils.resEndByCode(res, 130);
+                        if (!user.chargeDeadlineTimeStamp) {
+                            var chargeDeadline = new Date();
+                            chargeDeadline.setDate(chargeDeadline.getDate() + 31);
+                            user.chargeDeadlineTimeStamp = chargeDeadline.getTime();
+                        }
+                        else if (user.chargeDeadlineTimeStamp < Date.now()) {
+                            return utils.resEndByCode(res, 130);
+                        }
                     }
                 }
                 sms.allowanceCheck(patient.numbers, 'sendans').then(function() {

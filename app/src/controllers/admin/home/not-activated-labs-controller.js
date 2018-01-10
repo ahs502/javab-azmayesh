@@ -10,7 +10,7 @@ app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '
         $scope.closeSelectedLab = closeSelectedLab;
         $scope.approveLab = approveLab;
         $scope.declineLab = declineLab;
-        
+
         getNotActivatedLabs();
 
         function getNotActivatedLabs() {
@@ -48,6 +48,12 @@ app.controller('AdminHomeNotActivatedLabsController', ['$scope', '$rootScope', '
                     'green', 'basic gray')
                 .then(function() {
                     $scope.updating = true;
+                    if ($scope.selectedLab.freeIntervalMonths) {
+                        var freeInterval = new Date;
+                        freeInterval.setMonth(freeInterval.getMonth() + (Number($scope.selectedLab.freeIntervalMonths || '0') || 0));
+                        $scope.selectedLab.freeIntervalTimeStamp = freeInterval.getTime();
+                    }
+                    delete $scope.selectedLab.freeIntervalMonths;
                     adminService.approveInactiveLab($scope.selectedLab)
                         .then(function() {
                             $scope.inactiveLabs.splice($scope.selectedLabIndex, 1);

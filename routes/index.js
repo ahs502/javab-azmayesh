@@ -66,6 +66,9 @@ router.get('/zarinpal/callback', function(req, res, next) {
                                 return kfs(userKey)
                                     .then(userData => {
                                         userData.balance = Number(userData.balance) + Number(amount);
+                                        if (userData.balance >= 0) {
+                                            delete userData.chargeDeadlineTimeStamp;
+                                        }
                                         return kfs(userKey, userData)
                                             .then(() => {
                                                 paymentData.verified = true;

@@ -1,4 +1,5 @@
 /*global app*/
+/*global angular*/
 
 app.service('UserService', ['$q', '$http', '$window', 'Utils',
     function($q, $http, $window, utils) {
@@ -37,8 +38,10 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 },
                 recaptcha: model.response
             }), function(data) {
-                if (invalidModelHandler)
+                if (angular.isFunction(invalidModelHandler) && data.code === 80) {
                     invalidModelHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -62,8 +65,10 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                     websiteAddress: newAccount.websiteAddress,
                 }
             }), function(data) {
-                if (invalidNewAccountHandler)
+                if (angular.isFunction(invalidNewAccountHandler) && data.code === 80) {
                     invalidNewAccountHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -73,8 +78,10 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
                 oldPassword: oldPassword,
                 newPassword: newPassword
             }), function(data) {
-                if (invalidNewPasswordHandler)
+                if (angular.isFunction(invalidNewPasswordHandler) && data.code === 80) {
                     invalidNewPasswordHandler(data.errors || {});
+                }
+                else return $q.reject(data.code);
             });
         }
 
@@ -214,6 +221,13 @@ app.service('UserService', ['$q', '$http', '$window', 'Utils',
             if (userInfo) {
                 userInfo.subscriptionDate = new Date(userInfo.timeStamp);
                 // delete userInfo.timeStamp; // DO NOT ACTIVATE THIS LINE EVER AGAIN!
+
+                if (userInfo.chargeDeadlineTimeStamp) {
+                    userInfo.chargeDeadline = new Date(userInfo.chargeDeadlineTimeStamp);
+                }
+                if (userInfo.freeIntervalTimeStamp) {
+                    userInfo.freeInterval = new Date(userInfo.freeIntervalTimeStamp);
+                }
             }
             return userInfo;
         }
