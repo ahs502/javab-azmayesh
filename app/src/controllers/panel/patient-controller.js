@@ -268,6 +268,9 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                 $scope.request.electronicVersion = $scope.request.paperVersion || $scope.request.electronicVersion;
             }
 
+            // Force to select the electronic version for now:
+            $scope.request.electronicVersion = true;
+
             //TODO: Remove these temporary lines later:
             $scope.request.paperVersion && $scope.showMessage('اطلاع رسانی',
                 "متأسفانه این قابلیت در حال حاضر فعال نیست اما به زودی فعال خواهد شد.");

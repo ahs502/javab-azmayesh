@@ -116,6 +116,16 @@ router.get('/in', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.get('/all', function(req, res, next) {
+    const baseUrl = config.protocol + '://' + config.domain;
+    res.redirect(baseUrl + '/#/start?init=' +
+        querystring.escape(JSON.stringify({
+            seeHistory: true
+        })));
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.get('/', function(req, res, next) {
     try {
         statistics.dailyCount('index');

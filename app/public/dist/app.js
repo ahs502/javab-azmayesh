@@ -4295,6 +4295,9 @@ app.controller('PanelPatientController', ['$scope', '$rootScope', '$state', '$st
                 $scope.request.electronicVersion = $scope.request.paperVersion || $scope.request.electronicVersion;
             }
 
+            // Force to select the electronic version for now:
+            $scope.request.electronicVersion = true;
+
             //TODO: Remove these temporary lines later:
             $scope.request.paperVersion && $scope.showMessage('اطلاع رسانی',
                 "متأسفانه این قابلیت در حال حاضر فعال نیست اما به زودی فعال خواهد شد.");
@@ -6302,7 +6305,8 @@ app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$l
                 return $scope.showMessage(startupMessage.title, startupMessage.message, startupMessage.ok);
             }))
         .then(function() {
-            var startupState = init.patientIn ? 'home.patient' : localStorage.startState;
+            var startupState = init.patientIn ? 'home.patient' :
+                init.seeHistory ? 'home.otp' : localStorage.startState;
             // return (startupState ? $q.when(startupState) :
             //     initiateDelay().then(function() {
             //         return $scope.showConfirmMessage("انتخاب نوع کاربری از سامانه",
