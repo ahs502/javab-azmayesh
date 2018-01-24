@@ -28,8 +28,11 @@ app.controller('PanelAcceptanceController', ['$scope', '$rootScope', '$state', '
 
         $scope.setPageTitle('پذیرش های جاری آزمایشگاه');
 
-        function acceptanceClicked(acceptanceClicked) {
-            //TODO: What to do when acceptance is clicked ?!
+        function acceptanceClicked(acceptance) {
+            $state.go('panel.send', {
+                nationalCode: acceptance.nationalCode,
+                previousState: 'panel.acceptance'
+            });
         }
 
     }

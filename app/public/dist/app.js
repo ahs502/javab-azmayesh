@@ -1324,6 +1324,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             })
             .state('panel.send', {
                 url: '/send',
+                params: {
+                    nationalCode: null,
+                    previousState: null
+                },
                 templateUrl: 'panel/send.html',
                 controller: 'PanelSendController',
                 data: {
@@ -3723,8 +3727,11 @@ app.controller('PanelAcceptanceController', ['$scope', '$rootScope', '$state', '
 
         $scope.setPageTitle('پذیرش های جاری آزمایشگاه');
 
-        function acceptanceClicked(acceptanceClicked) {
-            //TODO: What to do when acceptance is clicked ?!
+        function acceptanceClicked(acceptance) {
+            $state.go('panel.send', {
+                nationalCode: acceptance.nationalCode,
+                previousState: 'panel.acceptance'
+            });
         }
 
     }
@@ -4479,7 +4486,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         */
 
         $scope.setBackHandler(function() {
-            $state.go('panel.home');
+            $state.go($stateParams.previousState || 'panel.home');
         });
 
         $scope.setPageTitle('ارسال نتایج');
@@ -4509,6 +4516,11 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             ]);
 
         var fileId = 0;
+
+        if ($stateParams.nationalCode) {
+            $scope.nationalCode = $stateParams.nationalCode;
+            loadPatientInfo();
+        }
 
         function loadPatientInfo() {
             if (!$scope.vs.see('nationalCode')) {
@@ -6197,7 +6209,10 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
                 $state.go('panel.patient');
             },
             goToSendResults: function() {
-                $state.go('panel.send');
+                $state.go('panel.send', {
+                    nationalCode: null,
+                    previousState: null
+                });
             },
             goToAcceptancesHistory: function() {
                 $state.go('panel.acceptance');

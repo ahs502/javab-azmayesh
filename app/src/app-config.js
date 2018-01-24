@@ -331,6 +331,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
             })
             .state('panel.send', {
                 url: '/send',
+                params: {
+                    nationalCode: null,
+                    previousState: null
+                },
                 templateUrl: 'panel/send.html',
                 controller: 'PanelSendController',
                 data: {

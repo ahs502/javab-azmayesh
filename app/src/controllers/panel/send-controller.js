@@ -33,7 +33,7 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
         */
 
         $scope.setBackHandler(function() {
-            $state.go('panel.home');
+            $state.go($stateParams.previousState || 'panel.home');
         });
 
         $scope.setPageTitle('ارسال نتایج');
@@ -63,6 +63,11 @@ app.controller('PanelSendController', ['$scope', '$rootScope', '$state', '$state
             ]);
 
         var fileId = 0;
+
+        if ($stateParams.nationalCode) {
+            $scope.nationalCode = $stateParams.nationalCode;
+            loadPatientInfo();
+        }
 
         function loadPatientInfo() {
             if (!$scope.vs.see('nationalCode')) {

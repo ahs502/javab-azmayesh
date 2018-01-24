@@ -31,7 +31,10 @@ app.controller('PanelController', ['$scope', '$rootScope', '$state', '$statePara
                 $state.go('panel.patient');
             },
             goToSendResults: function() {
-                $state.go('panel.send');
+                $state.go('panel.send', {
+                    nationalCode: null,
+                    previousState: null
+                });
             },
             goToAcceptancesHistory: function() {
                 $state.go('panel.acceptance');
