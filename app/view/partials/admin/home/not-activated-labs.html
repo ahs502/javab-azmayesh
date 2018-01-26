@@ -24,7 +24,7 @@
         <div class="ui olive segment ja-not-activated-lab {{ $index === selectedLabIndex ? 'selected' : 'not-selected' }}" ng-repeat="lab in inactiveLabs" ng-click="$index === selectedLabIndex || openLab(lab, $index)">
 
             <p class="nazanin ja-rtl ja-align-right">
-                [<small>{{lab.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm:ss" }}</small>]&nbsp;({{lab.username}})
+                [<small>{{lab.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت HH:mm" }}</small>]&nbsp;({{lab.username}})
                 <strong>{{lab.labName}}</strong>
             </p>
             <p class="nazanin ja-rtl ja-align-right">

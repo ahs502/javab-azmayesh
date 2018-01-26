@@ -24,7 +24,7 @@
         <div class="ui yellow segment ja-not-delivered-sms {{ sms === selectedSms ? 'selected' : 'not-selected' }}" ng-repeat="sms in notDeliveredSmses" ng-click="openSms(sms, $index)">
 
             <p class="nazanin ja-rtl ja-align-right">
-                [<small>{{sms.data.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm:ss" }}</small>]&nbsp;&nbsp;
+                [<small>{{sms.data.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت HH:mm" }}</small>]&nbsp;&nbsp;
                 <strong>{{sms.data.typeDescription}}</strong>
             </p>
             <p class="nazanin ja-rtl ja-align-right">

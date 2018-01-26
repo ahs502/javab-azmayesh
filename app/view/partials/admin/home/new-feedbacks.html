@@ -24,7 +24,7 @@
         <div class="ui purple segment ja-new-feedback {{ $index === selectedFbIndex ? 'selected' : 'not-selected' }}" ng-repeat="fb in feedbacks" ng-click="$index === selectedFbIndex || openFb(fb, $index)">
 
             <p class="nazanin ja-rtl ja-align-right">
-                [<small>{{fb.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm:ss" }}</small>]
+                [<small>{{fb.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت HH:mm" }}</small>]
                 <strong>{{fb.mobilePhoneNumber | toPersianNumber}}</strong>
             </p>
             <p class="nazanin ja-rtl ja-align-right ja-code" ng-bind="fb.message"></p>

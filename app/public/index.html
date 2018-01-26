@@ -3162,8 +3162,10 @@
                                 {{patient.fullName}}
                                 <span ng-if="patient.gender">({{patient.gender}})</span>
                             </p>
-                            <p>{{patient.province}}، {{patient.city}}، {{patient.address}}</p>
-                            <p>پذیرش شده در روز {{ acceptance.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm" }}</p>
+                            <p ng-if="patient.province && patient.city && patient.address">
+                                {{patient.province}}، {{patient.city}}، {{patient.address}}
+                            </p>
+                            <p>پذیرش شده در روز {{ acceptance.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت HH:mm" }}</p>
                         </div>
 
                         <br />
@@ -4001,7 +4003,7 @@
         <div class="ui yellow segment ja-not-delivered-sms {{ sms === selectedSms ? 'selected' : 'not-selected' }}" ng-repeat="sms in notDeliveredSmses" ng-click="openSms(sms, $index)">
 
             <p class="nazanin ja-rtl ja-align-right">
-                [<small>{{sms.data.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm:ss" }}</small>]&nbsp;&nbsp;
+                [<small>{{sms.data.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت HH:mm" }}</small>]&nbsp;&nbsp;
                 <strong>{{sms.data.typeDescription}}</strong>
             </p>
             <p class="nazanin ja-rtl ja-align-right">
@@ -4139,7 +4141,7 @@
         <div class="ui olive segment ja-not-activated-lab {{ $index === selectedLabIndex ? 'selected' : 'not-selected' }}" ng-repeat="lab in inactiveLabs" ng-click="$index === selectedLabIndex || openLab(lab, $index)">
 
             <p class="nazanin ja-rtl ja-align-right">
-                [<small>{{lab.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm:ss" }}</small>]&nbsp;({{lab.username}})
+                [<small>{{lab.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت HH:mm" }}</small>]&nbsp;({{lab.username}})
                 <strong>{{lab.labName}}</strong>
             </p>
             <p class="nazanin ja-rtl ja-align-right">
@@ -4281,7 +4283,7 @@
         <div class="ui blue segment ja-new-c2c-payment-code {{ $index === selectedC2cIndex ? 'selected' : 'not-selected' }}" ng-repeat="c2c in c2cPaymentCodes" ng-click="$index === selectedC2cIndex || openC2c(c2c, $index)">
 
             <p class="nazanin ja-rtl ja-align-right">
-                [<small>{{c2c.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm:ss" }}</small>]&nbsp;({{c2c.username}})
+                [<small>{{c2c.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت HH:mm" }}</small>]&nbsp;({{c2c.username}})
                 <strong>{{c2c.labName}}</strong>
             </p>
             <p class="ja-ltr ja-align-right">
@@ -4362,7 +4364,7 @@
         <div class="ui purple segment ja-new-feedback {{ $index === selectedFbIndex ? 'selected' : 'not-selected' }}" ng-repeat="fb in feedbacks" ng-click="$index === selectedFbIndex || openFb(fb, $index)">
 
             <p class="nazanin ja-rtl ja-align-right">
-                [<small>{{fb.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm:ss" }}</small>]
+                [<small>{{fb.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت HH:mm" }}</small>]
                 <strong>{{fb.mobilePhoneNumber | toPersianNumber}}</strong>
             </p>
             <p class="nazanin ja-rtl ja-align-right ja-code" ng-bind="fb.message"></p>

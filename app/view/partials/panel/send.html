@@ -43,8 +43,10 @@
                                 {{patient.fullName}}
                                 <span ng-if="patient.gender">({{patient.gender}})</span>
                             </p>
-                            <p>{{patient.province}}، {{patient.city}}، {{patient.address}}</p>
-                            <p>پذیرش شده در روز {{ acceptance.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm" }}</p>
+                            <p ng-if="patient.province && patient.city && patient.address">
+                                {{patient.province}}، {{patient.city}}، {{patient.address}}
+                            </p>
+                            <p>پذیرش شده در روز {{ acceptance.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت HH:mm" }}</p>
                         </div>
 
                         <br />

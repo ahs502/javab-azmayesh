@@ -1,56 +1,28 @@
 
-    *   Add DirectPrint functionality to Post view of Panel.
-    
     *   Add a link to website rules to AboutUs page, alongside the brif company information.
 
-    *   Use the link: "https://t.me/JavabAzmayeshBot" as a QR Code on brushour.
-
-================================================================================
-
-    *   See if you can replace D3 by iScroll for Answer page: http://iscrolljs.com/
-    
-    *   Empower users to UPDATE their posts (Use Panel.Send page again).
-    
-    *   Add support for more secret answer posts where they need an OTP to
-        the patient phone every time he/she is trying to see them.
-
     *   Improve Panel.Home page, so the user can see almost everything by the first look.
-    
-    *   Restrict lab users in any environment other than live to send SMS to any arbitrary patient.
-    
-    *   Separate user passwords from its main file to a separate file.
 
-    *   Place some graphics to the site.
+    *   Empower users to UPDATE their posts (Use Panel.Send page again).
 
     *   Do not allow to send an answer before all files have been uploaded or errored.
-    
+
     *   Try to reduce the number of involved d3 module files in app/src/libraries folder.
 
     *   The max zoom factor is set to 2.0, shouldn't we make this larger and more dynamic?
 
-    *   Add a vertical pseudo scroll bar to Answer.Post page.
-    
     *   Debug: Sometimes PDFs does not appear in print layout.
-    
+
     *   Add the functionality to send SMS to admins when there is something he/she should now.
-    
+
     *   Let the patient download توضیحات as an text file in answer.download page.
 
     *   DEBUG: 'gulp build' does not work fine.
-    
+
     *   What if user changes view by menu when the site is still loading some request?
-    
+
     *   Use 'PurifyCSS' or something to exclude unused CSS from libraries.
         Do some similar thing with JSes of libraries if possible.
-    
-    *   Improve security even more!
-    
-    *   Think about HTML5 offline cache.
-    
-    
-
-    
-    
     
     
 ================================================================================
@@ -75,42 +47,8 @@
     
             // $scope.postDate = persianDate(new Date()).format('L');
             // $scope.postCode = toPersianNumber(6140);
+            // $scope.postCode = toLatinNumber(6140);
 
     *   Online security checker: https://www.htbridge.com/websec/
-
-
-================================================================================
-
->> Administrator Panel:
-
->--- Home
- ------- Main page
->------- Not delivered SMSs
->------- New laboratory sign up requests
->------- C2C receipts & user charge
->------- Feedbacks from 'Contact Us'
- ------- Website statistics
->--- Laboratory
->------- See & search all labs
------------- Block/Unblock
------------- Restrict/Unrestrict
->----------- Edit
->----------- Remove
->----------- Charge balance
->--- Patient
->------- Search
------------- Edit
------------- Remove
->--- SMS
->------- NikSMS left balance
->------- Send a dummy SMS
->------- Broadcast to all users
->------- List all used phone numbers
-
-
-
-
-
-
 
 

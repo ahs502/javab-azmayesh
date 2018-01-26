@@ -24,7 +24,7 @@
         <div class="ui blue segment ja-new-c2c-payment-code {{ $index === selectedC2cIndex ? 'selected' : 'not-selected' }}" ng-repeat="c2c in c2cPaymentCodes" ng-click="$index === selectedC2cIndex || openC2c(c2c, $index)">
 
             <p class="nazanin ja-rtl ja-align-right">
-                [<small>{{c2c.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت H:mm:ss" }}</small>]&nbsp;({{c2c.username}})
+                [<small>{{c2c.timeStamp | toPersianDate: "dddd YYYY/MM/DD ساعت HH:mm" }}</small>]&nbsp;({{c2c.username}})
                 <strong>{{c2c.labName}}</strong>
             </p>
             <p class="ja-ltr ja-align-right">

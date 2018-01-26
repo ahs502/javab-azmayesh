@@ -1519,7 +1519,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$window', '$location', '$timeo
 
                 var numberOfToBeLoadedResources =
                     dynamicResourceLoader(dependencies, true, function() {
-                        numberOfToBeLoadedResources && $state.go(toState);
+                        numberOfToBeLoadedResources && $state.go(toState, toParams);
                     });
 
                 if (numberOfToBeLoadedResources) {
