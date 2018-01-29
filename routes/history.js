@@ -123,6 +123,12 @@ router.post('/find/history', function(req, res, next) {
 router.post('/load/answer', function(req, res, next) {
     var nationalCode = req.body.nationalCode;
     var postCode = req.body.postCode;
+
+    //TODO: remove these lines:
+    console.log('\n\nnationalCode=', nationalCode, JSON.stringify(nationalCode));
+    console.log('\npostCode=', postCode, JSON.stringify(postCode));
+    console.log('\n\n');
+
     var patientTryLimitKey = 'patient-try-limit/' + nationalCode;
     kfs(patientTryLimitKey, function(err, patientTryLimit) {
         if (err) {
@@ -136,7 +142,7 @@ router.post('/load/answer', function(req, res, next) {
             patientTryLimit.jDate = jDate;
             patientTryLimit.count = 0;
         }
-        if (patientTryLimit.count >= 3) {
+        if (patientTryLimit.count >= 300 /*TODO: to 3 */ ) {
             return utils.resEndByCode(res, 75);
         }
         var patientKey = 'patient/data/' + nationalCode;

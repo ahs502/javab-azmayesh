@@ -5577,6 +5577,7 @@ app.controller('AdminController', ['$scope', '$rootScope', '$state', '$statePara
 /*global app*/
 /*global persianDate*/
 /*global toPersianNumber*/
+/*global toLatinNumber*/
 /*global Clipboard*/
 /*global simpleQueryString*/
 /*global sscAlert*/
@@ -5587,8 +5588,8 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
 
         var printLayoutWidth = 2400; // px
 
-        $scope.nationalCode = $stateParams.p;
-        $scope.postCode = $stateParams.n;
+        $scope.nationalCode = toLatinNumber(String($stateParams.p || '').trim());
+        $scope.postCode = toLatinNumber(String($stateParams.n || '').trim());
 
         $scope.pdfFileEventHandlerMaker = pdfFileEventHandlerMaker;
         $scope.copySharedUrl = copySharedUrl;
