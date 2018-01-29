@@ -427,7 +427,7 @@ router.post('/patient/accept', function(req, res, next) {
                             sms.send.acceptPatient([patientKey, acceptanceKey], patient, acceptance);
                             telegramContactExists || setTimeout(function() {
                                 sms.send.telegramBotInvitation([patientKey], patient);
-                            }, 60 * 1000);
+                            }, 10 * 1000);
                         });
                         utils.resEndByCode(res, 0);
                     });

@@ -5588,8 +5588,14 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
 
         var printLayoutWidth = 2400; // px
 
-        $scope.nationalCode = toLatinNumber(String($stateParams.p || '').trim());
-        $scope.postCode = toLatinNumber(String($stateParams.n || '').trim());
+        $scope.nationalCode = extractCodeFromNumericParam($stateParams.p, 10);
+        $scope.postCode = extractCodeFromNumericParam($stateParams.n, 4);
+
+        function extractCodeFromNumericParam(param, length) {
+            return toLatinNumber(String(param || '').trim()).split('').filter(function(char) {
+                return char >= '0' && char <= '9';
+            }).join('').slice(0, length || 100000);
+        }
 
         $scope.pdfFileEventHandlerMaker = pdfFileEventHandlerMaker;
         $scope.copySharedUrl = copySharedUrl;
