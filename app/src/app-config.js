@@ -142,6 +142,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$compi
                     footer: {
                         templateUrl: 'answer/footer.html',
                     },
+                },
+                data: {
+                    dependencies: [
+                        'fuse.min.js',
+                    ]
                 }
             })
             .state('answer.post', {

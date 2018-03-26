@@ -18,8 +18,11 @@ app.controller('StartController', ['$q', '$scope', '$state', '$stateParams', '$l
                 return $scope.showMessage(startupMessage.title, startupMessage.message, startupMessage.ok);
             }))
         .then(function() {
-            var startupState = init.patientIn ? 'home.patient' :
-                init.seeHistory ? 'home.otp' : localStorage.startState;
+            var startupState =
+                init.patientIn ? 'home.patient' :
+                init.seeHistory ? 'home.otp' :
+                init.laboratoryLogin ? 'lab.login' :
+                localStorage.startState;
             // return (startupState ? $q.when(startupState) :
             //     initiateDelay().then(function() {
             //         return $scope.showConfirmMessage("انتخاب نوع کاربری از سامانه",

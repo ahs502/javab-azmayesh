@@ -60,6 +60,9 @@ app.controller('AnswerController', ['$rootScope', '$scope', '$timeout', '$window
             viewFile: function() {
                 $state.go('answer.post');
             },
+            guide: function() {
+                angular.element('#ja-answer-guide-modal').modal('show');
+            },
             saveFile: function() {
                 $state.go('answer.download');
             },

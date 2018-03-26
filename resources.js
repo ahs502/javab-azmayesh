@@ -27,6 +27,7 @@ module.exports = {
         "./app/style/common.about.less",
         "./app/style/home.less",
         "./app/style/answer.less",
+        "./app/style/answer.guide.less",
         "./app/style/panel.less",
         "./app/style/admin.less",
         "./app/style/main.screens.less",
@@ -91,6 +92,8 @@ module.exports = {
 
         "./app/lib/dygraphs/dist/dygraph.min.js",
         "./app/lib/dygraphs/dist/dygraph.min.css",
+
+        "./app/lib/fuse/dist/fuse.min.js",
 
         "./app/lib/semantic/dist/components/card.rtl.min.css",
         "./app/lib/semantic/dist/components/loader.rtl.min.css",

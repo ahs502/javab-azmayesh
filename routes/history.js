@@ -125,30 +125,8 @@ router.post('/find/history', function(req, res, next) {
 router.post('/load/answer', function(req, res, next) {
     var nationalCode = req.body.nationalCode;
     var postCode = req.body.postCode;
-
-    //TODO: remove these lines:
-    console.log('\n\nBEFORE:\nnationalCode=', nationalCode);
-    console.log('nationalCode=', JSON.stringify(nationalCode));
-    console.log('\npostCode=', postCode);
-    console.log('postCode=', JSON.stringify(postCode));
-    console.log('\n\n');
-
     nationalCode = extractCodeFromNumericParam(nationalCode, 10);
     postCode = extractCodeFromNumericParam(postCode, 4);
-
-    function extractCodeFromNumericParam(param, length) {
-        return toLatinNumber(String(param || '').trim()).split('').filter(function(char) {
-            return char >= '0' && char <= '9';
-        }).join('').slice(0, length || 100000);
-    }
-
-    //TODO: remove these lines:
-    console.log('\n\nAFTER:\nnationalCode=', nationalCode);
-    console.log('nationalCode=', JSON.stringify(nationalCode));
-    console.log('\npostCode=', postCode);
-    console.log('postCode=', JSON.stringify(postCode));
-    console.log('\n\n');
-
     var patientTryLimitKey = 'patient-try-limit/' + nationalCode;
     kfs(patientTryLimitKey, function(err, patientTryLimit) {
         if (err) {
@@ -228,6 +206,14 @@ router.post('/load/answer', function(req, res, next) {
         });
     });
 });
+
+////////////////////////////////////////////////////////////////////////////////
+
+function extractCodeFromNumericParam(param, length) {
+    return toLatinNumber(String(param || '').trim()).split('').filter(function(char) {
+        return char >= '0' && char <= '9';
+    }).join('').slice(0, length || 100000);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 

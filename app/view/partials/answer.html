@@ -2,75 +2,10 @@
 
     <div class="ja-screen" ui-view></div>
 
-    <div class="ja-print" id="ja-answer-print" ng-if="!loading && answer">
-
-        <div class="ui segment nazanin ja-rtl ja-align-right ja-print-section">
-
-            <div class="ja-print-header-info">
-                نام:&nbsp;
-                <strong ng-bind="answer.patientName"></strong>
-            </div>
-            <div class="ja-print-header-info">
-                تاریخ ارسال نتایج:&nbsp;
-                <strong ng-bind="footerHandlers.postDateGetter()"></strong>
-            </div>
-            <div class="ja-print-header-info">
-                شماره آزمایش:&nbsp;
-                <strong ng-bind="footerHandlers.postCodeGetter()"></strong>
-            </div>
-            <div class="ja-print-header-info">
-                نام آزمایشگاه:&nbsp;
-                <strong ng-bind="answer.lab.name"></strong>
-            </div>
-            <div class="ja-print-header-info">
-                تلفن تماس آزمایشگاه:&nbsp;
-                <strong ng-bind="answer.lab.phoneNumber | toPersianNumber"></strong>
-            </div>
-            <div class="ja-print-header-info">
-                کُد پستی آزمایشگاه:&nbsp;
-                <strong ng-bind="answer.lab.postalCode | toPersianNumber"></strong>
-            </div>
-
-            <div>
-                آدرس آزمایشگاه:&nbsp;
-                <em ng-bind="answer.lab.address | toPersianNumber"></em>
-            </div>
-
-            <div>
-                دریافت شده به صورت آنلاین از&nbsp;
-                <strong>«جواب آزمایش»</strong>&nbsp; (
-                <em>JavabAzmayesh.ir</em>)&nbsp;
-                <strong><small>سامانه اینترنتی دریافت نتایج آزمایشگاهی</small></strong>
-            </div>
-
-        </div>
-
-        <p class="nazanin ja-rtl ja-align-right" ng-show="!(answer.files && answer.files.length)">
-            برای این آزمایش فایلی آپلود نشده است.
-        </p>
-
-        <div ng-if="answer.files && answer.files.length" ng-repeat="file in answer.files">
-
-            <div ng-if="file.material === 'image'">
-                <img ng-src="{{file.url}}" width="100%" class="ja-print-section">
-            </div>
-
-            <div ng-if="file.material === 'pdf' && !file.error && file.dataUrls && file.dataUrls.length">
-                <img ng-repeat="dataUrl in file.dataUrls" ng-src="{{dataUrl}}" width="100%" class="ja-print-section">
-            </div>
-
-        </div>
-
-        <div class="ja-print-section">
-            <br />
-            <p class="nazanin ja-rtl ja-align-right">
-                <strong>توضیحات :</strong>
-            </p>
-            <div class="ui segment">
-                <pre class="nazanin ja-rtl ja-right-align ja-multiline-pre" ng-bind="answer.notes || '(توضیحات ندارد)'"></pre>
-            </div>
-        </div>
-
+    <div class="ja-print">
+        <!-- import:./app/view/partials/answer/print.html -->
     </div>
+
+    <!-- import:./app/view/partials/answer/guide.html -->
 
 </div>

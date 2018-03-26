@@ -1,0 +1,44 @@
+<div id="ja-answer-guide-modal" class="ui modal ja-rtl" ng-controller="AnswerGuideController as answerGuideController">
+    <div class="header">
+        <span class="nazanin">راهنمای خواندن نتایج</span>
+        <button class="ui basic gray button ja-float-left nazanin" ng-click="answerGuideController.hideGuidance()">بستن پنجره</button>
+    </div>
+    <div class="scrolling content ja-ltr">
+        <dir class="ja-rtl ja-content">
+            <p class="ja-rtl nazanin" ng-hide="answerGuideController.data">
+                در حال بارگذاری داده ها...
+            </p>
+            <div ng-show="answerGuideController.data">
+
+                <div class="ja-category-titles">
+                    <span class="ja-category-title {{ answerGuideController.selectedCategory === category ? 'selected' : '' }}" ng-repeat="category in answerGuideController.data" ng-click="answerGuideController.selectCategory(category)">
+                        <span class="ja-category-title-text" ng-bind="category.title"></span>
+                    </span>
+                </div>
+
+                <div class="ui fluid input">
+                    <label class="nazanin">جستجو:&nbsp;</label>
+                    <input class="nazanin ja-search-input uppercase" ng-class="{ 'ja-rtl': !answerGuideController.searchText, 'ja-ltr ja-align-left': answerGuideController.searchText }" type="text" ng-model="answerGuideController.searchText" ng-change="answerGuideController.search()"
+                        placeholder="حروف اختصاری، اصطلاحات و ...">
+                </div>
+
+                <div class="ja-search-results">
+                    <p class="ja-rtl nazanin" ng-hide="answerGuideController.filteredArticles.length">
+                        هیچ موردی یافت نشد.
+                    </p>
+                    <div class="ja-article {{ answerGuideController.selectedArticle === article ? 'selected' : 'not-selected' }}" ng-repeat="article in answerGuideController.filteredArticles">
+                        <p class="ja-article-title ja-rtl ja-align-center nazanin" ng-click="answerGuideController.selectArticle(article)" ng-bind="article.title"></p>
+                        <div class="ja-article-text ja-rtl ja-align-justify nazanin" ng-if="answerGuideController.selectedArticle === article" ng-bind="article.text"></div>
+                        <p class="ja-article-wrapper ja-align-center" ng-click="answerGuideController.selectArticle(article)" ng-if="answerGuideController.selectedArticle === article">X</p>
+                    </div>
+                </div>
+
+            </div>
+        </dir>
+    </div>
+    <!--<div class="actions">-->
+    <!--    <button class="ui green ok button">-->
+    <!--        <span class="nazanin">ثبت کُد اعتبار سنجی</span>-->
+    <!--    </button>-->
+    <!--</div>-->
+</div>

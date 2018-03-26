@@ -34,6 +34,12 @@ body {
 .ja-align-justify {
   text-align: justify !important;
 }
+.ja-float-right {
+  float: right;
+}
+.ja-float-left {
+  float: left;
+}
 .lowercase {
   text-transform: lowercase;
 }
@@ -459,6 +465,77 @@ div[table-list-container] table tbody tr td.nazanin {
 	AHS502 : End of 'answer.less'
 */
 /*
+	AHS502 : Start of 'answer.guide.less'
+*/
+#ja-answer-guide-modal .ja-content {
+  margin: 0;
+  padding: 0;
+}
+#ja-answer-guide-modal .ja-category-titles .ja-category-title {
+  color: gray;
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 6px 12px;
+  margin: 0 0 8px 8px;
+  display: inline-block;
+  cursor: pointer;
+}
+#ja-answer-guide-modal .ja-category-titles .ja-category-title .ja-category-title-text {
+  font-family: BNazanin !important;
+  font-size: 130%;
+  white-space: nowrap;
+}
+#ja-answer-guide-modal .ja-category-titles .ja-category-title:hover {
+  background-color: #eee;
+}
+#ja-answer-guide-modal .ja-category-titles .ja-category-title.selected {
+  color: black;
+  border-color: black;
+  border-width: 2px;
+  background-color: #eee;
+}
+#ja-answer-guide-modal .ja-search-input {
+  padding: 3px;
+}
+#ja-answer-guide-modal .ja-search-results {
+  margin-top: 13px;
+}
+#ja-answer-guide-modal .ja-search-results .ja-article {
+  border: 1px solid #a6a6a6;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+#ja-answer-guide-modal .ja-search-results .ja-article.selected {
+  border: 1px solid black;
+}
+#ja-answer-guide-modal .ja-search-results .ja-article.selected .ja-article-title {
+  font-weight: bold;
+}
+#ja-answer-guide-modal .ja-search-results .ja-article .ja-article-title {
+  margin-bottom: 0;
+  padding: 5px 0;
+  cursor: pointer;
+}
+#ja-answer-guide-modal .ja-search-results .ja-article .ja-article-text {
+  margin: 0;
+  padding: 8px;
+  border-top: 1px solid #d1d1d1;
+  border-bottom: 1px solid #d1d1d1;
+  white-space: pre-wrap;
+}
+#ja-answer-guide-modal .ja-search-results .ja-article .ja-article-title,
+#ja-answer-guide-modal .ja-search-results .ja-article .ja-article-wrapper {
+  cursor: pointer;
+}
+#ja-answer-guide-modal .ja-search-results .ja-article .ja-article-title:hover,
+#ja-answer-guide-modal .ja-search-results .ja-article .ja-article-wrapper:hover {
+  background-color: #eee;
+  font-weight: bold;
+}
+/*
+	AHS502 : End of 'answer.guide.less'
+*/
+/*
 	AHS502 : Start of 'panel.less'
 */
 #ja-panel {
@@ -713,6 +790,11 @@ div[table-list-container] table tbody tr td.nazanin {
 /*
 	AHS502 : Start of 'main.screens.less'
 */
+@media (max-width: 580px) {
+  .ja-more-than-580 {
+    display: none !important;
+  }
+}
 @media (max-width: 570px) {
   .ja-more-than-570 {
     display: none !important;

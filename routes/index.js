@@ -126,6 +126,16 @@ router.get('/all', function(req, res, next) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+router.get('/lab', function(req, res, next) {
+    const baseUrl = config.protocol + '://' + config.domain;
+    res.redirect(baseUrl + '/#/start?init=' +
+        querystring.escape(JSON.stringify({
+            laboratoryLogin: true
+        })));
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 router.get('/', function(req, res, next) {
     try {
         statistics.dailyCount('index');

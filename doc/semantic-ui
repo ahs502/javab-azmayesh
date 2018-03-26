@@ -1,0 +1,15 @@
+1.  Go to semantic-ui folder,
+2.  # npm i
+3.  # gulp
+4.  Config files will be created.
+
+> Disable Google fonts:
+
+    1.  Go to file: /src/site/globals/site.variables
+    2.  Add: @importGoogleFonts : false;
+    3.  # gulp build
+
+> Activate RTL components:
+
+    1.  Go to file: /semantic.json
+    2.  Change rtl to true.

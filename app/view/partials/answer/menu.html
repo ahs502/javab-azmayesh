@@ -3,6 +3,13 @@
     <img class="ja-menu-item-icon" ng-src="{{iconJs('reader')}}">
 </a>
 
+<a class="item nazanin ja-align-right ja-rtl" ng-click="menuHandlers.guide(); toggleMenu()">
+    <img class="ja-menu-item-icon" ng-src="{{iconJs('question')}}">
+    <bdi>
+        راهنمای خواندن نتایج
+    </bdi>
+</a>
+
 <a class="item nazanin ja-align-right" ng-click="menuHandlers.saveFile(); toggleMenu()" ng-show="menuHandlers.getAsnwerLoadedStatus()">
     ذخیره فایل
     <img class="ja-menu-item-icon" ng-src="{{iconJs('download')}}">
